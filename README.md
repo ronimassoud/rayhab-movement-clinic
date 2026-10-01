@@ -7,14 +7,28 @@ physiotherapy.
 Static site: plain HTML, CSS custom properties and vanilla JavaScript. No build
 step and no framework. Open `site/index.html` or serve the `site/` directory.
 
+- **Live site:** <https://ronimassoud.github.io/rayhab-movement-clinic/>
 - **Repository:** <https://github.com/ronimassoud/rayhab-movement-clinic>
 - **Design canvas:** [Rayhab UI on Claude Design](https://claude.ai/design/p/c0ba2874-187e-4463-b422-73d41cc99cb9?file=Rayhab+UI.dc.html)
   (the source the site was built from, kept byte-exact at `Rayhab UI.dc.html`)
 
-> **This repository is private, and should stay that way until the points under
-> [Before launch](#before-launch) are resolved.** It contains clinical
-> photographs of identifiable patients and 24 patient-facing clinical articles
-> that have not yet been reviewed by a clinician.
+> **This site is live and publicly indexed while the items under
+> [Before launch](#before-launch) are still open.** That was a deliberate
+> decision, not an oversight. It means clinical photographs of identifiable
+> patients and 24 articles still marked "Awaiting clinical review" are
+> publicly reachable. Close those items, or take the deploy down, before
+> treating this as finished.
+
+## Deployment
+
+Pushing to `main` publishes `site/` to GitHub Pages via
+`.github/workflows/pages.yml`. The workflow runs `.github/scripts/check_links.py`
+first and fails the deploy if any internal link is broken.
+
+Canonical URLs, `sitemap.xml` and `robots.txt` point at the Pages address. When
+the real domain is ready, set it as a custom domain in the repository's Pages
+settings and replace that base URL across `site/` and in the two builders in
+`content/`, which hold it so a rebuild does not revert it.
 
 ## Running it
 

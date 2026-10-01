@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /book.html
 
-Sitemap: https://dr-rayhab.com/sitemap.xml
+Sitemap: https://ronimassoud.github.io/rayhab-movement-clinic/sitemap.xml
