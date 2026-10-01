@@ -189,7 +189,7 @@ def render_article(a, lookup, pillars):
     <p class="art-stand">%s</p>
     <div class="art-metarow">
       <div><span class="art-metak">Reading time</span><span class="art-metav">%s</span></div>
-      <div><span class="art-metak">Written by</span><span class="art-metav">Rayan Halimeh, Schroth Level 2</span></div>
+      <div><span class="art-metak">Written by</span><span class="art-metav">Rayan Halimeh, Certified Schroth Practitioner</span></div>
       <div><span class="art-metak">Status</span><span class="art-metav">%s</span></div>
     </div>
   </header>
@@ -211,7 +211,7 @@ def render_article(a, lookup, pillars):
       <div class="reviewbox">
         <p class="review-k">Clinical reviewer</p>
         <p class="review-n">Rayan Halimeh</p>
-        <p class="review-v">Physiotherapist, Schroth Level 2 Practitioner, FRC Certified, ACE Medical Exercise Specialist.</p>
+        <p class="review-v">Physiotherapist, Certified Schroth Practitioner, Certified Mobility Specialist (FCRms), ACE Medical Exercise Specialist.</p>
         %s
       </div>
       <div class="reviewbox" style="background:var(--bone)">
