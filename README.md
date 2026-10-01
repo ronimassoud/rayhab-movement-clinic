@@ -7,6 +7,10 @@ physiotherapy.
 Static site: plain HTML, CSS custom properties and vanilla JavaScript. No build
 step and no framework. Open `site/index.html` or serve the `site/` directory.
 
+- **Repository:** <https://github.com/ronimassoud/rayhab-movement-clinic>
+- **Design canvas:** [Rayhab UI on Claude Design](https://claude.ai/design/p/c0ba2874-187e-4463-b422-73d41cc99cb9?file=Rayhab+UI.dc.html)
+  (the source the site was built from, kept byte-exact at `Rayhab UI.dc.html`)
+
 > **This repository is private, and should stay that way until the points under
 > [Before launch](#before-launch) are resolved.** It contains clinical
 > photographs of identifiable patients and 24 patient-facing clinical articles
@@ -103,4 +107,6 @@ These are load-bearing, not stylistic preferences:
 - Only measurements that exist are shown. One case study carries Cobb angles
   because an X-ray exists; the rest are labelled photographic.
 - Unwritten content reads "In preparation" and does not link anywhere.
-- No em dashes anywhere in the site copy or the source.
+- No em dashes in anything written here: site copy, generator content and code
+  comments all use a comma or a semicolon instead. The imported canvas and its
+  runtime JavaScript still contain them, and are left byte-exact on purpose.
