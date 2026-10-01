@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /book.html
+
+Sitemap: https://dr-rayhab.com/sitemap.xml

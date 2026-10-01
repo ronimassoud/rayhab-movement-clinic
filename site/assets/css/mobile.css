@@ -1,0 +1,243 @@
+/* ==========================================================
+   MOBILE SCREENS, implemented from the canvas 390 mockups
+   (mobile frames in sections 03, 04, 05, 06 and 07).
+   These are separate compositions, not reflowed desktop.
+   ========================================================== */
+
+/* Copy variants: the mobile mockups use shorter wording. */
+.m-only{display:none}
+/* Mobile-only affordances. */
+.m-arrow,.stage-rail,.stage-more,.myth-more,.pillar-count,.m-bookbar{display:none}
+/* These wrap existing headings so mobile can regroup them. On desktop they
+   must dissolve, not hide, or the heading inside disappears with them. */
+.stage-body,.supcard-head,.pillar-body{display:contents}
+
+@media (max-width:700px){
+  :root{ --pad-x:18px; }
+  .m-only{display:block}
+  span.m-only,a.m-only{display:inline}
+  .d-only{display:none !important}
+  .m-arrow{display:block;color:var(--brand-800);flex:none;font-size:16px}
+
+  /* ---- Nav: 86x29 wordmark, two right-aligned bars, no CTA ---- */
+  .site-nav{padding:14px 18px;gap:12px}
+  .site-nav .wordmark{width:86px;height:29px}
+  .nav-right{display:none}
+  .nav-toggle{border:0;width:24px;height:24px;justify-content:flex-end;align-items:center}
+  .nav-toggle i{width:22px;height:1.7px;border-radius:2px;background:var(--bone)}
+  .nav-toggle i::before{width:14px;height:1.7px;border-radius:2px;top:6px;left:auto;right:0}
+  /* Kept in the layout but collapsed, so the morph into the X can be
+     animated. display:none cannot be transitioned. */
+  .nav-toggle i::after{display:block;width:0;opacity:0;top:6px;left:auto;right:0}
+  .nav-toggle[aria-expanded="true"] i{background:transparent}
+  .nav-toggle[aria-expanded="true"] i::before{width:22px;top:0;right:0;transform:rotate(45deg)}
+  .nav-toggle[aria-expanded="true"] i::after{width:22px;opacity:1;top:0;left:auto;right:0;transform:rotate(-45deg)}
+  .navgroup{margin-top:4px}
+
+  /* ---- Shared mobile pieces ---- */
+  .m-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:16px;overflow:hidden}
+  .m-list>*{background:var(--paper);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+
+  .m-spec{display:flex;flex-direction:column;gap:1px;background:var(--w-1f);border-radius:14px;overflow:hidden}
+  .m-spec>div{background:var(--forest-900);padding:14px 16px;display:flex;justify-content:space-between;gap:12px}
+  .m-spec .k{font:300 14px/1.4 var(--sans);color:var(--on-dark-2);margin:0}
+  .m-spec .v{font:600 14px/1.4 var(--sans);color:var(--spring-500);margin:0;text-align:right}
+
+  body{padding-bottom:80px}
+  .m-bookbar{
+    display:flex;gap:10px;align-items:center;position:fixed;left:0;right:0;bottom:0;z-index:95;
+    background:var(--sand);border-top:1px solid var(--border);padding:14px 18px 18px;
+  }
+  .m-bookbar-bone{background:var(--bone)}
+  .m-bookbar-txt{flex:1;min-width:0}
+  .m-bookbar-t{margin:0;font:600 15px/1.3 var(--sans);color:var(--text)}
+  .m-bookbar-d{margin:0;font:300 13px/1.3 var(--sans);color:var(--text-3)}
+  .m-bookbar-1{margin:0;flex:1;min-width:0;font:300 14px/1.4 var(--sans);color:var(--text-2)}
+  .m-bookbar .btn{flex:none;font:600 15px/1 var(--sans);padding:15px 22px;min-height:0}
+
+  /* ---- HOME (05 mobile) ---- */
+  .home-hero{padding:14px 18px 32px}
+  .hero-device{display:none}
+  .hero-inner{display:flex;flex-direction:column;gap:0;align-items:stretch}
+  .hero-pill{align-self:flex-start}
+  .hero-copy{display:contents}
+  .hero-pill{order:0;padding:7px 13px;margin-bottom:18px;font-size:11px}
+  .hero-pill .dot{width:5px;height:5px}
+  .home-hero .d1{order:1;font-size:42px;line-height:1;letter-spacing:-.04em;margin-bottom:14px}
+  .hero-lede{order:2;margin:0 0 22px;font:300 16px/1.6 var(--sans)}
+  .hero-media{order:3;margin-bottom:20px}
+  .hero-slot{height:250px;border-radius:20px}
+  .hero-card{display:none}
+  .hero-btns{order:4;display:block;margin:0}
+  .hero-btns .btn{display:block;width:100%;padding:17px 0;margin-bottom:10px;text-align:center}
+  .hero-btns .btn:last-child{margin-bottom:0;padding:16px 0}
+
+  .credstrip{padding:14px 0}
+  .cred-set{gap:16px;padding-right:16px}
+  .cred-set li{font:500 13px/1 var(--sans);gap:16px}
+
+  .philo{padding:30px 18px;gap:24px}
+  .philo-cards{gap:10px}
+
+  .svc-split{display:block}
+  .svc-primary{border-radius:18px;padding:24px 22px;min-height:0;margin-bottom:10px}
+  .svc-device{display:none}
+  .svc-primary .eyebrow{font-size:10px;margin-bottom:0}
+  .svc-primary .h3{font-size:28px;line-height:1.05;margin:14px 0 8px}
+  .svc-primary>p{margin-bottom:20px;font-size:15px}
+  .svc-chips{display:none}
+  .svc-primary .btn{display:block;width:100%;padding:15px 0;font-size:15px;text-align:center}
+  .svc-stack{gap:1px;background:var(--border);border-radius:16px;overflow:hidden}
+  .svc-card{border:0;border-radius:0;padding:18px 20px;flex-direction:row;justify-content:space-between;align-items:center;gap:12px}
+  .svc-card .body-s{display:none}
+  .svc-card .h5{font:600 17px/1.25 var(--display);margin:0}
+
+  .founder{gap:24px;padding:30px 18px}
+  .founder-slot{height:260px}
+
+  /* ---- SERVICE DETAIL (03 mobile) ---- */
+  .svc-hero{display:flex;flex-direction:column;padding:8px 18px 30px;gap:0;align-items:stretch}
+  .svc-hero .hero-pill{align-self:flex-start}
+  .svc-hero-copy{padding-top:0;display:contents}
+  .svc-hero .crumbs{order:0;font-size:12px;margin-bottom:16px}
+  .svc-hero .hero-pill{order:1;margin-bottom:16px}
+  .svc-hero .h1{order:2;font-size:40px;line-height:1.02;letter-spacing:-.035em;margin-bottom:14px}
+  .svc-hero .body-l{order:3;margin:0 0 22px;font-size:16px;line-height:1.6}
+  .svc-hero-media{order:4;padding-top:0;margin-bottom:22px;position:static}
+  .svc-hero-slot{height:230px;border-radius:20px}
+  .measure-card{display:none}
+  .svc-hero .hero-btns{display:none}
+  .svc-stats{display:none}
+  .svc-mspec{order:6}
+
+  .svc-approach{padding:30px 18px}
+  .svc-process{padding:30px 18px}
+  .svc-process .sechead{margin-bottom:20px}
+  .svc-process .h3,.svc-process .sec-h{font-size:28px;line-height:1.1}
+  .svc-process .body-s{display:none}
+  .stages{display:flex;flex-direction:column;gap:0;background:none;border:0;border-radius:0;overflow:visible}
+  .stage{background:none;border:0;padding:0 0 18px;min-height:0;display:flex;gap:14px;flex-direction:row}
+  .stage-rail{display:flex;flex:none;flex-direction:column;align-items:center;gap:6px}
+  .stage-body{display:block;min-width:0}
+  .stage-n{display:none}
+  .stage-num{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--hairline);
+    color:var(--forest-600);font:600 11px/23px var(--sans);text-align:center;flex:none}
+  .stage-lead .stage-num{background:var(--brand-800);border-color:var(--brand-800);color:var(--spring-500);line-height:26px}
+  .stage-line{display:block;width:1.5px;flex:1;background:var(--border)}
+  .stage-t,.stage-lead .stage-t{margin:0 0 3px;font:600 17px/1.3 var(--display);color:var(--forest-900)}
+  .stage-d,.stage-lead .stage-d{margin:0;font:300 14px/1.55 var(--sans);color:var(--body)}
+  .stage-5,.stage-6{display:none}
+  .stage-4{padding-bottom:0}
+  .stage-4 .stage-line{display:none}
+  .stage-more{display:block;margin-top:20px;font:500 15px/1 var(--sans);color:var(--brand-800)}
+
+  .svc-consult{padding:30px 18px}
+  .consult-grid{gap:10px}
+  .svc-proof{padding:30px 18px;gap:24px}
+  .svc-who{padding:30px 18px;gap:24px}
+
+  /* ---- SERVICES INDEX (06 mobile) ---- */
+  .svcidx-hero{padding:12px 18px 28px}
+  .svcidx-hero .crumbs{font-size:12px;margin-bottom:16px}
+  .svcidx-head{gap:12px}
+  .svcidx-hero .h1{font-size:36px;line-height:1.02;letter-spacing:-.038em}
+  .svcidx-hero .body-m{font-size:16px;line-height:1.6}
+  .svcidx-primary-band{padding:22px 18px 0}
+  .svcidx-primary{border-radius:20px}
+  .svcidx-primary-body{padding:22px 22px 24px}
+  .svcidx-primary .h2,.svcidx-h2{font-size:27px;line-height:1.08;margin-bottom:8px}
+  .svcidx-primary-body>p{margin-bottom:20px;font-size:15px}
+  .svcidx-primary .eyebrow{font-size:10px;margin-bottom:12px}
+  .ticks2{display:none}
+  .svcidx-media{min-height:170px;order:-1}
+  .svcidx-btns{display:block}
+  .svcidx-btns .btn{display:block;width:100%;padding:15px 0;font-size:15px;text-align:center}
+  .svcidx-btns .btn+.btn{display:none}
+  .svcidx-support{padding:20px 18px 26px}
+  .svcidx-grid{gap:10px}
+  .supcard{border-radius:16px}
+  .supcard-media{display:none}
+  .supcard-body{padding:20px 22px}
+  .supcard-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+  .supcard-title{font:600 19px/1.25 var(--display);margin:0}
+  .supcard .body-s{font-size:14px;line-height:1.55;margin:0}
+  .dotlist,.supcard-link{display:none}
+  .router-band{padding:26px 18px}
+  .router-grid{gap:10px}
+
+  /* ---- SCOLIOSIS HUB (07 mobile) ---- */
+  .hub-hero{padding:12px 18px 28px}
+  .hub-device{display:none}
+  .hub-hero .crumbs{font-size:12px;margin-bottom:14px}
+  .hub-hero-grid{display:block}
+  .hub-hero .h1,.hub-h1{font-size:38px;line-height:1.02;letter-spacing:-.038em;margin-bottom:12px}
+  .hub-hero .lede{font-size:16px;line-height:1.6;margin-bottom:22px}
+  .startbox{border-radius:16px;padding:20px 20px 22px}
+  .startbox .eyebrow{font-size:10px;margin-bottom:12px}
+  .startbox>p{display:none}
+  .startlist{border-radius:10px}
+  .startlist li{padding:13px 14px;font:500 14px/1.4 var(--sans)}
+  .startlist .mins{font-size:12px}
+
+  .hub-route{padding:24px 18px 26px;background:var(--bone)}
+  .hub-route .sechead{margin-bottom:12px}
+  .hub-route .h2-sm,.hub-route .body-s{display:none}
+  .route-grid{gap:10px;margin-bottom:26px}
+  .routecard{border-radius:16px;padding:20px 22px;min-height:0}
+  .routecard svg{display:none}
+  .route-t{font:600 20px/1.2 var(--display);margin-bottom:5px}
+  .route-d{margin-bottom:12px;font-size:14px;line-height:1.55}
+  .route-links span:not(.route-more){display:none}
+  .route-more{padding-top:0;font-size:14px}
+
+  .hub-pillars{padding:0 18px 26px;background:var(--bone)}
+  .hub-pillars .sechead{margin-bottom:12px}
+  .hub-pillars .h2-sm,.hub-pillars .body-s{display:none}
+  .pillars-row1,.pillars-row2{display:flex;flex-direction:column;gap:1px;background:var(--border);margin:0}
+  .pillars-row1{border-radius:16px 16px 0 0;overflow:hidden;margin-bottom:1px}
+  .pillars-row2{border-radius:0 0 16px 16px;overflow:hidden}
+  .pillar{border:0;border-radius:0;padding:16px 18px;flex-direction:row;justify-content:space-between;align-items:center;gap:12px}
+  .pillar-body{display:block;min-width:0}
+  .pillar-head{display:none}
+  .pillar-t,.pillar-t-lg{font:600 17px/1.25 var(--display);margin:0}
+  .pillar-count{display:block;font:300 13px/1.4 var(--sans);color:var(--text-3);margin:0}
+  .pillar-d,.pillar-tags{display:none}
+
+  .hub-myths{padding:26px 18px}
+  .hub-myths .sechead{margin-bottom:14px}
+  .hub-myths .h2-sm,.hub-myths .body-s{display:none}
+  .hub-myths .eyebrow{margin-bottom:14px}
+  .myth-grid{gap:10px}
+  .mythcard{border-radius:14px;padding:18px 20px;flex-direction:column;gap:0}
+  .myth-tag{font-size:11px;border-radius:5px;padding:6px 9px;align-self:flex-start}
+  .myth-q{margin:12px 0 6px;font:500 17px/1.35 var(--sans)}
+  .myth-a{font-size:14px;line-height:1.55}
+  .myth-3,.myth-4{display:none}
+  .myth-more{display:block;margin-top:14px;font:600 14px/1 var(--sans);color:var(--spring-500)}
+  .hub-myths .disclaimer{display:none}
+
+  .hub-latest{padding:26px 18px;gap:24px}
+  .artcard{grid-template-columns:1fr}
+  .art-media{min-height:150px}
+
+  .cta-band{padding:26px 18px}
+  .site-footer{padding:28px 18px;gap:28px}
+
+  /* Section headings the mockups shrink on mobile */
+  .sec-h{font-size:28px;line-height:1.1}
+  .cta-h2{font-size:26px;line-height:1.1}
+  .cta-lede{font-size:16px}
+  .latest-h{font-size:26px}
+
+  /* Case studies: one column, media above copy, tighter type. */
+  .casegrid,.casestrip{grid-template-columns:1fr;gap:12px}
+  .case-feat .case-inner,.casestrip .case-inner{grid-template-columns:1fr}
+  .case-body,.case-feat .case-body,.casestrip .case-body{padding:20px 18px 22px}
+  .case-t,.case-feat .case-t,.casestrip .case-t{font-size:22px;line-height:1.15}
+  .case-q,.case-feat .case-q,.casestrip .case-q{font-size:16px;line-height:1.6}
+  .case-d{font-size:15px}
+  .case-metrics{gap:8px;margin-bottom:18px}
+  .metric{flex:1 1 130px;padding:11px 14px}
+  .metric-v{font-size:19px}
+  .case-note{font-size:13px}
+}

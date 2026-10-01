@@ -1,0 +1,491 @@
+/* ==========================================================
+   BOOKING (§04), 420px rail + panel, per the mockup
+   ========================================================== */
+.bk{
+  display:grid;grid-template-columns:420px 1fr;min-height:760px;
+  border:1px solid var(--border);border-radius:24px;overflow:hidden;background:var(--bone);
+}
+@media (max-width:1000px){ .bk{grid-template-columns:1fr;min-height:0} }
+
+/* ---- Rail ---- */
+.bk-rail{background:var(--forest-900);padding:34px 36px;display:flex;flex-direction:column}
+.bk-rail .wordmark{margin-bottom:44px}
+.bk-rail h1{margin:0 0 8px;font:600 34px/1.1 var(--display);letter-spacing:-.03em;color:var(--bone)}
+.bk-lede{margin:0 0 34px;font:300 16px/1.6 var(--sans);color:var(--on-dark-2)}
+.bk-steps{display:flex;flex-direction:column;gap:20px;margin-bottom:36px}
+.bk-stepitem{display:flex;gap:14px;align-items:center}
+.bk-dot{
+  width:26px;height:26px;border-radius:50%;flex:none;text-align:center;
+  border:1.5px solid #3B5942;color:#6E8A76;font:600 12px/23px var(--sans);
+}
+.bk-dot.is-current{background:var(--bone);color:var(--forest-900);border-color:var(--bone);line-height:26px}
+.bk-dot.is-done{background:var(--spring-500);color:var(--ink-950);border-color:var(--spring-500);line-height:26px}
+.bk-steplabel{margin:0;font:400 15px/1.3 var(--sans);color:var(--on-dark-2)}
+.bk-steplabel.is-current{font-weight:600;color:var(--bone)}
+.bk-summary{background:var(--w-08);border:1px solid #ffffff1a;border-radius:16px;padding:20px 22px;margin-top:auto}
+.bk-summary dl{display:flex;flex-direction:column;gap:13px;margin:0}
+.bk-summary dl>div{display:flex;justify-content:space-between;gap:16px}
+.bk-summary dt{font:300 14px/1.4 var(--sans);color:var(--on-dark-2);flex:none}
+.bk-summary dd{margin:0;font:500 14px/1.4 var(--sans);color:var(--bone);text-align:right}
+.bk-note{margin:20px 0 0;font:300 13px/1.6 var(--sans);color:var(--on-dark-3)}
+@media (max-width:1000px){
+  .bk-rail{padding:26px var(--pad-x)}
+  .bk-rail .wordmark{margin-bottom:26px}
+  .bk-steps{flex-direction:row;justify-content:space-between;gap:8px;margin-bottom:24px}
+  .bk-steplabel{display:none}
+  .bk-summary{margin-top:0}
+}
+
+/* ---- Panel ---- */
+.bk-panel{padding:44px 48px;display:flex;flex-direction:column;background:var(--bone)}
+@media (max-width:700px){ .bk-panel{padding:28px var(--pad-x)} }
+.bk-stephead{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:26px}
+.bk-eyebrow{margin:0 0 8px;font:600 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.bk-h{margin:0;font:600 32px/1.1 var(--display);letter-spacing:-.03em;color:var(--forest-900)}
+.bk-h:focus{outline:none}
+.bk-h:focus-visible{outline:2px solid var(--ink-950);outline-offset:4px}
+@media (max-width:640px){ .bk-stephead{flex-direction:column;gap:16px} .bk-h{font-size:26px} }
+
+/* Segmented toggle */
+.segment{display:flex;gap:2px;background:var(--sand);border-radius:999px;padding:4px;flex:none}
+.segment button{
+  border:0;background:transparent;border-radius:999px;padding:11px 18px;cursor:pointer;
+  font:500 14px/1 var(--sans);color:var(--text-2);min-height:40px;
+}
+.segment button[aria-pressed="true"]{background:var(--spring-500);color:var(--ink-950);font-weight:600}
+
+/* Service type radios */
+.bk-typelist{display:flex;flex-direction:column;gap:12px}
+.bk-type{
+  display:flex;gap:16px;align-items:flex-start;width:100%;text-align:left;
+  background:#fff;border:1px solid var(--border);border-radius:16px;padding:21px 23px;cursor:pointer;
+}
+.bk-type:hover{border-color:var(--forest-600)}
+.bk-type.is-on{border:1.5px solid var(--brand-800);padding:20.5px 22.5px}
+.bk-radio{width:20px;height:20px;border-radius:50%;flex:none;margin-top:3px;border:1.5px solid var(--hairline);background:#fff}
+.bk-type.is-on .bk-radio{border:6px solid var(--brand-800);background:var(--spring-500)}
+.bk-type>span:last-child{flex:1;display:block}
+.bk-typetop{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bk-typename{display:block;font:600 16px/1.35 var(--sans);color:var(--text)}
+.bk-typedesc{display:block;margin-top:5px;font:400 14px/1.55 var(--sans);color:var(--body)}
+.bk-typemeta{display:block;margin-top:8px;font:500 13px/1 var(--sans);color:var(--brand-800)}
+.tag-start{font:500 12px/1 var(--sans);color:var(--ink-950);background:var(--spring-500);border-radius:6px;padding:7px 10px;flex:none}
+
+/* Calendar card */
+.bk-cal{background:var(--paper);border:1px solid var(--border);border-radius:20px;padding:24px 26px 26px}
+.bk-calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.bk-month{margin:0;font:600 16px/1 var(--sans);color:var(--text)}
+.bk-nav{display:flex;gap:8px}
+.bk-nav span{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
+.bk-nav span:last-child{color:var(--brand-800)}
+.bk-daybar{display:flex;gap:8px;margin-bottom:22px}
+.bk-day{
+  display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;cursor:pointer;
+  background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 0;min-height:44px;
+}
+.bk-day:hover{border-color:var(--forest-600)}
+.bk-day.is-active{background:var(--brand-800);border-color:var(--brand-800)}
+.bk-dow{margin:0;font:500 12px/1 var(--sans);color:var(--muted)}
+.bk-day.is-active .bk-dow{color:#8FD69A}
+.bk-num{margin:0;font:600 20px/1.15 var(--display);color:var(--text)}
+.bk-day.is-active .bk-num{color:var(--bone)}
+.bk-day.is-closed .bk-num{color:#B6BEB8}
+.bk-availdot{width:4px;height:4px;border-radius:50%;background:var(--spring-500)}
+.bk-day.is-closed .bk-availdot{background:#D6D2C4}
+.bk-slotlabel{margin:0 0 12px;font:500 14px/1 var(--sans);color:var(--body)}
+.bk-slotgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.slot-btn{
+  padding:13px 6px;border-radius:6px;background:#fff;border:1px solid var(--border);
+  font:500 14px/1 var(--sans);color:var(--text-2);text-align:center;cursor:pointer;min-height:44px;
+}
+.slot-btn:hover:not([disabled]){border-color:var(--forest-600)}
+.slot-btn[aria-pressed="true"]{background:var(--spring-500);border-color:var(--spring-500);color:var(--ink-950);font-weight:600}
+.slot-btn[disabled]{background:#F3F1E9;border-color:var(--sand);color:#B6BEB8;text-decoration:line-through;cursor:not-allowed}
+@media (max-width:520px){ .bk-slotgrid{grid-template-columns:repeat(3,1fr)} }
+.bk-noslots{text-align:center;background:#fff;border:1px dashed var(--hairline);border-radius:14px;padding:34px 20px}
+.bk-noslots-t{margin:0 0 5px;font:600 17px/1.3 var(--sans);color:var(--text)}
+.bk-noslots-d{margin:0 0 16px;font:300 15px/1.5 var(--sans);color:var(--text-3)}
+.bk-hold{margin:16px 0 0;font:300 13px/1.6 var(--sans);color:var(--text-3)}
+
+/* Details form */
+.bk-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.bk-fields .span2{grid-column:1/-1}
+@media (max-width:640px){ .bk-fields{grid-template-columns:1fr} }
+.field-label{display:block;margin-bottom:7px;font:500 14px/1 var(--sans);color:var(--text-2)}
+.input,.textarea{
+  width:100%;background:#fff;border:1px solid var(--border);border-radius:12px;
+  padding:13px 15px;font:400 16px/1.35 var(--sans);color:var(--text);
+}
+.input::placeholder,.textarea::placeholder{color:#9AA79E}
+.input:focus,.textarea:focus{outline:2px solid var(--ink-950);outline-offset:2px;border-color:var(--brand-800)}
+.input[aria-invalid="true"],.textarea[aria-invalid="true"]{border:1.5px solid var(--error)}
+.textarea{min-height:104px;resize:vertical;line-height:1.55}
+.field-hint{display:block;margin-top:6px;font:300 13px/1.5 var(--sans);color:var(--text-3)}
+.bk-consent{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;padding:0;cursor:pointer}
+.bk-checkbox{
+  width:22px;height:22px;border-radius:6px;flex:none;margin-top:2px;background:#fff;
+  border:1.5px solid var(--hairline);display:grid;place-items:center;color:transparent;font:600 13px/1 var(--sans);
+}
+.bk-consent.is-on .bk-checkbox{background:var(--brand-800);border-color:var(--brand-800);color:var(--bone)}
+.bk-consent.is-on .bk-checkbox::after{content:"✓"}
+.notice{display:block;padding:16px 18px;border-radius:12px;font:400 15px/1.55 var(--sans)}
+.notice-error{background:#F7E4E0;color:#8A2617}
+.notice-info{background:var(--sand);color:var(--text-2)}
+
+/* Review */
+.bk-review{border-top:1px solid var(--border)}
+.bk-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:18px 0;border-bottom:1px solid var(--border)}
+.bk-row dt{font:400 13px/1.5 var(--sans);color:var(--muted);margin-bottom:3px}
+.bk-row dd{margin:0;font:500 16px/1.45 var(--sans);color:var(--text)}
+.bk-edit{background:none;border:0;cursor:pointer;flex:none;font:500 14px/1 var(--sans);color:var(--brand-800);text-decoration:underline;min-height:44px;padding:0 2px}
+
+/* Actions */
+.bk-actions{display:flex;align-items:center;gap:16px;margin-top:auto;padding-top:32px}
+.bk-hint{margin:0;flex:1;font:300 14px/1.5 var(--sans);color:var(--text-3)}
+.btn-disabled{background:var(--sand);color:#9AA79E;cursor:not-allowed}
+.bk-linkbtn{background:none;border:0;cursor:pointer;min-height:44px;font:500 15px/1 var(--sans);color:var(--text-2);padding:0 4px}
+.bk-linkbtn:hover{color:var(--brand-800)}
+
+/* Loading + done */
+.bk-loadwrap{display:flex;flex-direction:column;gap:16px;padding:48px 0}
+.bk-skel{height:14px;border-radius:6px;background:var(--sand)}
+.bk-skel:nth-child(2){width:70%}
+.bk-skel:nth-child(3){width:45%}
+.bk-donemark{width:56px;height:56px;border-radius:50%;background:var(--spring-500);display:grid;place-items:center;font:600 26px/1 var(--sans);color:var(--ink-950);margin-bottom:24px}
+.bk-checklist{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+.bk-checklist li{display:flex;gap:10px;font:300 15px/1.6 var(--sans);color:var(--text-2)}
+.bk-checklist li::before{content:"–";color:var(--forest-600);flex:none}
+
+/* ---- Responsive: day picker per the §04 mobile spec ---- */
+@media (max-width:560px){
+  .bk-cal{padding:18px 16px 18px}
+  .bk-daybar{gap:6px;margin-bottom:20px}
+  .bk-day{padding:11px 0;border-radius:12px}
+  .bk-dow{font-size:11px}
+  .bk-num{font-size:19px}
+  .bk-availdot{display:none}          /* the mobile spec drops the dot */
+  .bk-slotgrid{grid-template-columns:repeat(3,1fr)}
+  .segment{width:100%}
+  .segment button{flex:1;padding:12px 0;text-align:center}
+  .bk-actions{flex-wrap:wrap;gap:12px}
+  .bk-actions .btn{width:100%;order:3}
+  .bk-hint{order:2;flex:1 0 100%}
+  .bk-linkbtn{order:1}
+}
+@media (max-width:1000px){
+  .bk{border-radius:0;border-left:0;border-right:0}
+}
+
+/* Segment buttons must also meet the 44px floor on touch. */
+@media (pointer:coarse){
+  .segment button{min-height:44px}
+  .bk-type{padding:18px 20px}
+  .bk-type.is-on{padding:17.5px 19.5px}
+}
+@media (max-width:560px){
+  .segment button{padding:14px 0}
+}
+
+
+/* ==========================================================
+   BOOKING MOBILE (04 mobile), compact forest header with a
+   progress bar replaces the 420 rail.
+   ========================================================== */
+.bk-mhead{display:none}
+@media (max-width:700px){
+  .bk{display:block;border:0;border-radius:0;min-height:0}
+  .bk-rail{padding:16px 18px 20px;display:block}
+  .bk-rail>a,.bk-rail h1,.bk-lede,.bk-steps,.bk-summary,.bk-note{display:none}
+
+  .bk-mhead{display:block}
+  .bk-mtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
+  .bk-mtop .wordmark{width:80px;height:27px;margin:0}
+  .bk-mback,.bk-mexit{font:500 15px/1 var(--sans);color:var(--on-dark-2);background:none;border:0;cursor:pointer;padding:6px 2px;min-height:44px;display:inline-flex;align-items:center}
+  .bk-mback[hidden]{display:none}
+  .bk-progress{display:flex;gap:5px;margin-bottom:14px}
+  .bk-progress span{flex:1;height:3px;border-radius:2px;background:var(--w-26)}
+  .bk-progress span.on{background:var(--spring-500)}
+  .bk-meyebrow{margin:0 0 4px;font:600 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--spring-500)}
+  .bk-mtitle{margin:0;font:600 28px/1.1 var(--display);letter-spacing:-.03em;color:var(--bone)}
+
+  .bk-mdone{display:none}
+  .bk-mdone .bk-donemark{width:54px;height:54px;margin-bottom:18px}
+  .bk-mdone h2{margin:0 0 8px;font:600 30px/1.08 var(--display);letter-spacing:-.03em;color:var(--bone)}
+  .bk-mdone p{margin:0;font:300 16px/1.6 var(--sans);color:var(--on-dark)}
+  .bk-rail.is-done .bk-mtop{justify-content:center;margin-bottom:20px}
+  .bk-rail.is-done .bk-mback,.bk-rail.is-done .bk-mexit,
+  .bk-rail.is-done .bk-progress,.bk-rail.is-done .bk-meyebrow,
+  .bk-rail.is-done .bk-mtitle{display:none}
+  .bk-rail.is-done .bk-mdone{display:block}
+
+  .bk-panel{padding:20px 18px 18px}
+  /* The eyebrow and title move into the forest header; the step's
+     segmented toggle must stay in the panel. */
+  .bk-stephead{display:block;margin:0}
+  .bk-stephead>div:first-child{display:none}
+  .bk-stephead .segment{margin-bottom:18px}
+  .segment{width:100%}
+  .segment button{flex:1;padding:12px 0;text-align:center}
+  .bk-cal{background:none;border:0;border-radius:0;padding:0}
+  .bk-calhead{display:none}
+  .bk-daybar{gap:6px;margin-bottom:20px}
+  .bk-day{padding:11px 0;border-radius:12px}
+  .bk-dow{font-size:11px}
+  .bk-num{font-size:19px}
+  .bk-availdot{display:none}
+  .bk-slotgrid{grid-template-columns:repeat(4,1fr);gap:8px}
+  .bk-actions{padding-top:20px;display:block}
+  .bk-actions .btn{display:block;width:100%;padding:17px 0}
+  .bk-hint{margin:0 0 12px}
+  #bk-back{display:none}
+
+  /* Success body */
+  #bk-done .bk-donemark,#bk-done .bk-h,#bk-done>.body-m{display:none}
+  #bk-done .h6{margin:0 0 12px;font:600 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .bk-checklist{gap:1px;background:var(--border);border-radius:14px;overflow:hidden;margin:0 0 20px}
+  .bk-checklist li{background:var(--paper);padding:14px 16px;font:300 15px/1.5 var(--sans);color:var(--text-2);display:block}
+  .bk-checklist li::before{content:none}
+  #bk-done .btn,#bk-done .bk-linkbtn{display:block;width:100%;text-align:center;padding:17px 0;margin-bottom:10px}
+  #bk-done>div:last-child{display:block}
+}
+
+.bk-doneactions{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap;align-items:center}
+@media (max-width:700px){
+  .bk-doneactions{display:block;margin-top:0}
+  .bk-doneactions .btn{display:block;width:100%;text-align:center;padding:17px 0;margin-bottom:10px}
+  .bk-doneactions .bk-linkbtn{display:block;width:100%;text-align:center;padding:8px 0}
+}
+
+
+/* ==========================================================
+   BOOKING MODAL, the flow presented over the current page
+   ========================================================== */
+html.modal-open{overflow:hidden}
+
+dialog.modal{
+  padding:0;border:0;background:transparent;
+  max-width:none;max-height:none;overflow:visible;
+  width:min(1120px, calc(100vw - 48px));
+  height:min(820px, calc(100vh - 48px));
+  opacity:0;transform:translateY(14px) scale(.985);
+  transition:opacity .22s ease, transform .26s cubic-bezier(.2,.8,.2,1);
+}
+dialog.modal.is-open{opacity:1;transform:none}
+dialog.modal::backdrop{background:rgba(8,25,14,0);transition:background .24s ease}
+dialog.modal.is-open::backdrop{background:rgba(8,25,14,.72)}
+
+.modal-body{
+  height:100%;border-radius:22px;overflow:hidden;
+  background:var(--bone);box-shadow:0 24px 60px rgba(8,25,14,.34);
+}
+.modal-body .bk{height:100%;min-height:0;border:0;border-radius:0}
+.modal-body .bk-rail,.modal-body .bk-panel{overflow-y:auto}
+
+.modal-close{
+  position:absolute;top:14px;right:14px;z-index:3;
+  width:40px;height:40px;border-radius:50%;padding:0;cursor:pointer;
+  background:var(--bone);border:1px solid var(--border);color:var(--ink-950);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 1px 2px rgba(14,42,23,.14);
+}
+.modal-close:hover{background:#fff;border-color:var(--muted)}
+.modal-close svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+@media (pointer:coarse){ .modal-close{width:44px;height:44px} }
+
+@media (max-width:700px){
+  dialog.modal{
+    width:100vw;height:100dvh;max-width:100vw;
+    transform:translateY(22px) scale(1);
+  }
+  .modal-body{border-radius:0;overflow-y:auto}
+  .modal-body .bk{height:auto;min-height:100%}
+  .modal-body .bk-rail,.modal-body .bk-panel{overflow:visible}
+  .modal-close{top:12px;right:12px}
+  /* The X replaces the flow's own Exit affordance inside the modal. */
+  .modal-body .bk-mexit{display:none}
+  .modal-body .bk-mtop{padding-right:44px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  dialog.modal{transition:none;transform:none}
+  dialog.modal::backdrop{transition:none}
+}
+
+
+/* ---- Fitting the flow inside the dialog ----
+   Short viewports made step 1 scroll (panel needed 790px, rail 760px).
+   These tiers trade only whitespace: no type size, colour, radius or
+   component structure changes, and they engage solely when the height
+   actually demands it. Guarded above the mobile breakpoint so the
+   full-screen mobile modal keeps its own 18px gutters. */
+@media (min-width:701px) and (max-height:840px){
+  dialog.modal{height:min(820px, calc(100vh - 32px))}
+  .modal-body .bk-panel{padding:32px 48px}
+  .modal-body .bk-stephead{margin-bottom:18px}
+  .modal-body .bk-typelist{gap:10px}
+  .modal-body .bk-type{padding:16px 22px}
+  .modal-body .bk-type.is-on{padding:15.5px 21.5px}
+  .modal-body .bk-actions{padding-top:22px}
+  .modal-body .bk-rail{padding:28px 36px}
+  .modal-body .bk-rail .wordmark{margin-bottom:24px}
+  .modal-body .bk-lede{margin-bottom:22px}
+  .modal-body .bk-steps{gap:14px;margin-bottom:24px}
+  .modal-body .bk-note{margin-top:16px}
+}
+
+@media (min-width:701px) and (max-height:750px){
+  dialog.modal{height:calc(100vh - 24px)}
+  .modal-body .bk-panel{padding:24px 44px}
+  .modal-body .bk-stephead{margin-bottom:14px}
+  .modal-body .bk-typelist{gap:8px}
+  .modal-body .bk-type{padding:13px 20px}
+  .modal-body .bk-type.is-on{padding:12.5px 19.5px}
+  .modal-body .bk-actions{padding-top:16px}
+  .modal-body .bk-rail{padding:22px 32px}
+  .modal-body .bk-rail .wordmark{margin-bottom:18px}
+  .modal-body .bk-lede{margin-bottom:16px}
+  .modal-body .bk-steps{gap:12px;margin-bottom:18px}
+  .modal-body .bk-summary{padding:16px 20px}
+  .modal-body .bk-summary dl{gap:10px}
+  .modal-body .bk-note{margin-top:12px}
+}
+
+@media (min-width:701px) and (max-height:680px){
+  dialog.modal{height:calc(100vh - 20px)}
+  .modal-body .bk-panel{padding:20px 40px}
+  .modal-body .bk-stephead{margin-bottom:12px}
+  .modal-body .bk-type{padding:11px 18px}
+  .modal-body .bk-type.is-on{padding:10.5px 17.5px}
+  .modal-body .bk-typelist{gap:7px}
+  .modal-body .bk-actions{padding-top:12px}
+  .modal-body .bk-row{padding:13px 0}
+  .modal-body #step4 .notice{margin-top:14px !important;padding:12px 16px}
+  .modal-body .bk-rail{padding:18px 28px}
+  .modal-body .bk-rail .wordmark{margin-bottom:14px}
+  .modal-body .bk-lede{margin-bottom:14px}
+  .modal-body .bk-steps{gap:10px;margin-bottom:14px}
+  .modal-body .bk-summary{padding:14px 18px}
+  .modal-body .bk-summary dl{gap:8px}
+}
+
+.bk-consentwrap{margin-top:24px}
+
+/* ---- Mobile: fit the flow in the full-screen dialog ----
+   Whitespace only. Type sizes, copy and component structure are the
+   ones the 390 mockups specify. */
+@media (max-width:700px){
+  .modal-body .bk-panel{padding:14px 18px 14px}
+  .modal-body .bk-rail{padding:14px 18px 12px}
+  .modal-body .bk-stephead .segment{margin-bottom:12px}
+  .modal-body .bk-typelist{gap:8px}
+  .modal-body .bk-type{padding:12px 18px}
+  .modal-body .bk-type.is-on{padding:11.5px 17.5px}
+  .modal-body .bk-typedesc{margin-top:2px}
+  .modal-body .bk-typemeta{margin-top:4px}
+  .modal-body .bk-actions{padding-top:11px}
+  .modal-body .bk-fields{gap:10px}
+  .modal-body .textarea{min-height:78px}
+  .modal-body .bk-consentwrap{margin-top:14px}
+  .modal-body .bk-cal{padding:0}
+  .modal-body .bk-hold{margin-top:12px}
+}
+
+
+/* ==========================================================
+   Booking hover and focus motion
+   These controls already changed colour on hover but did it
+   instantly, with no transition declared. This eases them and
+   adds a small amount of movement to the things you click
+   most: the type cards, the day picker and the time slots.
+   ========================================================== */
+.bk-type,.bk-day,.slot-btn,.segment button,.modal-close,.bk-linkbtn,.bk-edit{
+  transition:background-color var(--t-tint),border-color var(--t-tint),
+             color var(--t-tint),transform var(--t-move) var(--ease-out),
+             box-shadow var(--t-move) var(--ease-out)}
+
+@media (hover:hover) and (pointer:fine){
+  .bk-type:hover{transform:translateY(-2px);box-shadow:var(--lift-sm)}
+  .bk-day:hover:not(.is-closed){transform:translateY(-2px)}
+  .slot-btn:hover:not([disabled]):not([aria-pressed="true"]){
+    transform:translateY(-1px);background:var(--spring-50);border-color:var(--forest-600)}
+  .segment button:hover:not([aria-pressed="true"]){background:#ffffffb8}
+  .modal-close:hover{transform:scale(1.08);box-shadow:0 3px 10px rgba(14,42,23,.20)}
+  .bk-linkbtn:hover,.bk-edit:hover{color:var(--brand-800)}
+}
+
+/* A selected day or slot is already committed, so it should not keep
+   floating under the cursor. */
+@media (hover:hover) and (pointer:fine){
+  .bk-day.is-active:hover,.slot-btn[aria-pressed="true"]:hover{transform:none}
+}
+
+/* The closed days are genuinely not clickable, so they get nothing. */
+.bk-day.is-closed{cursor:not-allowed}
+.slot-btn[disabled]{cursor:not-allowed}
+
+@media (prefers-reduced-motion:reduce){
+  .bk-type:hover,.bk-day:hover,.slot-btn:hover,.modal-close:hover{
+    transform:none !important;box-shadow:none !important}
+}
+
+
+/* ==========================================================
+   Booking: the controls the first pass missed
+   The type cards, day picker, slots, segment and close button
+   were covered above. These still had no transition at all.
+   ========================================================== */
+
+/* ---- Consent toggle: a role=checkbox button, and a required step ---- */
+.bk-consent{transition:color var(--t-tint)}
+.bk-checkbox{transition:border-color var(--t-tint),background-color var(--t-tint),
+  color var(--t-tint),transform var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .bk-consent:hover .bk-checkbox{border-color:var(--brand-800)}
+  .bk-consent:not(.is-on):hover .bk-checkbox{transform:scale(1.08)}
+}
+.bk-consent:focus-visible .bk-checkbox{border-color:var(--brand-800)}
+.bk-consent:active .bk-checkbox{transform:scale(.92);transition-duration:.06s}
+
+/* ---- The radio answers when its card is hovered ----
+   :not(.is-on) keeps a chosen card's 6px brand ring from being
+   recoloured, since both selectors carry the same weight. */
+.bk-radio{transition:border-color var(--t-tint),background-color var(--t-tint),
+  transform var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .bk-type:not(.is-on):hover .bk-radio{border-color:var(--forest-600)}
+}
+
+/* ---- Fields ----
+   Only one field is ever under the cursor, so the hover can be explicit:
+   a forest border with a pale mint ring. That stays clearly distinct from
+   the focus state, which is a dark 2px outline, and from the error state,
+   which keeps its red border and is excluded below.
+   Used by the booking flow and the contact form, which share these
+   classes. */
+.input,.textarea{transition:border-color var(--t-tint),box-shadow var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .input:hover:not(:focus):not([aria-invalid="true"]),
+  .textarea:hover:not(:focus):not([aria-invalid="true"]){
+    border-color:var(--forest-600);box-shadow:0 0 0 3px var(--spring-50)}
+}
+
+/* The label belongs to the field, so it answers with it. :focus-within
+   covers the keyboard case without needing :has(). */
+.field-label{transition:color var(--t-tint)}
+@media (hover:hover) and (pointer:fine){
+  .bk-fields p:hover .field-label{color:var(--brand-800)}
+}
+.bk-fields p:focus-within .field-label{color:var(--brand-800)}
+
+/* ---- Mobile header controls on the forest bar ---- */
+.bk-mback,.bk-mexit{transition:color var(--t-tint),transform var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .bk-mback:hover,.bk-mexit:hover{color:var(--bone)}
+  .bk-mback:hover{transform:translateX(-3px)}
+}
+.bk-mback:active,.bk-mexit:active{transform:scale(.96);transition-duration:.06s}
+
+@media (prefers-reduced-motion:reduce){
+  .bk-consent:hover .bk-checkbox,.bk-consent:active .bk-checkbox,
+  .bk-mback:hover,.bk-mback:active,.bk-mexit:active{transform:none !important}
+}

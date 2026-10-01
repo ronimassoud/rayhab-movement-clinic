@@ -1,0 +1,19 @@
+# Normalise text to LF in the repository, check out native on each platform.
+# Explicit here so the repo does not depend on anyone's core.autocrlf setting.
+* text=auto
+
+*.html  text
+*.css   text
+*.js    text
+*.json  text
+*.py    text
+*.md    text
+*.txt   text
+*.xml   text
+
+# Binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.docx binary

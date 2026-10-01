@@ -1,0 +1,1251 @@
+/* ==========================================================
+   Rayhab Movement Clinic
+   Implemented from the SPECIFIED SCREENS in "Rayhab UI.dc.html"
+   (§03 service detail, §04 booking, §05 home, §06 services index,
+   §07 scoliosis hub), values taken from the mockup markup itself,
+   not from the summary table in §02.
+   ========================================================== */
+
+:root{
+  /* Forest */
+  --ink-950:#08190E;
+  --forest-900:#0E2A17;
+  --forest-850:#123018;
+  --brand-800:#174924;
+  --forest-700:#1F5C2E;
+  --forest-600:#2A7440;
+
+  /* Spring */
+  --spring-pressed:#3DBF48;
+  --spring-hover:#4FD65A;
+  --spring-500:#62E36B;
+  --spring-200:#A8F0AC;
+  --spring-50:#DFF8E1;
+
+  /* Warm neutrals */
+  --paper:#FBFAF5;
+  --bone:#F5F3EC;
+  --sand:#EFEDE4;
+  --border:#DCD8CB;
+  --hairline:#C3CEC5;
+  --error:#C4442F;
+
+  /* Text; note --body is #5A6A5E, used throughout the screens */
+  --text:#101C13;
+  --body:#5A6A5E;
+  --text-2:#3E4C43;
+  --text-3:#6C7A70;
+  --muted:#8A9490;
+  --on-dark:#B4C7B8;
+  --on-dark-2:#8FA994;
+  --on-dark-3:#6E8A76;
+  --nav-link:#C6D8C9;
+  --foot-head:#4A6650;
+  --dot-dark:#2F4A38;
+  --on-spring:#123018;
+
+  /* Translucent whites used on forest */
+  --w-08:#ffffff0f;
+  --w-12:#ffffff12;
+  --w-14:#ffffff14;
+  --w-1f:#ffffff1f;
+  --w-26:#ffffff26;
+
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --sans:"Public Sans",system-ui,-apple-system,sans-serif;
+
+  --pad-x:40px;      /* section side padding, per the 1440 mockups */
+  --pad-y:80px;      /* section rhythm in the mockups */
+}
+@media (max-width:900px){ :root{ --pad-x:24px; --pad-y:56px; } }
+@media (max-width:560px){ :root{ --pad-x:20px; --pad-y:44px; } }
+
+/* ---- Reset ---- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bone);color:var(--text);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+svg{display:block}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4,p,figure,blockquote,ul,ol{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+[hidden]{display:none !important}
+:focus-visible{outline:2px solid var(--ink-950);outline-offset:3px;border-radius:2px}
+.on-dark :focus-visible,.site-nav :focus-visible,.site-footer :focus-visible{outline-color:var(--spring-500)}
+.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--spring-500);color:var(--ink-950);padding:12px 20px;font-weight:600}
+.skip:focus{left:0}
+.vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important}}
+
+/* ---- Frame: the mockups are 1440 wide ---- */
+.frame{max-width:1440px;margin:0 auto;background:var(--bone)}
+.band{padding:var(--pad-y) var(--pad-x)}
+
+/* ---- Type ---- */
+.d1{font:600 74px/1.0 var(--display);letter-spacing:-.042em;margin:0}
+.h1{font:600 66px/1.02 var(--display);letter-spacing:-.04em;margin:0}
+.h2{font:600 46px/1.08 var(--display);letter-spacing:-.035em;margin:0}
+.h2-sm{font:600 42px/1.08 var(--display);letter-spacing:-.035em;margin:0}
+.h3{font:600 40px/1.05 var(--display);letter-spacing:-.035em;margin:0}
+.h4{font:600 30px/1.1 var(--display);letter-spacing:-.03em;margin:0}
+.h5{font:600 21px/1.25 var(--display);letter-spacing:-.02em;margin:0}
+.h6{font:600 19px/1.3 var(--display);margin:0}
+.eyebrow{font:600 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0}
+.lede{font:300 20px/1.6 var(--sans);margin:0}
+.body-l{font:300 19px/1.7 var(--sans);margin:0}
+.body-m{font:300 18px/1.65 var(--sans);margin:0}
+.body-s{font:300 15px/1.6 var(--sans);color:var(--body);margin:0}
+.body-xs{font:300 14px/1.6 var(--sans);margin:0}
+.quote{font:400 18px/1.55 var(--sans);margin:0}
+
+@media (max-width:1200px){
+  .d1{font-size:58px} .h1{font-size:52px} .h2,.h2-sm{font-size:38px} .h3{font-size:34px}
+}
+@media (max-width:760px){
+  .d1{font-size:40px;line-height:1.04;letter-spacing:-.03em}
+  .h1{font-size:36px} .h2,.h2-sm{font-size:30px;line-height:1.1} .h3{font-size:28px}
+  .h4{font-size:24px} .lede{font-size:17px} .body-l,.body-m{font-size:16px;line-height:1.6}
+}
+
+.on-dark{color:var(--bone)}
+.dim{color:var(--body)}
+
+/* ---- Nav: pill group, active item is a spring pill ---- */
+.site-nav{background:var(--forest-900);padding:18px var(--pad-x);display:flex;align-items:center;justify-content:space-between;gap:32px;position:sticky;top:0;z-index:100}
+.wordmark{display:block;width:112px;height:37px;flex:none;background:var(--bone);
+  -webkit-mask:url(../img/rayhab-wordmark.png) left center/contain no-repeat;
+  mask:url(../img/rayhab-wordmark.png) left center/contain no-repeat}
+.navgroup{display:flex;align-items:center;gap:4px;background:var(--w-08);border-radius:999px;padding:5px}
+.navgroup a,.navgroup span{font:400 14px/1 var(--sans);color:var(--nav-link);padding:10px 16px;border-radius:999px;white-space:nowrap}
+.navgroup a:hover{color:var(--bone);background:var(--w-08)}
+.navgroup [aria-current="page"]{font-weight:500;color:var(--ink-950);background:var(--spring-500)}
+.navgroup .soon{color:#7E9585;cursor:default}
+.nav-right{display:flex;align-items:center;gap:14px;flex:none}
+.nav-meta{font:400 14px/1 var(--sans);color:var(--on-dark-2)}
+.nav-toggle{display:none;width:44px;height:44px;padding:0;background:transparent;border:1px solid var(--w-26);border-radius:10px;cursor:pointer;align-items:center;justify-content:center}
+.nav-toggle i{display:block;width:18px;height:1.5px;background:var(--bone);position:relative}
+.nav-toggle i::before,.nav-toggle i::after{content:"";position:absolute;left:0;width:18px;height:1.5px;background:var(--bone)}
+.nav-toggle i::before{top:-6px}.nav-toggle i::after{top:6px}
+.nav-toggle[aria-expanded="true"] i{background:transparent}
+.nav-toggle[aria-expanded="true"] i::before{top:0;transform:rotate(45deg)}
+.nav-toggle[aria-expanded="true"] i::after{top:0;transform:rotate(-45deg)}
+
+@media (max-width:1180px){
+  .site-nav{flex-wrap:wrap;position:relative;gap:14px}
+  .nav-toggle{display:flex;order:2}
+  .nav-right{order:3;margin-left:auto}
+  .nav-meta{display:none}
+  .navgroup{order:4;display:none;width:100%;flex-direction:column;align-items:stretch;gap:2px;border-radius:16px;padding:8px}
+  .navgroup.open{display:flex}
+  .navgroup a,.navgroup span{padding:13px 16px;font-size:16px;text-align:left}
+}
+
+/* ---- Buttons (exact paddings from the screens) ---- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;font:600 16px/1 var(--sans);cursor:pointer;padding:18px 30px;min-height:44px;transition:background-color .15s,border-color .15s,color .15s}
+.btn-spring{background:var(--spring-500);color:var(--ink-950)}
+.btn-spring:hover{background:var(--spring-hover)}
+.btn-spring:active{background:var(--spring-pressed)}
+.btn-forest{background:var(--forest-900);color:var(--bone)}
+.btn-forest:hover{background:var(--brand-800)}
+.btn-ghost-dark{background:var(--w-14);border-color:var(--w-26);color:var(--bone);padding:17px 29px}
+.btn-ghost-dark:hover{background:var(--w-1f)}
+.btn-ghost-light{background:transparent;border-color:var(--hairline);color:var(--brand-800);padding:15px 26px}
+.btn-ghost-light:hover{background:var(--sand)}
+.btn-ghost-ink{background:transparent;border:1px solid #08190E4d;color:var(--ink-950);padding:17px 29px}
+.btn-ghost-ink:hover{background:#08190E14}
+.btn-sm{font-size:14px;padding:12px 20px;min-height:40px}
+.btn-md{padding:16px 28px}
+.btn[disabled],.btn[aria-disabled="true"]{background:var(--sand);color:#9AA79E;border-color:transparent;cursor:not-allowed}
+.textlink{font:600 16px/1 var(--sans);color:var(--brand-800);display:inline-flex;align-items:center;gap:7px;flex:none;transition:gap .15s}
+
+.textlink-dark{color:var(--spring-500)}
+
+/* ---- Section header: heading left, link/note right ---- */
+.sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:34px}
+.sechead .eyebrow{margin-bottom:14px}
+@media (max-width:760px){ .sechead{flex-direction:column;align-items:flex-start;gap:18px} }
+
+/* ---- Image slots; art direction text comes from the canvas ---- */
+.slot{position:relative;background:var(--sand);overflow:hidden;display:grid;place-items:center;padding:24px}
+.slot::before{content:"";position:absolute;inset:0;background-image:
+  linear-gradient(#0e2a170a 1px,transparent 1px),linear-gradient(90deg,#0e2a170a 1px,transparent 1px);
+  background-size:28px 28px}
+.slot-txt{position:relative;font:400 13px/1.5 var(--sans);color:var(--muted);text-align:center;max-width:32ch}
+.slot-dark{background:var(--forest-850)}
+.slot-dark .slot-txt{color:var(--on-dark-3)}
+.slot-dark::before{background-image:
+  linear-gradient(#ffffff0a 1px,transparent 1px),linear-gradient(90deg,#ffffff0a 1px,transparent 1px)}
+.slot-circle{border-radius:50%;padding:0}
+.slot-circle .slot-txt{display:none}
+
+/* ---- Cards ---- */
+.card{background:var(--paper);border:1px solid var(--border);border-radius:18px;padding:26px 26px 28px}
+.card-forest{background:var(--brand-800);border-color:transparent}
+.card-forest .h6{color:var(--bone)}
+.card-forest .body-s{color:var(--on-dark)}
+.chip{display:inline-flex;align-items:center;font:500 13px/1 var(--sans);color:var(--spring-50);background:var(--w-14);border:1px solid var(--w-1f);border-radius:999px;padding:9px 14px}
+.chip-light{color:var(--text-2);background:var(--sand);border-color:transparent}
+
+/* ---- CTA band (spring green, per the spec) ---- */
+.cta-band{background:var(--spring-500);padding:60px var(--pad-x);display:flex;justify-content:space-between;align-items:center;gap:40px}
+.cta-band .h2-sm{color:var(--ink-950);margin-bottom:8px}
+.cta-band .body-m{color:var(--on-spring);max-width:540px}
+.cta-band .btns{display:flex;gap:12px;flex:none;flex-wrap:wrap}
+@media (max-width:900px){ .cta-band{flex-direction:column;align-items:flex-start;gap:28px} }
+
+/* ---- Footer ---- */
+.site-footer{background:var(--ink-950);padding:44px var(--pad-x);display:flex;justify-content:space-between;align-items:flex-start;gap:40px;flex-wrap:wrap}
+.site-footer .wordmark{width:104px;height:35px}
+.foot-tag{margin:12px 0 0;font:500 10px/1 var(--sans);letter-spacing:.3em;color:var(--spring-500)}
+.socials{display:flex;gap:10px;margin-top:22px}
+.socials a{width:38px;height:38px;border-radius:50%;border:1px solid var(--w-26);display:flex;align-items:center;justify-content:center}
+.socials a:hover{border-color:var(--spring-500)}
+.footcols{display:flex;gap:56px;flex-wrap:wrap}
+.footcol{display:flex;flex-direction:column;gap:9px}
+.footcol h2{margin:0 0 3px;font:600 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--foot-head)}
+.footcol a,.footcol span{font:300 14px/1.35 var(--sans);color:var(--on-dark)}
+.footcol a:hover{color:var(--bone)}
+.footcol .soon{color:var(--on-dark-3)}
+@media (max-width:760px){ .footcols{gap:32px} }
+
+/* ---- Credential strip: right-to-left marquee ----
+   The track holds two identical sets, so translating it by exactly -50%
+   lands on the start of the duplicate and the loop is seamless. */
+.credstrip{
+  background:var(--ink-950);padding:22px 0;overflow:hidden;position:relative;
+  --cred-speed:34s;
+}
+.cred-track{
+  display:flex;width:max-content;
+  animation:cred-scroll var(--cred-speed) linear infinite;
+  will-change:transform;
+}
+.credstrip:hover .cred-track,
+.credstrip:focus-within .cred-track{animation-play-state:paused}
+.cred-set{display:flex;align-items:center;gap:24px;padding-right:24px;flex:none}
+.cred-set li{
+  font:500 15px/1.4 var(--sans);color:var(--on-dark-2);
+  display:flex;align-items:center;gap:24px;white-space:nowrap;
+}
+/* every item carries a trailing dot so the rhythm continues across the seam */
+.cred-set li::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--dot-dark);flex:none}
+@keyframes cred-scroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+@media (max-width:900px){
+  .cred-set{gap:16px;padding-right:16px}
+  .cred-set li{font-size:13px;gap:16px}
+}
+
+/* Reduced motion: no movement at all. The duplicate set is dropped and
+   the strip falls back to a static wrapping row. */
+@media (prefers-reduced-motion:reduce){
+  .cred-track{animation-name:none;flex-wrap:wrap}
+  .cred-set[aria-hidden="true"]{display:none}
+  .cred-track{width:auto}
+  .credstrip{padding-inline:var(--pad-x)}
+  .cred-set{flex-wrap:wrap}
+}
+
+/* ---- Breadcrumb ---- */
+.crumbs{display:flex;gap:9px;align-items:center;flex-wrap:wrap;font:400 13px/1 var(--sans);color:var(--muted)}
+.crumbs a:hover{color:var(--brand-800)}
+.crumbs-dark{color:var(--on-dark-2)}
+.crumbs-dark a:hover{color:var(--spring-500)}
+
+/* ---- Accordion ---- */
+.acc-item{border-bottom:1px solid var(--border)}
+.acc-btn{width:100%;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:20px 0;background:none;border:0;cursor:pointer;text-align:left;font:500 18px/1.4 var(--sans);color:var(--text)}
+.acc-btn:hover{color:var(--brand-800)}
+.acc-mark{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;font:400 17px/1 var(--sans);color:var(--brand-800)}
+.acc-btn[aria-expanded="true"] .acc-mark{background:var(--brand-800);border-color:var(--brand-800);color:var(--bone)}
+.acc-panel{padding:0 0 22px;max-width:70ch;font:300 16px/1.65 var(--sans);color:var(--body)}
+.acc-dark .acc-item{border-color:var(--w-1f)}
+.acc-dark .acc-btn{color:var(--bone)}
+.acc-dark .acc-mark{border-color:var(--w-26);color:var(--spring-500)}
+.acc-dark .acc-panel{color:var(--on-dark)}
+
+/* ---- Utility ---- */
+.grid{display:grid}
+.g14{gap:14px}
+.disclaimer{font:300 14px/1.6 var(--sans);color:var(--text-3)}
+.disclaimer-dark{color:var(--on-dark-3)}
+
+/* ==========================================================
+   HOME (§05), grid ratios and sizes taken from the mockup
+   ========================================================== */
+.home-hero{background:var(--forest-900);padding:20px var(--pad-x) 64px;position:relative;overflow:hidden}
+.hero-device{position:absolute;right:-120px;top:-40px;width:620px;height:620px;pointer-events:none;opacity:.5}
+.hero-device svg{width:100%;height:100%}
+.hero-inner{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+.hero-pill{display:inline-flex;align-items:center;gap:9px;background:var(--w-12);border:1px solid var(--w-1f);border-radius:999px;padding:8px 15px;margin-bottom:26px;
+  font:500 12px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--spring-50)}
+.hero-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--spring-500);flex:none}
+.home-hero .d1{color:var(--bone)}
+.hero-lede{margin-top:26px;max-width:580px;color:var(--on-dark)}
+.hero-btns{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
+.hero-media{position:relative}
+.hero-slot{height:560px;border-radius:28px}
+.hero-card{position:absolute;left:20px;bottom:24px;right:20px;background:var(--bone);border-radius:18px;padding:16px 20px;
+  display:flex;justify-content:space-between;align-items:center;gap:18px}
+.hero-card p{margin:0;font:500 15px/1.4 var(--sans);color:var(--text);max-width:260px}
+.hero-card .textlink{font-size:14px}
+@media (max-width:1000px){
+  .hero-inner{grid-template-columns:1fr;gap:36px}
+  .hero-slot{height:380px}
+  .hero-device{right:-200px;opacity:.35}
+}
+
+/* Philosophy */
+.philo{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+.philo-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:1000px){ .philo{grid-template-columns:1fr;gap:36px} }
+@media (max-width:620px){ .philo-cards{grid-template-columns:1fr} }
+
+/* Services split */
+.svc-split{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+.svc-primary{background:var(--forest-900);border-radius:22px;padding:38px 40px;display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:340px}
+.svc-device{position:absolute;right:-30px;bottom:-30px;width:280px;height:280px;opacity:.55;pointer-events:none}
+.svc-device svg{width:100%;height:100%}
+.svc-chips{display:flex;gap:8px;flex-wrap:wrap;margin:auto 0 26px;position:relative}
+.svc-stack{display:flex;flex-direction:column;gap:14px}
+.svc-card{background:var(--paper);border:1px solid var(--border);border-radius:18px;padding:24px 26px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.svc-primary:hover{background:#0c2414}
+.svc-card:hover{border-color:var(--forest-600)}
+@media (max-width:1000px){ .svc-split{grid-template-columns:1fr} .svc-primary{padding:30px 26px} }
+
+/* Founder */
+.founder{display:grid;grid-template-columns:.85fr 1.15fr;gap:52px;align-items:center}
+.founder-slot{height:520px;border-radius:26px}
+.creds3{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);padding-top:24px;margin-bottom:32px}
+.creds3>div{padding-right:20px}
+.creds3>div+div{padding:0 20px;border-left:1px solid var(--border)}
+.creds3>div:last-child{padding-right:0}
+.cred-k{margin:0 0 4px;font:600 22px/1.1 var(--display);color:var(--brand-800)}
+.cred-v{margin:0;font:300 14px/1.5 var(--sans);color:var(--text-3)}
+@media (max-width:1000px){
+  .founder{grid-template-columns:1fr;gap:36px}
+  .founder-slot{height:360px;order:2}
+}
+@media (max-width:620px){
+  .creds3{grid-template-columns:1fr;gap:16px;border-top:0;padding-top:0}
+  .creds3>div,.creds3>div+div{padding:0;border-left:0;border-top:1px solid var(--border);padding-top:14px}
+}
+
+/* Proof */
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.proof-card{border-radius:20px;padding:30px 30px 26px;display:flex;flex-direction:column;margin:0}
+.proof-light{background:var(--bone)}
+.proof-dark{background:var(--w-08);border:1px solid var(--w-1f)}
+.proof-card blockquote{margin:0 0 24px}
+.proof-by{display:flex;gap:12px;align-items:center;margin-top:auto}
+.avatar{width:40px;height:40px;flex:none}
+.proof-name{display:block;font:600 14px/1.3 var(--sans)}
+.proof-meta{display:block;font:300 13px/1.3 var(--sans);color:var(--text-3)}
+.proof-dark .proof-meta{color:var(--on-dark-2)}
+@media (max-width:900px){ .proof-grid{grid-template-columns:1fr} }
+
+/* Education */
+.edu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.edu-card{display:block;background:var(--paper);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:border-color .15s}
+.edu-card:hover{border-color:var(--forest-600)}
+.edu-media{display:grid;height:190px}
+.edu-body{display:block;padding:24px 26px 26px}
+.edu-kicker{display:block;font:600 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--forest-600)}
+.edu-title{display:block;margin:12px 0 8px;color:var(--forest-900)}
+@media (max-width:900px){ .edu-grid{grid-template-columns:1fr} }
+
+/* ==========================================================
+   SERVICES INDEX (§06)
+   ========================================================== */
+.svcidx-hero{background:var(--forest-900);padding:16px var(--pad-x) 60px}
+.svcidx-crumbs{margin-bottom:26px}
+.svcidx-head{display:flex;justify-content:space-between;align-items:flex-end;gap:48px}
+@media (max-width:900px){ .svcidx-head{flex-direction:column;align-items:flex-start;gap:22px} }
+
+.svcidx-primary-band{background:var(--bone);padding:56px var(--pad-x) 0}
+.svcidx-primary{background:var(--brand-800);border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1.12fr .88fr}
+.svcidx-primary-body{padding:44px 46px 46px;display:flex;flex-direction:column}
+.svcidx-media{min-height:440px}
+.ticks2{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;margin-bottom:34px}
+.ticks2 li{display:flex;gap:10px;align-items:center;font:300 15px/1.5 var(--sans);color:var(--nav-link)}
+.ticks2 li::before{content:"✓";color:var(--spring-500);font-size:14px;flex:none}
+.svcidx-btns{display:flex;gap:12px;margin-top:auto;flex-wrap:wrap}
+@media (max-width:1000px){
+  .svcidx-primary{grid-template-columns:1fr}
+  .svcidx-primary-body{padding:30px 26px 32px}
+  .svcidx-media{min-height:300px;order:-1}
+  .ticks2{grid-template-columns:1fr}
+}
+
+.svcidx-support{background:var(--bone);padding:44px var(--pad-x) 72px}
+.svcidx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.supcard{background:var(--paper);border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s}
+.supcard:hover{border-color:var(--forest-600)}
+.supcard-media{display:grid;height:180px}
+.supcard-body{padding:26px 28px 28px;display:flex;flex-direction:column;flex:1}
+.supcard-title{margin:0 0 10px;font:600 25px/1.2 var(--display);letter-spacing:-.025em;color:var(--forest-900)}
+.dotlist{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.dotlist li{display:flex;gap:9px;align-items:center;font:400 14px/1.5 var(--sans);color:var(--text-2)}
+.dotlist li::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--spring-500);flex:none}
+.supcard-link{font:600 15px/1 var(--sans);color:var(--brand-800);margin-top:auto}
+@media (max-width:960px){ .svcidx-grid{grid-template-columns:1fr} }
+
+.router-band{background:var(--sand);padding:64px var(--pad-x)}
+.router-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.router-card{display:block;background:var(--paper);border:1px solid var(--border);border-radius:16px;padding:22px 24px;transition:border-color .15s}
+a.router-card:hover{border-color:var(--forest-600)}
+.router-q{margin:0 0 8px;font:600 17px/1.35 var(--sans);color:var(--text)}
+.router-a{margin:0;font:300 14px/1.55 var(--sans);color:var(--body)}
+.router-foot{display:flex;align-items:center;gap:16px;margin-top:20px;background:var(--paper);border:1px dashed var(--hairline);border-radius:16px;padding:20px 24px;flex-wrap:wrap}
+.router-foot p{margin:0;flex:1;min-width:260px;font:300 16px/1.6 var(--sans);color:var(--text-2)}
+@media (max-width:1100px){ .router-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:620px){ .router-grid{grid-template-columns:1fr} }
+
+/* ==========================================================
+   SERVICE DETAIL (§03)
+   ========================================================== */
+.svc-hero{background:var(--forest-900);padding:8px var(--pad-x) 56px;display:grid;grid-template-columns:1.08fr .92fr;gap:48px;align-items:start;position:relative}
+.svc-hero-copy{padding-top:34px}
+.svc-hero-media{position:relative;padding-top:34px}
+.svc-hero-slot{height:512px;border-radius:28px}
+.svc-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:44px;border-top:1px solid var(--w-1f);padding-top:24px}
+.svc-stats>div{padding-right:20px}
+.svc-stats>div+div{padding:0 20px;border-left:1px solid var(--w-1f)}
+.svc-stats>div:last-child{padding-right:0}
+.stat-k{margin:0 0 5px;font:600 24px/1 var(--display);color:var(--spring-500)}
+.stat-v{margin:0;font:300 14px/1.5 var(--sans);color:var(--on-dark-2)}
+.measure-card{position:absolute;left:8px;bottom:32px;background:var(--bone);border-radius:18px;padding:18px 20px;display:flex;gap:16px;align-items:center;box-shadow:0 1px 2px #0E2A171a}
+.measure-card svg{width:58px;height:58px;flex:none}
+.measure-k{margin:0 0 3px;font:600 13px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.measure-v{margin:0;font:400 15px/1.45 var(--sans);color:var(--text);max-width:236px}
+@media (max-width:1040px){
+  .svc-hero{grid-template-columns:1fr;gap:32px}
+  .svc-hero-slot{height:340px}
+  .svc-stats{grid-template-columns:1fr;gap:16px;border-top:0;padding-top:0}
+  .svc-stats>div,.svc-stats>div+div{padding:14px 0 0;border-left:0;border-top:1px solid var(--w-1f)}
+}
+@media (max-width:560px){ .measure-card{position:static;margin-top:14px} }
+
+.svc-approach{background:var(--bone);padding:72px var(--pad-x);display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:start}
+.approach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mini-card{background:var(--paper);border:1px solid var(--border);border-radius:16px;padding:20px}
+.mini-k{margin:0 0 8px;font:600 16px/1.3 var(--sans);color:var(--text)}
+.mini-v{margin:0;font:300 14px/1.6 var(--sans);color:var(--body)}
+@media (max-width:1040px){ .svc-approach{grid-template-columns:1fr;gap:32px} }
+@media (max-width:760px){ .approach-grid{grid-template-columns:1fr} }
+
+.svc-process{background:var(--sand);padding:72px var(--pad-x)}
+.stages{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.stage{background:var(--paper);border:1px solid var(--border);border-radius:16px;padding:20px 18px 22px;min-height:172px;display:flex;flex-direction:column}
+.stage-lead{background:var(--brand-800);border-color:transparent}
+.stage-n{margin:0 0 14px;font:600 12px/1 var(--sans);color:var(--forest-600)}
+.stage-lead .stage-n{color:var(--spring-500)}
+.stage-t{margin:0 0 8px;font:600 17px/1.25 var(--display);color:var(--forest-900)}
+.stage-lead .stage-t{color:var(--bone)}
+.stage-d{margin:auto 0 0;font:300 13px/1.55 var(--sans);color:var(--body)}
+.stage-lead .stage-d{color:var(--on-dark)}
+@media (max-width:1200px){ .stages{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:720px){ .stages{grid-template-columns:repeat(2,1fr)} .stage{min-height:0} }
+@media (max-width:460px){ .stages{grid-template-columns:1fr} }
+
+.svc-who{background:var(--bone);padding:72px var(--pad-x);display:grid;grid-template-columns:1fr 1fr;gap:56px}
+.wholist{display:flex;flex-direction:column;gap:12px}
+.whocard{background:var(--paper);border:1px solid var(--border);border-radius:16px;padding:22px 24px;display:flex;gap:18px;align-items:flex-start}
+.whoicon{width:52px;height:52px;border-radius:14px;background:var(--spring-50);flex:none;display:flex;align-items:center;justify-content:center}
+.who-k{margin:0 0 5px;font:600 18px/1.3 var(--sans);color:var(--text)}
+.who-v{margin:0;font:300 15px/1.6 var(--sans);color:var(--body)}
+.inclist li{display:flex;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid var(--sand);font:400 16px/1.5 var(--sans);color:var(--text-2)}
+.inclist li:last-child{border-bottom:0}
+.inclist li::before{content:"";width:18px;height:18px;flex:none;border-radius:50%;background:var(--spring-50) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6.2 10.3l2.5 2.4 5-5.2' fill='none' stroke='%23174924' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+@media (max-width:1040px){ .svc-who{grid-template-columns:1fr;gap:36px} }
+
+.svc-consult{background:var(--forest-900);padding:72px var(--pad-x)}
+.consult-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.consult{border-radius:20px;padding:28px 26px;display:flex;flex-direction:column}
+.consult-lead{background:var(--bone)}
+.consult-alt{background:var(--w-08);border:1px solid var(--w-1f)}
+.consult-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.consult-t{margin:0;font:600 22px/1.25 var(--display);color:var(--forest-900)}
+.consult-alt .consult-t{color:var(--bone)}
+.tag-start{font:500 12px/1 var(--sans);color:var(--ink-950);background:var(--spring-500);border-radius:6px;padding:7px 10px;flex:none}
+.consult-spec{display:flex;gap:18px;margin:auto 0 20px;padding-top:18px;border-top:1px solid var(--border)}
+.consult-spec-dark{border-top-color:var(--w-1f)}
+.consult-spec dt{margin:0;font:400 12px/1.4 var(--sans);color:var(--muted)}
+.consult-spec dd{margin:0;font:600 16px/1.4 var(--sans);color:var(--text)}
+.consult-spec-dark dt{color:var(--on-dark-2)}
+.consult-spec-dark dd{color:var(--bone)}
+.consult .btn{text-align:center;justify-content:center}
+@media (max-width:960px){ .consult-grid{grid-template-columns:1fr} }
+
+.svc-proof{background:var(--bone);padding:72px var(--pad-x);display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.quote-card{background:var(--paper);border:1px solid var(--border);border-radius:20px;padding:30px 32px;margin:0 0 12px}
+.quote-card blockquote{margin:0 0 22px;font:400 22px/1.5 var(--sans);color:var(--text);text-wrap:pretty}
+.quote-card figcaption{display:flex;gap:12px;align-items:center}
+.q-name{display:block;font:600 15px/1.3 var(--sans);color:var(--text)}
+.q-meta{display:block;font:300 14px/1.3 var(--sans);color:var(--text-3)}
+.stat-tiles{display:flex;gap:12px}
+.stat-tiles>div{flex:1;background:var(--brand-800);border-radius:16px;padding:22px 24px}
+.tile-k{margin:0 0 6px;font:600 30px/1 var(--display);color:var(--spring-500)}
+.tile-v{margin:0;font:300 14px/1.5 var(--sans);color:var(--on-dark)}
+.faq-card{background:var(--paper);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.faq-item{border-bottom:1px solid var(--sand)}
+.faq-item:last-child{border-bottom:0}
+.faq-btn{padding:22px 26px;font:600 17px/1.4 var(--sans)}
+.faq-mark{border:0;width:auto;height:auto;font:400 20px/1 var(--sans);color:var(--brand-800);background:none}
+.acc-btn[aria-expanded="true"] .faq-mark{background:none;color:var(--brand-800)}
+.faq-panel{padding:0 26px 22px;font:300 15px/1.65 var(--sans);color:var(--body);max-width:600px}
+@media (max-width:1040px){ .svc-proof{grid-template-columns:1fr;gap:36px} }
+@media (max-width:520px){ .stat-tiles{flex-direction:column} }
+
+/* ==========================================================
+   SCOLIOSIS HUB (§07)
+   ========================================================== */
+.hub-hero{background:var(--forest-900);padding:16px var(--pad-x) 60px;position:relative;overflow:hidden}
+.hub-device{position:absolute;left:44%;top:-60px;width:700px;height:700px;opacity:.4;pointer-events:none}
+.hub-device svg{width:100%;height:100%}
+.hub-hero-inner{position:relative}
+.hub-hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:end}
+.startbox{background:var(--w-08);border:1px solid var(--w-1f);border-radius:20px;padding:26px 28px}
+.startlist{display:flex;flex-direction:column;gap:1px;background:var(--w-1f);border-radius:12px;overflow:hidden}
+.startlist li{background:var(--forest-900);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px;
+  font:500 15px/1.4 var(--sans);color:var(--bone)}
+.startlist .mins{font:400 13px/1 var(--sans);color:var(--on-dark-2);flex:none}
+@media (max-width:1040px){ .hub-hero-grid{grid-template-columns:1fr;gap:32px} .hub-device{left:auto;right:-240px;opacity:.25} }
+
+.hub-route{background:var(--bone);padding:64px var(--pad-x)}
+.route-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.routecard{background:var(--paper);border:1px solid var(--border);border-radius:20px;padding:30px 32px 32px;display:flex;flex-direction:column;min-height:280px}
+.routecard-lead{background:var(--brand-800);border-color:transparent}
+.route-t{margin:0 0 10px;font:600 26px/1.15 var(--display);letter-spacing:-.028em;color:var(--bone)}
+.route-d{margin:0 0 22px;font:300 16px/1.6 var(--sans);color:var(--body)}
+.route-links{display:flex;flex-direction:column;gap:9px;margin-top:auto;font:400 15px/1.4 var(--sans);color:var(--text-2)}
+.route-more{font-weight:600;color:var(--spring-500);padding-top:6px}
+.route-more-light{color:var(--brand-800)}
+@media (max-width:1040px){ .route-grid{grid-template-columns:1fr} .routecard{min-height:0} }
+
+.hub-pillars{background:var(--sand);padding:72px var(--pad-x)}
+.pillars-row1{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.pillars-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pillar{background:var(--paper);border:1px solid var(--border);border-radius:20px;padding:28px 30px 30px;display:flex;flex-direction:column}
+.pillar-wide{padding:32px 34px 34px}
+.pillar-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;gap:14px}
+.pillar-n{font:600 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--forest-600)}
+.pillar-c{font:400 13px/1 var(--sans);color:var(--muted)}
+.pillar-t{margin:0 0 12px;font:600 26px/1.15 var(--display);letter-spacing:-.028em;color:var(--forest-900)}
+.pillar-t-lg{margin:0 0 12px;font:600 32px/1.1 var(--display);letter-spacing:-.03em;color:var(--forest-900)}
+.pillar-d{margin:0;font:300 16px/1.6 var(--sans);color:var(--body)}
+.pillar-wide .pillar-d{margin-bottom:24px}
+.pillar-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.tag-mint{font:500 13px/1 var(--sans);color:var(--brand-800);background:var(--spring-50);border-radius:999px;padding:9px 14px}
+@media (max-width:1100px){ .pillars-row1{grid-template-columns:1fr 1fr} .pillar-wide{grid-column:1/-1} }
+@media (max-width:700px){ .pillars-row1,.pillars-row2{grid-template-columns:1fr} }
+
+.hub-myths{background:var(--forest-900);padding:72px var(--pad-x)}
+.myth-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.mythcard{background:var(--w-08);border:1px solid var(--w-1f);border-radius:18px;padding:26px 28px;display:flex;gap:20px;align-items:flex-start}
+.myth-tag{font:600 13px/1 var(--sans);color:#8A2617;background:#F7E4E0;border-radius:6px;padding:8px 11px;flex:none}
+.myth-q{margin:0 0 10px;font:500 20px/1.4 var(--sans);color:var(--bone)}
+.myth-a{margin:0;font:300 16px/1.6 var(--sans);color:var(--on-dark)}
+@media (max-width:900px){ .myth-grid{grid-template-columns:1fr} }
+
+.hub-latest{background:var(--bone);padding:72px var(--pad-x);display:grid;grid-template-columns:1fr 380px;gap:44px;align-items:start}
+.artlist{display:flex;flex-direction:column;gap:12px}
+.artcard{background:var(--paper);border:1px solid var(--border);border-radius:18px;overflow:hidden;display:grid;grid-template-columns:220px 1fr;transition:border-color .15s}
+.artcard:hover{border-color:var(--forest-600)}
+.art-media{display:grid;min-height:170px}
+.art-body{padding:24px 28px 26px;display:flex;flex-direction:column}
+.art-meta{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.art-kicker{font:600 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--forest-600)}
+.art-dot{width:3px;height:3px;border-radius:50%;background:var(--hairline)}
+.art-mins{font:400 13px/1 var(--sans);color:var(--muted)}
+.art-t{margin:0 0 8px;font:600 24px/1.25 var(--display);letter-spacing:-.025em;color:var(--forest-900)}
+.art-d{margin:0;font:300 16px/1.6 var(--sans);color:var(--body)}
+.hub-side{display:flex;flex-direction:column;gap:12px}
+.sidecard{background:var(--paper);border:1px solid var(--border);border-radius:20px;padding:26px 28px}
+.sidecard-sand{background:var(--sand);border-color:transparent}
+.rev-head{display:flex;gap:14px;align-items:center}
+.qa-item{border-bottom:1px solid var(--sand)}
+.qa-item:last-child{border-bottom:0}
+.qa-btn{padding:13px 0;font:400 15px/1.45 var(--sans);color:var(--text-2)}
+.qa-mark{border:0;width:auto;height:auto;background:none;color:var(--brand-800);font:400 16px/1 var(--sans)}
+.acc-btn[aria-expanded="true"] .qa-mark{background:none;color:var(--brand-800)}
+.qa-panel{padding:0 0 14px;font:300 14px/1.6 var(--sans);color:var(--body)}
+@media (max-width:1100px){ .hub-latest{grid-template-columns:1fr} }
+@media (max-width:640px){ .artcard{grid-template-columns:1fr} .art-media{min-height:150px} }
+
+/* ==========================================================
+   RESPONSIVE HARDENING
+   ========================================================== */
+
+/* 1. Grid and flex children default to min-width:auto, which floors a
+   track at the child's min-content width. A padded card then blows the
+   track past the viewport and gets clipped by the section's
+   overflow:hidden. Allow every layout child to shrink. */
+.hero-inner>*,.philo>*,.philo-cards>*,.svc-split>*,.svc-stack>*,.founder>*,
+.creds3>*,.proof-grid>*,.proof-card>*,.edu-grid>*,.footcols>*,.footcol>*,
+.svcidx-head>*,.svcidx-primary>*,.svcidx-primary-body>*,.svcidx-grid>*,
+.ticks2>*,.router-grid>*,.router-foot>*,.supcard-body>*,
+.svc-hero>*,.svc-hero-copy>*,.svc-stats>*,.svc-approach>*,.approach-grid>*,
+.stages>*,.svc-who>*,.wholist>*,.whocard>*,.consult-grid>*,.consult>*,
+.svc-proof>*,.stat-tiles>*,.faq-card>*,
+.hub-hero-grid>*,.hub-hero-inner>*,.startbox>*,.startlist>*,.route-grid>*,
+.routecard>*,.pillars-row1>*,.pillars-row2>*,.myth-grid>*,.mythcard>*,
+.hub-latest>*,.hub-side>*,.artcard>*,.art-body>*,.sechead>*,
+.cta-band>*,.bk>*,.bk-fields>*,.bk-slotgrid>*,.bk-daybar>*,
+.bk-summary dl>*,.bk-row>*,.bk-rail>*,.bk-panel>*{min-width:0}
+
+/* Long tokens (emails, URLs) must never force a track wider. */
+body{overflow-wrap:break-word}
+
+/* 2. Full-bleed bands, content capped at the 1360 the mockups use.
+   Every band pads with --pad-x, so widening it centres the content
+   while backgrounds still span the viewport. */
+.frame{max-width:none}
+@media (min-width:1441px){
+  :root{ --pad-x:calc((100% - 1360px) / 2); }
+}
+.bk{max-width:1440px;margin-inline:auto}
+
+/* 3. Touch targets. The design's 14–15px links are correct for a mouse;
+   on a coarse pointer the spec's 44px floor applies. */
+@media (pointer:coarse){
+  .navgroup a,.navgroup span,.footcol a,.footcol span,
+  .textlink,.supcard-link,.route-more,.bk-edit,.bk-linkbtn,.crumbs a{
+    min-height:44px;display:inline-flex;align-items:center;
+  }
+  .footcol{gap:2px}
+  .socials a{width:44px;height:44px}
+  .site-nav>a{display:inline-flex;align-items:center;min-height:44px}
+  .btn-sm{min-height:44px}
+  .startlist li{min-height:48px}
+  .qa-btn,.faq-btn,.acc-btn{min-height:48px}
+}
+
+/* 4. Tablet band: the 1440 grids need an intermediate step before
+   collapsing to one column. */
+@media (max-width:1180px) and (min-width:901px){
+  .philo-cards{grid-template-columns:1fr 1fr}
+  .edu-grid,.proof-grid,.svcidx-grid,.consult-grid,.approach-grid{grid-template-columns:repeat(2,1fr)}
+  .edu-grid>:last-child,.proof-grid>:last-child,
+  .svcidx-grid>:last-child,.consult-grid>:last-child,
+  .approach-grid>:last-child{grid-column:1/-1}
+}
+
+/* 5. Very small phones: keep the 4pt rhythm but stop cards feeling boxed in. */
+@media (max-width:400px){
+  .card,.routecard,.pillar,.mythcard,.supcard-body,.art-body,.sidecard{padding-inline:20px}
+  .svcidx-primary-body{padding-inline:20px}
+  .cta-band .btns{width:100%}
+  .cta-band .btns .btn{flex:1;min-width:0}
+}
+
+
+/* ---- Type declarations lifted out of inline styles so the mobile
+   mockups can override them (inline styles beat media queries). ---- */
+.hub-h1{font-size:64px;letter-spacing:-.04em;max-width:660px}
+.pillar-d-lg{max-width:460px;font-size:17px}
+.latest-h{font-size:34px;color:var(--forest-900)}
+.cta-h2{font-size:38px;line-height:1.1}
+.cta-lede{font-size:17px;line-height:1.6;max-width:560px}
+.sec-h{font-size:40px;line-height:1.1;letter-spacing:-.03em;color:var(--forest-900)}
+.sec-h-dark{color:var(--bone)}
+.mw400{max-width:400px}
+.svcidx-h2{margin-bottom:16px;font-size:46px;line-height:1.05}
+
+.btn-brand{background:var(--brand-800);color:var(--bone)}
+.btn-brand:hover{background:var(--forest-700);color:var(--bone)}
+
+
+/* ---- Contact detail rows ---- */
+.contact-rows{border-top:1px solid var(--border)}
+.contact-rows>div{
+  display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  padding:14px 0;border-bottom:1px solid var(--border);
+}
+.contact-rows dt{margin:0;font:400 14px/1.5 var(--sans);color:var(--muted);flex:none}
+.contact-rows dd{margin:0;font:500 15px/1.5 var(--sans);color:var(--text);text-align:right}
+/* Same convention as the disabled nav items: an honest empty state,
+   not a fabricated number. */
+.contact-rows .pending{font-weight:400;color:var(--text-3)}
+
+
+/* ==========================================================
+   Case studies
+   Consented patient journeys. Built on the .pillar grammar
+   (paper, 1px border, 20px radius) so the cards sit in the
+   same family as the scoliosis hub, with a media well added.
+   ========================================================== */
+.casegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+
+.case{
+  background:var(--paper);border:1px solid var(--border);border-radius:20px;
+  overflow:hidden;display:flex;flex-direction:column;
+}
+/* The clinic's own progress composites are built on #174924, the same
+   green as --brand-800, so letterboxing them onto it reads as extra
+   margin rather than a bar, and no date label gets cropped away. */
+.case-media{background:var(--brand-800);display:block;position:relative;
+  aspect-ratio:5/4;overflow:hidden}
+.case-media img{width:100%;height:100%;object-fit:contain}
+.case-body{padding:26px 28px 28px;display:flex;flex-direction:column;flex:1}
+.case-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}
+.case-n{font:600 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--forest-600)}
+.case-c{font:400 13px/1 var(--sans);color:var(--muted);text-align:right}
+.case-t{margin:0 0 12px;font:600 26px/1.15 var(--display);letter-spacing:-.028em;color:var(--forest-900)}
+.case-d{margin:0 0 20px;font:300 16px/1.6 var(--sans);color:var(--body)}
+.case-q{margin:0 0 18px;font:400 17px/1.6 var(--sans);color:var(--text-2);text-wrap:pretty}
+.case-by{display:flex;flex-direction:column;gap:2px;margin-top:auto;
+  padding-top:18px;border-top:1px solid var(--border)}
+.case-name{font:600 14px/1.3 var(--sans);color:var(--forest-900)}
+.case-meta{font:300 13px/1.4 var(--sans);color:var(--text-3)}
+
+/* The featured case: media beside the copy rather than above it. */
+.case-feat{grid-column:1 / -1}
+.case-feat .case-inner{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr)}
+.case-feat .case-media{aspect-ratio:auto}
+.case-feat .case-body{padding:34px 38px 36px}
+.case-feat .case-t{font-size:32px;line-height:1.1;letter-spacing:-.03em}
+.case-feat .case-q{font-size:20px;line-height:1.55;color:var(--text)}
+
+/* A before/after pair shown as two stills rather than one composite. */
+/* Loose stills rather than a composite: fill the same well, cropping
+   only the wall at the edges. */
+.case-pair{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border)}
+.case-pair img{width:100%;height:100%;object-fit:cover;object-position:center top}
+
+/* Measured change. Only used where a measurement actually exists. */
+.case-metrics{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 22px}
+.metric{background:var(--spring-50);border-radius:14px;padding:13px 17px}
+.metric-k{margin:0 0 8px;font:600 11px/1 var(--sans);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--forest-600)}
+.metric-v{margin:0;font:600 22px/1 var(--display);letter-spacing:-.02em;
+  color:var(--brand-800);display:flex;align-items:center;gap:9px;white-space:nowrap}
+.metric-was{color:var(--text-3);font-weight:500}
+.metric-arw{color:var(--forest-600);font:400 15px/1 var(--sans)}
+
+/* The honest note that sits under a set of photographs. */
+.case-note{margin:22px 0 0;font:300 14px/1.6 var(--sans);color:var(--text-3);max-width:720px}
+
+/* Compact strip: two cases inside another page, media beside copy. */
+.casestrip{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.casestrip .case-inner{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr)}
+.casestrip .case-body{padding:22px 24px 24px}
+.casestrip .case-t{font-size:20px;line-height:1.2;margin-bottom:10px}
+.casestrip .case-q{font-size:15px;margin-bottom:16px}
+
+.casegrid>*,.case>*,.case-inner>*,.case-body>*,.case-pair>*,
+.case-metrics>*,.casestrip>*,.case-head>*{min-width:0}
+
+/* Case-study responsive steps, on the same breakpoints as .pillars-row1
+   and .artcard so the page reflows in one move rather than in stages. */
+@media (max-width:1100px){
+  .case-feat .case-inner{grid-template-columns:minmax(0,340px) minmax(0,1fr)}
+  .case-feat .case-body{padding:28px 30px 30px}
+  .case-feat .case-t{font-size:28px}
+  .case-feat .case-q{font-size:18px}
+}
+@media (max-width:860px){
+  .casegrid{grid-template-columns:1fr}
+  .case-feat .case-inner{grid-template-columns:1fr}
+  .casestrip{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  .casestrip .case-inner{grid-template-columns:1fr}
+  .metric{flex:1 1 140px}
+}
+
+/* A single patient line carrying a whole band, used where a grid of
+   short quotes would repeat what the case studies already say. */
+.bigquote{margin:0;max-width:940px}
+.bigquote blockquote{margin:0 0 28px;font:600 40px/1.18 var(--display);
+  letter-spacing:-.03em;color:var(--bone);text-wrap:pretty}
+.bigquote figcaption{display:flex;gap:14px;align-items:center}
+.bq-name{display:block;font:600 15px/1.35 var(--sans);color:var(--bone)}
+.bq-meta{display:block;font:300 14px/1.35 var(--sans);color:var(--on-dark-2)}
+@media (max-width:900px){ .bigquote blockquote{font-size:30px} }
+@media (max-width:560px){ .bigquote blockquote{font-size:24px;margin-bottom:22px} }
+
+
+/* ==========================================================
+   Hover and focus motion
+   The site already had one idiom: border-colour on cards,
+   background on buttons, a widening gap on arrow links, all
+   at .15s. This extends that rather than replacing it, and
+   adds movement only to things that are genuinely clickable,
+   so a hover never promises a click that is not there.
+   Transforms sit behind (hover:hover) so a tap on a phone
+   does not leave a card stuck in its hover state.
+   ========================================================== */
+:root{
+  --ease-out:cubic-bezier(.2,.8,.2,1);   /* the modal's curve */
+  --t-tint:.15s;                          /* colour */
+  --t-move:.24s;                          /* position */
+  --t-media:.55s;                         /* imagery */
+  --lift-sm:0 6px 18px rgba(8,25,14,.10);
+  --lift-md:0 12px 30px rgba(8,25,14,.13);
+  --lift-spring:0 8px 22px rgba(23,73,36,.26);
+}
+
+/* ---- Buttons: press-ready rather than decorative ---- */
+.btn{transition:
+  background-color var(--t-tint),border-color var(--t-tint),color var(--t-tint),
+  transform var(--t-move) var(--ease-out),box-shadow var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .btn:hover{transform:translateY(-2px)}
+  .btn-spring:hover{box-shadow:var(--lift-spring)}
+  .btn-forest:hover,.btn-brand:hover{box-shadow:var(--lift-sm)}
+}
+.btn:active{transform:translateY(0);transition-duration:.06s}
+
+/* ---- Cards that are actually links ---- */
+a.edu-card,a.routecard,a.router-card,a.case-link,a.svc-primary{
+  transition:border-color var(--t-tint),background-color var(--t-tint),
+             transform var(--t-move) var(--ease-out),box-shadow var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  a.edu-card:hover,a.routecard:hover,a.router-card:hover,a.case-link:hover{
+    border-color:var(--forest-600);transform:translateY(-3px);box-shadow:var(--lift-md)}
+  a.svc-primary:hover{transform:translateY(-3px);box-shadow:var(--lift-md)}
+}
+/* Keyboard users get the same treatment, without the movement. */
+a.edu-card:focus-visible,a.routecard:focus-visible,
+a.router-card:focus-visible,a.case-link:focus-visible{border-color:var(--forest-600)}
+
+/* The arrow on a linked card tracks the card, like .textlink does. */
+.case-more{display:inline-block;margin-top:10px;font:600 14px/1 var(--sans);
+  color:var(--brand-800);transition:transform var(--t-move) var(--ease-out)}
+/* the arrow inside these moves on its own; see the arrow block below */
+
+/* ---- Imagery ---- */
+/* Case photographs invite a closer look, so they ease up slightly under the
+   cursor. No border or lift here: on the results page these cards are
+   content, not navigation. */
+.case-media img{transition:transform var(--t-media) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .case:hover .case-media img{transform:scale(1.035)}
+  a.case-link:hover .case-media img{transform:scale(1.05)}
+}
+
+/* ---- Inline links and small controls ---- */
+.textlink{transition:color var(--t-tint)}
+.textlink:hover{color:var(--forest-700)}
+.textlink-dark:hover{color:var(--spring-200)}
+.navgroup a,.footcol a,.crumbs a,.acc-btn,.socials a{
+  transition:color var(--t-tint),background-color var(--t-tint),
+             border-color var(--t-tint),transform var(--t-move) var(--ease-out)}
+/* .socials and .footcol hover live in the footer block further down. */
+/* Accordion motion lives in its own block further down. */
+
+/* ---- Anything that moves must hold still when asked ---- */
+@media (prefers-reduced-motion:reduce){
+  .btn:hover,.btn:active,
+  a.edu-card:hover,a.routecard:hover,a.router-card:hover,
+  a.case-link:hover,a.svc-primary:hover,
+  .case:hover .case-media img,a.case-link:hover .case-media img,
+  a.case-link:hover .case-more,a.routecard:hover .route-more,
+  a.edu-card:hover .supcard-link{
+    transform:none !important;box-shadow:none !important}
+}
+
+
+/* ==========================================================
+   Nav and menu-button motion
+   ========================================================== */
+
+/* ---- Nav links: the hover pill grows in behind the label ----
+   It is a pseudo-element rather than a plain background so it can
+   scale as well as fade. z-index:0 on the link makes the stacking
+   context, which keeps the -1 pill above .navgroup's own background
+   instead of disappearing behind it. */
+.navgroup a{position:relative;z-index:0;
+  transition:color var(--t-tint),background-color var(--t-tint)}
+.navgroup a::before{
+  content:"";position:absolute;inset:0;z-index:-1;border-radius:999px;
+  background:var(--w-14);opacity:0;transform:scale(.82);
+  transition:opacity var(--t-tint),transform var(--t-move) var(--ease-out)}
+/* The pill is drawn by ::before now, so the old flat background goes. */
+.navgroup a:hover{background:transparent}
+@media (hover:hover) and (pointer:fine){
+  .navgroup a:not([aria-current="page"]):hover::before{opacity:1;transform:scale(1)}
+}
+.navgroup a:focus-visible::before{opacity:1;transform:scale(1)}
+
+/* The current page keeps its spring pill under the cursor. Without this
+   .navgroup a:hover out-specifies the [aria-current] rule and the active
+   marker vanishes on hover. */
+.navgroup a[aria-current="page"]:hover,
+.navgroup a[aria-current="page"]:focus-visible{
+  background:var(--spring-500);color:var(--ink-950)}
+@media (hover:hover) and (pointer:fine){
+  .navgroup a[aria-current="page"]:hover{background:var(--spring-hover)}
+}
+.navgroup a[aria-current="page"]::before{content:none}
+
+/* In the stacked mobile menu a scaling pill reads as a stretch across the
+   full row, so those items nudge instead, like the footer links. */
+@media (max-width:1180px){
+  .navgroup a::before{transform:none}
+  @media (hover:hover) and (pointer:fine){
+    .navgroup a:not([aria-current="page"]):hover{transform:translateX(3px)}
+  }
+  .navgroup a{transition:color var(--t-tint),background-color var(--t-tint),
+    transform var(--t-move) var(--ease-out)}
+}
+
+/* ---- The menu button ---- */
+.nav-toggle{
+  transition:border-color var(--t-tint),background-color var(--t-tint),
+             transform var(--t-move) var(--ease-out)}
+.nav-toggle i,
+.nav-toggle i::before,
+.nav-toggle i::after{
+  transition:transform var(--t-move) var(--ease-out),
+             top var(--t-move) var(--ease-out),
+             width var(--t-move) var(--ease-out),
+             opacity var(--t-tint),background-color var(--t-tint)}
+
+/* Tablet: the bordered 44px button. The bars spread a little on hover. */
+@media (hover:hover) and (pointer:fine){
+  .nav-toggle:hover{background:var(--w-08);border-color:var(--spring-500)}
+  .nav-toggle:hover i,
+  .nav-toggle:hover i::before,
+  .nav-toggle:hover i::after{background:var(--spring-500)}
+  .nav-toggle[aria-expanded="false"]:hover i::before{top:-7px}
+  .nav-toggle[aria-expanded="false"]:hover i::after{top:7px}
+}
+/* Touch devices never fire :hover, so the press feedback sits outside it. */
+.nav-toggle:active{transform:scale(.92);transition-duration:.06s}
+
+/* Phone: borderless two-bar mark, so the short bar runs out to full
+   width on hover instead. */
+@media (max-width:700px) and (hover:hover) and (pointer:fine){
+  .nav-toggle:hover{background:transparent;border-color:transparent}
+  .nav-toggle[aria-expanded="false"]:hover i::before{width:22px;top:6px}
+}
+
+/* ---- The menu itself drops in rather than appearing ---- */
+@keyframes nav-drop{
+  from{opacity:0;transform:translateY(-8px)}
+  to{opacity:1;transform:none}
+}
+@media (max-width:1180px){
+  .navgroup.open{animation:nav-drop var(--t-move) var(--ease-out) both}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .navgroup a::before{transition:none}
+  .navgroup a:hover,.nav-toggle:hover,.nav-toggle:active{transform:none !important}
+  /* hold the bars where they already are, rather than letting them
+     fall back to their static position */
+  .nav-toggle[aria-expanded="false"]:hover i::before{top:-6px}
+  .nav-toggle[aria-expanded="false"]:hover i::after{top:6px}
+  .navgroup.open{animation:none}
+}
+@media (max-width:700px) and (prefers-reduced-motion:reduce){
+  .nav-toggle[aria-expanded="false"]:hover i::before{top:6px;width:14px}
+}
+
+
+/* ==========================================================
+   Footer motion
+   ========================================================== */
+
+/* ---- Column links: the rule wipes in from the left ----
+   .footcol is a column flex container, so its links stretch to the full
+   column width by default and an underline would run far past the text.
+   width:fit-content pulls both the rule and the click target back to the
+   words themselves. */
+.footcol a{position:relative;width:fit-content;transition:color var(--t-tint)}
+.footcol a::after{
+  content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;
+  background:currentColor;transform:scaleX(0);transform-origin:left;
+  transition:transform var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .footcol a:hover::after{transform:scaleX(1)}
+}
+.footcol a:focus-visible::after{transform:scaleX(1)}
+/* .soon items are plain spans, so they never get a rule or a colour shift. */
+
+/* ---- Social buttons: the circle fills and the icon inverts ----
+   The icons carry stroke="#B4C7B8" and fill="#B4C7B8" as presentation
+   attributes. CSS outranks those, so driving them from the link's own
+   color lets one hover flip the whole mark. */
+.socials a{color:var(--on-dark);
+  transition:color var(--t-tint),background-color var(--t-tint),
+             border-color var(--t-tint),transform var(--t-move) var(--ease-out),
+             box-shadow var(--t-move) var(--ease-out)}
+.socials a svg{stroke:currentColor}
+.socials a svg [fill]:not([fill="none"]){fill:currentColor}
+@media (hover:hover) and (pointer:fine){
+  .socials a:hover{
+    background:var(--spring-500);border-color:var(--spring-500);
+    color:var(--ink-950);transform:translateY(-3px);box-shadow:var(--lift-spring)}
+}
+.socials a:focus-visible{
+  background:var(--spring-500);border-color:var(--spring-500);color:var(--ink-950)}
+/* Touch never fires :hover, so the press lives outside the guard. */
+.socials a:active{transform:scale(.94);transition-duration:.06s}
+
+@media (prefers-reduced-motion:reduce){
+  .footcol a::after{transition:none}
+  .socials a:hover,.socials a:active{transform:none !important;box-shadow:none !important}
+}
+
+
+/* ==========================================================
+   Accordion and FAQ motion
+   Two variants are in use: .faq-btn rows inside a bordered
+   .faq-card, and the compact .qa-btn rows in a sidecard. They
+   sit in different amounts of space, so they respond
+   differently.
+   ========================================================== */
+
+.acc-btn{transition:color var(--t-tint),background-color var(--t-tint),
+  transform var(--t-move) var(--ease-out)}
+.acc-mark{transition:background-color var(--t-tint),border-color var(--t-tint),
+  color var(--t-tint),transform var(--t-move) var(--ease-out)}
+
+/* The mark is a bare + or - glyph in both variants, not the bordered disc
+   of the base .acc-mark, so it needs a larger step to register. It is not
+   rotated: the JS swaps the character, and a + turned 90 degrees is still
+   a +, while 45 degrees reads as a close button. */
+@media (hover:hover) and (pointer:fine){
+  .acc-btn:hover .acc-mark{transform:scale(1.2)}
+}
+.acc-btn:focus-visible .acc-mark{transform:scale(1.2)}
+
+/* Card rows have full-width padding, so the whole row can light up. The
+   card's overflow:hidden clips the tint to its rounded corners, so the
+   button needs no radius of its own. */
+@media (hover:hover) and (pointer:fine){
+  .faq-btn:hover{background:var(--bone)}
+}
+.faq-btn:focus-visible{background:var(--bone)}
+
+/* Sidecard rows have no horizontal padding, so a full-bleed tint would run
+   edge to edge against the text. They step across instead. */
+@media (hover:hover) and (pointer:fine){
+  .qa-btn:hover{transform:translateX(3px)}
+}
+
+/* An open panel is revealed by dropping the hidden attribute, so an
+   animation on the visible state runs each time one opens. */
+@keyframes acc-open{
+  from{opacity:0;transform:translateY(-5px)}
+  to{opacity:1;transform:none}
+}
+.acc-panel:not([hidden]){animation:acc-open var(--t-move) var(--ease-out) both}
+
+@media (prefers-reduced-motion:reduce){
+  .acc-btn:hover .acc-mark,.acc-btn:focus-visible .acc-mark,
+  .qa-btn:hover{transform:none !important}
+  .acc-panel:not([hidden]){animation:none}
+}
+
+
+/* The wordmark is a link to home in the nav and in the booking header, and
+   had no hover state anywhere. It is a masked shape, so the mask's colour
+   is what responds. The footer wordmark is a plain span, not a link, so it
+   is untouched. */
+.wordmark{transition:background-color var(--t-tint)}
+@media (hover:hover) and (pointer:fine){
+  a:hover > .wordmark{background:var(--spring-500)}
+}
+a:focus-visible > .wordmark{background:var(--spring-500)}
+
+
+/* ==========================================================
+   Service and pillar cards
+   These split into two populations. Some lead somewhere; most
+   are placeholders for content that is not written yet. They
+   get different hovers on purpose, so a card that lifts and
+   casts a shadow is always a card you can click.
+   ========================================================== */
+.svc-card,.supcard,.pillar,.routecard,.router-card,.svcidx-primary{
+  transition:border-color var(--t-tint),background-color var(--t-tint),
+             transform var(--t-move) var(--ease-out),box-shadow var(--t-move) var(--ease-out)}
+
+/* ---- Cards that lead somewhere ---- */
+@media (hover:hover) and (pointer:fine){
+  .pillar.is-linked:hover{
+    border-color:var(--forest-600);transform:translateY(-3px);box-shadow:var(--lift-md)}
+  /* the dark primary card comes forward rather than darkening */
+  .svcidx-primary.is-linked:hover{
+    background:var(--forest-700);transform:translateY(-3px);box-shadow:var(--lift-md)}
+  .is-linked:hover .textlink,.is-linked:hover .supcard-link{transform:translateX(4px)}
+}
+.pillar.is-linked:focus-within{border-color:var(--forest-600)}
+
+/* ---- Placeholder cards ----
+   A warm step and a firmer edge, with no lift and no shadow. There is
+   nothing behind these yet, so the hover should read as the card noticing
+   the cursor, not as an invitation to click. */
+@media (hover:hover) and (pointer:fine){
+  .svc-card:hover,
+  .supcard:hover,
+  .pillar:not(.is-linked):hover,
+  article.routecard:not(.routecard-lead):hover,
+  div.router-card:hover{
+    background:var(--bone);border-color:var(--hairline)}
+  /* the dark lead card has no border to firm up, so it warms only */
+  article.routecard.routecard-lead:hover{background:var(--forest-700)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .pillar.is-linked:hover,.svcidx-primary.is-linked:hover,
+  .is-linked:hover .textlink,.is-linked:hover .supcard-link{
+    transform:none !important;box-shadow:none !important}
+}
+
+
+/* ==========================================================
+   Article pages and pillar indexes
+   ========================================================== */
+.art-hero{background:var(--forest-900);padding:44px var(--pad-x) 52px;color:var(--bone)}
+.art-eyebrow{font:600 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--spring-500);margin:0 0 18px}
+.art-h1{margin:0;font:600 50px/1.06 var(--display);letter-spacing:-.036em;
+  color:var(--bone);max-width:21ch}
+.art-stand{margin:20px 0 0;font:300 20px/1.6 var(--sans);color:var(--on-dark);max-width:62ch}
+.art-metarow{display:flex;gap:14px 30px;flex-wrap:wrap;align-items:baseline;
+  margin-top:30px;padding-top:22px;border-top:1px solid var(--w-1f)}
+.art-metak{display:block;font:600 10px/1 var(--sans);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--on-dark-3);margin-bottom:7px}
+.art-metav{display:block;font:400 14px/1.35 var(--sans);color:var(--on-dark)}
+
+.artwrap{background:var(--paper);padding:var(--pad-y) var(--pad-x);
+  display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:60px;align-items:start}
+
+/* ---- Body copy ---- */
+.prose{max-width:68ch}
+.prose>*+*{margin-top:18px}
+.prose h2{margin:44px 0 0;font:600 30px/1.18 var(--display);letter-spacing:-.028em;color:var(--forest-900)}
+.prose h2:first-child{margin-top:0}
+.prose h3{margin:30px 0 0;font:600 20px/1.3 var(--display);letter-spacing:-.018em;color:var(--forest-900)}
+.prose p{font:300 17px/1.75 var(--sans);color:var(--text-2)}
+.prose strong{font-weight:600;color:var(--text)}
+.prose ul,.prose ol{display:flex;flex-direction:column;gap:11px;padding-left:2px}
+.prose li{position:relative;padding-left:22px;font:300 17px/1.7 var(--sans);color:var(--text-2)}
+.prose ul li::before{content:"";position:absolute;left:2px;top:12px;width:5px;height:5px;
+  border-radius:50%;background:var(--forest-600)}
+.prose ol{counter-reset:n}
+.prose ol li{counter-increment:n}
+.prose ol li::before{content:counter(n) ".";position:absolute;left:0;top:0;
+  font:600 15px/1.9 var(--sans);color:var(--forest-600)}
+
+/* ---- Callouts ---- */
+.keybox{background:var(--spring-50);border-radius:18px;padding:26px 28px 28px;margin:0 0 34px}
+.keybox h2{margin:0 0 14px;font:600 12px/1 var(--sans);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--forest-600)}
+.keybox ul{display:flex;flex-direction:column;gap:10px}
+.keybox li{position:relative;padding-left:22px;font:400 16px/1.6 var(--sans);color:var(--brand-800)}
+.keybox li::before{content:"";position:absolute;left:2px;top:10px;width:5px;height:5px;
+  border-radius:50%;background:var(--forest-600)}
+
+/* The brief asks that uncertainty be stated rather than smoothed over, so
+   it gets its own block instead of a parenthesis in the prose. */
+.uncertain{margin:34px 0 0;border-left:3px solid var(--forest-600);
+  background:var(--bone);border-radius:0 14px 14px 0;padding:22px 24px}
+.uncertain h2{margin:0 0 10px;font:600 12px/1 var(--sans);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--forest-600)}
+.uncertain p{margin:0;font:300 16px/1.65 var(--sans);color:var(--text-2)}
+
+/* ---- Sidebar ---- */
+.art-side{display:flex;flex-direction:column;gap:14px;position:sticky;top:92px}
+.toc{background:var(--bone);border-radius:18px;padding:22px 24px}
+.toc h2{margin:0 0 14px;font:600 11px/1 var(--sans);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted)}
+.toc ol{display:flex;flex-direction:column;gap:10px;counter-reset:t}
+.toc a{display:block;font:400 14px/1.45 var(--sans);color:var(--text-2);
+  transition:color var(--t-tint),transform var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){ .toc a:hover{color:var(--brand-800);transform:translateX(3px)} }
+
+.reviewbox{background:var(--paper);border:1px solid var(--border);border-radius:18px;padding:22px 24px}
+.review-k{margin:0 0 6px;font:600 11px/1 var(--sans);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted)}
+.review-n{margin:0;font:600 17px/1.3 var(--display);color:var(--forest-900)}
+.review-v{margin:8px 0 0;font:300 14px/1.55 var(--sans);color:var(--body)}
+/* Until a clinician signs a piece off, the page says so rather than
+   printing a review it has not had. */
+.review-pending{display:inline-block;margin-top:12px;padding:7px 12px;border-radius:999px;
+  background:var(--sand);font:600 11px/1 var(--sans);letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-3)}
+
+/* ---- Related ---- */
+.art-more{background:var(--sand);padding:var(--pad-y) var(--pad-x)}
+.morelist{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.morecard{background:var(--paper);border:1px solid var(--border);border-radius:18px;
+  padding:24px 26px 26px;display:flex;flex-direction:column;
+  transition:border-color var(--t-tint),background-color var(--t-tint),
+             transform var(--t-move) var(--ease-out),box-shadow var(--t-move) var(--ease-out)}
+.morecard .art-t{margin:0 0 8px;font-size:20px;line-height:1.25}
+.morecard .art-d{font-size:15px}
+@media (hover:hover) and (pointer:fine){
+  a.morecard:hover{border-color:var(--forest-600);transform:translateY(-3px);box-shadow:var(--lift-md)}
+}
+
+/* ---- Pillar index ---- */
+.pidx-list{display:flex;flex-direction:column;gap:12px}
+.pidx{background:var(--paper);border:1px solid var(--border);border-radius:18px;
+  padding:24px 28px;display:grid;grid-template-columns:44px minmax(0,1fr) auto;
+  gap:20px;align-items:center;
+  transition:border-color var(--t-tint),background-color var(--t-tint),
+             transform var(--t-move) var(--ease-out),box-shadow var(--t-move) var(--ease-out)}
+.pidx-n{font:600 15px/1 var(--display);color:var(--forest-600)}
+.pidx-t{margin:0 0 5px;font:600 21px/1.28 var(--display);letter-spacing:-.02em;color:var(--forest-900)}
+.pidx-d{margin:0;font:300 15px/1.6 var(--sans);color:var(--body)}
+.pidx-go{font:600 14px/1 var(--sans);color:var(--brand-800);flex:none}
+@media (hover:hover) and (pointer:fine){
+  a.pidx:hover{border-color:var(--forest-600);transform:translateY(-3px);box-shadow:var(--lift-md)}
+}
+
+.artwrap>*,.prose>*,.art-side>*,.morelist>*,.pidx>*,.art-metarow>*{min-width:0}
+
+@media (max-width:1060px){
+  .artwrap{grid-template-columns:1fr;gap:38px}
+  .art-side{position:static}
+  .art-h1{font-size:40px}
+  .morelist{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .art-h1{font-size:31px;letter-spacing:-.03em}
+  .art-stand{font-size:17px}
+  .prose h2{font-size:24px;margin-top:34px}
+  .prose p,.prose li{font-size:16px;line-height:1.7}
+  .pidx{grid-template-columns:1fr;gap:10px;padding:20px 22px}
+  .pidx-n{font-size:13px}
+  .keybox{padding:20px 22px}
+}
+@media (prefers-reduced-motion:reduce){
+  a.morecard:hover,a.pidx:hover,a.pidx:hover .pidx-go,.toc a:hover{
+    transform:none !important;box-shadow:none !important}
+}
+
+
+/* ==========================================================
+   Arrows
+   Every trailing navigational arrow is wrapped in .arw and
+   steps right under the cursor. Arrows that are data rather
+   than navigation are deliberately left out: the 29 to 20
+   degree metric chips, the proof meta line and the router
+   card descriptions all use an arrow as punctuation.
+   ========================================================== */
+.arw,.m-arrow{display:inline-block;transition:transform var(--t-move) var(--ease-out)}
+
+@media (hover:hover) and (pointer:fine){
+  a:hover .arw,button:hover .arw,
+  a:hover .m-arrow,
+  .case:hover .m-arrow,.pillar:hover .m-arrow,
+  .supcard:hover .m-arrow,.artcard:hover .m-arrow,
+  .routecard:hover .m-arrow,.svc-card:hover .m-arrow{transform:translateX(4px)}
+}
+a:focus-visible .arw,button:focus-visible .arw{transform:translateX(4px)}
+
+@media (prefers-reduced-motion:reduce){
+  .arw,.m-arrow{transition:none}
+  a:hover .arw,button:hover .arw,a:hover .m-arrow,
+  a:focus-visible .arw,button:focus-visible .arw{transform:none !important}
+}

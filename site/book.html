@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book with Rayhab, Rayhab Movement Clinic</title>
+<meta name="description" content="Request a scoliosis assessment, rehabilitation session, online consultation or physiotherapy appointment. No account needed; the clinic confirms by WhatsApp.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/rayhab.css">
+<link rel="stylesheet" href="assets/css/mobile.css">
+<link rel="stylesheet" href="assets/css/booking.css">
+<link rel="icon" href="assets/img/rayhab-logo.png">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="frame" style="padding:0">
+<main id="main">
+<div class="bk" id="booking">
+
+  <!-- Rail -->
+  <div class="bk-rail" id="bk-rail">
+    <div class="bk-mhead">
+      <div class="bk-mtop">
+        <button class="bk-mback" type="button" id="bk-mback" hidden>← Back</button>
+        <a href="./" aria-label="Rayhab Movement Clinic, home"><span class="wordmark"></span></a>
+        <a class="bk-mexit" href="./">Exit</a>
+      </div>
+      <div class="bk-progress" id="bk-progress" aria-hidden="true">
+        <span class="on"></span><span></span><span></span><span></span>
+      </div>
+      <p class="bk-meyebrow" id="bk-meyebrow">Step 1 of 4</p>
+      <h2 class="bk-mtitle" id="bk-mtitle">What do you need?</h2>
+      <div class="bk-mdone">
+        <div class="bk-donemark" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#08190E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+        </div>
+        <h2>Request sent</h2>
+        <p id="m-doneWhen">We confirm by WhatsApp within one working day.</p>
+      </div>
+    </div>
+    <a href="./" aria-label="Rayhab Movement Clinic, home"><span class="wordmark"></span></a>
+    <h1>Book with Rayhab</h1>
+    <p class="bk-lede">No account needed. You'll get a confirmation by WhatsApp within one working day.</p>
+
+    <ol class="bk-steps">
+      <li class="bk-stepitem"><span class="bk-dot is-current" id="dot1">1</span><p class="bk-steplabel is-current" id="lbl1">What you need</p></li>
+      <li class="bk-stepitem"><span class="bk-dot" id="dot2">2</span><p class="bk-steplabel" id="lbl2">Date &amp; time</p></li>
+      <li class="bk-stepitem"><span class="bk-dot" id="dot3">3</span><p class="bk-steplabel" id="lbl3">Your details</p></li>
+      <li class="bk-stepitem"><span class="bk-dot" id="dot4">4</span><p class="bk-steplabel" id="lbl4">Review &amp; confirm</p></li>
+    </ol>
+
+    <div class="bk-summary" id="bk-aside">
+      <p class="eyebrow" style="color:var(--spring-500);margin-bottom:16px">Your request</p>
+      <dl>
+        <div><dt>Service</dt><dd id="sumType">Scoliosis assessment</dd></div>
+        <div><dt>Duration</dt><dd id="sumDur">60 min</dd></div>
+        <div><dt>Patient</dt><dd id="sumWho">For myself</dd></div>
+        <div><dt>When</dt><dd id="sumWhen">Not chosen yet</dd></div>
+        <div><dt>Where</dt><dd id="sumWhere">Rayhab Movement Clinic, Beirut</dd></div>
+      </dl>
+    </div>
+    <p class="bk-note">Need to talk first? Call the clinic, number to be confirmed.</p>
+  </div>
+
+  <!-- Panel -->
+  <div class="bk-panel">
+
+    <!-- Step 1 -->
+    <section id="step1">
+      <div class="bk-stephead">
+        <div>
+          <p class="bk-eyebrow">Step 1 of 4</p>
+          <h2 class="bk-h">What do you need?</h2>
+        </div>
+        <div class="segment">
+          <button type="button" id="who-me" aria-pressed="true">For myself</button>
+          <button type="button" id="who-child" aria-pressed="false">For my child</button>
+        </div>
+      </div>
+      <div class="bk-typelist" role="radiogroup" aria-label="Service type">
+        <div class="bk-type is-on" data-type="assessment" role="radio" aria-checked="true" tabindex="0">
+          <span class="bk-radio" aria-hidden="true"></span>
+          <span>
+            <span class="bk-typetop"><span class="bk-typename">Scoliosis assessment</span><span class="tag-start">Start here</span></span>
+            <span class="bk-typedesc">First visit. Three-dimensional assessment, movement screen, and the first version of your plan.</span>
+            <span class="bk-typemeta">60 min</span>
+          </span>
+        </div>
+        <div class="bk-type" data-type="follow" role="radio" aria-checked="false" tabindex="-1">
+          <span class="bk-radio" aria-hidden="true"></span>
+          <span>
+            <span class="bk-typetop"><span class="bk-typename">Scoliosis rehabilitation session</span></span>
+            <span class="bk-typedesc">Coached corrective exercise and progression. For existing patients.</span>
+            <span class="bk-typemeta">45 min</span>
+          </span>
+        </div>
+        <div class="bk-type" data-type="online" role="radio" aria-checked="false" tabindex="-1">
+          <span class="bk-radio" aria-hidden="true"></span>
+          <span>
+            <span class="bk-typetop"><span class="bk-typename">Online scoliosis consultation</span></span>
+            <span class="bk-typedesc">Imaging review, exercise guidance and a remote plan. For patients outside Lebanon.</span>
+            <span class="bk-typemeta">40 min</span>
+          </span>
+        </div>
+        <div class="bk-type" data-type="sports" role="radio" aria-checked="false" tabindex="-1">
+          <span class="bk-radio" aria-hidden="true"></span>
+          <span>
+            <span class="bk-typetop"><span class="bk-typename">Sports or general physiotherapy</span></span>
+            <span class="bk-typedesc">Injury rehabilitation, return to sport, mobility and joint training.</span>
+            <span class="bk-typemeta">45 min</span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 2 -->
+    <section id="step2" hidden>
+      <div class="bk-stephead">
+        <div>
+          <p class="bk-eyebrow">Step 2 of 4</p>
+          <h2 class="bk-h">When suits you?</h2>
+        </div>
+        <div class="segment">
+          <button type="button" id="mode-clinic" aria-pressed="true">Beirut clinic</button>
+          <button type="button" id="mode-online" aria-pressed="false">Online</button>
+        </div>
+      </div>
+
+      <div class="bk-cal">
+        <div class="bk-calhead">
+          <p class="bk-month">September 2026</p>
+          <div class="bk-nav" aria-hidden="true"><span>‹</span><span>›</span></div>
+        </div>
+        <div class="bk-daybar" id="bk-days" role="group" aria-label="Choose a day"></div>
+
+        <div id="bk-slotwrap">
+          <p class="bk-slotlabel">Available times · Beirut time (GMT+3)</p>
+          <div class="bk-slotgrid" id="bk-slots" role="group" aria-label="Choose a time"></div>
+        </div>
+
+        <div id="bk-noslots" hidden>
+          <div class="bk-noslots">
+            <p class="bk-noslots-t">Nothing free on Wednesday</p>
+            <p class="bk-noslots-d">Rayan is in clinic but fully booked. The next opening is Thursday morning.</p>
+            <button class="btn btn-spring" style="font-size:15px;padding:14px 22px" type="button" id="bk-jump">Jump to Thursday</button>
+          </div>
+        </div>
+      </div>
+      <p class="bk-hold">Times are held for 15 minutes while you finish the request. Nothing is charged online.</p>
+    </section>
+
+    <!-- Step 3 -->
+    <section id="step3" hidden>
+      <div class="bk-stephead">
+        <div>
+          <p class="bk-eyebrow">Step 3 of 4</p>
+          <h2 class="bk-h">Your details</h2>
+        </div>
+      </div>
+      <div class="bk-fields">
+        <p><label class="field-label" for="f-first">First name</label><input class="input" id="f-first" type="text" autocomplete="given-name" required></p>
+        <p><label class="field-label" for="f-last">Last name</label><input class="input" id="f-last" type="text" autocomplete="family-name" required></p>
+        <p><label class="field-label" for="f-email">Email</label><input class="input" id="f-email" type="email" autocomplete="email" required></p>
+        <p><label class="field-label" for="f-phone">Phone / WhatsApp</label><input class="input" id="f-phone" type="tel" autocomplete="tel" placeholder="+961 3" required></p>
+        <p class="span2">
+          <label class="field-label" for="f-note">What brings you in?</label>
+          <textarea class="textarea" id="f-note"></textarea>
+          <span class="field-hint">Optional, a diagnosis, a Cobb angle, or just how it feels.</span>
+        </p>
+      </div>
+      <div class="bk-consentwrap">
+        <button class="bk-consent" type="button" id="bk-consent" role="checkbox" aria-checked="false">
+          <span class="bk-checkbox" aria-hidden="true"></span>
+          <span class="body-s">I agree to Rayhab storing these details to arrange my appointment. They are not shared with anyone outside the clinic.</span>
+        </button>
+      </div>
+      <p class="notice notice-error" id="bk-detailerr" hidden style="margin-top:20px">Fill in the highlighted fields and tick the consent box so we can reach you to confirm.</p>
+    </section>
+
+    <!-- Step 4 -->
+    <section id="step4" hidden>
+      <div class="bk-stephead">
+        <div>
+          <p class="bk-eyebrow">Step 4 of 4</p>
+          <h2 class="bk-h">Check and confirm</h2>
+        </div>
+      </div>
+      <dl class="bk-review">
+        <div class="bk-row">
+          <div><dt>Service</dt><dd id="rvType">Scoliosis assessment · 60 min</dd></div>
+          <button class="bk-edit" type="button" data-step="1">Change</button>
+        </div>
+        <div class="bk-row">
+          <div><dt>Date &amp; time</dt><dd id="rvWhen">Not chosen yet</dd></div>
+          <button class="bk-edit" type="button" data-step="2">Change</button>
+        </div>
+        <div class="bk-row">
+          <div><dt>Where</dt><dd id="rvWhere">Rayhab Movement Clinic, Beirut</dd></div>
+          <button class="bk-edit" type="button" data-step="2">Change</button>
+        </div>
+        <div class="bk-row">
+          <div><dt>Patient</dt><dd id="rvName">Not entered yet</dd><dd id="rvContact" style="font:300 14px/1.4 var(--sans);color:var(--text-3)">Not entered yet</dd></div>
+          <button class="bk-edit" type="button" data-step="3">Change</button>
+        </div>
+      </dl>
+      <p class="notice notice-info" style="margin-top:24px">This is a request, not a locked booking. The clinic confirms by WhatsApp within one working day, and payment happens in clinic.</p>
+    </section>
+
+    <!-- Loading -->
+    <div id="bk-loading" hidden>
+      <p class="bk-eyebrow">Sending your request…</p>
+      <div class="bk-loadwrap" aria-live="polite">
+        <span class="vh">Sending your request</span>
+        <span class="bk-skel" aria-hidden="true"></span>
+        <span class="bk-skel" aria-hidden="true"></span>
+        <span class="bk-skel" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <!-- Done -->
+    <section id="bk-done" hidden aria-live="polite">
+      <div class="bk-donemark" aria-hidden="true">✓</div>
+      <h2 class="bk-h">Request sent</h2>
+      <p class="body-m" style="margin-top:16px;color:var(--text-2)">We've got your request for <strong id="doneWhen">…</strong>. The clinic confirms by WhatsApp within one working day. Nothing has been charged.</p>
+      <h3 class="h6" style="margin-top:32px;color:var(--forest-900)">Before your first visit</h3>
+      <ul class="bk-checklist">
+        <li><span class="d-only">Bring any X-ray or report you already have; no need to get a new one.</span><span class="m-only">Bring any X-ray or report you already have.</span></li>
+        <li>Wear clothing you can move and be assessed in.</li>
+        <li><span class="d-only">Allow the full hour; the assessment is not rushed.</span><span class="m-only">Allow the full hour.</span></li>
+      </ul>
+      <div class="bk-doneactions">
+        <button class="btn btn-brand" type="button" id="bk-ics">Add to calendar</button>
+        <a class="btn btn-ghost-light" href="scoliosis/">Read: what to expect</a>
+        <button class="bk-linkbtn" type="button" id="bk-restart">Start again</button>
+      </div>
+    </section>
+
+    <!-- Actions -->
+    <div class="bk-actions" id="bk-actions">
+      <button class="bk-linkbtn" type="button" id="bk-back" hidden>← Back</button>
+      <p class="bk-hint" id="bk-hint"></p>
+      <button class="btn btn-spring" type="button" id="bk-next">Continue</button>
+    </div>
+
+  </div>
+</div>
+</main>
+</div>
+<script src="assets/js/booking.js"></script>
+</body>
+</html>
