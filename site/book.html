@@ -131,8 +131,11 @@
 
       <div class="bk-cal">
         <div class="bk-calhead">
-          <p class="bk-month">September 2026</p>
-          <div class="bk-nav" aria-hidden="true"><span>‹</span><span>›</span></div>
+          <p class="bk-month" id="bk-month">&nbsp;</p>
+          <div class="bk-nav">
+            <button type="button" id="bk-prev" aria-label="Earlier dates">‹</button>
+            <button type="button" id="bk-fwd" aria-label="Later dates">›</button>
+          </div>
         </div>
         <div class="bk-daybar" id="bk-days" role="group" aria-label="Choose a day"></div>
 
@@ -143,13 +146,13 @@
 
         <div id="bk-noslots" hidden>
           <div class="bk-noslots">
-            <p class="bk-noslots-t">Nothing free on Wednesday</p>
-            <p class="bk-noslots-d">Rayan is in clinic but fully booked. The next opening is Thursday morning.</p>
-            <button class="btn btn-spring" style="font-size:15px;padding:14px 22px" type="button" id="bk-jump">Jump to Thursday</button>
+            <p class="bk-noslots-t" id="bk-noslots-t">&nbsp;</p>
+            <p class="bk-noslots-d" id="bk-noslots-d">&nbsp;</p>
+            <button class="btn btn-spring" style="font-size:15px;padding:14px 22px" type="button" id="bk-jump">&nbsp;</button>
           </div>
         </div>
       </div>
-      <p class="bk-hold">Times are held for 15 minutes while you finish the request. Nothing is charged online.</p>
+      <p class="bk-hold">Choosing a time sends a request. Nothing is reserved until the clinic confirms, by WhatsApp within one working day, and nothing is charged online.</p>
     </section>
 
     <!-- Step 3 -->
@@ -161,10 +164,10 @@
         </div>
       </div>
       <div class="bk-fields">
-        <p><label class="field-label" for="f-first">First name</label><input class="input" id="f-first" type="text" autocomplete="given-name" required></p>
-        <p><label class="field-label" for="f-last">Last name</label><input class="input" id="f-last" type="text" autocomplete="family-name" required></p>
-        <p><label class="field-label" for="f-email">Email</label><input class="input" id="f-email" type="email" autocomplete="email" required></p>
-        <p><label class="field-label" for="f-phone">Phone / WhatsApp</label><input class="input" id="f-phone" type="tel" autocomplete="tel" placeholder="+961 3" required></p>
+        <p><label class="field-label" for="f-first">First name</label><input class="input" id="f-first" type="text" autocomplete="given-name" required aria-describedby="err-f-first"><span class="field-err" id="err-f-first" hidden></span></p>
+        <p><label class="field-label" for="f-last">Last name</label><input class="input" id="f-last" type="text" autocomplete="family-name" required aria-describedby="err-f-last"><span class="field-err" id="err-f-last" hidden></span></p>
+        <p><label class="field-label" for="f-email">Email</label><input class="input" id="f-email" type="email" autocomplete="email" required aria-describedby="err-f-email"><span class="field-err" id="err-f-email" hidden></span></p>
+        <p><label class="field-label" for="f-phone">Phone / WhatsApp</label><input class="input" id="f-phone" type="tel" autocomplete="tel" placeholder="+961 3" required aria-describedby="err-f-phone"><span class="field-err" id="err-f-phone" hidden></span></p>
         <p class="span2">
           <label class="field-label" for="f-note">What brings you in?</label>
           <textarea class="textarea" id="f-note"></textarea>

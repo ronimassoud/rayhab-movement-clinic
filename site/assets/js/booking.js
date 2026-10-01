@@ -30,39 +30,87 @@
       desc: 'Injury rehabilitation, return to sport, mobility and joint training.' }
   ];
 
-  var DAYS = [
-    { dow: 'Mon', num: '1', month: 'Sep', open: true },
-    { dow: 'Tue', num: '2', month: 'Sep', open: true },
-    { dow: 'Wed', num: '3', month: 'Sep', open: false },
-    { dow: 'Thu', num: '4', month: 'Sep', open: true },
-    { dow: 'Fri', num: '5', month: 'Sep', open: true },
-    { dow: 'Sat', num: '6', month: 'Sep', open: true }
-  ];
+  /* ---------- Clinic calendar ----------
+     Real dates, generated from the day the page is opened. The previous
+     version listed a fixed "1-6 September" week with a hardcoded set of
+     taken times: it went stale the moment the month turned, and it showed
+     bookings that never existed.
 
-  var TAKEN = {
-    0: ['10:00', '15:00', '09:45', '10:30'],
-    1: ['09:00', '17:00'],
-    3: ['11:00', '16:00'],
-    4: ['09:00', '12:00', '18:00'],
-    5: ['15:00']
+     Opening pattern: closed Sunday and Wednesday; mornings and afternoons
+     Monday, Tuesday, Thursday and Friday; Saturday mornings only. Times
+     are Beirut local, which is what the panel tells the patient. */
+  var CLOSED_DOW = [0, 3];
+  var HOURS = {
+    1: [['09:00', '12:00'], ['15:00', '18:00']],
+    2: [['09:00', '12:00'], ['15:00', '18:00']],
+    4: [['09:00', '12:00'], ['15:00', '18:00']],
+    5: [['09:00', '12:00'], ['15:00', '18:00']],
+    6: [['09:00', '13:00']]
   };
+  var LEAD_DAYS = 1;   // the clinic confirms within one working day
+  var HORIZON = 90;    // how far ahead a request can be made
+  var WINDOW = 6;      // days visible at once
 
-  function slotsFor(dayIndex, mins) {
-    var base = mins <= 40
-      ? ['09:00','09:30','10:00','10:30','11:00','11:30','15:00','15:30','16:00','16:30','17:00','17:30']
-      : mins <= 45
-      ? ['09:00','09:45','10:30','11:15','15:00','15:45','16:30','17:15']
-      : ['09:00','10:00','11:00','12:00','15:00','16:00','17:00','18:00'];
-    var taken = TAKEN[dayIndex] || [];
-    return base.map(function (s) {
-      return { label: s, taken: taken.indexOf(s) >= 0 };
+  var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var DOW_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
+                  'Thursday', 'Friday', 'Saturday'];
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var MON_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+                  'August', 'September', 'October', 'November', 'December'];
+
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function startOfDay(d) { var x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+  function addDays(d, n) { var x = startOfDay(d); x.setDate(x.getDate() + n); return x; }
+  function sameDay(a, b) { return a && b && a.getTime() === b.getTime(); }
+  function isoDate(d) {
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+  function toMin(hhmm) {
+    var q = hhmm.split(':');
+    return parseInt(q[0], 10) * 60 + parseInt(q[1], 10);
+  }
+  function fromMin(m) { return pad2(Math.floor(m / 60)) + ':' + pad2(m % 60); }
+
+  function firstBookable() { return addDays(new Date(), LEAD_DAYS); }
+  function lastBookable() { return addDays(new Date(), HORIZON); }
+  function isOpen(d) { return CLOSED_DOW.indexOf(d.getDay()) < 0; }
+
+  /* Which times are already taken needs the practice calendar behind it.
+     There is no backend yet, so nothing is shown as taken: the flow makes
+     a request and the clinic confirms it. Point this at the real source
+     and the slot grid will grey out accordingly, no other change needed. */
+  function busyTimes(/* isoDateString */) { return []; }
+
+  function slotsFor(date, mins) {
+    if (!date || !isOpen(date)) return [];
+    var blocks = HOURS[date.getDay()] || [];
+    var busy = busyTimes(isoDate(date));
+    var out = [];
+    blocks.forEach(function (b) {
+      var t = toMin(b[0]), end = toMin(b[1]);
+      while (t + mins <= end) {
+        var label = fromMin(t);
+        out.push({ label: label, taken: busy.indexOf(label) >= 0 });
+        t += mins;
+      }
     });
+    return out;
+  }
+
+  function nextOpenFrom(date) {
+    var d = startOfDay(date), limit = lastBookable();
+    for (var i = 0; i < 14 && d <= limit; i++) {
+      if (isOpen(d)) return d;
+      d = addDays(d, 1);
+    }
+    return null;
   }
 
   /* ---------- State ---------- */
   var st = {
     step: 1, forWhom: 'me', type: 'assessment', mode: 'clinic',
-    day: 0, slot: null,
+    winStart: 0, date: null, slot: null, blurred: {}, blurred: {},
     first: '', last: '', email: '', phone: '', note: '', consent: false,
     touched: false, loading: false, done: false
   };
@@ -75,10 +123,45 @@
     return TYPES.filter(function (t) { return t.id === st.type; })[0] || TYPES[0];
   }
   function isOnline() { return st.type === 'online' || st.mode === 'online'; }
-  function emailOk() { return /.+@.+\..+/.test(st.email); }
-  function phoneOk() { return st.phone.replace(/\D/g, '').length >= 7; }
+  /* Field rules. Each returns an error string, or '' when the value is
+     acceptable, so the message and the validity come from one place. */
+  function nameErr(v, what) {
+    v = v.trim();
+    if (!v) return 'Enter your ' + what + '.';
+    if (v.length < 2) return 'That looks too short.';
+    if (!/[A-Za-z\u00C0-\u024F\u0600-\u06FF]/.test(v)) return 'Use letters for your ' + what + '.';
+    return '';
+  }
+  function emailErr() {
+    var v = st.email.trim();
+    if (!v) return 'Enter an email so the clinic can reply.';
+    // One @, something either side, a dot in the domain, no spaces.
+    if (!/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(v)) return 'Check the email address.';
+    return '';
+  }
+  function phoneErr() {
+    var v = st.phone.trim();
+    if (!v) return 'Enter a number the clinic can reach you on.';
+    if (/[^0-9+()\-\s]/.test(v)) return 'Use digits, spaces, + or ( ) only.';
+    var digits = v.replace(/\D/g, '');
+    if (digits.length < 8) return 'That number looks too short.';
+    if (digits.length > 15) return 'That number looks too long.';
+    return '';
+  }
+  function fieldErrors() {
+    return {
+      '#f-first': nameErr(st.first, 'first name'),
+      '#f-last': nameErr(st.last, 'last name'),
+      '#f-email': emailErr(),
+      '#f-phone': phoneErr()
+    };
+  }
+  function emailOk() { return !emailErr(); }
+  function phoneOk() { return !phoneErr(); }
   function detailsOk() {
-    return !!(st.first.trim() && st.last.trim() && emailOk() && phoneOk() && st.consent);
+    var e = fieldErrors();
+    for (var k in e) { if (e[k]) return false; }
+    return st.consent;
   }
   function canNext() {
     if (st.step === 1) return !!st.type;
@@ -86,10 +169,16 @@
     if (st.step === 3) return detailsOk();
     return true;
   }
+  function visibleDays() {
+    var out = [], from = addDays(firstBookable(), st.winStart);
+    for (var i = 0; i < WINDOW; i++) out.push(addDays(from, i));
+    return out;
+  }
   function whenLabel() {
-    if (!st.slot) return 'Not chosen yet';
-    var d = DAYS[st.day];
-    return d.dow + ' ' + d.num + ' ' + d.month + ' · ' + st.slot;
+    if (!st.slot || !st.date) return 'Not chosen yet';
+    var d = st.date;
+    return DOW[d.getDay()] + ' ' + d.getDate() + ' ' + MON[d.getMonth()] +
+           ' · ' + st.slot;
   }
   function whereLabel() {
     return isOnline() ? 'Online, video call' : 'Rayhab Movement Clinic, Beirut';
@@ -129,36 +218,78 @@
   function renderDays() {
     var wrapEl = $('#bk-days');
     wrapEl.innerHTML = '';
-    DAYS.forEach(function (d, i) {
+    var days = visibleDays();
+
+    // Month heading spans the visible window, which can straddle a month.
+    var a = days[0], z = days[days.length - 1];
+    var label = a.getMonth() === z.getMonth()
+      ? MON_FULL[a.getMonth()] + ' ' + a.getFullYear()
+      : MON[a.getMonth()] + ' \u2013 ' + MON[z.getMonth()] + ' ' + z.getFullYear();
+    var monthEl = $('#bk-month');
+    if (monthEl) monthEl.textContent = label;
+
+    var prev = $('#bk-prev'), fwd = $('#bk-fwd');
+    if (prev) prev.disabled = st.winStart === 0;
+    if (fwd) fwd.disabled = addDays(firstBookable(), st.winStart + WINDOW) > lastBookable();
+
+    days.forEach(function (d) {
+      var open = isOpen(d);
+      var selected = st.date && sameDay(d, st.date);
       var b = document.createElement('button');
       b.type = 'button';
-      b.className = 'bk-day' + (st.day === i ? ' is-active' : '') + (d.open ? '' : ' is-closed');
-      b.setAttribute('aria-pressed', String(st.day === i));
+      b.className = 'bk-day' + (selected ? ' is-active' : '') + (open ? '' : ' is-closed');
+      b.setAttribute('aria-pressed', String(!!selected));
       b.innerHTML =
-        '<span class="bk-dow">' + d.dow + '</span>' +
-        '<span class="bk-num">' + d.num + '</span>' +
+        '<span class="bk-dow">' + DOW[d.getDay()] + '</span>' +
+        '<span class="bk-num">' + d.getDate() + '</span>' +
         '<span class="bk-availdot" aria-hidden="true"></span>';
       b.setAttribute('aria-label',
-        d.dow + ' ' + d.num + ' ' + d.month + (d.open ? '' : ', no availability'));
+        DOW_FULL[d.getDay()] + ' ' + d.getDate() + ' ' + MON_FULL[d.getMonth()] +
+        (open ? '' : ', closed'));
       b.addEventListener('click', function () {
-        st.day = i; st.slot = null; render();
+        st.date = d; st.slot = null; render();
       });
       wrapEl.appendChild(b);
     });
   }
 
   function renderSlots() {
-    var day = DAYS[st.day];
     var grid = $('#bk-slots');
     var none = $('#bk-noslots');
-    var hasSlots = day.open;
+    var day = st.date;
+    var list = day ? slotsFor(day, currentType().mins) : [];
+    var hasSlots = list.length > 0;
 
     $('#bk-slotwrap').hidden = !hasSlots;
     none.hidden = hasSlots;
-    if (!hasSlots) { grid.innerHTML = ''; return; }
+
+    if (!hasSlots) {
+      grid.innerHTML = '';
+      // Which day is closed depends on the date, so the panel is written
+      // here rather than hardcoded in the markup.
+      var nxt = day ? nextOpenFrom(addDays(day, 1)) : null;
+      var t = $('#bk-noslots-t'), d2 = $('#bk-noslots-d'), jump = $('#bk-jump');
+      if (t) t.textContent = day
+        ? 'Closed on ' + DOW_FULL[day.getDay()]
+        : 'Pick a day to see times';
+      if (d2) d2.textContent = nxt
+        ? 'The clinic is closed that day. The next open day is ' +
+          DOW_FULL[nxt.getDay()] + ' ' + nxt.getDate() + ' ' + MON_FULL[nxt.getMonth()] + '.'
+        : 'Choose another day from the row above.';
+      if (jump) {
+        jump.hidden = !nxt;
+        if (nxt) jump.textContent = 'Jump to ' + DOW_FULL[nxt.getDay()];
+        jump.onclick = nxt ? function () {
+          var off = Math.round((nxt - firstBookable()) / 86400000);
+          st.winStart = Math.max(0, Math.min(off, off - WINDOW + 1));
+          st.date = nxt; st.slot = null; render();
+        } : null;
+      }
+      return;
+    }
 
     grid.innerHTML = '';
-    slotsFor(st.day, currentType().mins).forEach(function (s) {
+    list.forEach(function (s) {
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'slot-btn';
@@ -193,16 +324,19 @@
   }
 
   function renderValidation() {
-    var pairs = [
-      ['#f-first', st.first.trim()],
-      ['#f-last', st.last.trim()],
-      ['#f-email', emailOk()],
-      ['#f-phone', phoneOk()]
-    ];
-    pairs.forEach(function (p) {
-      var el = $(p[0]);
-      var bad = st.touched && !p[1];
-      el.setAttribute('aria-invalid', String(bad));
+    var errs = fieldErrors();
+    Object.keys(errs).forEach(function (sel) {
+      var el = $(sel);
+      if (!el) return;
+      // A field is only marked once it has been left, or once Continue has
+      // been pressed, so nobody is told they are wrong mid-typing.
+      var show = (st.touched || st.blurred[sel]) && !!errs[sel];
+      el.setAttribute('aria-invalid', String(show));
+      var msg = $('#err-' + el.id);
+      if (msg) {
+        msg.textContent = show ? errs[sel] : '';
+        msg.hidden = !show;
+      }
     });
     $('#bk-consent').setAttribute('aria-checked', String(st.consent));
     $('#bk-consent').classList.toggle('is-on', st.consent);
@@ -253,8 +387,8 @@
 
     var hint = $('#bk-hint');
     // Once a time is chosen the action bar has nothing to add: the panel's
-    // own .bk-hold line already says times are held for 15 minutes, and
-    // repeating it right underneath read as a stutter.
+    // own .bk-hold line already explains what happens next, and repeating
+    // it right underneath read as a stutter.
     hint.textContent = st.step === 2 && !st.slot ? 'Pick a time to continue.' : '';
   }
 
@@ -283,22 +417,36 @@
     });
   });
 
+  var prevBtn = $('#bk-prev'), fwdBtn = $('#bk-fwd');
+  if (prevBtn) prevBtn.addEventListener('click', function () {
+    st.winStart = Math.max(0, st.winStart - WINDOW); render();
+  });
+  if (fwdBtn) fwdBtn.addEventListener('click', function () {
+    st.winStart += WINDOW; render();
+  });
+
   $('#who-me').addEventListener('click', function () { st.forWhom = 'me'; render(); });
   $('#who-child').addEventListener('click', function () { st.forWhom = 'child'; render(); });
   $('#mode-clinic').addEventListener('click', function () { st.mode = 'clinic'; st.slot = null; render(); });
   $('#mode-online').addEventListener('click', function () { st.mode = 'online'; st.slot = null; render(); });
 
-  $('#bk-jump').addEventListener('click', function () { st.day = 3; st.slot = null; render(); });
 
   [['#f-first', 'first'], ['#f-last', 'last'], ['#f-email', 'email'],
    ['#f-phone', 'phone'], ['#f-note', 'note']].forEach(function (p) {
-    $(p[0]).addEventListener('input', function (e) {
+    var el = $(p[0]);
+    el.addEventListener('input', function (e) {
       st[p[1]] = e.target.value;
-      if (st.touched) renderValidation();
+      renderValidation();
       var n = $('#bk-next');
       var ok = canNext();
       n.classList.toggle('btn-primary', ok);
       n.classList.toggle('btn-disabled', !ok);
+    });
+    // Nobody is told they are wrong while still typing: a field is only
+    // marked once they leave it, or once Continue is pressed.
+    el.addEventListener('blur', function () {
+      st.blurred[p[0]] = true;
+      renderValidation();
     });
   });
 
@@ -329,7 +477,17 @@
 
   $('#bk-next').addEventListener('click', function () {
     if (st.step === 4) return submit();
-    if (st.step === 3 && !detailsOk()) { st.touched = true; renderValidation(); return; }
+    if (st.step === 3 && !detailsOk()) {
+      st.touched = true;
+      renderValidation();
+      // Send focus to the first thing that needs fixing rather than
+      // leaving the patient to hunt for it.
+      var errs = fieldErrors();
+      var firstBad = Object.keys(errs).filter(function (k) { return errs[k]; })[0];
+      var target = firstBad ? $(firstBad) : (!st.consent ? $('#bk-consent') : null);
+      if (target) target.focus();
+      return;
+    }
     if (!canNext()) return;
     st.step = Math.min(4, st.step + 1);
     st.touched = false;
@@ -341,16 +499,16 @@
   if (icsBtn) icsBtn.addEventListener('click', function () {
     // The mockup offers this on the success screen. The request is not yet
     // confirmed, so the event is written as tentative.
-    var d = DAYS[st.day];
-    if (!st.slot) return;
-    var month = 9, year = 2026;                       // fixture month
-    var hh = parseInt(st.slot.split(':')[0], 10);
-    var mm = parseInt(st.slot.split(':')[1], 10);
-    var pad = function (n) { return (n < 10 ? '0' : '') + n; };
-    var day = pad(parseInt(d.num, 10));
-    var start = '' + year + pad(month) + day + 'T' + pad(hh) + pad(mm) + '00';
-    var endMin = mm + currentType().mins;
-    var end = '' + year + pad(month) + day + 'T' + pad(hh + Math.floor(endMin / 60)) + pad(endMin % 60) + '00';
+    if (!st.slot || !st.date) return;
+    var startAt = new Date(st.date);
+    startAt.setHours(parseInt(st.slot.split(':')[0], 10),
+                     parseInt(st.slot.split(':')[1], 10), 0, 0);
+    var endAt = new Date(startAt.getTime() + currentType().mins * 60000);
+    var stamp = function (dt) {
+      return '' + dt.getFullYear() + pad2(dt.getMonth() + 1) + pad2(dt.getDate()) +
+             'T' + pad2(dt.getHours()) + pad2(dt.getMinutes()) + '00';
+    };
+    var start = stamp(startAt), end = stamp(endAt);
     var lines = [
       'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Rayhab Movement Clinic//Booking//EN',
       'BEGIN:VEVENT', 'UID:' + Date.now() + '@dr-rayhab.com',
@@ -371,9 +529,11 @@
   });
 
   $('#bk-restart').addEventListener('click', function () {
-    st = { step: 1, forWhom: 'me', type: 'assessment', mode: 'clinic', day: 0, slot: null,
+    st = { step: 1, forWhom: 'me', type: 'assessment', mode: 'clinic',
+           winStart: 0, date: null, slot: null, blurred: {},
            first: '', last: '', email: '', phone: '', note: '', consent: false,
-           touched: false, loading: false, done: false };
+           touched: false, blurred: {}, loading: false, done: false };
+    st.date = nextOpenFrom(firstBookable());
     ['#f-first', '#f-last', '#f-email', '#f-phone', '#f-note'].forEach(function (s) { $(s).value = ''; });
     render();
     focusStep();
@@ -394,6 +554,7 @@
     }, 1400);
   }
 
+    st.date = nextOpenFrom(firstBookable());
     render();
   }
 

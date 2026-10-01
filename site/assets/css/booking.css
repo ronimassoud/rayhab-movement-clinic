@@ -489,3 +489,29 @@ dialog.modal.is-open::backdrop{background:rgba(8,25,14,.72)}
   .bk-consent:hover .bk-checkbox,.bk-consent:active .bk-checkbox,
   .bk-mback:hover,.bk-mback:active,.bk-mexit:active{transform:none !important}
 }
+
+
+/* ---- Per-field validation messages ----
+   One message per field, tied to the input with aria-describedby, instead
+   of a single summary line at the bottom of the step. */
+.field-err{
+  display:block;margin-top:6px;font:400 13px/1.45 var(--sans);color:var(--error)}
+.field-err[hidden]{display:none}
+
+/* ---- Week navigation ----
+   The calendar arrows were decorative spans. They are buttons now, so the
+   visible range can move. */
+.bk-nav button{
+  width:30px;height:30px;border-radius:50%;padding:0;cursor:pointer;
+  background:transparent;border:1px solid var(--border);color:var(--text-2);
+  display:inline-flex;align-items:center;justify-content:center;
+  font:400 17px/1 var(--sans);
+  transition:background-color var(--t-tint),border-color var(--t-tint),
+             color var(--t-tint),transform var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .bk-nav button:hover:not([disabled]){
+    border-color:var(--forest-600);color:var(--brand-800);background:var(--spring-50)}
+}
+.bk-nav button:active:not([disabled]){transform:scale(.92);transition-duration:.06s}
+.bk-nav button[disabled]{opacity:.35;cursor:not-allowed}
+@media (pointer:coarse){ .bk-nav button{width:44px;height:44px} }
