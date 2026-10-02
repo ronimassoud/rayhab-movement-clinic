@@ -1457,3 +1457,35 @@ html{scrollbar-color:var(--sb-thumb) transparent}
    navigation, which reads as the page reloading rather than moving. */
 .site-nav{view-transition-name:site-nav}
 .m-bookbar{view-transition-name:book-bar}
+
+
+/* ---- Scoliosis sits under Education ----
+   It is a child of Education, not a seventh peer, so it reads as a
+   sub-entry: a shade smaller, a shade dimmer, and preceded by a chevron.
+   The marker is ::after because ::before already draws the hover pill. */
+/* One step down from --nav-link, not two. The smaller size and the
+   chevron already carry the subordination; dimming it further buries
+   the clinic's main specialism to make a point about hierarchy. */
+.navgroup .nav-sub{font-size:13px;color:var(--on-dark);padding-left:26px}
+/* Drawn rather than a chevron character: generated text content is
+   announced by some screen readers, and the breadcrumb already states the
+   relationship properly. A shape stays silent and hits the 3:1 non-text
+   contrast target, which the dimmer glyph colour did not. */
+.navgroup .nav-sub::after{
+  content:"";position:absolute;left:14px;top:50%;width:4px;height:4px;
+  border-top:1.5px solid var(--on-dark-3);border-right:1.5px solid var(--on-dark-3);
+  transform:translateY(-50%) rotate(45deg);pointer-events:none}
+.navgroup .nav-sub:hover{color:var(--bone)}
+
+/* On its own pages the sub-entry still takes the spring pill, so the
+   chevron has to flip with the label or it disappears into the green. */
+.navgroup .nav-sub[aria-current="page"]{color:var(--ink-950)}
+.navgroup .nav-sub[aria-current="page"]::after{
+  border-top-color:var(--on-spring);border-right-color:var(--on-spring)}
+
+@media (max-width:1180px){
+  /* Stacked in the drawer, indentation carries the relationship and the
+     chevron only has to confirm it. */
+  .navgroup .nav-sub{font-size:15px;padding-left:34px}
+  .navgroup .nav-sub::after{left:19px;width:5px;height:5px}
+}

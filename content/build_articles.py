@@ -16,11 +16,11 @@ NAV = '''<nav class="site-nav" aria-label="Primary">
   <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navgroup"><i></i><span class="vh">Menu</span></button>
   <div class="navgroup" id="navgroup">
     <a href="../">Home</a>
-    <a href="./" aria-current="page">Scoliosis</a>
+    <a href="../education.html">Education</a>
+    <a class="nav-sub" href="./" aria-current="page">Scoliosis</a>
     <a href="../services/">Services</a>
     <a href="../about.html">About</a>
     <a href="../results.html">Results</a>
-    <a href="../education.html">Education</a>
     <a href="../contact.html">Contact</a>
   </div>
   <div class="nav-right">
