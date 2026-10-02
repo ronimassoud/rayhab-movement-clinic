@@ -1533,3 +1533,35 @@ html{scrollbar-color:var(--sb-thumb) transparent}
 /* The whole-library chip leads, so getting back to all 24 is one click
    from any view rather than a trip through the breadcrumb. */
 .libchip-all{margin-right:4px}
+
+
+/* ==========================================================
+   Portrait panels
+   A cut-out portrait stands in a coloured panel rather than
+   sitting in a photographic box, so the figure reads against
+   the brand colour instead of a white studio rectangle.
+   ========================================================== */
+.photo{position:relative;overflow:hidden;display:block;background:var(--forest-850)}
+.photo-light{background:var(--sand)}
+.photo img{
+  width:100%;height:100%;display:block;
+  /* contain, not cover: a cut-out has no spare background to crop into,
+     and bottom alignment stands the figure on the panel floor rather than
+     floating it. */
+  object-fit:contain;object-position:bottom center}
+
+/* The hero figure is the largest paint on the page, so it gets no reveal
+   and no transition. It is the LCP element. */
+.hero-slot.photo img{object-position:bottom center}
+
+.avatar{border-radius:50%;overflow:hidden;flex:none;background:var(--sand)}
+.avatar img{width:100%;height:100%;display:block;object-fit:cover;object-position:center top}
+
+/* The phone heights were set for an empty well. A standing figure in a
+   250px panel that is 339px wide sits small with dead space either side,
+   so the panels holding the portrait get more room. Scoped to .photo, as
+   the service pages still carry placeholder wells at these class names. */
+@media (max-width:700px){
+  .photo.hero-slot{height:340px}
+  .photo.svc-hero-slot{height:320px}
+}
