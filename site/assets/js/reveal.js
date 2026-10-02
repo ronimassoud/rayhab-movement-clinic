@@ -107,6 +107,26 @@
   if (reduce.addEventListener) reduce.addEventListener('change', onReduce);
   else if (reduce.addListener) reduce.addListener(onReduce);
 
+  /* ---------- Library view bar ----------
+     On a phone the bar is one horizontal track, and the active view can sit
+     a long way along it: arriving on "Parents" put its chip 960px to the
+     right of a 339px window, so the reader could not see which view they
+     were in. Nudging the track, rather than calling scrollIntoView, avoids
+     yanking the page vertically as a side effect. */
+  var bar = document.querySelector('.libbar');
+  if (bar) {
+    var active = bar.querySelector('[aria-current="page"]');
+    if (active && bar.scrollWidth > bar.clientWidth) {
+      // Prefer showing the chip's leading edge, but fall back to its
+      // trailing edge so the last one does not land half cut off, then
+      // clamp so neither end of the track overscrolls.
+      var lead = active.offsetLeft - 16;
+      var trail = active.offsetLeft + active.offsetWidth + 16 - bar.clientWidth;
+      bar.scrollLeft = Math.max(0, Math.min(Math.max(lead, trail),
+                                            bar.scrollWidth - bar.clientWidth));
+    }
+  }
+
   /* ---------- Measured angles count to their result ----------
      The four Cobb angles on the site are its only measured outcome, and
      they sit on the page as flat text. Counting the result down from the

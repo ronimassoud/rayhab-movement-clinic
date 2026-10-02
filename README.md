@@ -48,7 +48,7 @@ and JS between edits. Hard-refresh when something looks unchanged.
 site/                        the website, 72 pages
   index.html                 home
   about.html  contact.html  results.html  education.html  book.html
-  scoliosis/                 hub, 4 pillar indexes, 3 audience routes, 24 articles
+  scoliosis/                 hub, library + 7 views of it, 24 articles
   exercise/  sport/  posture/  mobility/  injury/
                              5 education hubs, 24 articles between them
   services/                  index + 4 service pages
@@ -102,6 +102,27 @@ The two assets that ship are derived from it:
   planes are flattened because `mask-image` reads only the alpha channel.
 
 Regenerate both from the master rather than editing them in place.
+
+## The scoliosis library
+
+Twenty-four articles, one list, eight ways in. `library.html` is the whole
+set; the four topic views and the three situation views are the same list
+filtered, and every one of them renders from `render_index()` in
+`build_articles.py` with a different subset.
+
+They were separate pages over overlapping subsets before, which is why the
+hub felt like it offered four competing routes into one shelf: a parent who
+opened "Parents of adolescents" and then "Pillar 01" met the same layout
+twice with nothing saying the two were one library. Seventeen of the
+twenty-four appeared on more than one page with no way to tell.
+
+Every view now carries the same bar of chips, so the relationship is
+visible and switching is one click. The bar is plain links, so it works
+without JavaScript; `reveal.js` only nudges the horizontal track on a phone
+so the active chip is not off-screen.
+
+Adding a view means adding an entry to `routes` in `articles.json` and a
+label in `VIEW_LABEL`. Nothing else changes.
 
 ## Motion
 

@@ -1,344 +1,1308 @@
 {
-"pillars": [
- {"id":"p1","slug":"what-scoliosis-is","name":"What scoliosis is","short":"Pillar 01 · What scoliosis is","claim":9,
-  "desc":"What a scoliosis curve actually is, what the Cobb angle measures, which types exist, what predicts progression, and how adult scoliosis differs.",
-  "stand":"Before anything can be treated it has to be understood. These nine articles cover what a curve is, what the numbers mean, and what actually predicts whether one changes."},
- {"id":"p2","slug":"the-schroth-method","name":"The Schroth Method","short":"Pillar 02 · The Schroth Method","claim":6,
-  "desc":"What Schroth-based scoliosis rehabilitation involves, what rotational breathing is, why the exercises are curve-specific, and what the evidence does and does not show.",
-  "stand":"Schroth is the method behind most of what happens in the clinic. These six articles explain what it asks of you, why it is built around your specific curve, and how strong the evidence actually is."},
- {"id":"p3","slug":"rayhabs-approach","name":"Rayhab's approach","short":"Pillar 03 · Rayhab's approach","claim":5,
-  "desc":"How Rayhab builds a scoliosis programme you can run yourself, work alongside a brace, keep a teenager engaged, and return to lifting and sport with a known curve.",
-  "stand":"Method is not the same as practice. These five articles cover how the work is actually delivered here: handed over rather than held onto, and built around the life you already have."},
- {"id":"p4","slug":"the-assessment","name":"The assessment","short":"Pillar 04 · The assessment","claim":4,
-  "desc":"What happens in a 60-minute scoliosis assessment at Rayhab, whether you need an X-ray first, what gets measured, and what to do straight after a diagnosis.",
-  "stand":"Everything starts with one appointment. These four articles explain what is measured, what you need to bring, and what you leave with."}
-],
-"articles": [
-
-{"slug":"what-scoliosis-actually-is","pillar":"p1","mins":"6 min read",
- "title":"What scoliosis actually is",
- "blurb":"A curve is three-dimensional, not a bend on a flat picture. Here is what that means.",
- "desc":"Scoliosis is a three-dimensional change in the spine, not simply a sideways bend. What the definition means, how it is confirmed, and how common it is.",
- "stand":"Most people picture a spine bent sideways. That picture is not wrong, but it is missing the part that matters most for treatment.",
- "key":["Scoliosis is a sideways curve of **10 degrees or more**, measured on a standing X-ray, combined with rotation of the vertebrae.","It is three-dimensional: sideways, rotated, and it changes the normal front-to-back curves too.","Around 2 to 3 in 100 adolescents have a curve. Most never need more than monitoring.","A curve is a structural finding, not a diagnosis of pain or disability."],
- "blocks":[
-  {"k":"h","id":"definition","t":"The definition, and why it has a number in it"},
-  {"k":"p","t":"Scoliosis is defined as a sideways curvature of the spine measuring **10 degrees or more** on a standing X-ray, together with rotation of the vertebrae. The number matters because spines are not perfectly straight. Small asymmetries are normal and extremely common. The 10-degree line exists to separate ordinary variation from something worth following."},
-  {"k":"p","t":"That threshold is a convention, not a biological cliff. A curve of 9 degrees and a curve of 11 degrees are almost the same spine. What changes at that line is whether the finding gets a name and a follow-up plan."},
-  {"k":"h","id":"three-dimensions","t":"Why it is three-dimensional"},
-  {"k":"p","t":"An X-ray is a flat image of a solid object. On that image a curve looks like a bend to one side. In the body, the vertebrae in that curve are also **rotated**, turning around the long axis of the spine, and the normal front-to-back curves of the back and lower back are usually flattened or exaggerated as well."},
-  {"k":"p","t":"This is why rotation shows up on the outside of the body. When the vertebrae turn, they carry the ribs with them, which is what produces the raised area on one side of the back that becomes obvious when someone bends forward."},
-  {"k":"ul","items":["**Sideways**, the part the Cobb angle measures.","**Rotational**, the part that produces a rib hump or a waist that looks uneven.","**Front-to-back**, where the normal curves of the spine are altered."]},
-  {"k":"p","t":"Treatment that only addresses the sideways component is working on one dimension of a three-dimensional problem. That is the reasoning behind curve-specific exercise approaches, which try to act on all three."},
-  {"k":"h","id":"how-common","t":"How common it is"},
-  {"k":"p","t":"Roughly 2 to 3 in every 100 adolescents have a curve of 10 degrees or more. Far fewer progress to a size where active treatment is considered. Most curves found during a school or family check turn out to be small, stable, and require nothing beyond periodic review."},
-  {"k":"p","t":"Curves are found more often in girls, and the difference grows with curve size: small curves are distributed fairly evenly between boys and girls, while larger curves are considerably more common in girls."},
-  {"k":"h","id":"not-a-verdict","t":"What a curve is not"},
-  {"k":"p","t":"A curve is a structural description. On its own it does not tell you that you will be in pain, that you will lose function, or that you will need surgery. Adolescents with curves are frequently symptom-free, and many adults live a full life with a curve they have had for decades."},
-  {"k":"p","t":"It also does not tell you what caused it. In around eight out of ten cases no cause is identified at all, which is what the word **idiopathic** means."},
-  {"k":"uncertain","t":"The causes of idiopathic scoliosis are still not understood. Genetics, growth, neuromuscular control and connective tissue have all been investigated, and none of them explains the condition on its own. Anyone who tells you confidently why your curve appeared is going beyond what is currently known."}],
- "related":["cobb-angle","types-of-scoliosis","rotation-and-the-rib-hump"]},
-
-{"slug":"cobb-angle","pillar":"p1","mins":"7 min read",
- "title":"Reading your Cobb angle: what the number does and doesn't tell you",
- "blurb":"The number is real and useful. It is also narrower than most people assume.",
- "desc":"What the Cobb angle measures, why two readings of the same X-ray can differ by several degrees, and what the number cannot tell you about your scoliosis.",
- "stand":"The Cobb angle is the number everyone remembers from the appointment. It is worth knowing exactly what it measures, and what it leaves out.",
- "key":["The Cobb angle measures the **sideways** tilt between the two most tilted vertebrae of a curve.","Repeat measurements of the same X-ray commonly differ by around **5 degrees**, so a small change may be measurement noise.","It says nothing about rotation, appearance, pain or function.","A single number means little. The direction of travel over time means a great deal."],
- "blocks":[
-  {"k":"h","id":"what-it-measures","t":"What the measurement actually is"},
-  {"k":"p","t":"To measure a Cobb angle, the clinician finds the vertebra at the top of the curve that tilts most, and the vertebra at the bottom that tilts most. A line is drawn along each of those two vertebrae, and the angle where those lines would meet is the Cobb angle."},
-  {"k":"p","t":"It is a measure of one thing: the sideways tilt between the two ends of a curve, on a flat image, taken while standing. That is genuinely useful, because it is reproducible enough to compare over time and it is the number that treatment thresholds are built around."},
-  {"k":"h","id":"measurement-error","t":"Why 5 degrees is not always a change"},
-  {"k":"p","t":"Choosing which vertebrae are the most tilted involves judgement, and small differences in how a patient stands change the image. As a result, the same X-ray measured twice, or measured by two clinicians, commonly differs by around **5 degrees**."},
-  {"k":"p","t":"This has a direct practical consequence. A curve reported as 24 degrees and later as 28 degrees may have progressed, or may be the same curve measured slightly differently on a slightly different day. This is why clinicians look for a trend across several reviews rather than reacting to a single reading."},
-  {"k":"h","id":"what-it-misses","t":"What the number leaves out"},
-  {"k":"ul","items":["**Rotation.** Two curves measuring 30 degrees can look completely different on the body, because one is far more rotated than the other.","**Appearance.** Shoulder level, waist asymmetry and rib prominence do not track the Cobb angle neatly.","**Pain.** There is no reliable relationship between curve size and pain in adolescents.","**Function.** What you can do, lift, and tolerate is not predicted by the angle."]},
-  {"k":"p","t":"This is why an assessment measures more than the angle, and why two people with the same number can need quite different programmes."},
-  {"k":"h","id":"thresholds","t":"The thresholds you will hear"},
-  {"k":"p","t":"Certain numbers recur in conversations about scoliosis. They are useful landmarks rather than rules, and they are always weighed against how much growing is left."},
-  {"k":"ul","items":["**10 degrees**, the point at which a curve is called scoliosis at all.","**20 to 25 degrees** in a growing spine, where active treatment is usually discussed.","**40 to 45 degrees and above**, where surgical opinion is commonly sought."]},
-  {"k":"p","t":"The same angle carries very different weight at different ages. Twenty-five degrees in a child with years of growth ahead is a different situation from 25 degrees in an adult whose spine stopped growing a decade ago."},
-  {"k":"uncertain","t":"There is no agreed threshold at which exercise-based treatment stops being worthwhile, and practice varies between clinics and countries. Where your curve sits relative to these landmarks is a starting point for a conversation, not an automatic decision."}],
- "related":["what-scoliosis-actually-is","will-it-get-worse","what-we-measure"]},
-
-{"slug":"types-of-scoliosis","pillar":"p1","mins":"5 min read",
- "title":"Idiopathic, congenital, neuromuscular: why the type matters",
- "blurb":"The label in front of the word scoliosis changes what should happen next.",
- "desc":"The main types of scoliosis, how they differ in cause and behaviour, and why the type determines what treatment is appropriate.",
- "stand":"Scoliosis is not one condition. The word describes a shape, and several very different situations produce that shape.",
- "key":["**Idiopathic** scoliosis has no identified cause and accounts for roughly 80 per cent of cases.","**Congenital** scoliosis comes from vertebrae that formed differently before birth.","**Neuromuscular** scoliosis develops alongside a condition affecting muscle control.","**Degenerative** scoliosis appears in adulthood as the spine ages, and behaves differently from all of the above."],
- "blocks":[
-  {"k":"h","id":"idiopathic","t":"Idiopathic"},
-  {"k":"p","t":"This is the common one. Idiopathic means no cause has been identified, and it accounts for around **80 per cent** of scoliosis. It is usually subdivided by the age at which it appears, with adolescent idiopathic scoliosis being by far the largest group."},
-  {"k":"p","t":"Idiopathic scoliosis typically appears during the growth spurt, in someone otherwise healthy, with a normal neurological examination. The absence of a cause is not a gap in your particular investigation; it is the current state of knowledge for the condition as a whole."},
-  {"k":"h","id":"congenital","t":"Congenital"},
-  {"k":"p","t":"Here the vertebrae themselves formed differently during early development, before birth. A vertebra may be partly formed, or two may be joined on one side, so the spine grows unevenly from the start."},
-  {"k":"p","t":"Congenital curves behave according to the underlying bone anatomy, so the reasoning behind treatment is different. They are also more often associated with differences in other systems that developed at the same time, which is why further investigation is usual."},
-  {"k":"h","id":"neuromuscular","t":"Neuromuscular"},
-  {"k":"p","t":"When the muscles that support the trunk do not work typically, the spine can curve as a consequence. This occurs alongside conditions such as cerebral palsy, muscular dystrophy and spina bifida."},
-  {"k":"p","t":"The priorities here are often different: comfortable sitting, breathing, skin integrity and care. Goals are set around function and daily life rather than around the angle alone."},
-  {"k":"h","id":"degenerative","t":"Degenerative, or adult-onset"},
-  {"k":"p","t":"This is a curve that was not there in adolescence and develops later as discs and joints change with age, most often in the lower back. It behaves quite differently from a curve someone has carried since they were fourteen, and the reasons people seek help are usually pain and function rather than appearance or progression."},
-  {"k":"h","id":"why-it-matters","t":"Why the distinction matters to you"},
-  {"k":"p","t":"Exercise-based scoliosis rehabilitation, including Schroth, was developed and studied mainly in **idiopathic** curves. Applying it to another type is not automatically wrong, but the reasoning, the goals and the realistic expectations all change."},
-  {"k":"p","t":"If the type of your scoliosis has never been stated clearly, it is a fair thing to ask. It is the first fork in the road."}],
- "related":["what-scoliosis-actually-is","adult-scoliosis","schroth-evidence"]},
-
-{"slug":"curve-patterns","pillar":"p1","mins":"5 min read",
- "title":"Curve patterns: thoracic, lumbar and double curves",
- "blurb":"Where the curve sits changes how it looks, how it behaves, and what the exercises are.",
- "desc":"How thoracic, thoracolumbar, lumbar and double curves differ in appearance and behaviour, and why the pattern shapes the exercise programme.",
- "stand":"Two people can both have a 30-degree curve and need entirely different programmes, because the curve is in a different place.",
- "key":["Curves are described by **where** the apex sits: thoracic, thoracolumbar, lumbar, or double.","Thoracic curves involve the ribs, so they show as rib prominence and shoulder asymmetry.","Lumbar curves more often show as an uneven waist and a hip that looks higher.","Double curves can look more balanced from behind while still being substantial."],
- "blocks":[
-  {"k":"h","id":"naming","t":"How curves are named"},
-  {"k":"p","t":"A curve is named by the region containing its apex, the vertebra furthest from the midline, and by the side the curve bends towards. A right thoracic curve has its apex in the upper back and bends to the right."},
-  {"k":"h","id":"thoracic","t":"Thoracic curves"},
-  {"k":"p","t":"These sit in the upper and middle back, where the ribs attach. Because rotation carries the ribs with it, thoracic curves tend to be the most visible ones: a prominence on one side of the back when bending forward, one shoulder blade sitting higher or further out, an uneven shoulder line."},
-  {"k":"p","t":"Thoracic curves in a growing spine have historically been regarded as carrying a higher risk of progression than lumbar curves of the same size, which is one reason they are followed closely."},
-  {"k":"h","id":"lumbar","t":"Lumbar and thoracolumbar curves"},
-  {"k":"p","t":"Lower curves often show differently. There are no ribs to carry, so instead of a rib hump you see an uneven waist, one crease deeper than the other, or a hip that appears higher. People often notice it in how clothes hang rather than in a mirror."},
-  {"k":"p","t":"Lumbar curves matter a great deal in adulthood, because the lower back carries load and is the region where degenerative change tends to become symptomatic."},
-  {"k":"h","id":"double","t":"Double curves"},
-  {"k":"p","t":"Here there are two curves, typically one thoracic and one lumbar, bending in opposite directions. Each partly compensates for the other, so the head can sit reasonably central over the pelvis and the overall impression from behind can look **more** balanced than a single curve of similar size."},
-  {"k":"p","t":"That apparent balance can be misleading. A double curve is two curves, and both need addressing."},
-  {"k":"h","id":"why-programme-differs","t":"Why the programme differs"},
-  {"k":"p","t":"Curve-specific exercise works by directing correction in particular directions at particular levels. A correction that lengthens and de-rotates one pattern can be unhelpful applied to another. This is the central reason a scoliosis programme cannot be taken off a shelf, and why an assessment has to establish the pattern before anything is prescribed."}],
- "related":["rotation-and-the-rib-hump","curve-specific-exercise","what-we-measure"]},
-
-{"slug":"rotation-and-the-rib-hump","pillar":"p1","mins":"5 min read",
- "title":"Rotation, and why the rib hump is not the whole story",
- "blurb":"The part of a curve people see is rotation, not the sideways bend.",
- "desc":"What vertebral rotation is, how it produces a rib hump, how it is measured with a scoliometer, and why it does not track the Cobb angle.",
- "stand":"When someone notices scoliosis in a mirror or a photograph, what they are usually seeing is rotation.",
- "key":["Rotation is the vertebrae turning around the spine's long axis, carrying the ribs with them.","It is measured on the body as **trunk rotation**, usually with a scoliometer during a forward bend.","Rotation and Cobb angle are related but do not move together reliably.","Appearance concerns are usually rotation concerns, which is why they deserve their own attention."],
- "blocks":[
-  {"k":"h","id":"what-rotation-is","t":"What rotation is"},
-  {"k":"p","t":"Alongside bending sideways, the vertebrae in a curve turn about the vertical axis of the spine. In a thoracic curve that turning carries the attached ribs backwards on one side and forwards on the other, producing a prominence on one side of the back and a flattening on the other."},
-  {"k":"h","id":"forward-bend","t":"The forward bend test"},
-  {"k":"p","t":"Rotation is hard to see when standing and obvious when bending forward, because the ribs on the rotated side rise. This is why the forward bend test is the standard screening manoeuvre, and why a curve is so often first noticed at a swimming pool or during a physiotherapy appointment for something else."},
-  {"k":"p","t":"The amount of rotation is measured with a **scoliometer**, a simple inclinometer laid across the back during the forward bend. It reports trunk rotation in degrees. A reading of around 7 degrees is a commonly used threshold for referring on for imaging, though thresholds vary."},
-  {"k":"h","id":"not-the-same","t":"Why it does not track the Cobb angle"},
-  {"k":"p","t":"Trunk rotation measured on the body and Cobb angle measured on an X-ray are two different measurements of two different things. They are related, but loosely. A curve can be relatively large on X-ray and modest on the body, or the reverse."},
-  {"k":"p","t":"This matters because the two numbers answer different questions. The Cobb angle is what progression thresholds are built on. Trunk rotation is much closer to what a patient actually sees and minds."},
-  {"k":"h","id":"why-it-matters","t":"Why rotation gets its own attention"},
-  {"k":"p","t":"When people describe what bothers them about scoliosis, they rarely describe an angle. They describe a shoulder blade that sticks out, a waist that is uneven on one side, a bra strap that slips. Those are rotation, and they are legitimate reasons to seek help even when the Cobb angle is modest."},
-  {"k":"p","t":"It is also why treating a curve as a flat, sideways problem misses the part patients care about most."},
-  {"k":"uncertain","t":"How much rotation can be changed by exercise, and how durable any change is, remains an open question. Improvements in trunk rotation have been reported in studies of curve-specific exercise, but the quality of evidence is limited and results vary between individuals."}],
- "related":["what-scoliosis-actually-is","rotational-breathing","what-we-measure"]},
-
-{"slug":"will-it-get-worse","pillar":"p1","mins":"7 min read",
- "title":"Will it get worse? What actually predicts progression",
- "blurb":"Three factors carry most of the weight, and one of them is not the curve at all.",
- "desc":"What predicts scoliosis progression: remaining growth, curve size and curve pattern. What the risk means in practice and what it does not.",
- "stand":"This is the first question almost everyone asks, and it has a reasonably good answer, though not a certain one.",
- "key":["**Remaining growth** is the single most important factor. A curve in a spine that has stopped growing behaves very differently.","**Curve size** matters: larger curves at a given stage of maturity are more likely to progress.","**Curve pattern** matters, with thoracic curves generally considered higher risk.","Risk is a probability across groups, not a prediction for one person."],
- "blocks":[
-  {"k":"h","id":"growth","t":"Growth is the engine"},
-  {"k":"p","t":"Idiopathic curves overwhelmingly progress during the adolescent growth spurt, and progression usually slows markedly once growth finishes. This is why age alone is a poor guide and **skeletal maturity** is the useful measure: two fifteen-year-olds can be at completely different points in their growth."},
-  {"k":"p","t":"Clinicians estimate remaining growth from several signs, including the Risser sign on X-ray, which grades how far a growth plate on the pelvis has matured, and from milestones such as the timing of menarche and the peak of the height spurt."},
-  {"k":"h","id":"size","t":"Size, at a given maturity"},
-  {"k":"p","t":"At the same stage of growth, a larger curve is more likely to get larger. The combination is what matters. A 30-degree curve in a child at the start of their growth spurt is watched much more closely than a 30-degree curve in someone who finished growing two years ago."},
-  {"k":"h","id":"pattern","t":"Pattern"},
-  {"k":"p","t":"Thoracic curves have generally been regarded as carrying a higher risk of progression than lumbar curves of equivalent size, and double curves are usually followed attentively because there are two curves that can each change."},
-  {"k":"h","id":"after-growth","t":"What happens after growth stops"},
-  {"k":"p","t":"Most curves become substantially more stable once skeletal growth is complete. Larger curves, particularly those beyond roughly 45 to 50 degrees, may continue to change slowly over decades, which is one reason larger curves are treated more actively while there is still an opportunity."},
-  {"k":"p","t":"Smaller curves in adults tend to be stable, and the reason for treating them is usually symptoms, function or appearance rather than fear of progression."},
-  {"k":"h","id":"what-risk-means","t":"What a risk figure actually means"},
-  {"k":"p","t":"If you are told a curve has a high chance of progressing, that is a statement about what happens to groups of people with similar curves at a similar stage of growth. It is not a forecast for you specifically. Some high-risk curves stay put. Some low-risk curves surprise everyone."},
-  {"k":"p","t":"The practical use of a risk estimate is to decide how closely to watch and how actively to intervene, not to tell you what your future is."},
-  {"k":"uncertain","t":"There is no test that reliably predicts an individual curve's course. Genetic tests marketed for predicting progression have not held up well under independent evaluation, and none is part of routine practice."}],
- "related":["growth-and-skeletal-maturity","cobb-angle","working-alongside-a-brace"]},
-
-{"slug":"scoliosis-and-pain","pillar":"p1","mins":"5 min read",
- "title":"Scoliosis and pain: what the link really is",
- "blurb":"In adolescents the link is weaker than people expect. In adults it is different.",
- "desc":"Whether scoliosis causes pain, why curve size and pain do not track together, and when pain in a curved spine needs further investigation.",
- "stand":"People assume a curved spine must hurt. For adolescents that assumption is usually wrong, which surprises families in both directions.",
- "key":["Adolescents with idiopathic curves are frequently pain-free, and curve size does not predict pain well.","Back pain in adolescents is common in general, whether or not there is a curve.","In adults, particularly with degenerative curves, pain is a much more prominent feature.","Severe, night-time or neurological symptoms are not typical and should be assessed."],
- "blocks":[
-  {"k":"h","id":"adolescents","t":"In adolescents"},
-  {"k":"p","t":"Most adolescents with idiopathic scoliosis do not have significant pain, and where pain exists it correlates poorly with how large the curve is. A 45-degree curve can be comfortable; a 20-degree curve can ache."},
-  {"k":"p","t":"It is also worth knowing that back pain is common in adolescents generally, curve or no curve. Finding a curve in a teenager with back pain does not establish that the curve is the cause."},
-  {"k":"h","id":"adults","t":"In adults"},
-  {"k":"p","t":"The picture changes. Adults present with scoliosis far more often because of pain and difficulty with daily activity than because of appearance or progression. In degenerative curves the pain often comes from the discs, joints and nerve spaces that are changing with age, in a spine whose alignment makes those changes less well tolerated."},
-  {"k":"p","t":"For adults, this reframes the goal. The question is rarely how to change the angle and usually how to load the spine well, build capacity, and manage symptoms over years."},
-  {"k":"h","id":"what-helps","t":"What tends to help"},
-  {"k":"ul","items":["Building strength and endurance in the trunk and hips, so the spine is supported through a day rather than a session.","Learning positions and movement strategies that reduce provocation during the activities that actually cause trouble.","Keeping generally active. Deconditioning reliably makes spinal pain harder to manage."]},
-  {"k":"h","id":"when-to-ask","t":"When pain needs a closer look"},
-  {"k":"p","t":"Some patterns are not typical of a curve alone and deserve proper assessment rather than reassurance."},
-  {"k":"ul","items":["Pain that consistently wakes you at night.","Pain with fever, unexplained weight loss, or feeling generally unwell.","Numbness, weakness, or changes in bladder or bowel control.","A curve that appears rapidly, or pain that escalates quickly."]},
-  {"k":"p","t":"None of these means something serious is happening. They mean the question deserves answering properly rather than being attributed to the curve by default."}],
- "related":["adult-scoliosis","lifting-with-scoliosis","inside-the-assessment"]},
-
-{"slug":"growth-and-skeletal-maturity","pillar":"p1","mins":"5 min read",
- "title":"Growth, Risser sign and why timing matters so much",
- "blurb":"The same curve is a different problem depending on how much growing is left.",
- "desc":"How skeletal maturity is estimated, what the Risser sign means, and why remaining growth is the most important variable in adolescent scoliosis.",
- "stand":"If you understand one thing about adolescent scoliosis, make it this: the clock matters more than the number.",
- "key":["Progression in idiopathic scoliosis is driven mainly by growth.","**Skeletal maturity** is estimated from X-ray signs and growth milestones, not from age alone.","The **Risser sign** grades maturity from 0 to 5 using a growth plate on the pelvis.","The window where active treatment can do most is also the window that closes.","Once growth is complete, the situation becomes considerably more stable."],
- "blocks":[
-  {"k":"h","id":"why-timing","t":"Why timing dominates"},
-  {"k":"p","t":"Idiopathic curves change most during rapid growth. The practical implication is uncomfortable but important: the period when a curve is most likely to worsen is also the period when intervention has the most to work with, and that period is finite."},
-  {"k":"p","t":"This is why clinicians sometimes want to review a growing adolescent every few months while being relaxed about an adult with a similar curve."},
-  {"k":"h","id":"risser","t":"The Risser sign"},
-  {"k":"p","t":"The Risser sign grades how far a growth plate along the top of the pelvis has ossified and fused, on a scale from 0 to 5. It is visible on the same standing X-ray used to measure the curve, so it costs nothing extra."},
-  {"k":"ul","items":["**Risser 0** means that growth plate has not begun to ossify. Considerable growth typically remains.","**Risser 1 to 3** covers the progressive stages, spanning the fastest part of the growth spurt.","**Risser 4 to 5** indicates growth is largely or entirely complete."]},
-  {"k":"p","t":"Risser is a useful shorthand rather than a precise clock, and it is read alongside other information."},
-  {"k":"h","id":"other-markers","t":"The other markers"},
-  {"k":"ul","items":["**Height velocity**, how fast someone is currently growing, tracked across visits.","**Menarche**, since the growth rate usually slows in the period following it.","**Hand and wrist films** or other bone-age methods, used where a more precise estimate is needed."]},
-  {"k":"h","id":"what-it-means","t":"What this means for a family"},
-  {"k":"p","t":"If a curve is found early in the growth spurt, expect closer monitoring and a lower threshold for acting. That is not alarmism; it is making use of a window."},
-  {"k":"p","t":"If a curve is found once growth is finished, the conversation shifts away from progression and towards symptoms, function, appearance and long-term management. Both are legitimate reasons to do rehabilitation. They are just different reasons."}],
- "related":["will-it-get-worse","working-alongside-a-brace","just-diagnosed"]},
-
-{"slug":"adult-scoliosis","pillar":"p1","mins":"6 min read",
- "title":"Scoliosis in adults: two different stories",
- "blurb":"A curve you grew up with and a curve that appeared at fifty are not the same condition.",
- "desc":"The difference between adult idiopathic scoliosis and degenerative adult-onset scoliosis, what each means, and what rehabilitation is aiming at.",
- "stand":"Adults with scoliosis fall into two broad groups, and mixing them up leads to a lot of unnecessary worry.",
- "key":["**Adult idiopathic** scoliosis is a curve carried since adolescence into adult life.","**Degenerative** scoliosis is a new curve that develops as the spine ages, usually in the lower back.","Adults usually seek help for pain and function rather than for the angle.","Meaningful improvement in symptoms and capacity is realistic even when the curve itself does not change much."],
- "blocks":[
-  {"k":"h","id":"carried-forward","t":"The curve you grew up with"},
-  {"k":"p","t":"Many adults have had a curve since their teens. It may have been monitored and discharged, or never formally assessed at all. These curves are usually stable, especially below roughly 45 to 50 degrees, and the reason for seeking help is typically discomfort, fatigue with prolonged postures, appearance, or simply wanting to know where things stand."},
-  {"k":"p","t":"The goals here are about capacity and management. Building strength, improving how the trunk is controlled under load, and learning what to do when a flare happens are all realistic. Substantially changing the angle of a mature curve is not the aim."},
-  {"k":"h","id":"degenerative","t":"The curve that appeared later"},
-  {"k":"p","t":"Degenerative, or de novo, scoliosis develops in adulthood, most often in the lower back, as discs lose height unevenly and the facet joints and ligaments change. Someone with no history of scoliosis in adolescence can develop a measurable curve in their fifties or later."},
-  {"k":"p","t":"Symptoms here often have as much to do with the associated degenerative changes as with the curve: back pain, leg pain, and symptoms that come on with standing and walking and ease with sitting or bending forward."},
-  {"k":"h","id":"what-changes","t":"What rehabilitation is aiming at"},
-  {"k":"ul","items":["**Tolerance**, being able to stand, walk and work for longer before symptoms interrupt.","**Strength and endurance**, particularly through the trunk and hips.","**Movement options**, so there is more than one way to perform the tasks that provoke symptoms.","**Self-management**, knowing what a flare is and what to do about it."]},
-  {"k":"p","t":"None of those are angle measurements, which is exactly the point. For most adults the angle is not the thing that is limiting their life."},
-  {"k":"h","id":"when-to-ask-more","t":"When to seek a broader opinion"},
-  {"k":"p","t":"Progressive leg weakness, numbness in the saddle area, changes in bladder or bowel function, or leg symptoms that are worsening steadily all warrant prompt medical assessment rather than a rehabilitation plan alone."},
-  {"k":"uncertain","t":"Evidence for exercise-based treatment in adult scoliosis is thinner than in adolescents, and most of what exists concerns symptoms and function rather than the curve. That is an honest limitation, not a reason to do nothing: exercise for back pain and for general capacity is well supported in its own right."}],
- "related":["scoliosis-and-pain","types-of-scoliosis","lifting-with-scoliosis"]},
-
-{"slug":"what-schroth-involves","pillar":"p2","mins":"7 min read",
- "title":"What the Schroth Method actually involves",
- "blurb":"Not a set of stretches. A way of holding and breathing into a specific correction.",
- "desc":"What a Schroth-based scoliosis programme actually asks of you: curve-specific positions, active correction, rotational breathing, and daily practice.",
- "stand":"People arrive expecting exercises. What Schroth actually teaches is a correction, and then how to hold it while you do things.",
- "key":["Schroth is a **curve-specific** approach: the exercises are chosen for your pattern, not for scoliosis in general.","The core skill is producing an active correction yourself, not being put into position by someone else.","**Rotational breathing** is used to direct air into the flattened part of the chest.","It requires regular home practice. That is the part that decides whether it works."],
- "blocks":[
-  {"k":"h","id":"origin","t":"Where it comes from"},
-  {"k":"p","t":"The method originated with Katharina Schroth in Germany in the 1920s and was developed further by her daughter Christa Lehnert-Schroth. It was built on the idea that a three-dimensional deformity needs a three-dimensional correction, held actively by the person themselves."},
-  {"k":"h","id":"principles","t":"The working principles"},
-  {"k":"ul","items":["**Auto-elongation**, actively lengthening the spine to reduce the curve before anything else is attempted.","**De-rotation**, turning the trunk against the direction of the curve's rotation.","**Rotational breathing**, directing breath into the concave, collapsed areas to expand them from the inside.","**Stabilisation**, holding the corrected position with muscular effort so it is not purely passive."]},
-  {"k":"p","t":"Those four are the grammar of the method. Individual exercises are sentences built from them."},
-  {"k":"h","id":"session","t":"What a session actually looks like"},
-  {"k":"p","t":"Early sessions are largely about learning to feel and produce the correction, often in supported positions using a wall, a bar, poles or a mat, with plenty of tactile and verbal cueing and frequent use of a mirror. It is slow, detailed work and it is more mentally demanding than most people expect."},
-  {"k":"p","t":"As the correction becomes reliable, it is progressed: held for longer, in less supported positions, then during movement, then under load, and finally during the things you actually do."},
-  {"k":"h","id":"home","t":"The home programme is the treatment"},
-  {"k":"p","t":"Clinic sessions teach and refine. The home programme is where the volume happens, and it is usually the single biggest determinant of whether anything changes. A realistic programme performed most days beats an ambitious one performed occasionally."},
-  {"k":"p","t":"This is why a good programme is short enough to survive a school week, and why it is reviewed and trimmed rather than only added to."},
-  {"k":"h","id":"expect","t":"What to expect, honestly"},
-  {"k":"p","t":"Postural change and better control of the trunk are the things most people notice first, often within weeks. Changes in the measured angle, where they occur, take considerably longer and are not guaranteed. Anyone promising a specific number of degrees is overstating what is known."},
-  {"k":"uncertain","t":"The strongest evidence for curve-specific exercise concerns growing adolescents with modest curves, and even there the certainty of the evidence is limited. Its effect in adults, and its effect on large curves, is much less clear."}],
- "related":["rotational-breathing","elongation-derotation-stabilisation","schroth-evidence"]},
-
-{"slug":"rotational-breathing","pillar":"p2","mins":"5 min read",
- "title":"What rotational breathing actually is",
- "blurb":"The idea that you can aim a breath. It is stranger and more learnable than it sounds.",
- "desc":"What rotational angular breathing means in Schroth scoliosis rehabilitation, why the ribcage is the target, and how the skill is taught.",
- "stand":"Of everything in a Schroth programme, this is the part people find hardest to believe and, once learned, hardest to unlearn.",
- "key":["Rotation changes the shape of the ribcage, collapsing it on one side and expanding it on the other.","Rotational breathing directs air into the **collapsed** areas to expand them from within.","It is a learned motor skill, taught with hands, mirrors and cues, not a breathing exercise in the relaxation sense.","It is used in combination with an active correction, not on its own."],
- "blocks":[
-  {"k":"h","id":"the-problem","t":"The problem it addresses"},
-  {"k":"p","t":"When vertebrae rotate, the attached ribs go with them. On one side the ribs are pushed backwards and splay apart; on the other they are drawn forwards and crowd together. The result is a ribcage that is no longer symmetrical, with regions that have become habitually collapsed and move very little."},
-  {"k":"p","t":"Those collapsed regions are not passive bystanders. They are part of what holds the shape in place."},
-  {"k":"h","id":"the-idea","t":"The idea"},
-  {"k":"p","t":"Breathing is not evenly distributed by necessity. With training, a person can bias where expansion happens: more into the back than the front, more into one side than the other, more into the lower ribs than the upper. Rotational breathing uses that to expand the collapsed areas from the inside while the rest of the trunk is held in a corrected position."},
-  {"k":"p","t":"You are, in effect, using air as a corrective force in a direction that muscles cannot easily reach."},
-  {"k":"h","id":"how-taught","t":"How it is taught"},
-  {"k":"p","t":"Almost always through touch first. A hand or a strap gives the target something to push against, so there is clear feedback about whether the right area moved. Mirrors, tape and verbal cues are added. Most people cannot do it on the first attempt and can do something recognisable by the end of the first session."},
-  {"k":"p","t":"It is then combined with the correction, because breathing into a collapsed area while the trunk is slumped simply reinforces the existing shape."},
-  {"k":"h","id":"what-it-feels-like","t":"What it feels like"},
-  {"k":"p","t":"Effortful and slightly odd. People commonly report that the corrected side feels stretched or unfamiliar, and that a few breaths are tiring in a way that ordinary breathing is not. That fades as the skill becomes more automatic."},
-  {"k":"uncertain","t":"Rotational breathing is a core component of Schroth practice, but it has not been isolated and tested on its own. What has been studied is whole programmes that include it, so its individual contribution is not separately established."}],
- "related":["what-schroth-involves","rotation-and-the-rib-hump","elongation-derotation-stabilisation"]},
-
-{"slug":"elongation-derotation-stabilisation","pillar":"p2","mins":"5 min read",
- "title":"Elongation, de-rotation, stabilisation: the three jobs",
- "blurb":"Every corrective exercise is doing one of three things, usually in this order.",
- "desc":"The three mechanical jobs of a Schroth correction, why the order matters, and how they combine into a single held position.",
- "stand":"Once you can see which of the three jobs an exercise is doing, the whole programme stops looking arbitrary.",
- "key":["**Elongation** creates space and reduces the curve before any other correction is attempted.","**De-rotation** turns the trunk against the rotation of the curve.","**Stabilisation** holds the result with muscular effort so it survives outside the session.","The order matters: de-rotating a collapsed spine achieves much less than de-rotating a lengthened one."],
- "blocks":[
-  {"k":"h","id":"elongation","t":"Elongation comes first"},
-  {"k":"p","t":"A curve shortens the spine. Actively lengthening, growing tall through the crown of the head while the pelvis stays anchored, reduces the curve before anything else is added, and creates the space in which the other corrections become possible."},
-  {"k":"p","t":"This is an active effort, not someone pulling on your head. The distinction matters, because the aim is a correction you can produce yourself on a bus."},
-  {"k":"h","id":"derotation","t":"De-rotation"},
-  {"k":"p","t":"With length established, the trunk is turned against the direction of the curve's rotation. In practice this is a combination of shoulder girdle position, ribcage orientation and pelvic position, and it is specific to the pattern: which way to turn depends entirely on which way the curve rotates."},
-  {"k":"p","t":"This is the step that most obviously cannot be generic."},
-  {"k":"h","id":"stabilisation","t":"Stabilisation"},
-  {"k":"p","t":"A correction that collapses the moment attention wanders has not achieved much. Stabilisation is the muscular work of holding the corrected position, first briefly, then for longer, then while breathing normally, then while moving, then while carrying something."},
-  {"k":"p","t":"This is also where the programme stops being about posture and starts being about strength and endurance, which is why scoliosis rehabilitation and strength training are not separate projects."},
-  {"k":"h","id":"together","t":"Putting them together"},
-  {"k":"p","t":"A mature correction has all three running at once: long, turned, and held, with breath directed into the areas that are collapsed. That is a lot to coordinate, which is why it is taught in pieces and assembled gradually."},
-  {"k":"p","t":"When a programme is reviewed, the question is usually which of the three has quietly dropped out. Elongation is the most common casualty."}],
- "related":["what-schroth-involves","rotational-breathing","curve-specific-exercise"]},
-
-{"slug":"curve-specific-exercise","pillar":"p2","mins":"5 min read",
- "title":"Why the exercises have to be curve-specific",
- "blurb":"The same exercise can help one curve and be irrelevant, or unhelpful, for another.",
- "desc":"Why scoliosis exercise has to be matched to the individual curve pattern, and why generic core or stretching programmes are not equivalent.",
- "stand":"This is the single most important thing separating scoliosis-specific rehabilitation from general back exercise.",
- "key":["Corrections are **directional**, and the right direction depends on your curve pattern.","A correction that helps a right thoracic curve may do nothing for a left lumbar curve.","Symmetrical exercise treats an asymmetrical problem symmetrically.","This is why an assessment must establish the pattern before a programme exists."],
- "blocks":[
-  {"k":"h","id":"asymmetry","t":"An asymmetrical problem"},
-  {"k":"p","t":"Scoliosis is asymmetrical by definition. One side is lengthened and one shortened; one side of the ribcage is collapsed and the other splayed. A programme that does the same thing on both sides preserves the difference between them, because it adds equally to both."},
-  {"k":"p","t":"That is not an argument that symmetrical exercise is harmful. It is an argument that it is not, by itself, scoliosis treatment."},
-  {"k":"h","id":"direction","t":"Corrections have a direction"},
-  {"k":"p","t":"Every corrective position in a curve-specific programme has a direction attached: lengthen here, turn this way, expand into that region, press down through that side. Reverse the pattern and you reverse the instructions."},
-  {"k":"p","t":"Applying the corrections for a right thoracic curve to someone with a left thoracolumbar curve is not a smaller version of the right treatment. It is a different treatment, applied to the wrong person."},
-  {"k":"h","id":"what-about-general","t":"So is general exercise pointless?"},
-  {"k":"p","t":"No, and this is worth being clear about. General strength, mobility and cardiovascular fitness are valuable for anyone with a spine, including a curved one. They support the specific work and they matter for health in their own right."},
-  {"k":"p","t":"What they are not is a substitute for the corrective component. The reasonable position is both, with the general work built so it does not fight the specific work."},
-  {"k":"h","id":"consequence","t":"The practical consequence"},
-  {"k":"p","t":"A scoliosis programme cannot responsibly be handed out before someone has established the curve pattern, its direction, its rotation and how the trunk behaves under load. That is what an assessment is for, and it is why programmes downloaded from the internet are a gamble rather than a plan."}],
- "related":["curve-patterns","schroth-vs-general-exercise","inside-the-assessment"]},
-
-{"slug":"schroth-evidence","pillar":"p2","mins":"6 min read",
- "title":"What the evidence says about Schroth, honestly",
- "blurb":"Better than sceptics claim, weaker than enthusiasts claim. Here is the actual state of it.",
- "desc":"An honest summary of the evidence for physiotherapeutic scoliosis-specific exercise, including Schroth: what is supported, how certain it is, and what remains unknown.",
- "stand":"You deserve a straight answer about how well this is supported, including the parts that are not flattering.",
- "key":["International guidance recommends scoliosis-specific exercise for growing adolescents with mild to moderate curves.","Studies report benefits for curve progression, trunk rotation and quality of life.","The **certainty** of that evidence is generally rated low to moderate, mainly because trials are small and blinding is impossible.","Evidence in adults, and for large curves, is considerably thinner."],
- "blocks":[
-  {"k":"h","id":"what-supported","t":"What is reasonably supported"},
-  {"k":"p","t":"Physiotherapeutic scoliosis-specific exercise, the family of approaches Schroth belongs to, is recommended by international scoliosis guidance for growing adolescents with mild to moderate idiopathic curves, generally alongside bracing where bracing is indicated."},
-  {"k":"p","t":"Published trials and reviews report benefits including slowed or halted progression in some groups, reductions in trunk rotation, and improvements in patient-reported outcomes and quality of life."},
-  {"k":"h","id":"how-certain","t":"How certain that evidence is"},
-  {"k":"p","t":"Less certain than the recommendations alone might suggest. The literature has real limitations, and it is better to know them."},
-  {"k":"ul","items":["Many trials are **small**, often a few dozen participants.","**Blinding is impossible**. You cannot conceal from someone whether they are doing an exercise programme.","**Programmes differ** between studies and clinics, so results do not transfer cleanly.","**Follow-up is often short** relative to how long a curve is lived with.","Control groups vary, from observation only to general exercise, which changes what is being compared."]},
-  {"k":"p","t":"Systematic reviews typically conclude that the evidence points in a favourable direction while rating the certainty as low to moderate. That is a genuine finding, not a criticism of the method."},
-  {"k":"h","id":"where-thin","t":"Where the evidence is thin"},
-  {"k":"ul","items":["**Adults.** Much less studied, and mostly for symptoms rather than the curve.","**Large curves.** Little evidence that exercise alone alters the course of a curve well beyond the usual treatment range.","**Long-term outcomes.** What a programme in adolescence means at fifty is largely unstudied.","**Individual components.** Whole programmes are tested, not their parts."]},
-  {"k":"h","id":"what-to-do","t":"What to do with this"},
-  {"k":"p","t":"A reasonable reading is that curve-specific exercise is a justifiable, guideline-supported option for the group it was designed for, with real but imperfect evidence behind it, and that it should be offered without promises."},
-  {"k":"p","t":"If a clinic tells you the evidence is conclusive, or that a specific number of degrees will come off, that is a claim the literature does not support."},
-  {"k":"uncertain","t":"The central open question is how much of the reported benefit comes from the curve-specific corrections and how much from supervised, progressive, engaged exercise in general. That comparison has not been done well enough to settle it."}],
- "related":["what-schroth-involves","schroth-vs-general-exercise","types-of-scoliosis"]},
-
-{"slug":"schroth-vs-general-exercise","pillar":"p2","mins":"5 min read",
- "title":"Schroth, Pilates, yoga and the gym: what does what",
- "blurb":"They are not competitors. They answer different questions.",
- "desc":"How Schroth-based scoliosis exercise differs from Pilates, yoga and general strength training, and how they can sensibly fit together.",
- "stand":"Almost everyone with a curve has been told to try Pilates. It is worth being precise about what each of these actually offers.",
- "key":["**Schroth** provides curve-specific correction. Nothing else on this list does.","**Pilates and yoga** build control, mobility and body awareness, but are not curve-specific by design.","**Strength training** builds the capacity that makes a correction holdable under load.","The sensible arrangement is the specific work plus general training, not one instead of the other."],
- "blocks":[
-  {"k":"h","id":"schroth","t":"What Schroth does that the others do not"},
-  {"k":"p","t":"It prescribes directional corrections matched to your specific curve, and teaches you to produce and hold them. No general class can do this, because the instructor is teaching a room rather than a pattern."},
-  {"k":"h","id":"pilates-yoga","t":"Pilates and yoga"},
-  {"k":"p","t":"Both can be genuinely useful. They develop trunk control, mobility, breathing awareness and the habit of paying attention to how you are positioned, all of which support corrective work."},
-  {"k":"p","t":"The limitation is that they are not built around scoliosis. Some positions are symmetrical in a way that does not address an asymmetrical spine, and deep end-range rotation is worth discussing with whoever is managing your curve. A teacher who knows you have scoliosis and is willing to adapt is worth a great deal."},
-  {"k":"h","id":"strength","t":"Strength training"},
-  {"k":"p","t":"Often the most underrated piece. A correction that cannot be held under load is a correction that exists in a clinic and nowhere else. Building strength through the trunk, hips and shoulders is what lets the correction survive a school bag, a shift at work, or a season of sport."},
-  {"k":"p","t":"There is no good evidence that resistance training is inherently bad for a curved spine. Loading well matters more than avoiding load."},
-  {"k":"h","id":"stacking","t":"How to stack them"},
-  {"k":"ol","items":["**The corrective programme** is the non-negotiable core, done most days, kept short enough to survive real life.","**Strength work** two or three times a week, coached, progressive, built so it does not fight the correction.","**Pilates, yoga or a class you enjoy**, if you want it, with the instructor informed."]},
-  {"k":"p","t":"The order reflects priority, not importance to your week. The thing most likely to be dropped when life gets busy is the corrective work, which is exactly the thing that should not be."}],
- "related":["curve-specific-exercise","lifting-with-scoliosis","programme-you-run-yourself"]}
-
-]}
+ "pillars": [
+  {
+   "id": "p1",
+   "slug": "what-scoliosis-is",
+   "name": "What scoliosis is",
+   "short": "Pillar 01 · What scoliosis is",
+   "claim": 9,
+   "desc": "What a scoliosis curve actually is, what the Cobb angle measures, which types exist, what predicts progression, and how adult scoliosis differs.",
+   "stand": "Before anything can be treated it has to be understood. These nine articles cover what a curve is, what the numbers mean, and what actually predicts whether one changes."
+  },
+  {
+   "id": "p2",
+   "slug": "the-schroth-method",
+   "name": "The Schroth Method",
+   "short": "Pillar 02 · The Schroth Method",
+   "claim": 6,
+   "desc": "What Schroth-based scoliosis rehabilitation involves, what rotational breathing is, why the exercises are curve-specific, and what the evidence does and does not show.",
+   "stand": "Schroth is the method behind most of what happens in the clinic. These six articles explain what it asks of you, why it is built around your specific curve, and how strong the evidence actually is."
+  },
+  {
+   "id": "p3",
+   "slug": "rayhabs-approach",
+   "name": "Rayhab's approach",
+   "short": "Pillar 03 · Rayhab's approach",
+   "claim": 5,
+   "desc": "How Rayhab builds a scoliosis programme you can run yourself, work alongside a brace, keep a teenager engaged, and return to lifting and sport with a known curve.",
+   "stand": "Method is not the same as practice. These five articles cover how the work is actually delivered here: handed over rather than held onto, and built around the life you already have."
+  },
+  {
+   "id": "p4",
+   "slug": "the-assessment",
+   "name": "The assessment",
+   "short": "Pillar 04 · The assessment",
+   "claim": 4,
+   "desc": "What happens in a 60-minute scoliosis assessment at Rayhab, whether you need an X-ray first, what gets measured, and what to do straight after a diagnosis.",
+   "stand": "Everything starts with one appointment. These four articles explain what is measured, what you need to bring, and what you leave with."
+  }
+ ],
+ "articles": [
+  {
+   "slug": "what-scoliosis-actually-is",
+   "pillar": "p1",
+   "mins": "6 min read",
+   "title": "What scoliosis actually is",
+   "blurb": "A curve is three-dimensional, not a bend on a flat picture. Here is what that means.",
+   "desc": "Scoliosis is a three-dimensional change in the spine, not simply a sideways bend. What the definition means, how it is confirmed, and how common it is.",
+   "stand": "Most people picture a spine bent sideways. That picture is not wrong, but it is missing the part that matters most for treatment.",
+   "key": [
+    "Scoliosis is a sideways curve of **10 degrees or more**, measured on a standing X-ray, combined with rotation of the vertebrae.",
+    "It is three-dimensional: sideways, rotated, and it changes the normal front-to-back curves too.",
+    "Around 2 to 3 in 100 adolescents have a curve. Most never need more than monitoring.",
+    "A curve is a structural finding, not a diagnosis of pain or disability."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "definition",
+     "t": "The definition, and why it has a number in it"
+    },
+    {
+     "k": "p",
+     "t": "Scoliosis is defined as a sideways curvature of the spine measuring **10 degrees or more** on a standing X-ray, together with rotation of the vertebrae. The number matters because spines are not perfectly straight. Small asymmetries are normal and extremely common. The 10-degree line exists to separate ordinary variation from something worth following."
+    },
+    {
+     "k": "p",
+     "t": "That threshold is a convention, not a biological cliff. A curve of 9 degrees and a curve of 11 degrees are almost the same spine. What changes at that line is whether the finding gets a name and a follow-up plan."
+    },
+    {
+     "k": "h",
+     "id": "three-dimensions",
+     "t": "Why it is three-dimensional"
+    },
+    {
+     "k": "p",
+     "t": "An X-ray is a flat image of a solid object. On that image a curve looks like a bend to one side. In the body, the vertebrae in that curve are also **rotated**, turning around the long axis of the spine, and the normal front-to-back curves of the back and lower back are usually flattened or exaggerated as well."
+    },
+    {
+     "k": "p",
+     "t": "This is why rotation shows up on the outside of the body. When the vertebrae turn, they carry the ribs with them, which is what produces the raised area on one side of the back that becomes obvious when someone bends forward."
+    },
+    {
+     "k": "ul",
+     "items": [
+      "**Sideways**, the part the Cobb angle measures.",
+      "**Rotational**, the part that produces a rib hump or a waist that looks uneven.",
+      "**Front-to-back**, where the normal curves of the spine are altered."
+     ]
+    },
+    {
+     "k": "p",
+     "t": "Treatment that only addresses the sideways component is working on one dimension of a three-dimensional problem. That is the reasoning behind curve-specific exercise approaches, which try to act on all three."
+    },
+    {
+     "k": "h",
+     "id": "how-common",
+     "t": "How common it is"
+    },
+    {
+     "k": "p",
+     "t": "Roughly 2 to 3 in every 100 adolescents have a curve of 10 degrees or more. Far fewer progress to a size where active treatment is considered. Most curves found during a school or family check turn out to be small, stable, and require nothing beyond periodic review."
+    },
+    {
+     "k": "p",
+     "t": "Curves are found more often in girls, and the difference grows with curve size: small curves are distributed fairly evenly between boys and girls, while larger curves are considerably more common in girls."
+    },
+    {
+     "k": "h",
+     "id": "not-a-verdict",
+     "t": "What a curve is not"
+    },
+    {
+     "k": "p",
+     "t": "A curve is a structural description. On its own it does not tell you that you will be in pain, that you will lose function, or that you will need surgery. Adolescents with curves are frequently symptom-free, and many adults live a full life with a curve they have had for decades."
+    },
+    {
+     "k": "p",
+     "t": "It also does not tell you what caused it. In around eight out of ten cases no cause is identified at all, which is what the word **idiopathic** means."
+    },
+    {
+     "k": "uncertain",
+     "t": "The causes of idiopathic scoliosis are still not understood. Genetics, growth, neuromuscular control and connective tissue have all been investigated, and none of them explains the condition on its own. Anyone who tells you confidently why your curve appeared is going beyond what is currently known."
+    }
+   ],
+   "related": [
+    "cobb-angle",
+    "types-of-scoliosis",
+    "rotation-and-the-rib-hump"
+   ]
+  },
+  {
+   "slug": "cobb-angle",
+   "pillar": "p1",
+   "mins": "7 min read",
+   "title": "Reading your Cobb angle: what the number does and doesn't tell you",
+   "blurb": "The number is real and useful. It is also narrower than most people assume.",
+   "desc": "What the Cobb angle measures, why two readings of the same X-ray can differ by several degrees, and what the number cannot tell you about your scoliosis.",
+   "stand": "The Cobb angle is the number everyone remembers from the appointment. It is worth knowing exactly what it measures, and what it leaves out.",
+   "key": [
+    "The Cobb angle measures the **sideways** tilt between the two most tilted vertebrae of a curve.",
+    "Repeat measurements of the same X-ray commonly differ by around **5 degrees**, so a small change may be measurement noise.",
+    "It says nothing about rotation, appearance, pain or function.",
+    "A single number means little. The direction of travel over time means a great deal."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "what-it-measures",
+     "t": "What the measurement actually is"
+    },
+    {
+     "k": "p",
+     "t": "To measure a Cobb angle, the clinician finds the vertebra at the top of the curve that tilts most, and the vertebra at the bottom that tilts most. A line is drawn along each of those two vertebrae, and the angle where those lines would meet is the Cobb angle."
+    },
+    {
+     "k": "p",
+     "t": "It is a measure of one thing: the sideways tilt between the two ends of a curve, on a flat image, taken while standing. That is genuinely useful, because it is reproducible enough to compare over time and it is the number that treatment thresholds are built around."
+    },
+    {
+     "k": "h",
+     "id": "measurement-error",
+     "t": "Why 5 degrees is not always a change"
+    },
+    {
+     "k": "p",
+     "t": "Choosing which vertebrae are the most tilted involves judgement, and small differences in how a patient stands change the image. As a result, the same X-ray measured twice, or measured by two clinicians, commonly differs by around **5 degrees**."
+    },
+    {
+     "k": "p",
+     "t": "This has a direct practical consequence. A curve reported as 24 degrees and later as 28 degrees may have progressed, or may be the same curve measured slightly differently on a slightly different day. This is why clinicians look for a trend across several reviews rather than reacting to a single reading."
+    },
+    {
+     "k": "h",
+     "id": "what-it-misses",
+     "t": "What the number leaves out"
+    },
+    {
+     "k": "ul",
+     "items": [
+      "**Rotation.** Two curves measuring 30 degrees can look completely different on the body, because one is far more rotated than the other.",
+      "**Appearance.** Shoulder level, waist asymmetry and rib prominence do not track the Cobb angle neatly.",
+      "**Pain.** There is no reliable relationship between curve size and pain in adolescents.",
+      "**Function.** What you can do, lift, and tolerate is not predicted by the angle."
+     ]
+    },
+    {
+     "k": "p",
+     "t": "This is why an assessment measures more than the angle, and why two people with the same number can need quite different programmes."
+    },
+    {
+     "k": "h",
+     "id": "thresholds",
+     "t": "The thresholds you will hear"
+    },
+    {
+     "k": "p",
+     "t": "Certain numbers recur in conversations about scoliosis. They are useful landmarks rather than rules, and they are always weighed against how much growing is left."
+    },
+    {
+     "k": "ul",
+     "items": [
+      "**10 degrees**, the point at which a curve is called scoliosis at all.",
+      "**20 to 25 degrees** in a growing spine, where active treatment is usually discussed.",
+      "**40 to 45 degrees and above**, where surgical opinion is commonly sought."
+     ]
+    },
+    {
+     "k": "p",
+     "t": "The same angle carries very different weight at different ages. Twenty-five degrees in a child with years of growth ahead is a different situation from 25 degrees in an adult whose spine stopped growing a decade ago."
+    },
+    {
+     "k": "uncertain",
+     "t": "There is no agreed threshold at which exercise-based treatment stops being worthwhile, and practice varies between clinics and countries. Where your curve sits relative to these landmarks is a starting point for a conversation, not an automatic decision."
+    }
+   ],
+   "related": [
+    "what-scoliosis-actually-is",
+    "will-it-get-worse",
+    "what-we-measure"
+   ]
+  },
+  {
+   "slug": "types-of-scoliosis",
+   "pillar": "p1",
+   "mins": "5 min read",
+   "title": "Idiopathic, congenital, neuromuscular: why the type matters",
+   "blurb": "The label in front of the word scoliosis changes what should happen next.",
+   "desc": "The main types of scoliosis, how they differ in cause and behaviour, and why the type determines what treatment is appropriate.",
+   "stand": "Scoliosis is not one condition. The word describes a shape, and several very different situations produce that shape.",
+   "key": [
+    "**Idiopathic** scoliosis has no identified cause and accounts for roughly 80 per cent of cases.",
+    "**Congenital** scoliosis comes from vertebrae that formed differently before birth.",
+    "**Neuromuscular** scoliosis develops alongside a condition affecting muscle control.",
+    "**Degenerative** scoliosis appears in adulthood as the spine ages, and behaves differently from all of the above."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "idiopathic",
+     "t": "Idiopathic"
+    },
+    {
+     "k": "p",
+     "t": "This is the common one. Idiopathic means no cause has been identified, and it accounts for around **80 per cent** of scoliosis. It is usually subdivided by the age at which it appears, with adolescent idiopathic scoliosis being by far the largest group."
+    },
+    {
+     "k": "p",
+     "t": "Idiopathic scoliosis typically appears during the growth spurt, in someone otherwise healthy, with a normal neurological examination. The absence of a cause is not a gap in your particular investigation; it is the current state of knowledge for the condition as a whole."
+    },
+    {
+     "k": "h",
+     "id": "congenital",
+     "t": "Congenital"
+    },
+    {
+     "k": "p",
+     "t": "Here the vertebrae themselves formed differently during early development, before birth. A vertebra may be partly formed, or two may be joined on one side, so the spine grows unevenly from the start."
+    },
+    {
+     "k": "p",
+     "t": "Congenital curves behave according to the underlying bone anatomy, so the reasoning behind treatment is different. They are also more often associated with differences in other systems that developed at the same time, which is why further investigation is usual."
+    },
+    {
+     "k": "h",
+     "id": "neuromuscular",
+     "t": "Neuromuscular"
+    },
+    {
+     "k": "p",
+     "t": "When the muscles that support the trunk do not work typically, the spine can curve as a consequence. This occurs alongside conditions such as cerebral palsy, muscular dystrophy and spina bifida."
+    },
+    {
+     "k": "p",
+     "t": "The priorities here are often different: comfortable sitting, breathing, skin integrity and care. Goals are set around function and daily life rather than around the angle alone."
+    },
+    {
+     "k": "h",
+     "id": "degenerative",
+     "t": "Degenerative, or adult-onset"
+    },
+    {
+     "k": "p",
+     "t": "This is a curve that was not there in adolescence and develops later as discs and joints change with age, most often in the lower back. It behaves quite differently from a curve someone has carried since they were fourteen, and the reasons people seek help are usually pain and function rather than appearance or progression."
+    },
+    {
+     "k": "h",
+     "id": "why-it-matters",
+     "t": "Why the distinction matters to you"
+    },
+    {
+     "k": "p",
+     "t": "Exercise-based scoliosis rehabilitation, including Schroth, was developed and studied mainly in **idiopathic** curves. Applying it to another type is not automatically wrong, but the reasoning, the goals and the realistic expectations all change."
+    },
+    {
+     "k": "p",
+     "t": "If the type of your scoliosis has never been stated clearly, it is a fair thing to ask. It is the first fork in the road."
+    }
+   ],
+   "related": [
+    "what-scoliosis-actually-is",
+    "adult-scoliosis",
+    "schroth-evidence"
+   ]
+  },
+  {
+   "slug": "curve-patterns",
+   "pillar": "p1",
+   "mins": "5 min read",
+   "title": "Curve patterns: thoracic, lumbar and double curves",
+   "blurb": "Where the curve sits changes how it looks, how it behaves, and what the exercises are.",
+   "desc": "How thoracic, thoracolumbar, lumbar and double curves differ in appearance and behaviour, and why the pattern shapes the exercise programme.",
+   "stand": "Two people can both have a 30-degree curve and need entirely different programmes, because the curve is in a different place.",
+   "key": [
+    "Curves are described by **where** the apex sits: thoracic, thoracolumbar, lumbar, or double.",
+    "Thoracic curves involve the ribs, so they show as rib prominence and shoulder asymmetry.",
+    "Lumbar curves more often show as an uneven waist and a hip that looks higher.",
+    "Double curves can look more balanced from behind while still being substantial."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "naming",
+     "t": "How curves are named"
+    },
+    {
+     "k": "p",
+     "t": "A curve is named by the region containing its apex, the vertebra furthest from the midline, and by the side the curve bends towards. A right thoracic curve has its apex in the upper back and bends to the right."
+    },
+    {
+     "k": "h",
+     "id": "thoracic",
+     "t": "Thoracic curves"
+    },
+    {
+     "k": "p",
+     "t": "These sit in the upper and middle back, where the ribs attach. Because rotation carries the ribs with it, thoracic curves tend to be the most visible ones: a prominence on one side of the back when bending forward, one shoulder blade sitting higher or further out, an uneven shoulder line."
+    },
+    {
+     "k": "p",
+     "t": "Thoracic curves in a growing spine have historically been regarded as carrying a higher risk of progression than lumbar curves of the same size, which is one reason they are followed closely."
+    },
+    {
+     "k": "h",
+     "id": "lumbar",
+     "t": "Lumbar and thoracolumbar curves"
+    },
+    {
+     "k": "p",
+     "t": "Lower curves often show differently. There are no ribs to carry, so instead of a rib hump you see an uneven waist, one crease deeper than the other, or a hip that appears higher. People often notice it in how clothes hang rather than in a mirror."
+    },
+    {
+     "k": "p",
+     "t": "Lumbar curves matter a great deal in adulthood, because the lower back carries load and is the region where degenerative change tends to become symptomatic."
+    },
+    {
+     "k": "h",
+     "id": "double",
+     "t": "Double curves"
+    },
+    {
+     "k": "p",
+     "t": "Here there are two curves, typically one thoracic and one lumbar, bending in opposite directions. Each partly compensates for the other, so the head can sit reasonably central over the pelvis and the overall impression from behind can look **more** balanced than a single curve of similar size."
+    },
+    {
+     "k": "p",
+     "t": "That apparent balance can be misleading. A double curve is two curves, and both need addressing."
+    },
+    {
+     "k": "h",
+     "id": "why-programme-differs",
+     "t": "Why the programme differs"
+    },
+    {
+     "k": "p",
+     "t": "Curve-specific exercise works by directing correction in particular directions at particular levels. A correction that lengthens and de-rotates one pattern can be unhelpful applied to another. This is the central reason a scoliosis programme cannot be taken off a shelf, and why an assessment has to establish the pattern before anything is prescribed."
+    }
+   ],
+   "related": [
+    "rotation-and-the-rib-hump",
+    "curve-specific-exercise",
+    "what-we-measure"
+   ]
+  },
+  {
+   "slug": "rotation-and-the-rib-hump",
+   "pillar": "p1",
+   "mins": "5 min read",
+   "title": "Rotation, and why the rib hump is not the whole story",
+   "blurb": "The part of a curve people see is rotation, not the sideways bend.",
+   "desc": "What vertebral rotation is, how it produces a rib hump, how it is measured with a scoliometer, and why it does not track the Cobb angle.",
+   "stand": "When someone notices scoliosis in a mirror or a photograph, what they are usually seeing is rotation.",
+   "key": [
+    "Rotation is the vertebrae turning around the spine's long axis, carrying the ribs with them.",
+    "It is measured on the body as **trunk rotation**, usually with a scoliometer during a forward bend.",
+    "Rotation and Cobb angle are related but do not move together reliably.",
+    "Appearance concerns are usually rotation concerns, which is why they deserve their own attention."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "what-rotation-is",
+     "t": "What rotation is"
+    },
+    {
+     "k": "p",
+     "t": "Alongside bending sideways, the vertebrae in a curve turn about the vertical axis of the spine. In a thoracic curve that turning carries the attached ribs backwards on one side and forwards on the other, producing a prominence on one side of the back and a flattening on the other."
+    },
+    {
+     "k": "h",
+     "id": "forward-bend",
+     "t": "The forward bend test"
+    },
+    {
+     "k": "p",
+     "t": "Rotation is hard to see when standing and obvious when bending forward, because the ribs on the rotated side rise. This is why the forward bend test is the standard screening manoeuvre, and why a curve is so often first noticed at a swimming pool or during a physiotherapy appointment for something else."
+    },
+    {
+     "k": "p",
+     "t": "The amount of rotation is measured with a **scoliometer**, a simple inclinometer laid across the back during the forward bend. It reports trunk rotation in degrees. A reading of around 7 degrees is a commonly used threshold for referring on for imaging, though thresholds vary."
+    },
+    {
+     "k": "h",
+     "id": "not-the-same",
+     "t": "Why it does not track the Cobb angle"
+    },
+    {
+     "k": "p",
+     "t": "Trunk rotation measured on the body and Cobb angle measured on an X-ray are two different measurements of two different things. They are related, but loosely. A curve can be relatively large on X-ray and modest on the body, or the reverse."
+    },
+    {
+     "k": "p",
+     "t": "This matters because the two numbers answer different questions. The Cobb angle is what progression thresholds are built on. Trunk rotation is much closer to what a patient actually sees and minds."
+    },
+    {
+     "k": "h",
+     "id": "why-it-matters",
+     "t": "Why rotation gets its own attention"
+    },
+    {
+     "k": "p",
+     "t": "When people describe what bothers them about scoliosis, they rarely describe an angle. They describe a shoulder blade that sticks out, a waist that is uneven on one side, a bra strap that slips. Those are rotation, and they are legitimate reasons to seek help even when the Cobb angle is modest."
+    },
+    {
+     "k": "p",
+     "t": "It is also why treating a curve as a flat, sideways problem misses the part patients care about most."
+    },
+    {
+     "k": "uncertain",
+     "t": "How much rotation can be changed by exercise, and how durable any change is, remains an open question. Improvements in trunk rotation have been reported in studies of curve-specific exercise, but the quality of evidence is limited and results vary between individuals."
+    }
+   ],
+   "related": [
+    "what-scoliosis-actually-is",
+    "rotational-breathing",
+    "what-we-measure"
+   ]
+  },
+  {
+   "slug": "will-it-get-worse",
+   "pillar": "p1",
+   "mins": "7 min read",
+   "title": "Will it get worse? What actually predicts progression",
+   "blurb": "Three factors carry most of the weight, and one of them is not the curve at all.",
+   "desc": "What predicts scoliosis progression: remaining growth, curve size and curve pattern. What the risk means in practice and what it does not.",
+   "stand": "This is the first question almost everyone asks, and it has a reasonably good answer, though not a certain one.",
+   "key": [
+    "**Remaining growth** is the single most important factor. A curve in a spine that has stopped growing behaves very differently.",
+    "**Curve size** matters: larger curves at a given stage of maturity are more likely to progress.",
+    "**Curve pattern** matters, with thoracic curves generally considered higher risk.",
+    "Risk is a probability across groups, not a prediction for one person."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "growth",
+     "t": "Growth is the engine"
+    },
+    {
+     "k": "p",
+     "t": "Idiopathic curves overwhelmingly progress during the adolescent growth spurt, and progression usually slows markedly once growth finishes. This is why age alone is a poor guide and **skeletal maturity** is the useful measure: two fifteen-year-olds can be at completely different points in their growth."
+    },
+    {
+     "k": "p",
+     "t": "Clinicians estimate remaining growth from several signs, including the Risser sign on X-ray, which grades how far a growth plate on the pelvis has matured, and from milestones such as the timing of menarche and the peak of the height spurt."
+    },
+    {
+     "k": "h",
+     "id": "size",
+     "t": "Size, at a given maturity"
+    },
+    {
+     "k": "p",
+     "t": "At the same stage of growth, a larger curve is more likely to get larger. The combination is what matters. A 30-degree curve in a child at the start of their growth spurt is watched much more closely than a 30-degree curve in someone who finished growing two years ago."
+    },
+    {
+     "k": "h",
+     "id": "pattern",
+     "t": "Pattern"
+    },
+    {
+     "k": "p",
+     "t": "Thoracic curves have generally been regarded as carrying a higher risk of progression than lumbar curves of equivalent size, and double curves are usually followed attentively because there are two curves that can each change."
+    },
+    {
+     "k": "h",
+     "id": "after-growth",
+     "t": "What happens after growth stops"
+    },
+    {
+     "k": "p",
+     "t": "Most curves become substantially more stable once skeletal growth is complete. Larger curves, particularly those beyond roughly 45 to 50 degrees, may continue to change slowly over decades, which is one reason larger curves are treated more actively while there is still an opportunity."
+    },
+    {
+     "k": "p",
+     "t": "Smaller curves in adults tend to be stable, and the reason for treating them is usually symptoms, function or appearance rather than fear of progression."
+    },
+    {
+     "k": "h",
+     "id": "what-risk-means",
+     "t": "What a risk figure actually means"
+    },
+    {
+     "k": "p",
+     "t": "If you are told a curve has a high chance of progressing, that is a statement about what happens to groups of people with similar curves at a similar stage of growth. It is not a forecast for you specifically. Some high-risk curves stay put. Some low-risk curves surprise everyone."
+    },
+    {
+     "k": "p",
+     "t": "The practical use of a risk estimate is to decide how closely to watch and how actively to intervene, not to tell you what your future is."
+    },
+    {
+     "k": "uncertain",
+     "t": "There is no test that reliably predicts an individual curve's course. Genetic tests marketed for predicting progression have not held up well under independent evaluation, and none is part of routine practice."
+    }
+   ],
+   "related": [
+    "growth-and-skeletal-maturity",
+    "cobb-angle",
+    "working-alongside-a-brace"
+   ]
+  },
+  {
+   "slug": "scoliosis-and-pain",
+   "pillar": "p1",
+   "mins": "5 min read",
+   "title": "Scoliosis and pain: what the link really is",
+   "blurb": "In adolescents the link is weaker than people expect. In adults it is different.",
+   "desc": "Whether scoliosis causes pain, why curve size and pain do not track together, and when pain in a curved spine needs further investigation.",
+   "stand": "People assume a curved spine must hurt. For adolescents that assumption is usually wrong, which surprises families in both directions.",
+   "key": [
+    "Adolescents with idiopathic curves are frequently pain-free, and curve size does not predict pain well.",
+    "Back pain in adolescents is common in general, whether or not there is a curve.",
+    "In adults, particularly with degenerative curves, pain is a much more prominent feature.",
+    "Severe, night-time or neurological symptoms are not typical and should be assessed."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "adolescents",
+     "t": "In adolescents"
+    },
+    {
+     "k": "p",
+     "t": "Most adolescents with idiopathic scoliosis do not have significant pain, and where pain exists it correlates poorly with how large the curve is. A 45-degree curve can be comfortable; a 20-degree curve can ache."
+    },
+    {
+     "k": "p",
+     "t": "It is also worth knowing that back pain is common in adolescents generally, curve or no curve. Finding a curve in a teenager with back pain does not establish that the curve is the cause."
+    },
+    {
+     "k": "h",
+     "id": "adults",
+     "t": "In adults"
+    },
+    {
+     "k": "p",
+     "t": "The picture changes. Adults present with scoliosis far more often because of pain and difficulty with daily activity than because of appearance or progression. In degenerative curves the pain often comes from the discs, joints and nerve spaces that are changing with age, in a spine whose alignment makes those changes less well tolerated."
+    },
+    {
+     "k": "p",
+     "t": "For adults, this reframes the goal. The question is rarely how to change the angle and usually how to load the spine well, build capacity, and manage symptoms over years."
+    },
+    {
+     "k": "h",
+     "id": "what-helps",
+     "t": "What tends to help"
+    },
+    {
+     "k": "ul",
+     "items": [
+      "Building strength and endurance in the trunk and hips, so the spine is supported through a day rather than a session.",
+      "Learning positions and movement strategies that reduce provocation during the activities that actually cause trouble.",
+      "Keeping generally active. Deconditioning reliably makes spinal pain harder to manage."
+     ]
+    },
+    {
+     "k": "h",
+     "id": "when-to-ask",
+     "t": "When pain needs a closer look"
+    },
+    {
+     "k": "p",
+     "t": "Some patterns are not typical of a curve alone and deserve proper assessment rather than reassurance."
+    },
+    {
+     "k": "ul",
+     "items": [
+      "Pain that consistently wakes you at night.",
+      "Pain with fever, unexplained weight loss, or feeling generally unwell.",
+      "Numbness, weakness, or changes in bladder or bowel control.",
+      "A curve that appears rapidly, or pain that escalates quickly."
+     ]
+    },
+    {
+     "k": "p",
+     "t": "None of these means something serious is happening. They mean the question deserves answering properly rather than being attributed to the curve by default."
+    }
+   ],
+   "related": [
+    "adult-scoliosis",
+    "lifting-with-scoliosis",
+    "inside-the-assessment"
+   ]
+  },
+  {
+   "slug": "growth-and-skeletal-maturity",
+   "pillar": "p1",
+   "mins": "5 min read",
+   "title": "Growth, Risser sign and why timing matters so much",
+   "blurb": "The same curve is a different problem depending on how much growing is left.",
+   "desc": "How skeletal maturity is estimated, what the Risser sign means, and why remaining growth is the most important variable in adolescent scoliosis.",
+   "stand": "If you understand one thing about adolescent scoliosis, make it this: the clock matters more than the number.",
+   "key": [
+    "Progression in idiopathic scoliosis is driven mainly by growth.",
+    "**Skeletal maturity** is estimated from X-ray signs and growth milestones, not from age alone.",
+    "The **Risser sign** grades maturity from 0 to 5 using a growth plate on the pelvis.",
+    "The window where active treatment can do most is also the window that closes.",
+    "Once growth is complete, the situation becomes considerably more stable."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "why-timing",
+     "t": "Why timing dominates"
+    },
+    {
+     "k": "p",
+     "t": "Idiopathic curves change most during rapid growth. The practical implication is uncomfortable but important: the period when a curve is most likely to worsen is also the period when intervention has the most to work with, and that period is finite."
+    },
+    {
+     "k": "p",
+     "t": "This is why clinicians sometimes want to review a growing adolescent every few months while being relaxed about an adult with a similar curve."
+    },
+    {
+     "k": "h",
+     "id": "risser",
+     "t": "The Risser sign"
+    },
+    {
+     "k": "p",
+     "t": "The Risser sign grades how far a growth plate along the top of the pelvis has ossified and fused, on a scale from 0 to 5. It is visible on the same standing X-ray used to measure the curve, so it costs nothing extra."
+    },
+    {
+     "k": "ul",
+     "items": [
+      "**Risser 0** means that growth plate has not begun to ossify. Considerable growth typically remains.",
+      "**Risser 1 to 3** covers the progressive stages, spanning the fastest part of the growth spurt.",
+      "**Risser 4 to 5** indicates growth is largely or entirely complete."
+     ]
+    },
+    {
+     "k": "p",
+     "t": "Risser is a useful shorthand rather than a precise clock, and it is read alongside other information."
+    },
+    {
+     "k": "h",
+     "id": "other-markers",
+     "t": "The other markers"
+    },
+    {
+     "k": "ul",
+     "items": [
+      "**Height velocity**, how fast someone is currently growing, tracked across visits.",
+      "**Menarche**, since the growth rate usually slows in the period following it.",
+      "**Hand and wrist films** or other bone-age methods, used where a more precise estimate is needed."
+     ]
+    },
+    {
+     "k": "h",
+     "id": "what-it-means",
+     "t": "What this means for a family"
+    },
+    {
+     "k": "p",
+     "t": "If a curve is found early in the growth spurt, expect closer monitoring and a lower threshold for acting. That is not alarmism; it is making use of a window."
+    },
+    {
+     "k": "p",
+     "t": "If a curve is found once growth is finished, the conversation shifts away from progression and towards symptoms, function, appearance and long-term management. Both are legitimate reasons to do rehabilitation. They are just different reasons."
+    }
+   ],
+   "related": [
+    "will-it-get-worse",
+    "working-alongside-a-brace",
+    "just-diagnosed"
+   ]
+  },
+  {
+   "slug": "adult-scoliosis",
+   "pillar": "p1",
+   "mins": "6 min read",
+   "title": "Scoliosis in adults: two different stories",
+   "blurb": "A curve you grew up with and a curve that appeared at fifty are not the same condition.",
+   "desc": "The difference between adult idiopathic scoliosis and degenerative adult-onset scoliosis, what each means, and what rehabilitation is aiming at.",
+   "stand": "Adults with scoliosis fall into two broad groups, and mixing them up leads to a lot of unnecessary worry.",
+   "key": [
+    "**Adult idiopathic** scoliosis is a curve carried since adolescence into adult life.",
+    "**Degenerative** scoliosis is a new curve that develops as the spine ages, usually in the lower back.",
+    "Adults usually seek help for pain and function rather than for the angle.",
+    "Meaningful improvement in symptoms and capacity is realistic even when the curve itself does not change much."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "carried-forward",
+     "t": "The curve you grew up with"
+    },
+    {
+     "k": "p",
+     "t": "Many adults have had a curve since their teens. It may have been monitored and discharged, or never formally assessed at all. These curves are usually stable, especially below roughly 45 to 50 degrees, and the reason for seeking help is typically discomfort, fatigue with prolonged postures, appearance, or simply wanting to know where things stand."
+    },
+    {
+     "k": "p",
+     "t": "The goals here are about capacity and management. Building strength, improving how the trunk is controlled under load, and learning what to do when a flare happens are all realistic. Substantially changing the angle of a mature curve is not the aim."
+    },
+    {
+     "k": "h",
+     "id": "degenerative",
+     "t": "The curve that appeared later"
+    },
+    {
+     "k": "p",
+     "t": "Degenerative, or de novo, scoliosis develops in adulthood, most often in the lower back, as discs lose height unevenly and the facet joints and ligaments change. Someone with no history of scoliosis in adolescence can develop a measurable curve in their fifties or later."
+    },
+    {
+     "k": "p",
+     "t": "Symptoms here often have as much to do with the associated degenerative changes as with the curve: back pain, leg pain, and symptoms that come on with standing and walking and ease with sitting or bending forward."
+    },
+    {
+     "k": "h",
+     "id": "what-changes",
+     "t": "What rehabilitation is aiming at"
+    },
+    {
+     "k": "ul",
+     "items": [
+      "**Tolerance**, being able to stand, walk and work for longer before symptoms interrupt.",
+      "**Strength and endurance**, particularly through the trunk and hips.",
+      "**Movement options**, so there is more than one way to perform the tasks that provoke symptoms.",
+      "**Self-management**, knowing what a flare is and what to do about it."
+     ]
+    },
+    {
+     "k": "p",
+     "t": "None of those are angle measurements, which is exactly the point. For most adults the angle is not the thing that is limiting their life."
+    },
+    {
+     "k": "h",
+     "id": "when-to-ask-more",
+     "t": "When to seek a broader opinion"
+    },
+    {
+     "k": "p",
+     "t": "Progressive leg weakness, numbness in the saddle area, changes in bladder or bowel function, or leg symptoms that are worsening steadily all warrant prompt medical assessment rather than a rehabilitation plan alone."
+    },
+    {
+     "k": "uncertain",
+     "t": "Evidence for exercise-based treatment in adult scoliosis is thinner than in adolescents, and most of what exists concerns symptoms and function rather than the curve. That is an honest limitation, not a reason to do nothing: exercise for back pain and for general capacity is well supported in its own right."
+    }
+   ],
+   "related": [
+    "scoliosis-and-pain",
+    "types-of-scoliosis",
+    "lifting-with-scoliosis"
+   ]
+  },
+  {
+   "slug": "what-schroth-involves",
+   "pillar": "p2",
+   "mins": "7 min read",
+   "title": "What the Schroth Method actually involves",
+   "blurb": "Not a set of stretches. A way of holding and breathing into a specific correction.",
+   "desc": "What a Schroth-based scoliosis programme actually asks of you: curve-specific positions, active correction, rotational breathing, and daily practice.",
+   "stand": "People arrive expecting exercises. What Schroth actually teaches is a correction, and then how to hold it while you do things.",
+   "key": [
+    "Schroth is a **curve-specific** approach: the exercises are chosen for your pattern, not for scoliosis in general.",
+    "The core skill is producing an active correction yourself, not being put into position by someone else.",
+    "**Rotational breathing** is used to direct air into the flattened part of the chest.",
+    "It requires regular home practice. That is the part that decides whether it works."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "origin",
+     "t": "Where it comes from"
+    },
+    {
+     "k": "p",
+     "t": "The method originated with Katharina Schroth in Germany in the 1920s and was developed further by her daughter Christa Lehnert-Schroth. It was built on the idea that a three-dimensional deformity needs a three-dimensional correction, held actively by the person themselves."
+    },
+    {
+     "k": "h",
+     "id": "principles",
+     "t": "The working principles"
+    },
+    {
+     "k": "ul",
+     "items": [
+      "**Auto-elongation**, actively lengthening the spine to reduce the curve before anything else is attempted.",
+      "**De-rotation**, turning the trunk against the direction of the curve's rotation.",
+      "**Rotational breathing**, directing breath into the concave, collapsed areas to expand them from the inside.",
+      "**Stabilisation**, holding the corrected position with muscular effort so it is not purely passive."
+     ]
+    },
+    {
+     "k": "p",
+     "t": "Those four are the grammar of the method. Individual exercises are sentences built from them."
+    },
+    {
+     "k": "h",
+     "id": "session",
+     "t": "What a session actually looks like"
+    },
+    {
+     "k": "p",
+     "t": "Early sessions are largely about learning to feel and produce the correction, often in supported positions using a wall, a bar, poles or a mat, with plenty of tactile and verbal cueing and frequent use of a mirror. It is slow, detailed work and it is more mentally demanding than most people expect."
+    },
+    {
+     "k": "p",
+     "t": "As the correction becomes reliable, it is progressed: held for longer, in less supported positions, then during movement, then under load, and finally during the things you actually do."
+    },
+    {
+     "k": "h",
+     "id": "home",
+     "t": "The home programme is the treatment"
+    },
+    {
+     "k": "p",
+     "t": "Clinic sessions teach and refine. The home programme is where the volume happens, and it is usually the single biggest determinant of whether anything changes. A realistic programme performed most days beats an ambitious one performed occasionally."
+    },
+    {
+     "k": "p",
+     "t": "This is why a good programme is short enough to survive a school week, and why it is reviewed and trimmed rather than only added to."
+    },
+    {
+     "k": "h",
+     "id": "expect",
+     "t": "What to expect, honestly"
+    },
+    {
+     "k": "p",
+     "t": "Postural change and better control of the trunk are the things most people notice first, often within weeks. Changes in the measured angle, where they occur, take considerably longer and are not guaranteed. Anyone promising a specific number of degrees is overstating what is known."
+    },
+    {
+     "k": "uncertain",
+     "t": "The strongest evidence for curve-specific exercise concerns growing adolescents with modest curves, and even there the certainty of the evidence is limited. Its effect in adults, and its effect on large curves, is much less clear."
+    }
+   ],
+   "related": [
+    "rotational-breathing",
+    "elongation-derotation-stabilisation",
+    "schroth-evidence"
+   ]
+  },
+  {
+   "slug": "rotational-breathing",
+   "pillar": "p2",
+   "mins": "5 min read",
+   "title": "What rotational breathing actually is",
+   "blurb": "The idea that you can aim a breath. It is stranger and more learnable than it sounds.",
+   "desc": "What rotational angular breathing means in Schroth scoliosis rehabilitation, why the ribcage is the target, and how the skill is taught.",
+   "stand": "Of everything in a Schroth programme, this is the part people find hardest to believe and, once learned, hardest to unlearn.",
+   "key": [
+    "Rotation changes the shape of the ribcage, collapsing it on one side and expanding it on the other.",
+    "Rotational breathing directs air into the **collapsed** areas to expand them from within.",
+    "It is a learned motor skill, taught with hands, mirrors and cues, not a breathing exercise in the relaxation sense.",
+    "It is used in combination with an active correction, not on its own."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "the-problem",
+     "t": "The problem it addresses"
+    },
+    {
+     "k": "p",
+     "t": "When vertebrae rotate, the attached ribs go with them. On one side the ribs are pushed backwards and splay apart; on the other they are drawn forwards and crowd together. The result is a ribcage that is no longer symmetrical, with regions that have become habitually collapsed and move very little."
+    },
+    {
+     "k": "p",
+     "t": "Those collapsed regions are not passive bystanders. They are part of what holds the shape in place."
+    },
+    {
+     "k": "h",
+     "id": "the-idea",
+     "t": "The idea"
+    },
+    {
+     "k": "p",
+     "t": "Breathing is not evenly distributed by necessity. With training, a person can bias where expansion happens: more into the back than the front, more into one side than the other, more into the lower ribs than the upper. Rotational breathing uses that to expand the collapsed areas from the inside while the rest of the trunk is held in a corrected position."
+    },
+    {
+     "k": "p",
+     "t": "You are, in effect, using air as a corrective force in a direction that muscles cannot easily reach."
+    },
+    {
+     "k": "h",
+     "id": "how-taught",
+     "t": "How it is taught"
+    },
+    {
+     "k": "p",
+     "t": "Almost always through touch first. A hand or a strap gives the target something to push against, so there is clear feedback about whether the right area moved. Mirrors, tape and verbal cues are added. Most people cannot do it on the first attempt and can do something recognisable by the end of the first session."
+    },
+    {
+     "k": "p",
+     "t": "It is then combined with the correction, because breathing into a collapsed area while the trunk is slumped simply reinforces the existing shape."
+    },
+    {
+     "k": "h",
+     "id": "what-it-feels-like",
+     "t": "What it feels like"
+    },
+    {
+     "k": "p",
+     "t": "Effortful and slightly odd. People commonly report that the corrected side feels stretched or unfamiliar, and that a few breaths are tiring in a way that ordinary breathing is not. That fades as the skill becomes more automatic."
+    },
+    {
+     "k": "uncertain",
+     "t": "Rotational breathing is a core component of Schroth practice, but it has not been isolated and tested on its own. What has been studied is whole programmes that include it, so its individual contribution is not separately established."
+    }
+   ],
+   "related": [
+    "what-schroth-involves",
+    "rotation-and-the-rib-hump",
+    "elongation-derotation-stabilisation"
+   ]
+  },
+  {
+   "slug": "elongation-derotation-stabilisation",
+   "pillar": "p2",
+   "mins": "5 min read",
+   "title": "Elongation, de-rotation, stabilisation: the three jobs",
+   "blurb": "Every corrective exercise is doing one of three things, usually in this order.",
+   "desc": "The three mechanical jobs of a Schroth correction, why the order matters, and how they combine into a single held position.",
+   "stand": "Once you can see which of the three jobs an exercise is doing, the whole programme stops looking arbitrary.",
+   "key": [
+    "**Elongation** creates space and reduces the curve before any other correction is attempted.",
+    "**De-rotation** turns the trunk against the rotation of the curve.",
+    "**Stabilisation** holds the result with muscular effort so it survives outside the session.",
+    "The order matters: de-rotating a collapsed spine achieves much less than de-rotating a lengthened one."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "elongation",
+     "t": "Elongation comes first"
+    },
+    {
+     "k": "p",
+     "t": "A curve shortens the spine. Actively lengthening, growing tall through the crown of the head while the pelvis stays anchored, reduces the curve before anything else is added, and creates the space in which the other corrections become possible."
+    },
+    {
+     "k": "p",
+     "t": "This is an active effort, not someone pulling on your head. The distinction matters, because the aim is a correction you can produce yourself on a bus."
+    },
+    {
+     "k": "h",
+     "id": "derotation",
+     "t": "De-rotation"
+    },
+    {
+     "k": "p",
+     "t": "With length established, the trunk is turned against the direction of the curve's rotation. In practice this is a combination of shoulder girdle position, ribcage orientation and pelvic position, and it is specific to the pattern: which way to turn depends entirely on which way the curve rotates."
+    },
+    {
+     "k": "p",
+     "t": "This is the step that most obviously cannot be generic."
+    },
+    {
+     "k": "h",
+     "id": "stabilisation",
+     "t": "Stabilisation"
+    },
+    {
+     "k": "p",
+     "t": "A correction that collapses the moment attention wanders has not achieved much. Stabilisation is the muscular work of holding the corrected position, first briefly, then for longer, then while breathing normally, then while moving, then while carrying something."
+    },
+    {
+     "k": "p",
+     "t": "This is also where the programme stops being about posture and starts being about strength and endurance, which is why scoliosis rehabilitation and strength training are not separate projects."
+    },
+    {
+     "k": "h",
+     "id": "together",
+     "t": "Putting them together"
+    },
+    {
+     "k": "p",
+     "t": "A mature correction has all three running at once: long, turned, and held, with breath directed into the areas that are collapsed. That is a lot to coordinate, which is why it is taught in pieces and assembled gradually."
+    },
+    {
+     "k": "p",
+     "t": "When a programme is reviewed, the question is usually which of the three has quietly dropped out. Elongation is the most common casualty."
+    }
+   ],
+   "related": [
+    "what-schroth-involves",
+    "rotational-breathing",
+    "curve-specific-exercise"
+   ]
+  },
+  {
+   "slug": "curve-specific-exercise",
+   "pillar": "p2",
+   "mins": "5 min read",
+   "title": "Why the exercises have to be curve-specific",
+   "blurb": "The same exercise can help one curve and be irrelevant, or unhelpful, for another.",
+   "desc": "Why scoliosis exercise has to be matched to the individual curve pattern, and why generic core or stretching programmes are not equivalent.",
+   "stand": "This is the single most important thing separating scoliosis-specific rehabilitation from general back exercise.",
+   "key": [
+    "Corrections are **directional**, and the right direction depends on your curve pattern.",
+    "A correction that helps a right thoracic curve may do nothing for a left lumbar curve.",
+    "Symmetrical exercise treats an asymmetrical problem symmetrically.",
+    "This is why an assessment must establish the pattern before a programme exists."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "asymmetry",
+     "t": "An asymmetrical problem"
+    },
+    {
+     "k": "p",
+     "t": "Scoliosis is asymmetrical by definition. One side is lengthened and one shortened; one side of the ribcage is collapsed and the other splayed. A programme that does the same thing on both sides preserves the difference between them, because it adds equally to both."
+    },
+    {
+     "k": "p",
+     "t": "That is not an argument that symmetrical exercise is harmful. It is an argument that it is not, by itself, scoliosis treatment."
+    },
+    {
+     "k": "h",
+     "id": "direction",
+     "t": "Corrections have a direction"
+    },
+    {
+     "k": "p",
+     "t": "Every corrective position in a curve-specific programme has a direction attached: lengthen here, turn this way, expand into that region, press down through that side. Reverse the pattern and you reverse the instructions."
+    },
+    {
+     "k": "p",
+     "t": "Applying the corrections for a right thoracic curve to someone with a left thoracolumbar curve is not a smaller version of the right treatment. It is a different treatment, applied to the wrong person."
+    },
+    {
+     "k": "h",
+     "id": "what-about-general",
+     "t": "So is general exercise pointless?"
+    },
+    {
+     "k": "p",
+     "t": "No, and this is worth being clear about. General strength, mobility and cardiovascular fitness are valuable for anyone with a spine, including a curved one. They support the specific work and they matter for health in their own right."
+    },
+    {
+     "k": "p",
+     "t": "What they are not is a substitute for the corrective component. The reasonable position is both, with the general work built so it does not fight the specific work."
+    },
+    {
+     "k": "h",
+     "id": "consequence",
+     "t": "The practical consequence"
+    },
+    {
+     "k": "p",
+     "t": "A scoliosis programme cannot responsibly be handed out before someone has established the curve pattern, its direction, its rotation and how the trunk behaves under load. That is what an assessment is for, and it is why programmes downloaded from the internet are a gamble rather than a plan."
+    }
+   ],
+   "related": [
+    "curve-patterns",
+    "schroth-vs-general-exercise",
+    "inside-the-assessment"
+   ]
+  },
+  {
+   "slug": "schroth-evidence",
+   "pillar": "p2",
+   "mins": "6 min read",
+   "title": "What the evidence says about Schroth, honestly",
+   "blurb": "Better than sceptics claim, weaker than enthusiasts claim. Here is the actual state of it.",
+   "desc": "An honest summary of the evidence for physiotherapeutic scoliosis-specific exercise, including Schroth: what is supported, how certain it is, and what remains unknown.",
+   "stand": "You deserve a straight answer about how well this is supported, including the parts that are not flattering.",
+   "key": [
+    "International guidance recommends scoliosis-specific exercise for growing adolescents with mild to moderate curves.",
+    "Studies report benefits for curve progression, trunk rotation and quality of life.",
+    "The **certainty** of that evidence is generally rated low to moderate, mainly because trials are small and blinding is impossible.",
+    "Evidence in adults, and for large curves, is considerably thinner."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "what-supported",
+     "t": "What is reasonably supported"
+    },
+    {
+     "k": "p",
+     "t": "Physiotherapeutic scoliosis-specific exercise, the family of approaches Schroth belongs to, is recommended by international scoliosis guidance for growing adolescents with mild to moderate idiopathic curves, generally alongside bracing where bracing is indicated."
+    },
+    {
+     "k": "p",
+     "t": "Published trials and reviews report benefits including slowed or halted progression in some groups, reductions in trunk rotation, and improvements in patient-reported outcomes and quality of life."
+    },
+    {
+     "k": "h",
+     "id": "how-certain",
+     "t": "How certain that evidence is"
+    },
+    {
+     "k": "p",
+     "t": "Less certain than the recommendations alone might suggest. The literature has real limitations, and it is better to know them."
+    },
+    {
+     "k": "ul",
+     "items": [
+      "Many trials are **small**, often a few dozen participants.",
+      "**Blinding is impossible**. You cannot conceal from someone whether they are doing an exercise programme.",
+      "**Programmes differ** between studies and clinics, so results do not transfer cleanly.",
+      "**Follow-up is often short** relative to how long a curve is lived with.",
+      "Control groups vary, from observation only to general exercise, which changes what is being compared."
+     ]
+    },
+    {
+     "k": "p",
+     "t": "Systematic reviews typically conclude that the evidence points in a favourable direction while rating the certainty as low to moderate. That is a genuine finding, not a criticism of the method."
+    },
+    {
+     "k": "h",
+     "id": "where-thin",
+     "t": "Where the evidence is thin"
+    },
+    {
+     "k": "ul",
+     "items": [
+      "**Adults.** Much less studied, and mostly for symptoms rather than the curve.",
+      "**Large curves.** Little evidence that exercise alone alters the course of a curve well beyond the usual treatment range.",
+      "**Long-term outcomes.** What a programme in adolescence means at fifty is largely unstudied.",
+      "**Individual components.** Whole programmes are tested, not their parts."
+     ]
+    },
+    {
+     "k": "h",
+     "id": "what-to-do",
+     "t": "What to do with this"
+    },
+    {
+     "k": "p",
+     "t": "A reasonable reading is that curve-specific exercise is a justifiable, guideline-supported option for the group it was designed for, with real but imperfect evidence behind it, and that it should be offered without promises."
+    },
+    {
+     "k": "p",
+     "t": "If a clinic tells you the evidence is conclusive, or that a specific number of degrees will come off, that is a claim the literature does not support."
+    },
+    {
+     "k": "uncertain",
+     "t": "The central open question is how much of the reported benefit comes from the curve-specific corrections and how much from supervised, progressive, engaged exercise in general. That comparison has not been done well enough to settle it."
+    }
+   ],
+   "related": [
+    "what-schroth-involves",
+    "schroth-vs-general-exercise",
+    "types-of-scoliosis"
+   ]
+  },
+  {
+   "slug": "schroth-vs-general-exercise",
+   "pillar": "p2",
+   "mins": "5 min read",
+   "title": "Schroth, Pilates, yoga and the gym: what does what",
+   "blurb": "They are not competitors. They answer different questions.",
+   "desc": "How Schroth-based scoliosis exercise differs from Pilates, yoga and general strength training, and how they can sensibly fit together.",
+   "stand": "Almost everyone with a curve has been told to try Pilates. It is worth being precise about what each of these actually offers.",
+   "key": [
+    "**Schroth** provides curve-specific correction. Nothing else on this list does.",
+    "**Pilates and yoga** build control, mobility and body awareness, but are not curve-specific by design.",
+    "**Strength training** builds the capacity that makes a correction holdable under load.",
+    "The sensible arrangement is the specific work plus general training, not one instead of the other."
+   ],
+   "blocks": [
+    {
+     "k": "h",
+     "id": "schroth",
+     "t": "What Schroth does that the others do not"
+    },
+    {
+     "k": "p",
+     "t": "It prescribes directional corrections matched to your specific curve, and teaches you to produce and hold them. No general class can do this, because the instructor is teaching a room rather than a pattern."
+    },
+    {
+     "k": "h",
+     "id": "pilates-yoga",
+     "t": "Pilates and yoga"
+    },
+    {
+     "k": "p",
+     "t": "Both can be genuinely useful. They develop trunk control, mobility, breathing awareness and the habit of paying attention to how you are positioned, all of which support corrective work."
+    },
+    {
+     "k": "p",
+     "t": "The limitation is that they are not built around scoliosis. Some positions are symmetrical in a way that does not address an asymmetrical spine, and deep end-range rotation is worth discussing with whoever is managing your curve. A teacher who knows you have scoliosis and is willing to adapt is worth a great deal."
+    },
+    {
+     "k": "h",
+     "id": "strength",
+     "t": "Strength training"
+    },
+    {
+     "k": "p",
+     "t": "Often the most underrated piece. A correction that cannot be held under load is a correction that exists in a clinic and nowhere else. Building strength through the trunk, hips and shoulders is what lets the correction survive a school bag, a shift at work, or a season of sport."
+    },
+    {
+     "k": "p",
+     "t": "There is no good evidence that resistance training is inherently bad for a curved spine. Loading well matters more than avoiding load."
+    },
+    {
+     "k": "h",
+     "id": "stacking",
+     "t": "How to stack them"
+    },
+    {
+     "k": "ol",
+     "items": [
+      "**The corrective programme** is the non-negotiable core, done most days, kept short enough to survive real life.",
+      "**Strength work** two or three times a week, coached, progressive, built so it does not fight the correction.",
+      "**Pilates, yoga or a class you enjoy**, if you want it, with the instructor informed."
+     ]
+    },
+    {
+     "k": "p",
+     "t": "The order reflects priority, not importance to your week. The thing most likely to be dropped when life gets busy is the corrective work, which is exactly the thing that should not be."
+    }
+   ],
+   "related": [
+    "curve-specific-exercise",
+    "lifting-with-scoliosis",
+    "programme-you-run-yourself"
+   ]
+  }
+ ],
+ "routes": [
+  {
+   "id": "r1",
+   "slug": "for-parents",
+   "name": "For parents of adolescents",
+   "short": "Situation · Parents of adolescents",
+   "claim": 7,
+   "desc": "The scoliosis articles that matter most to parents: what a diagnosis means, what predicts progression, how bracing works, and how to support a teenager doing daily exercises.",
+   "stand": "Seven of the twenty-four, in the order most parents need them, from the week of diagnosis onwards.",
+   "items": [
+    "just-diagnosed",
+    "what-scoliosis-actually-is",
+    "cobb-angle",
+    "will-it-get-worse",
+    "growth-and-skeletal-maturity",
+    "working-alongside-a-brace",
+    "teenager-exercises"
+   ]
+  },
+  {
+   "id": "r2",
+   "slug": "for-adults",
+   "name": "For adults with a curve",
+   "short": "Situation · Adults with a curve",
+   "claim": 6,
+   "desc": "Scoliosis articles for adults: how adult curves differ, what the link with pain really is, how to train for decades, and what an assessment covers.",
+   "stand": "Six of the twenty-four, for a curve that has stopped growing, where the questions are about pain, capacity and the next thirty years.",
+   "items": [
+    "adult-scoliosis",
+    "scoliosis-and-pain",
+    "what-scoliosis-actually-is",
+    "lifting-with-scoliosis",
+    "programme-you-run-yourself",
+    "inside-the-assessment"
+   ]
+  },
+  {
+   "id": "r3",
+   "slug": "for-athletes",
+   "name": "For athletes and lifters",
+   "short": "Situation · Athletes and lifters",
+   "claim": 4,
+   "desc": "Scoliosis articles for athletes and lifters: loading a curved spine, asymmetric sports, returning to play on criteria, and why stopping is rarely the answer.",
+   "stand": "Four of the twenty-four, on loading a curved spine well rather than avoiding load and hoping.",
+   "items": [
+    "lifting-with-scoliosis",
+    "return-to-sport",
+    "curve-specific-exercise",
+    "scoliosis-and-pain"
+   ]
+  }
+ ]
+}

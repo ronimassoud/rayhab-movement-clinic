@@ -140,6 +140,19 @@ CTA_ROTATE = [
 ]
 
 
+# Short labels for the view bar. The page titles work as headings and are
+# too long to sit in a row of chips.
+VIEW_LABEL = {
+    "what-scoliosis-is": "What scoliosis is",
+    "the-schroth-method": "The Schroth Method",
+    "rayhabs-approach": "Rayhab's approach",
+    "the-assessment": "The assessment",
+    "for-parents": "Parents",
+    "for-adults": "Adults",
+    "for-athletes": "Athletes and lifters",
+}
+
+
 def wrap_arrows(html):
     """Wrap trailing navigational arrows so they can animate on hover.
     The leading space is what separates a navigational arrow from a data
@@ -274,7 +287,35 @@ def render_article(a, lookup, pillars):
     return body
 
 
-def render_pillar(p, arts):
+def filter_bar(views, active):
+    """One row of views over one library.
+
+    Every index page carries it, so a reader can see that the topic shelves
+    and the situation shelves are the same twenty-four articles seen two
+    ways, and can move between them in a click. They are ordinary links, so
+    this needs no JavaScript."""
+    out = []
+    for slug, label, count in views:
+        cur = ' aria-current="page"' if slug == active else ''
+        out.append('<a class="libchip" href="%s.html"%s>%s'
+                   '<span class="libchip-n">%d</span></a>'
+                   % (slug, cur, esc(label), count))
+    whole = ('<a class="libchip libchip-all" href="library.html"%s>All'
+             '<span class="libchip-n">24</span></a>'
+             % (' aria-current="page"' if active == "library" else ''))
+    return ('<nav class="libbar" aria-label="Views of the scoliosis library">'
+            '%s<span class="libbar-k">By topic</span>%s'
+            '<span class="libbar-k">By situation</span>%s</nav>'
+            % (whole, "".join(out[:4]), "".join(out[4:])))
+
+
+def render_index(view, arts, views):
+    """Every scoliosis index is this page with a different filter applied.
+
+    The four topic shelves and the three situation shelves used to be
+    separate renders over overlapping subsets, so a parent who opened
+    "Parents of adolescents" and then "Pillar 01" met the same layout twice
+    with no way to tell the two were one library."""
     rows = ""
     for i, a in enumerate(arts, 1):
         rows += ('<a class="pidx" href="%s.html">'
@@ -284,28 +325,33 @@ def render_pillar(p, arts):
                  '<span class="pidx-go">Read \u2192</span></a>'
                  % (a["slug"], i, esc(a["title"]), esc(a["blurb"])))
 
+    p = view
     body = HEAD.format(title=esc(p["name"]) + ", Rayhab Movement Clinic",
                        desc=esc(p["desc"]), slug=p["slug"])
     body += NAV + "\n\n<main id=\"main\">\n\n"
     body += '''  <section class="art-hero">
-    <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="../education.html">Education</a> <span aria-hidden="true">/</span> <a href="./">Scoliosis</a></p>
+    <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="../education.html">Education</a> <span aria-hidden="true">/</span> <a href="./">Scoliosis</a> <span aria-hidden="true">/</span> <a href="library.html">Library</a></p>
     <p class="art-eyebrow" style="margin-top:18px">%s</p>
     <h1 class="art-h1">%s</h1>
     <p class="art-stand">%s</p>
   </section>
 
   <section class="band" style="background:var(--paper)">
-    <div class="sechead">
+    <div class="sechead" style="margin-bottom:20px">
       <div>
-        <p class="eyebrow" style="margin-bottom:14px">%d articles</p>
-        <h2 class="h2-sm" style="color:var(--forest-900)">Read in order, or jump in</h2>
+        <p class="eyebrow" style="margin-bottom:14px">%s</p>
+        <h2 class="h2-sm" style="color:var(--forest-900)">%s</h2>
       </div>
       <a class="textlink" href="./">Back to the hub \u2192</a>
     </div>
+    %s
     <div class="pidx-list" data-reveal="children" data-reveal-stagger="55">%s</div>
-    <p class="disclaimer" style="margin-top:26px">Every article on this page is written for patients and families, not clinicians, and carries a named clinical reviewer. General information cannot tell you what your own curve is doing.</p>
+    <p class="disclaimer" style="margin-top:26px">Every article here is written for patients and families, not clinicians, and carries a named clinical reviewer. The topic and situation views above are the same twenty-four articles ordered differently, so one article can appear in several. General information cannot tell you what your own curve is doing.</p>
   </section>
-''' % (esc(p["short"]), esc(p["name"]), esc(p["stand"]), len(arts), rows)
+''' % (esc(p["short"]), esc(p["name"]), esc(p["stand"]),
+       "%d of 24 articles" % len(arts) if len(arts) < 24 else "All 24 articles",
+       "Everything, in reading order" if p["slug"] == "library" else "One library, seen one way",
+       filter_bar(views, p["slug"]), rows)
 
     body += "\n" + CTA.format(h="Read enough. What's next?",
                               p="A 60-minute assessment turns general information into a plan for your curve.")
@@ -334,16 +380,37 @@ def main():
                 encoding="utf-8", newline="\n").write(inject(wrap_arrows(html)))
         n += 1
 
-    for pid, p in pillars.items():
-        group = [a for a in arts if a["pillar"] == pid]
-        html = render_pillar(p, group)
-        io.open(os.path.join(OUT, p["slug"] + ".html"), "w",
+    # Every index is a view of one library. The order here is the order of
+    # the filter bar: the four topics, then the three situations, with the
+    # complete list sitting above both as the page they all belong to.
+    order = [p["slug"] for p in data["pillars"]] + [r["slug"] for r in data["routes"]]
+    members = {}
+    for p in data["pillars"]:
+        members[p["slug"]] = [a for a in arts if a["pillar"] == p["id"]]
+    for r in data["routes"]:
+        members[r["slug"]] = [lookup[s] for s in r["items"]]
+        assert len(members[r["slug"]]) == r["claim"], r["slug"]
+
+    views = [(slug, VIEW_LABEL[slug], len(members[slug])) for slug in order]
+
+    LIBRARY = {
+        "slug": "library", "name": "The scoliosis library",
+        "short": "All of it, in one place",
+        "desc": "All 24 scoliosis articles in one list, with views by topic and by situation. "
+                "Every article carries a named clinical reviewer.",
+        "stand": "Twenty-four articles. The views below are the same library ordered by "
+                 "topic or by the situation you are in, so one article can appear in several.",
+    }
+
+    for view in [LIBRARY] + data["pillars"] + data["routes"]:
+        group = arts if view["slug"] == "library" else members[view["slug"]]
+        html = render_index(view, group, views)
+        io.open(os.path.join(OUT, view["slug"] + ".html"), "w",
                 encoding="utf-8", newline="\n").write(inject(wrap_arrows(html)))
 
-    print("wrote %d articles and %d pillar pages" % (n, len(pillars)))
-    for pid, p in pillars.items():
-        print("  %-26s %d articles (claims %d)" %
-              (p["slug"], len([a for a in arts if a["pillar"] == pid]), p["claim"]))
+    print("wrote %d articles and %d index views" % (n, len(views) + 1))
+    for slug in order:
+        print("  %-26s %d of 24" % (slug, len(members[slug])))
 
 
 if __name__ == "__main__":
