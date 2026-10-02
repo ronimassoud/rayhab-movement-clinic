@@ -56,9 +56,19 @@
 
   --pad-x:40px;      /* section side padding, per the 1440 mockups */
   --pad-y:80px;      /* section rhythm in the mockups */
+  --nav-h:80px;      /* measured height of .site-nav; 72px below 700, see mobile.css */
 }
 @media (max-width:900px){ :root{ --pad-x:24px; --pad-y:56px; } }
 @media (max-width:560px){ :root{ --pad-x:20px; --pad-y:44px; } }
+
+/* ---- Anchors land below the sticky nav ----
+   Every in-page link, and the "On this page" nav on 48 article pages, used
+   to drop its heading behind .site-nav: the heading arrived at y=0 under an
+   80px bar. scroll-padding-top on the scroll container fixes all of them at
+   once, including hash links arriving from another page. The extra 16px is
+   breathing room so the heading does not sit flush against the bar. */
+html{scroll-padding-top:calc(var(--nav-h) + 16px)}
+@media (prefers-reduced-motion:no-preference){ html{scroll-behavior:smooth} }
 
 /* ---- Reset ---- */
 *,*::before,*::after{box-sizing:border-box}
@@ -132,11 +142,23 @@ a{color:inherit;text-decoration:none}
 .nav-toggle[aria-expanded="true"] i::after{top:0;transform:rotate(-45deg)}
 
 @media (max-width:1180px){
-  .site-nav{flex-wrap:wrap;position:relative;gap:14px}
+  /* The bar stays sticky here. It used to go position:relative, which meant
+     every tablet and small laptop, not just phones, lost the navigation the
+     moment you scrolled; on a 9-screen page the only way back was to scroll
+     to the top. */
+  .site-nav{flex-wrap:wrap;gap:14px}
   .nav-toggle{display:flex;order:2}
   .nav-right{order:3;margin-left:auto}
   .nav-meta{display:none}
-  .navgroup{order:4;display:none;width:100%;flex-direction:column;align-items:stretch;gap:2px;border-radius:16px;padding:8px}
+  /* The drawer overlays the page instead of expanding the bar. In flow,
+     seven links made the sticky bar roughly 400px tall and glued it over
+     half the viewport, and it would have made --nav-h a moving target. */
+  .navgroup{
+    order:4;display:none;position:absolute;top:100%;left:var(--pad-x);right:var(--pad-x);
+    z-index:99;flex-direction:column;align-items:stretch;gap:2px;
+    border-radius:0 0 16px 16px;padding:8px;background:var(--forest-850);
+    max-height:calc(100dvh - var(--nav-h) - 16px);overflow-y:auto;
+    box-shadow:0 14px 34px rgba(8,25,14,.42)}
   .navgroup.open{display:flex}
   .navgroup a,.navgroup span{padding:13px 16px;font-size:16px;text-align:left}
 }
@@ -814,10 +836,11 @@ a.edu-card,a.routecard,a.router-card,a.case-link,a.svc-primary{
 a.edu-card:focus-visible,a.routecard:focus-visible,
 a.router-card:focus-visible,a.case-link:focus-visible{border-color:var(--forest-600)}
 
-/* The arrow on a linked card tracks the card, like .textlink does. */
+/* .case-more carries no transition: the arrow inside it is a .arw and moves
+   on its own, from the arrow block further down. It used to declare a
+   transform transition that nothing ever drove. */
 .case-more{display:inline-block;margin-top:10px;font:600 14px/1 var(--sans);
-  color:var(--brand-800);transition:transform var(--t-move) var(--ease-out)}
-/* the arrow inside these moves on its own; see the arrow block below */
+  color:var(--brand-800)}
 
 /* ---- Imagery ---- */
 /* Case photographs invite a closer look, so they ease up slightly under the
@@ -844,10 +867,11 @@ a.router-card:focus-visible,a.case-link:focus-visible{border-color:var(--forest-
   .btn:hover,.btn:active,
   a.edu-card:hover,a.routecard:hover,a.router-card:hover,
   a.case-link:hover,a.svc-primary:hover,
-  .case:hover .case-media img,a.case-link:hover .case-media img,
-  a.case-link:hover .case-more,a.routecard:hover .route-more,
-  a.edu-card:hover .supcard-link{
+  .case:hover .case-media img,a.case-link:hover .case-media img{
     transform:none !important;box-shadow:none !important}
+  /* The three child-arrow selectors that used to sit here guarded rules
+     that were never written. The arrows they meant are .arw and .m-arrow,
+     which hold still from the arrow block's own reduced-motion rule. */
 }
 
 
@@ -1030,6 +1054,9 @@ a.router-card:focus-visible,a.case-link:focus-visible{border-color:var(--forest-
 @media (hover:hover) and (pointer:fine){
   .qa-btn:hover{transform:translateX(3px)}
 }
+/* Outside the hover guard, so a keyboard user gets the same step a mouse
+   user does. .faq-btn already had both; this one only had hover. */
+.qa-btn:focus-visible{transform:translateX(3px)}
 
 /* An open panel is revealed by dropping the hidden attribute, so an
    animation on the visible state runs each time one opens. */
@@ -1041,7 +1068,7 @@ a.router-card:focus-visible,a.case-link:focus-visible{border-color:var(--forest-
 
 @media (prefers-reduced-motion:reduce){
   .acc-btn:hover .acc-mark,.acc-btn:focus-visible .acc-mark,
-  .qa-btn:hover{transform:none !important}
+  .qa-btn:hover,.qa-btn:focus-visible{transform:none !important}
   .acc-panel:not([hidden]){animation:none}
 }
 
@@ -1220,7 +1247,9 @@ a:focus-visible > .wordmark{background:var(--spring-500)}
   .keybox{padding:20px 22px}
 }
 @media (prefers-reduced-motion:reduce){
-  a.morecard:hover,a.pidx:hover,a.pidx:hover .pidx-go,.toc a:hover{
+  /* a.pidx:hover .pidx-go was in this list and matched nothing; the arrow
+     inside .pidx-go is a .arw and is covered by the arrow block. */
+  a.morecard:hover,a.pidx:hover,.toc a:hover{
     transform:none !important;box-shadow:none !important}
 }
 
@@ -1247,7 +1276,13 @@ a:focus-visible .arw,button:focus-visible .arw{transform:translateX(4px)}
 @media (prefers-reduced-motion:reduce){
   .arw,.m-arrow{transition:none}
   a:hover .arw,button:hover .arw,a:hover .m-arrow,
-  a:focus-visible .arw,button:focus-visible .arw{transform:none !important}
+  a:focus-visible .arw,button:focus-visible .arw,
+  /* The container-hover variants were missing here, which is backwards:
+     they are exactly the non-anchor cases the rule above was written for,
+     so the only arrows still jumping were the ones a:hover never matched. */
+  .case:hover .m-arrow,.pillar:hover .m-arrow,
+  .supcard:hover .m-arrow,.artcard:hover .m-arrow,
+  .routecard:hover .m-arrow,.svc-card:hover .m-arrow{transform:none !important}
 }
 
 

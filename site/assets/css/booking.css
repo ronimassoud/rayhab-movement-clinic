@@ -487,7 +487,10 @@ dialog.modal.is-open::backdrop{background:rgba(8,25,14,.72)}
 
 @media (prefers-reduced-motion:reduce){
   .bk-consent:hover .bk-checkbox,.bk-consent:active .bk-checkbox,
-  .bk-mback:hover,.bk-mback:active,.bk-mexit:active{transform:none !important}
+  .bk-mback:hover,.bk-mback:active,.bk-mexit:active,
+  /* The week arrows were added later and never joined their siblings here,
+     so they kept shrinking 8% on press. */
+  .bk-nav button:active:not([disabled]){transform:none !important}
 }
 
 

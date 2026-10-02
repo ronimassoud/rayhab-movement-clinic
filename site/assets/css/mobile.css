@@ -13,7 +13,10 @@
 .stage-body,.supcard-head,.pillar-body{display:contents}
 
 @media (max-width:700px){
-  :root{ --pad-x:18px; }
+  /* The nav loses its CTA and drops to 14px padding here, so it measures
+     72px rather than 80. Keeping --nav-h honest keeps scroll-padding-top
+     and the drawer's max-height honest with it. */
+  :root{ --pad-x:18px; --nav-h:72px; }
   .m-only{display:block}
   span.m-only,a.m-only{display:inline}
   .d-only{display:none !important}
@@ -32,7 +35,9 @@
   .nav-toggle[aria-expanded="true"] i{background:transparent}
   .nav-toggle[aria-expanded="true"] i::before{width:22px;top:0;right:0;transform:rotate(45deg)}
   .nav-toggle[aria-expanded="true"] i::after{width:22px;opacity:1;top:0;left:auto;right:0;transform:rotate(-45deg)}
-  .navgroup{margin-top:4px}
+  /* The drawer is absolutely positioned now, so a top margin would open a
+     gap between the bar and the panel with page content showing through. */
+  .navgroup{margin-top:0}
 
   /* ---- Shared mobile pieces ---- */
   .m-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:16px;overflow:hidden}
