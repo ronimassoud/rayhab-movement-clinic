@@ -55,6 +55,8 @@ site/                        the website, 72 pages
   assets/css/                rayhab.css (design system), mobile.css, booking.css
   assets/js/                 ui.js, booking.js, modal.js, contact.js
   assets/img/cases/          consented patient progress photographs
+  assets/img/favicon.png     32px R monogram, cut from the wordmark
+  assets/img/rayhab-logo.png the full-resolution master, not served
 content/                     generators and source content (see below)
 Rayhab UI.dc.html            the original Claude Design canvas, byte-exact
 brief.txt                    the original written brief
@@ -81,6 +83,20 @@ carries the Schroth byline; the five general hubs carry the credential that
 actually applies to them, which is set per topic. All three builders wrap trailing
 navigational arrows for the hover animation; data arrows such as `29° → 20°`
 are deliberately left alone.
+
+## Brand assets
+
+`rayhab-logo.png` is the 2172x724 master and is not referenced by any page.
+The two assets that ship are derived from it:
+
+- `favicon.png` (32px) and `apple-touch-icon.png` (180px) carry the R
+  monogram alone. The full wordmark is 3:1, so at 16px it renders as an
+  illegible smear; one letterform is the only thing that reads at that size.
+- `rayhab-wordmark.png` is the CSS mask behind `.wordmark`. It is 448px wide
+  for a 112px render, which covers 4x device pixel ratio, and its colour
+  planes are flattened because `mask-image` reads only the alpha channel.
+
+Regenerate both from the master rather than editing them in place.
 
 ## Design system
 

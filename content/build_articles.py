@@ -79,7 +79,8 @@ HEAD = '''<!DOCTYPE html>
 <link rel="stylesheet" href="../assets/css/rayhab.css">
 <link rel="stylesheet" href="../assets/css/mobile.css">
 <link rel="stylesheet" href="../assets/css/booking.css">
-<link rel="icon" href="../assets/img/rayhab-logo.png">
+<link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
