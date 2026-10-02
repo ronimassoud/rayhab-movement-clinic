@@ -515,3 +515,84 @@ dialog.modal.is-open::backdrop{background:rgba(8,25,14,.72)}
 .bk-nav button:active:not([disabled]){transform:scale(.92);transition-duration:.06s}
 .bk-nav button[disabled]{opacity:.35;cursor:not-allowed}
 @media (pointer:coarse){ .bk-nav button{width:44px;height:44px} }
+
+
+/* ==========================================================
+   Booking modal: scrollbars, and opening and closing
+   ========================================================== */
+
+/* ---- Scrollbars inside the dialog ----
+   The rail and the panel each scroll on their own, so the browser paints a
+   scrollbar in each one. Its default track is near-white. Against the dark
+   green rail that reads as a white line down the edge of the modal, and
+   the 22px corner radius slices the end of it off, which is the artefact
+   you notice first. These match the surface they sit on. The thumb is
+   inset through a transparent border so it stays clear of the corner, and
+   the track is transparent so nothing is drawn when there is no thumb. */
+.modal-body,
+.modal-body .bk-rail,
+.modal-body .bk-panel{scrollbar-width:thin}
+.modal-body .bk-rail{scrollbar-color:#3B5942 transparent}
+.modal-body,
+.modal-body .bk-panel{scrollbar-color:var(--border) transparent}
+
+/* Chromium before 121 and Safari ignore scrollbar-color, so they get the
+   same treatment through the pseudo-elements. */
+.modal-body::-webkit-scrollbar,
+.modal-body .bk-rail::-webkit-scrollbar,
+.modal-body .bk-panel::-webkit-scrollbar{width:10px;height:10px}
+.modal-body::-webkit-scrollbar-track,
+.modal-body .bk-rail::-webkit-scrollbar-track,
+.modal-body .bk-panel::-webkit-scrollbar-track,
+.modal-body::-webkit-scrollbar-corner,
+.modal-body .bk-rail::-webkit-scrollbar-corner,
+.modal-body .bk-panel::-webkit-scrollbar-corner{background:transparent}
+.modal-body::-webkit-scrollbar-thumb,
+.modal-body .bk-rail::-webkit-scrollbar-thumb,
+.modal-body .bk-panel::-webkit-scrollbar-thumb{
+  border:3px solid transparent;background-clip:content-box;border-radius:99px}
+.modal-body .bk-rail::-webkit-scrollbar-thumb{background-color:#3B5942}
+.modal-body::-webkit-scrollbar-thumb,
+.modal-body .bk-panel::-webkit-scrollbar-thumb{background-color:var(--border)}
+@media (hover:hover) and (pointer:fine){
+  .modal-body .bk-rail::-webkit-scrollbar-thumb:hover{background-color:#4E7257}
+  .modal-body::-webkit-scrollbar-thumb:hover,
+  .modal-body .bk-panel::-webkit-scrollbar-thumb:hover{background-color:var(--muted)}
+}
+
+/* ---- Opening and closing ----
+   There was a transition here already and it barely registered: 14px of
+   travel and 1.5% of scale, with the close cut off at 240ms while the
+   transform needed 260ms, so the exit never finished. Enter is longer and
+   eases out, exit is shorter and eases in, which is the usual asymmetry:
+   arriving should feel settled, leaving should feel immediate.
+
+   The base rule carries the closed state and the exit timing; .is-open
+   carries the open state and the enter timing. A transition is read from
+   the style being moved to, so the two directions stay independent. */
+dialog.modal{
+  opacity:0;transform:translateY(24px) scale(.965);
+  /* Opacity is the longest of the two on the way out, so it is the one
+     modal.js waits for and the movement has always finished by then. */
+  transition:opacity .20s ease-in, transform .18s cubic-bezier(.4,0,1,1);
+}
+dialog.modal.is-open{
+  opacity:1;transform:none;
+  transition:opacity .26s ease-out, transform .34s cubic-bezier(.17,.84,.26,1);
+}
+dialog.modal::backdrop{
+  background:rgba(8,25,14,0);transition:background .18s ease-in}
+dialog.modal.is-open::backdrop{
+  background:rgba(8,25,14,.72);transition:background .3s ease-out}
+
+/* Full screen on a phone, so it rises from the bottom rather than scaling.
+   This repeats the mobile transform because the block that sets it sits
+   above these rules and would otherwise be overridden. */
+@media (max-width:700px){
+  dialog.modal{transform:translateY(34px) scale(1)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  dialog.modal,dialog.modal.is-open{transition:none;transform:none}
+  dialog.modal::backdrop,dialog.modal.is-open::backdrop{transition:none}
+}

@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var ANIM = 240;
+  var ANIM_MAX = 600;     // only a backstop; the CSS owns the real duration
   var dialog = null;
   var cached = null;      // the parsed #booking node, never mounted itself
   var lastTrigger = null;
@@ -114,7 +114,11 @@
     if (!dialog || !dialog.open) return;
     dialog.classList.remove('is-open');
 
+    var done = false;
     var finish = function () {
+      if (done) return;
+      done = true;
+      dialog.removeEventListener('transitionend', onEnd);
       dialog.close();
       dialog.querySelector('.modal-body').innerHTML = '';
       document.documentElement.classList.remove('modal-open');
@@ -122,8 +126,21 @@
       lastTrigger = null;
     };
 
-    if (reduced()) finish();
-    else window.setTimeout(finish, ANIM);
+    function onEnd(e) {
+      // Children transition too, and the dialog's own opacity is the last
+      // thing to land, so anything else would close it mid-animation.
+      if (e.target === dialog && e.propertyName === 'opacity') finish();
+    }
+
+    if (reduced()) { finish(); return; }
+
+    // The exit length lives in the stylesheet. Waiting for the transition
+    // means the two cannot drift apart, which is what truncated the old
+    // close: it fired at 240ms while the transform ran for 260ms.
+    dialog.addEventListener('transitionend', onEnd);
+    // If the tab is hidden or the transition is interrupted, transitionend
+    // never arrives, so the dialog still has to come down.
+    window.setTimeout(finish, ANIM_MAX);
   }
 
   document.addEventListener('click', function (e) {
