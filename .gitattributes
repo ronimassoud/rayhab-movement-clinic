@@ -17,3 +17,8 @@
 *.jpeg binary
 *.webp binary
 *.docx binary
+
+# Vendored libraries are byte-exact third-party artefacts. Their SHA-256 is
+# recorded in site/assets/js/vendor/README.md, and `*.js text` above would
+# rewrite them to CRLF on a Windows checkout, quietly invalidating it.
+site/assets/js/vendor/*.js -text
