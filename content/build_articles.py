@@ -214,7 +214,7 @@ def render_article(a, lookup, pillars):
     body += NAV + "\n\n<main id=\"main\">\n\n"
     body += '''  <article>
   <header class="art-hero">
-    <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="./">Scoliosis</a> <span aria-hidden="true">/</span> <a href="%s.html">%s</a></p>
+    <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="../education.html">Education</a> <span aria-hidden="true">/</span> <a href="./">Scoliosis</a> <span aria-hidden="true">/</span> <a href="%s.html">%s</a></p>
     <p class="art-eyebrow" style="margin-top:18px">%s</p>
     <h1 class="art-h1">%s</h1>
     <p class="art-stand">%s</p>
@@ -288,7 +288,7 @@ def render_pillar(p, arts):
                        desc=esc(p["desc"]), slug=p["slug"])
     body += NAV + "\n\n<main id=\"main\">\n\n"
     body += '''  <section class="art-hero">
-    <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="./">Scoliosis</a></p>
+    <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="../education.html">Education</a> <span aria-hidden="true">/</span> <a href="./">Scoliosis</a></p>
     <p class="art-eyebrow" style="margin-top:18px">%s</p>
     <h1 class="art-h1">%s</h1>
     <p class="art-stand">%s</p>

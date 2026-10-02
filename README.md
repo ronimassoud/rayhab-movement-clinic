@@ -73,9 +73,14 @@ cd content
 python build_articles.py     # 24 scoliosis articles + 4 pillar index pages
 python build_topics.py       # 5 education hubs + 24 articles
 python build_services.py     # 3 supporting service pages
-python wire.py               # audience routes + cross-links + sitemap
-python wire_services.py      # service cards, footers, sitemap
 ```
+
+`wire.py` and `wire_services.py` are **one-off patchers that have already
+run**. They are kept for the record, not for the build. Do not run them:
+`wire.py` would reintroduce the `.slot-txt` placeholder notes that were
+deliberately moved into comments, and append sitemap URLs on `dr-rayhab.com`,
+which is not the domain this site is served from. The three pages it
+produced, the audience routes under `scoliosis/`, are maintained by hand.
 
 `build_articles.py` and `build_topics.py` derive each article's reading time from
 its own word count, so the label cannot drift from the text. The scoliosis library
