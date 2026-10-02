@@ -105,6 +105,13 @@
       <p class="body-s" style="max-width:360px">Each one carries its own timeline, what was measured and what was not, including the journeys that are still only a few weeks old.</p>
     </div>
 
+    <!-- Progress through the case set. Decorative: every case already
+         states "Case 03" in its own header, so this is not announced. -->
+    <div class="case-track" data-scene="cases" aria-hidden="true">
+      <span class="case-track-n"><b>1</b> of 5</span>
+      <span class="case-track-rail"><i></i></span>
+    </div>
+
     <div class="casegrid" data-reveal="children" data-reveal-stagger="70">
 
       <article class="case case-feat" id="case-01">
@@ -325,5 +332,8 @@
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/modal.js"></script>
 <script src="assets/js/reveal.js" defer></script>
+<script src="assets/js/vendor/gsap.min.js" defer></script>
+<script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
+<script src="assets/js/motion.js" defer></script>
 </body>
 </html>

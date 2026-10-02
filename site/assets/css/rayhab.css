@@ -1381,3 +1381,49 @@ html{scrollbar-color:var(--sb-thumb) transparent}
 .toc a[aria-current="true"]::before{
   content:"";position:absolute;left:-14px;top:.35em;bottom:.35em;width:2px;
   border-radius:2px;background:var(--spring-500)}
+
+
+/* ==========================================================
+   Case-set progress (results.html)
+   A sticky strip that says where you are in the five case
+   studies. Sticky is CSS because sticky is what CSS is for;
+   GSAP scrubs the fill, which is the part worth a library.
+   ========================================================== */
+.case-track{display:none}
+.case-track.is-live{
+  display:flex;align-items:center;gap:16px;
+  position:sticky;top:calc(var(--nav-h) + 10px);z-index:60;
+  margin:0 0 18px;padding:10px 16px;border-radius:999px;
+  background:var(--paper);border:1px solid var(--border);
+  box-shadow:var(--lift-sm)}
+.case-track-n{flex:none;font:600 13px/1 var(--sans);color:var(--text-2);
+  letter-spacing:.02em}
+.case-track-n b{font-weight:700;color:var(--brand-800)}
+.case-track-rail{flex:1;height:3px;border-radius:999px;background:var(--border);
+  overflow:hidden}
+.case-track-rail i{display:block;height:100%;width:100%;border-radius:999px;
+  background:var(--spring-500);transform:scaleX(0);transform-origin:left center}
+
+/* The strip never appears without the script that drives it, so there is
+   no empty rail to explain if GSAP fails to load. */
+@media (prefers-reduced-motion:reduce){ .case-track{display:none !important} }
+
+/* ---- Device SVGs draw themselves in ----
+   Two decorative line drawings, one per hero. Drawing them is two
+   properties, so it does not need a library; it runs once on load rather
+   than on scroll, because both sit above the fold. */
+/* pathLength="1" is set on each shape, so the geometry is normalised and
+   one dash figure draws a 154-unit path and a 391-unit path over the same
+   span. Without it they share a number and the short one snaps in late. */
+.hero-device path,.svc-device path,.hub-device path{
+  stroke-dasharray:1;stroke-dashoffset:1;
+  animation:draw-in 1.6s var(--ease-out) .25s forwards}
+.hero-device line,.svc-device line,.hub-device line{
+  opacity:0;animation:fade-in .8s var(--ease-out) .5s forwards}
+@keyframes draw-in{ to{stroke-dashoffset:0} }
+@keyframes fade-in{ to{opacity:1} }
+@media (prefers-reduced-motion:reduce){
+  .hero-device path,.svc-device path,.hub-device path{
+    stroke-dashoffset:0;animation:none}
+  .hero-device line,.svc-device line,.hub-device line{opacity:1;animation:none}
+}

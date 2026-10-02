@@ -137,6 +137,39 @@ serves the hand-written pages, so there is one definition. `book.html` is
 excluded by construction: it has no `modal.js`, which is the anchor.
 `check_links.py` fails the deploy if any other page is missing either.
 
+## GSAP
+
+GSAP 3.13.0 and ScrollTrigger are vendored in
+`site/assets/js/vendor/`, with provenance and SHA-256 in the README there.
+They load on **results.html only**, where `assets/js/motion.js` drives the
+sticky progress strip over the five case studies.
+
+They are not on the home page. The services section was the other
+candidate, and `reveal.js` already staggers it correctly for nothing; adding
+46 KB gzipped to the site's main entry point to redo something that works
+is the behaviour the brief warns against. One page, one scene, because that
+is the one place a reader loses their place in a set.
+
+`motion.js` owns `[data-scene]` and nothing else; `reveal.js` owns
+`[data-reveal]` and never reads `[data-scene]`. Disjoint namespaces, so the
+two cannot animate the same element.
+
+Four things it must keep doing, each for a reason that bit:
+
+- Its own `prefers-reduced-motion` check. The kill-switch at `rayhab.css:79`
+  stops CSS transitions and does nothing to the inline styles GSAP writes.
+- `gsap.matchMedia()` above 1061px only, so the scene tears itself down on
+  a narrow viewport instead of running against a one-column grid.
+- `document.fonts.ready` then `ScrollTrigger.refresh()`. The display font
+  loads with swap and every measurement taken before it lands is wrong.
+- A `MutationObserver` on `html.modal-open`, which sets `overflow:hidden`
+  and changes the scroller's height while the booking dialog is open.
+
+Never `normalizeScroll` (it takes over touch scrolling, which would break
+scrolling inside the booking flow) and never `ScrollSmoother` (it wraps the
+body in a transformed element, which breaks `position:sticky` on the nav
+and `position:fixed` on the mobile book bar).
+
 ## Design system
 
 Tokens are defined once at the top of `assets/css/rayhab.css` and transcribed
