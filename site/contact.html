@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>!function(d,w){var e=d.documentElement,m=0;try{m=w.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}if(!m){e.className+=" js-motion";w.rhMotionFail=w.setTimeout(function(){e.className=e.className.replace(/ ?js-motion/,"")},2600)}}(document,window);</script>
 <title>Contact, Rayhab Movement Clinic, Beirut</title>
 <meta name="description" content="Where Rayhab Movement Clinic is, how to book a scoliosis assessment, consultation types and online availability, and how to reach the clinic with a question.">
 <link rel="canonical" href="https://ronimassoud.github.io/rayhab-movement-clinic/contact.html">
@@ -53,7 +54,7 @@
   <section class="svc-who">
     <div>
       <p class="eyebrow" style="margin-bottom:14px">The clinic</p>
-      <div class="wholist">
+      <div class="wholist" data-reveal="children" data-reveal-stagger="55">
         <div class="whocard">
           <span class="whoicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#174924" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.3 7-11a7 7 0 10-14 0c0 5.7 7 11 7 11z"></path><circle cx="12" cy="10" r="2.6"></circle></svg></span>
           <div>
@@ -108,13 +109,13 @@
 
   <!-- Consultation types -->
   <section class="svc-consult">
-    <div class="sechead" style="margin-bottom:32px">
+    <div class="sechead" style="margin-bottom:32px" data-reveal>
       <div>
         <p class="eyebrow" style="color:var(--spring-500);margin-bottom:14px">Consultation types</p>
         <h2 class="h3 on-dark sec-h sec-h-dark">What you can book</h2>
       </div>
     </div>
-    <div class="consult-grid">
+    <div class="consult-grid" data-reveal="children" data-reveal-stagger="70">
       <div class="consult consult-lead">
         <div class="consult-head">
           <p class="consult-t" style="max-width:200px">Scoliosis assessment</p>
@@ -183,7 +184,7 @@
 
     <div>
       <p class="eyebrow" style="margin-bottom:14px">Before you get in touch</p>
-      <div class="faq-card">
+      <div class="faq-card" data-reveal="children" data-reveal-stagger="50">
         <div class="acc-item faq-item">
           <h3><button class="acc-btn faq-btn" type="button" aria-expanded="true" aria-controls="c1">How do I book?<span class="acc-mark faq-mark" aria-hidden="true">−</span></button></h3>
           <div class="acc-panel faq-panel" id="c1">Use “Book an assessment”. It takes about two minutes, needs no account, and nothing is charged online. The clinic confirms by WhatsApp within one working day.</div>
@@ -209,7 +210,7 @@
   </section>
 
   <!-- Closing CTA -->
-  <section class="cta-band" style="padding:56px var(--pad-x)">
+  <section class="cta-band" data-reveal="children" data-reveal-stagger="90" style="padding:56px var(--pad-x)">
     <div>
       <h2 class="h2-sm cta-h2">Start with an assessment</h2>
       <p class="body-m cta-lede">Sixty minutes, in Beirut or online. You leave knowing what your curve is doing and what the plan is.</p>
@@ -264,6 +265,7 @@
 <script src="assets/js/ui.js"></script>
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/modal.js"></script>
+<script src="assets/js/reveal.js" defer></script>
 <script src="assets/js/contact.js"></script>
 </body>
 </html>

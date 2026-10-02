@@ -3,6 +3,8 @@
 services/scoliosis-rehabilitation.html."""
 import io, json, os
 
+from motion_tags import inject
+
 SITE = r"C:/Users/Roni Massoud/Desktop/Dr. Rayhab/site"
 OUT = os.path.join(SITE, "services")
 here = os.path.dirname(os.path.abspath(__file__))
@@ -206,7 +208,7 @@ def build(s, n):
       </div>
       <p class="body-s" style="max-width:360px">%(process_p)s</p>
     </div>
-    <ol class="stages">%(stages)s</ol>
+    <ol class="stages" data-reveal="children" data-reveal-stagger="70">%(stages)s</ol>
   </section>
 
   <section class="svc-who">
@@ -246,11 +248,11 @@ def build(s, n):
     </div>
     <div>
       <p class="eyebrow" style="margin-bottom:14px">Common questions</p>
-      <div class="faq-card">%(faq)s</div>
+      <div class="faq-card" data-reveal="children" data-reveal-stagger="50">%(faq)s</div>
     </div>
   </section>
 
-  <section class="cta-band" style="padding:56px var(--pad-x)">
+  <section class="cta-band" style="padding:56px var(--pad-x)" data-reveal="children" data-reveal-stagger="90">
     <div>
       <h2 class="h2-sm cta-h2">%(cta_h)s</h2>
       <p class="body-m cta-lede">%(cta_p)s</p>
@@ -278,5 +280,5 @@ def build(s, n):
 data = json.load(io.open(os.path.join(here, "services.json"), encoding="utf-8"))
 for n, s in enumerate(data["services"]):
     io.open(os.path.join(OUT, s["slug"] + ".html"), "w",
-            encoding="utf-8", newline="\n").write(wrap_arrows(build(s, n)))
+            encoding="utf-8", newline="\n").write(inject(wrap_arrows(build(s, n))))
     print("wrote services/%s.html" % s["slug"])

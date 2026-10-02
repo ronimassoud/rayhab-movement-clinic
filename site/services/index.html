@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>!function(d,w){var e=d.documentElement,m=0;try{m=w.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}if(!m){e.className+=" js-motion";w.rhMotionFail=w.setTimeout(function(){e.className=e.className.replace(/ ?js-motion/,"")},2600)}}(document,window);</script>
 <title>Services, Rayhab Movement Clinic</title>
 <meta name="description" content="Four services at Rayhab: scoliosis rehabilitation as the specialisation, plus sports rehabilitation, FRC and joint training, and general physiotherapy.">
 <link rel="canonical" href="https://ronimassoud.github.io/rayhab-movement-clinic/services/">
@@ -79,7 +80,7 @@
   <!-- Supporting services -->
   <section class="svcidx-support">
     <p class="eyebrow" style="margin-bottom:20px">Supporting services</p>
-    <div class="svcidx-grid">
+    <div class="svcidx-grid" data-reveal="children" data-reveal-stagger="70">
       <a class="supcard is-linked" href="sports-rehabilitation.html">
         <span class="slot supcard-media"><span class="slot-txt">Sports rehab photo</span></span>
         <div class="supcard-body">
@@ -124,14 +125,14 @@
 
   <!-- Problem-first router -->
   <section class="router-band">
-    <div class="sechead" style="margin-bottom:28px">
+    <div class="sechead" style="margin-bottom:28px" data-reveal>
       <div>
         <p class="eyebrow" style="margin-bottom:14px">Not sure which one?</p>
         <h2 class="h3 sec-h">Start from the problem</h2>
       </div>
       <p class="body-s" style="max-width:360px">Patients search for their problem, not for a technique. Each of these routes into the right service page.</p>
     </div>
-    <div class="router-grid">
+    <div class="router-grid" data-reveal="children" data-reveal-stagger="60">
       <a class="router-card" href="scoliosis-rehabilitation.html">
         <p class="router-q">“My child was just diagnosed with scoliosis”</p>
         <p class="router-a">Scoliosis Rehabilitation → assessment</p>
@@ -199,5 +200,6 @@
 <script src="../assets/js/ui.js"></script>
 <script src="../assets/js/booking.js"></script>
 <script src="../assets/js/modal.js"></script>
+<script src="../assets/js/reveal.js" defer></script>
 </body>
 </html>

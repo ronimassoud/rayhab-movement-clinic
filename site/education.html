@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>!function(d,w){var e=d.documentElement,m=0;try{m=w.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}if(!m){e.className+=" js-motion";w.rhMotionFail=w.setTimeout(function(){e.className=e.className.replace(/ ?js-motion/,"")},2600)}}(document,window);</script>
 <title>Education, Rayhab Movement Clinic</title>
 <meta name="description" content="Rayhab's education hub: scoliosis, the Schroth Method, exercise and loading, posture, mobility and injury rehabilitation. Every article carries a named clinical reviewer.">
 <link rel="canonical" href="https://ronimassoud.github.io/rayhab-movement-clinic/education.html">
@@ -72,14 +73,14 @@
 
   <!-- Topic areas -->
   <section class="hub-route">
-    <div class="sechead" style="margin-bottom:28px">
+    <div class="sechead" style="margin-bottom:28px" data-reveal>
       <div>
         <p class="eyebrow" style="margin-bottom:14px">What we write about</p>
         <h2 class="h2-sm" style="color:var(--forest-900)">Six areas, one specialisation</h2>
       </div>
       <p class="body-s" style="max-width:380px">Scoliosis is the centre of the practice, so it is the centre of the writing. The rest exists because the same patients ask about training, pain and getting back to sport.</p>
     </div>
-    <div class="route-grid">
+    <div class="route-grid" data-reveal="children" data-reveal-stagger="65">
       <a class="routecard routecard-lead on-dark" href="scoliosis/">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#62E36B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:18px"><path d="M12 3v18"></path><path d="M5 7h14"></path><path d="M6 17h12"></path></svg>
         <h3 class="route-t">Scoliosis</h3>
@@ -152,11 +153,11 @@
   <!-- Latest + reviewer sidebar -->
   <section class="hub-latest">
     <div>
-      <div class="sechead" style="margin-bottom:24px">
+      <div class="sechead" style="margin-bottom:24px" data-reveal>
         <h2 class="h4 latest-h">Latest articles</h2>
         <a class="textlink" style="font-size:15px" href="scoliosis/">Scoliosis hub <span class="arw" aria-hidden="true">→</span></a>
       </div>
-      <div class="artlist">
+      <div class="artlist" data-reveal="children" data-reveal-stagger="60">
         <article class="artcard">
           <span class="slot art-media"><span class="slot-txt">Article image</span></span>
           <div class="art-body">
@@ -271,7 +272,7 @@
   </section>
 
   <!-- Closing CTA -->
-  <section class="cta-band" style="padding:56px var(--pad-x)">
+  <section class="cta-band" data-reveal="children" data-reveal-stagger="90" style="padding:56px var(--pad-x)">
     <div>
       <h2 class="h2-sm cta-h2">Read enough. What's next?</h2>
       <p class="body-m cta-lede">An assessment turns general information into your specific plan. Sixty minutes, in Beirut or online.</p>
@@ -326,5 +327,6 @@
 <script src="assets/js/ui.js"></script>
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/modal.js"></script>
+<script src="assets/js/reveal.js" defer></script>
 </body>
 </html>

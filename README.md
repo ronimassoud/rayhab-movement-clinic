@@ -98,6 +98,45 @@ The two assets that ship are derived from it:
 
 Regenerate both from the master rather than editing them in place.
 
+## Motion
+
+Reveals are CSS transitions driven by an IntersectionObserver in
+`site/assets/js/reveal.js`. They are deliberately not done in JavaScript:
+the global `prefers-reduced-motion` kill-switch in `rayhab.css` neutralises
+CSS transitions and has no effect on inline styles written per frame, so a
+JS-driven reveal would need a second copy of that policy, and the two would
+eventually disagree.
+
+Markup API, so the generators emit reveals without the script holding a
+list of selectors:
+
+```
+data-reveal                 fade and rise this element
+data-reveal="children"      stagger its direct children instead
+data-reveal-stagger="60"    ms between children (default 70)
+data-reveal-delay="120"     ms before the group starts
+data-reveal-y="8"           px of travel (default 14; 0 fades only)
+```
+
+Three rules this system lives by:
+
+- **Nothing hides without `html.js-motion`.** An inline script in the head
+  adds it, and arms a 2600 ms failsafe that removes it again. If `reveal.js`
+  is blocked, 404s or fails to parse, the class comes off and the page is
+  simply visible. Tested by pointing the script at a missing file.
+- **A revealed element loses its `data-reveal` attribute.** The reveal rules
+  tie with the card hover-lift rules on specificity and win on source order,
+  so leaving them matching would silently kill the lift on every linked
+  card. Removing the attribute is what prevents that.
+- **Heroes are never revealed.** They are the LCP element, and hiding one to
+  fade it in is how a fast page is made to feel slow.
+
+`content/motion_tags.py` injects the gate and the script tag, after
+formatting, the same way `wrap_arrows()` already works. The same function
+serves the hand-written pages, so there is one definition. `book.html` is
+excluded by construction: it has no `modal.js`, which is the anchor.
+`check_links.py` fails the deploy if any other page is missing either.
+
 ## Design system
 
 Tokens are defined once at the top of `assets/css/rayhab.css` and transcribed

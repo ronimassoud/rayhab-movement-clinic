@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>!function(d,w){var e=d.documentElement,m=0;try{m=w.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}if(!m){e.className+=" js-motion";w.rhMotionFail=w.setTimeout(function(){e.className=e.className.replace(/ ?js-motion/,"")},2600)}}(document,window);</script>
 <title>Results &amp; patient journeys, Rayhab Movement Clinic</title>
 <meta name="description" content="Five consented scoliosis case studies from Rayhab Movement Clinic in Beirut, with real timelines, patient words and measured Cobb angles where an X-ray exists. Individual results vary; no outcome is guaranteed.">
 <link rel="canonical" href="https://ronimassoud.github.io/rayhab-movement-clinic/results.html">
@@ -51,7 +52,7 @@
 
   <!-- Patient experiences -->
   <section class="band" style="background:var(--forest-900)">
-    <div class="sechead">
+    <div class="sechead" data-reveal>
       <div>
         <p class="eyebrow" style="color:var(--spring-500)">Patient experiences</p>
         <h2 class="h2 on-dark">What people say afterwards</h2>
@@ -77,7 +78,7 @@
     </div>
     <div>
       <p class="body-l" style="margin-bottom:28px;max-width:660px;color:var(--text-2)">Posture, rotation and function are re-measured at review points, so a change is something you can see in the record rather than something you have to take on trust. These are the things a journey is tracked against.</p>
-      <div class="approach-grid">
+      <div class="approach-grid" data-reveal="children" data-reveal-stagger="65">
         <div class="mini-card">
           <p class="mini-k">Functional improvement</p>
           <p class="mini-v">What you can do, hold and load that you could not hold at the first assessment.</p>
@@ -96,7 +97,7 @@
 
   <!-- Case studies -->
   <section class="hub-pillars" id="cases">
-    <div class="sechead" style="margin-bottom:30px">
+    <div class="sechead" style="margin-bottom:30px" data-reveal>
       <div>
         <p class="eyebrow" style="margin-bottom:14px">Case studies</p>
         <h2 class="h2-sm" style="color:var(--forest-900)">Published only with permission</h2>
@@ -104,7 +105,7 @@
       <p class="body-s" style="max-width:360px">Each one carries its own timeline, what was measured and what was not, including the journeys that are still only a few weeks old.</p>
     </div>
 
-    <div class="casegrid">
+    <div class="casegrid" data-reveal="children" data-reveal-stagger="70">
 
       <article class="case case-feat" id="case-01">
         <div class="case-inner">
@@ -229,7 +230,7 @@
   <section class="svc-who">
     <div>
       <p class="eyebrow" style="margin-bottom:14px">Privacy and consent</p>
-      <div class="wholist">
+      <div class="wholist" data-reveal="children" data-reveal-stagger="55">
         <div class="whocard">
           <span class="whoicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#174924" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10" rx="2.5"></rect><path d="M8 10.5V7.5a4 4 0 018 0v3"></path></svg></span>
           <div>
@@ -255,7 +256,7 @@
     </div>
     <div>
       <p class="eyebrow" style="margin-bottom:14px">Experience behind the work</p>
-      <div class="stat-tiles">
+      <div class="stat-tiles" data-reveal="children" data-reveal-stagger="80">
         <div><p class="tile-k">5+ yrs</p><p class="tile-v">Clinical and movement-based experience</p></div>
         <div><p class="tile-k">Amman</p><p class="tile-v">Sports rehabilitation with basketball and football athletes</p></div>
       </div>
@@ -268,7 +269,7 @@
   </section>
 
   <!-- Closing CTA -->
-  <section class="cta-band" style="padding:56px var(--pad-x)">
+  <section class="cta-band" data-reveal="children" data-reveal-stagger="90" style="padding:56px var(--pad-x)">
     <div>
       <h2 class="h2-sm cta-h2">Your plan starts with an assessment</h2>
       <p class="body-m cta-lede">Sixty minutes, in Beirut or online. You leave knowing what your curve is doing and what the plan is.</p>
@@ -323,5 +324,6 @@
 <script src="assets/js/ui.js"></script>
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/modal.js"></script>
+<script src="assets/js/reveal.js" defer></script>
 </body>
 </html>

@@ -10,6 +10,8 @@ much deeper tree, so it has its own richer landing page and is left alone.
 """
 import io, json, math, os, re
 
+from motion_tags import inject
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.normpath(os.path.join(HERE, "..", "site"))
 TOPICS = os.path.join(HERE, "topics")
@@ -151,7 +153,7 @@ TAIL = '''
 </html>
 '''
 
-CTA = '''  <section class="cta-band" style="padding:56px var(--pad-x)">
+CTA = '''  <section class="cta-band" style="padding:56px var(--pad-x)" data-reveal="children" data-reveal-stagger="90">
     <div>
       <h2 class="h2-sm cta-h2">{h}</h2>
       <p class="body-m cta-lede">{p}</p>
@@ -194,7 +196,7 @@ def render_blocks(blocks):
             items = "".join("<li>%s</li>" % inline(i) for i in b["items"])
             out.append("<%s>%s</%s>" % (k, items, k))
         elif k == "uncertain":
-            out.append('<div class="uncertain"><h2>What is not settled</h2><p>%s</p></div>'
+            out.append('<div class="uncertain" data-reveal><h2>What is not settled</h2><p>%s</p></div>'
                        % inline(b["t"]))
     return "\n      ".join(out)
 
@@ -246,7 +248,7 @@ def render_article(a, topic, lookup):
 
   <div class="artwrap">
     <div class="prose">
-      <div class="keybox">
+      <div class="keybox" data-reveal>
         <h2>In short</h2>
         <ul>%s</ul>
       </div>
@@ -279,7 +281,7 @@ def render_article(a, topic, lookup):
                  '<p class="eyebrow" style="margin-bottom:14px">Keep reading</p>'
                  '<h2 class="h2-sm" style="color:var(--forest-900)">Related in this hub</h2>'
                  '</div>\n      <a class="textlink" href="./">All %s →</a>\n    </div>'
-                 '\n    <div class="morelist">%s</div>\n  </section>\n'
+                 '\n    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>\n  </section>\n'
                  % (esc(topic["name"].lower()), related))
 
     body += "\n" + CTA.format(h=esc(a.get("cta_h", topic["cta_h"])),
@@ -326,7 +328,7 @@ def render_hub(topic, arts):
       <a class="textlink" href="../education.html">All topic areas →</a>
     </div>
     <p class="body-m" style="max-width:720px;margin-bottom:30px">%s</p>
-    <div class="pidx-list">%s</div>
+    <div class="pidx-list" data-reveal="children" data-reveal-stagger="55">%s</div>
     <p class="disclaimer" style="margin-top:26px">Every article on this page is written for patients and families, not clinicians, and carries a named clinical reviewer. Where the evidence is genuinely unsettled, the article says so rather than picking a side. General information cannot tell you what is happening in your own case.</p>
   </section>
 
@@ -338,7 +340,7 @@ def render_hub(topic, arts):
       </div>
       <a class="textlink" href="../services/">All services →</a>
     </div>
-    <div class="morelist">%s</div>
+    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>
   </section>
 ''' % (esc(topic["name"]), esc(topic["stand"]), len(arts), esc(topic["lede"]), rows, cross)
 
@@ -360,11 +362,11 @@ def main():
             os.makedirs(out)
 
         io.open(os.path.join(out, "index.html"), "w", encoding="utf-8",
-                newline="\n").write(wrap_arrows(render_hub(topic, arts)))
+                newline="\n").write(inject(wrap_arrows(render_hub(topic, arts))))
         for a in arts:
             html = render_article(a, topic, lookup)
             io.open(os.path.join(out, a["slug"] + ".html"), "w", encoding="utf-8",
-                    newline="\n").write(wrap_arrows(html))
+                    newline="\n").write(inject(wrap_arrows(html)))
 
         total += len(arts)
         print("  %-10s %d articles -> site/%s/" % (topic["dir"], len(arts), topic["dir"]))

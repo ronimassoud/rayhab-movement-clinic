@@ -1330,3 +1330,54 @@ html{scrollbar-color:var(--sb-thumb) transparent}
   ::-webkit-scrollbar-thumb:hover{background-color:var(--sb-thumb-hover)}
   .on-dark::-webkit-scrollbar-thumb:hover{background-color:var(--sb-thumb-dark-hover)}
 }
+
+
+/* ==========================================================
+   Scroll reveals, reading progress and section spy
+   Every rule here is scoped under html.js-motion, which an
+   inline script in the head adds only when motion is wanted.
+   No class means nothing is hidden, so a failed or blocked
+   reveal.js leaves an ordinary, fully visible page.
+   ========================================================== */
+
+.js-motion [data-reveal]:not([data-reveal="children"]),
+.js-motion [data-reveal="children"]>*{
+  opacity:0;transform:translateY(var(--rv-y,14px));
+  transition:opacity .5s var(--ease-out),transform .5s var(--ease-out)}
+.js-motion [data-reveal].rv-in,
+.js-motion [data-reveal="children"].rv-in>*{opacity:1;transform:none}
+
+/* Placeholder wells are excluded on purpose. Easing a dashed grey box into
+   view points the eye at the one thing on the page that is unfinished. */
+.js-motion .slot[data-reveal],.js-motion [data-reveal="children"]>.slot{
+  opacity:1;transform:none;transition:none}
+
+@media (max-width:700px){
+  /* A stagger down a single column is just a delay, and on the hairline
+     divided lists it strobes, so the group arrives as one on a phone. */
+  .js-motion [data-reveal="children"]>*{transition-delay:0ms !important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .js-motion [data-reveal]:not([data-reveal="children"]),
+  .js-motion [data-reveal="children"]>*{
+    opacity:1 !important;transform:none !important;transition:none}
+}
+
+/* ---- Reading progress ----
+   One custom property written per animation frame, no layout read in the
+   paint path. Sits directly under the nav, which is why it needs --nav-h. */
+.read-bar{position:fixed;top:var(--nav-h);left:0;right:0;height:2px;z-index:98;
+  pointer-events:none;background:transparent}
+.read-bar span{display:block;height:100%;width:100%;background:var(--spring-500);
+  transform:scaleX(var(--read,0));transform-origin:left center}
+@media (prefers-reduced-motion:reduce){ .read-bar{display:none} }
+
+/* ---- Section spy ----
+   The entry for the section being read. aria-current is the attribute the
+   state actually is, so it carries to assistive technology for free. */
+.toc a[aria-current="true"]{color:var(--brand-800);font-weight:600}
+.toc a{position:relative}
+.toc a[aria-current="true"]::before{
+  content:"";position:absolute;left:-14px;top:.35em;bottom:.35em;width:2px;
+  border-radius:2px;background:var(--spring-500)}

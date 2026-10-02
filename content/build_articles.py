@@ -6,6 +6,8 @@ the template. Every page shares the site chrome exactly as the hub uses it.
 """
 import io, json, os, re
 
+from motion_tags import inject
+
 SITE = r"C:/Users/Roni Massoud/Desktop/Dr. Rayhab/site"
 OUT = os.path.join(SITE, "scoliosis")
 
@@ -97,7 +99,7 @@ TAIL = '''
 </html>
 '''
 
-CTA = '''  <section class="cta-band" style="padding:56px var(--pad-x)">
+CTA = '''  <section class="cta-band" style="padding:56px var(--pad-x)" data-reveal="children" data-reveal-stagger="90">
     <div>
       <h2 class="h2-sm cta-h2">{h}</h2>
       <p class="body-m cta-lede">{p}</p>
@@ -140,7 +142,7 @@ def render_blocks(blocks):
             items = "".join("<li>%s</li>" % inline(i) for i in b["items"])
             out.append("<%s>%s</%s>" % (k, items, k))
         elif k == "uncertain":
-            out.append('<div class="uncertain"><h2>What is not settled</h2><p>%s</p></div>'
+            out.append('<div class="uncertain" data-reveal><h2>What is not settled</h2><p>%s</p></div>'
                        % inline(b["t"]))
     return "\n      ".join(out)
 
@@ -197,7 +199,7 @@ def render_article(a, lookup, pillars):
 
   <div class="artwrap">
     <div class="prose">
-      <div class="keybox">
+      <div class="keybox" data-reveal>
         <h2>In short</h2>
         <ul>%s</ul>
       </div>
@@ -230,7 +232,7 @@ def render_article(a, lookup, pillars):
                  '<p class="eyebrow" style="margin-bottom:14px">Keep reading</p>'
                  '<h2 class="h2-sm" style="color:var(--forest-900)">Related in this pillar</h2>'
                  '</div>\n      <a class="textlink" href="%s.html">All %s \u2192</a>\n    </div>'
-                 '\n    <div class="morelist">%s</div>\n  </section>\n'
+                 '\n    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>\n  </section>\n'
                  % (pil["slug"], esc(pil["name"].lower()), related))
 
     body += "\n" + CTA.format(h=esc(a.get("cta_h", "Still not sure what applies to you?")),
@@ -267,7 +269,7 @@ def render_pillar(p, arts):
       </div>
       <a class="textlink" href="./">Back to the hub \u2192</a>
     </div>
-    <div class="pidx-list">%s</div>
+    <div class="pidx-list" data-reveal="children" data-reveal-stagger="55">%s</div>
     <p class="disclaimer" style="margin-top:26px">Every article on this page is written for patients and families, not clinicians, and carries a named clinical reviewer. General information cannot tell you what your own curve is doing.</p>
   </section>
 ''' % (esc(p["short"]), esc(p["name"]), esc(p["stand"]), len(arts), rows)
@@ -290,14 +292,14 @@ def main():
     for a in arts:
         html = render_article(a, lookup, pillars)
         io.open(os.path.join(OUT, a["slug"] + ".html"), "w",
-                encoding="utf-8", newline="\n").write(wrap_arrows(html))
+                encoding="utf-8", newline="\n").write(inject(wrap_arrows(html)))
         n += 1
 
     for pid, p in pillars.items():
         group = [a for a in arts if a["pillar"] == pid]
         html = render_pillar(p, group)
         io.open(os.path.join(OUT, p["slug"] + ".html"), "w",
-                encoding="utf-8", newline="\n").write(wrap_arrows(html))
+                encoding="utf-8", newline="\n").write(inject(wrap_arrows(html)))
 
     print("wrote %d articles and %d pillar pages" % (n, len(pillars)))
     for pid, p in pillars.items():
