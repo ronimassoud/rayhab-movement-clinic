@@ -1249,3 +1249,45 @@ a:focus-visible .arw,button:focus-visible .arw{transform:translateX(4px)}
   a:hover .arw,button:hover .arw,a:hover .m-arrow,
   a:focus-visible .arw,button:focus-visible .arw{transform:none !important}
 }
+
+
+/* ==========================================================
+   Scrollbars
+   The browser default is a near-white track with a grey thumb.
+   Against the bone page it reads as a pale stripe, and against
+   any dark surface it reads as a white line, which is what gave
+   the booking dialog its white edge. One treatment everywhere:
+   no track, a thin bar, and a thumb in the page's own border
+   tone, inset from the edge so a rounded corner cannot slice it.
+   ========================================================== */
+:root{
+  --sb-thumb:var(--border);
+  --sb-thumb-hover:var(--muted);
+  --sb-thumb-dark:#3B5942;
+  --sb-thumb-dark-hover:#4E7257;
+}
+
+/* scrollbar-width is not inherited, so it has to be set broadly for any
+   scroll container to pick it up. scrollbar-color is inherited, which is
+   what lets the dark variant below cascade into a dark section. */
+*{scrollbar-width:thin}
+html{scrollbar-color:var(--sb-thumb) transparent}
+
+/* Dark surfaces carry this class across the site, so anything that scrolls
+   inside one gets a thumb that belongs there instead of a pale stripe. */
+.on-dark{scrollbar-color:var(--sb-thumb-dark) transparent}
+
+/* Chromium before 121 and Safari ignore scrollbar-color, so the same
+   treatment is repeated through the pseudo-elements. These carry no class,
+   so anything more specific later in the cascade wins, which is how the
+   booking rail sets its own thumb. */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent}
+::-webkit-scrollbar-thumb{
+  background-color:var(--sb-thumb);border:3px solid transparent;
+  background-clip:content-box;border-radius:99px}
+.on-dark::-webkit-scrollbar-thumb{background-color:var(--sb-thumb-dark)}
+@media (hover:hover) and (pointer:fine){
+  ::-webkit-scrollbar-thumb:hover{background-color:var(--sb-thumb-hover)}
+  .on-dark::-webkit-scrollbar-thumb:hover{background-color:var(--sb-thumb-dark-hover)}
+}

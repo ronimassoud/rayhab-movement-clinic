@@ -523,41 +523,17 @@ dialog.modal.is-open::backdrop{background:rgba(8,25,14,.72)}
 
 /* ---- Scrollbars inside the dialog ----
    The rail and the panel each scroll on their own, so the browser paints a
-   scrollbar in each one. Its default track is near-white. Against the dark
-   green rail that reads as a white line down the edge of the modal, and
-   the 22px corner radius slices the end of it off, which is the artefact
-   you notice first. These match the surface they sit on. The thumb is
-   inset through a transparent border so it stays clear of the corner, and
-   the track is transparent so nothing is drawn when there is no thumb. */
-.modal-body,
-.modal-body .bk-rail,
-.modal-body .bk-panel{scrollbar-width:thin}
-.modal-body .bk-rail{scrollbar-color:#3B5942 transparent}
-.modal-body,
-.modal-body .bk-panel{scrollbar-color:var(--border) transparent}
-
-/* Chromium before 121 and Safari ignore scrollbar-color, so they get the
-   same treatment through the pseudo-elements. */
-.modal-body::-webkit-scrollbar,
-.modal-body .bk-rail::-webkit-scrollbar,
-.modal-body .bk-panel::-webkit-scrollbar{width:10px;height:10px}
-.modal-body::-webkit-scrollbar-track,
-.modal-body .bk-rail::-webkit-scrollbar-track,
-.modal-body .bk-panel::-webkit-scrollbar-track,
-.modal-body::-webkit-scrollbar-corner,
-.modal-body .bk-rail::-webkit-scrollbar-corner,
-.modal-body .bk-panel::-webkit-scrollbar-corner{background:transparent}
-.modal-body::-webkit-scrollbar-thumb,
-.modal-body .bk-rail::-webkit-scrollbar-thumb,
-.modal-body .bk-panel::-webkit-scrollbar-thumb{
-  border:3px solid transparent;background-clip:content-box;border-radius:99px}
-.modal-body .bk-rail::-webkit-scrollbar-thumb{background-color:#3B5942}
-.modal-body::-webkit-scrollbar-thumb,
-.modal-body .bk-panel::-webkit-scrollbar-thumb{background-color:var(--border)}
+   scrollbar in each one. Everything about them now comes from the
+   site-wide scrollbar layer in rayhab.css; the rail is the one surface
+   here that is dark, and it is not marked .on-dark because the class sets
+   a text colour the rail already handles itself. So it takes the dark
+   thumb directly. */
+.modal-body .bk-rail{scrollbar-color:var(--sb-thumb-dark) transparent}
+.modal-body .bk-rail::-webkit-scrollbar-thumb{
+  background-color:var(--sb-thumb-dark)}
 @media (hover:hover) and (pointer:fine){
-  .modal-body .bk-rail::-webkit-scrollbar-thumb:hover{background-color:#4E7257}
-  .modal-body::-webkit-scrollbar-thumb:hover,
-  .modal-body .bk-panel::-webkit-scrollbar-thumb:hover{background-color:var(--muted)}
+  .modal-body .bk-rail::-webkit-scrollbar-thumb:hover{
+    background-color:var(--sb-thumb-dark-hover)}
 }
 
 /* ---- Opening and closing ----
