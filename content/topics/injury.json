@@ -1,0 +1,241 @@
+{
+  "topic": {
+    "dir": "injury",
+    "name": "Injury rehabilitation",
+    "short": "Injury rehabilitation",
+    "desc": "Active rehabilitation for neck, back, shoulder, hip and knee pain: why rest alone stalls, what scans do and do not explain, and how long recovery actually takes.",
+    "stand": "These six articles cover the problems people arrive with most often, and the one question everybody asks in the first session: how long is this going to take.",
+    "byline": "Rayan Halimeh, Physiotherapist",
+    "lede": "Most people who come to the clinic with a persistent problem have already tried rest, and some medication, and possibly a scan. The reason none of it worked is usually that none of it changed what the tissue can tolerate.",
+    "note": "This page describes general rehabilitation principles. It is not a diagnosis, it cannot tell you what is causing your symptoms, and it does not replace an assessment.",
+    "cta_h": "Had enough of waiting for it to settle?",
+    "cta_p": "An assessment identifies what is driving it and what the first four weeks should contain. Beirut or online."
+  },
+  "articles": [
+    {
+      "slug": "when-rest-has-not-worked",
+      "title": "When rest alone has not worked",
+      "blurb": "Three months off and it still hurts when you go back. That is information, not bad luck.",
+      "desc": "Why rest resolves symptoms without resolving the problem, what active rehabilitation does differently, and what the first four weeks should contain.",
+      "stand": "Rest removes the demand. It does not raise the ceiling. So when the demand returns, so does the problem, and nothing in between changed that.",
+      "key": [
+        "Rest reduces symptoms by removing load, and simultaneously lowers how much load you tolerate.",
+        "If a problem returns every time you resume activity, the limiting factor is **capacity**, which rest cannot build.",
+        "Active rehabilitation works by raising tolerance gradually, which means some loading from early on.",
+        "Persistent problems usually need eight to twelve weeks of consistent work before the gains are stable."
+      ],
+      "blocks": [
+        { "k": "h", "id": "the-cycle", "t": "The cycle most people arrive in" },
+        { "k": "p", "t": "It is recognisable within a minute of hearing the history. Something hurts, so activity stops. The pain settles, which confirms that stopping was right. Activity resumes at roughly the previous level, the pain returns, and the conclusion drawn is that the tissue is damaged and needs more rest." },
+        { "k": "p", "t": "Each round of this leaves capacity lower than the round before. By the third or fourth cycle, tasks that were never a problem are provocative, and the person reasonably concludes they are getting worse." },
+        { "k": "h", "id": "what-rest-cannot-do", "t": "What rest cannot do" },
+        { "k": "p", "t": "Rest is genuinely useful for a short period after an acute injury, when the tissue needs protecting. What it cannot do is increase tolerance, because tolerance is built by load. A tendon, a muscle and a joint all become more capable in response to demand, and no amount of time off supplies that demand." },
+        { "k": "p", "t": "So the question is never rest or no rest. It is which load, at what dose, starting when." },
+        { "k": "h", "id": "what-active-means", "t": "What active rehabilitation actually involves" },
+        { "k": "ol", "items": [
+          "**Find the entry point.** Something you can do today without a flare-up. There almost always is one, even if it is an isometric hold or a very short range.",
+          "**Establish a baseline.** Two weeks at that level, consistently, so there is something to progress from.",
+          "**Progress deliberately,** one variable at a time, roughly weekly, with a rule for what to do if it does not hold.",
+          "**Keep doing it longer than the symptoms last.** Symptoms improve before capacity does, and stopping at symptom relief is why problems recur.",
+          "**Measure something.** Strength, range, a tolerated time or distance. Without a number, progress is a feeling and feelings fluctuate."
+        ] },
+        { "k": "h", "id": "timeline", "t": "What the first month looks like" },
+        { "k": "p", "t": "Weeks one and two usually feel like very little is happening, which is the hardest part to sit with. Weeks three and four are typically when the first clear change shows up, often in function before pain. Expect the symptom graph to be jagged rather than a clean descent; a bad day inside an improving month is normal." },
+        { "k": "p", "t": "If there is genuinely no change by week four or five, that is a reason to reassess rather than to persist harder. Either the diagnosis, the dose or something outside the programme needs revisiting." },
+        { "k": "uncertain", "t": "Exercise-based rehabilitation has good evidence across most common musculoskeletal problems, and which exercise, at what dose, is far less settled. For several conditions, including shoulder and knee pain, different programmes produce broadly similar results, which suggests that doing something progressive and sticking with it matters more than the specific selection." }
+      ],
+      "related": ["how-long-does-rehab-take", "low-back-pain", "neck-and-shoulder-pain"]
+    },
+    {
+      "slug": "neck-and-shoulder-pain",
+      "title": "Neck and shoulder pain that keeps coming back",
+      "blurb": "Usually not a disc, usually not posture, usually a capacity and dose problem with a long history.",
+      "desc": "Why neck and shoulder pain recurs, what imaging typically shows, the role of the shoulder blade and rotator cuff, and what actually changes it.",
+      "stand": "Recurrent neck and shoulder pain is one of the most common reasons people come in, and one of the most over-explained conditions in musculoskeletal health.",
+      "key": [
+        "Most neck pain is **not** attributable to a specific structure, and that is not a failure of the assessment.",
+        "Rotator cuff related shoulder pain responds to progressive loading at least as well as to surgery in several trials.",
+        "Scan findings in both regions are common in people with no symptoms at all.",
+        "Recurrence is usually a dose and capacity pattern, and it responds to strength work plus honest load management."
+      ],
+      "blocks": [
+        { "k": "h", "id": "neck", "t": "The neck, and what is usually going on" },
+        { "k": "p", "t": "The majority of neck pain is classified as non-specific, meaning no single structure can be confidently identified as the source. That label frustrates people and it is more honest than inventing a cause. It also carries a reassuring implication: non-specific neck pain generally has a good prognosis and responds to exercise and activity." },
+        { "k": "p", "t": "Where symptoms travel down the arm with numbness, pins and needles or weakness in a defined pattern, that is a different presentation, needs examining properly, and may involve a nerve root. It is much less common than the headline fear suggests." },
+        { "k": "h", "id": "shoulder", "t": "The shoulder, and the surgery question" },
+        { "k": "p", "t": "Rotator cuff related shoulder pain, which used to be called impingement, is the most common shoulder presentation. The important finding of the last decade is that progressive exercise produces outcomes comparable to subacromial decompression surgery in randomised trials, and that the surgery performed little better than placebo surgery." },
+        { "k": "p", "t": "That does not make surgery never appropriate. It does mean a proper loading programme, run for long enough, is a reasonable first choice for most people, and that a scan finding of a degenerative tear is not on its own an argument for an operation." },
+        { "k": "h", "id": "scans", "t": "What scans show in people who are fine" },
+        { "k": "ul", "items": [
+          "Degenerative changes in the neck are present in a large share of people with no neck pain, and the proportion rises steadily with age.",
+          "Rotator cuff tears are found in many pain-free shoulders, particularly over the age of sixty.",
+          "Labral and bursal findings appear routinely in people with no symptoms."
+        ] },
+        { "k": "p", "t": "This is why imaging is requested for a reason rather than for reassurance. A scan that finds something normal-for-your-age can take months to recover from psychologically, and it frequently changes nothing about the plan." },
+        { "k": "h", "id": "why-recurs", "t": "Why it keeps coming back" },
+        { "k": "p", "t": "The usual pattern: symptoms appear, activity is reduced, symptoms settle, activity resumes, symptoms return. Strength work is either never started or stopped as soon as the pain eased, which is roughly halfway through the process that would have prevented the next episode." },
+        { "k": "ol", "items": [
+          "Build strength in the shoulder girdle and neck, loaded properly, for at least twelve weeks.",
+          "Include end-range and overhead work if your life or sport needs those positions.",
+          "Manage the dose: sustained positions, sudden increases in overhead volume, and new training on top of a full week are the usual triggers.",
+          "Continue the programme after the pain goes. This is the step everybody skips and the step that prevents recurrence."
+        ] },
+        { "k": "uncertain", "t": "Which exercises work best for either region is not established; several quite different programmes produce similar results. The role of the shoulder blade and of specific muscle timing has been heavily emphasised historically on weak evidence. Manual therapy helps some people in the short term and does not change long-term outcomes on its own." }
+      ],
+      "related": ["when-rest-has-not-worked", "low-back-pain", "how-long-does-rehab-take"]
+    },
+    {
+      "slug": "low-back-pain",
+      "title": "Low back pain: what the scan does and does not explain",
+      "blurb": "Disc bulges are found in most pain-free adults over forty. What that means for your report.",
+      "desc": "What imaging findings mean in low back pain, why most back pain is non-specific, which symptoms do need investigating, and what actually helps.",
+      "stand": "A report full of alarming words describes a spine that looks much like everybody else's. That is the single most useful thing to know about back imaging.",
+      "key": [
+        "Disc degeneration and bulges are present in a **majority of pain-free adults** by middle age.",
+        "Around 90 per cent of low back pain is non-specific, meaning no single structure can be blamed.",
+        "Imaging early, without a clinical reason, is associated with worse outcomes rather than better ones.",
+        "A small list of red-flag symptoms genuinely does need prompt medical assessment."
+      ],
+      "blocks": [
+        { "k": "h", "id": "what-scans-show", "t": "What scans show in people with no pain" },
+        { "k": "p", "t": "This is the finding that reframes the whole topic. In large studies of adults without any back pain, disc degeneration is present in roughly a third of people in their twenties and in the large majority by their sixties. Disc bulges, height loss and facet changes follow the same pattern." },
+        { "k": "p", "t": "So finding degeneration on your scan establishes that you have a spine of your age. It does not establish that the degeneration is producing your symptoms, and the correlation between the severity of findings and the severity of pain is weak." },
+        { "k": "h", "id": "non-specific", "t": "Non-specific does not mean unexplained" },
+        { "k": "p", "t": "Most low back pain is classified as non-specific. The term means that a single pain-producing structure cannot be reliably identified, which is different from saying nothing is happening or that the pain is imagined." },
+        { "k": "p", "t": "What can usually be identified is a pattern: which movements and positions provoke and ease it, what the recent load history was, how much capacity the trunk and hips currently have, and what else is going on in the person's life. That pattern is what a plan is built from, and it is more useful than a structural label would be." },
+        { "k": "h", "id": "imaging-harms", "t": "Why early imaging can make things worse" },
+        { "k": "p", "t": "Guidelines across countries advise against routine imaging for low back pain without red flags, and the reason is not cost alone. Patients who are imaged early tend to have more medical care, more procedures and no better outcomes. The findings cause worry, the worry reduces activity, and reduced activity is the one thing that reliably makes back pain worse." },
+        { "k": "h", "id": "red-flags", "t": "When it does need investigating" },
+        { "k": "p", "t": "Seek prompt medical assessment, urgently where indicated, for: loss of bladder or bowel control, numbness in the saddle area between the legs, progressive weakness in the legs, pain following significant trauma, unexplained weight loss, fever, a history of cancer, or severe unremitting night pain. These are uncommon and they change the plan completely." },
+        { "k": "h", "id": "what-helps", "t": "What actually helps" },
+        { "k": "ol", "items": [
+          "Stay as active as symptoms allow. Bed rest makes outcomes worse, consistently.",
+          "Exercise, of almost any kind, done progressively. The specific type matters much less than doing it.",
+          "Build trunk and hip strength over months, not weeks.",
+          "Understand what is happening, because explanation measurably reduces fear and fear measurably reduces activity.",
+          "Address sleep and stress, which change pain sensitivity directly."
+        ] },
+        { "k": "uncertain", "t": "Why some back pain becomes persistent and some resolves is not well understood, and no treatment performs dramatically better than the alternatives. Effect sizes for exercise, manual therapy and education are all modest. The strongest claims in this field, in both directions, outrun the evidence; what is firmly established is that imaging findings are common in pain-free people and that activity is better than rest." }
+      ],
+      "related": ["when-rest-has-not-worked", "how-long-does-rehab-take", "neck-and-shoulder-pain"]
+    },
+    {
+      "slug": "knee-pain-and-loading",
+      "title": "Knee pain and the loading it needs",
+      "blurb": "Knees are not wearing out from use. Under-use is the more reliable route to a painful one.",
+      "desc": "What drives common knee pain, whether running and squatting damage knees, what the evidence says about osteoarthritis and exercise, and how to load a painful knee.",
+      "stand": "The most common belief about knees is that they have a fixed mileage. It is also the one most clearly contradicted by the research.",
+      "key": [
+        "Running is **not** associated with higher rates of knee osteoarthritis; recreational runners have lower rates than sedentary people.",
+        "Exercise is a first-line treatment for knee osteoarthritis, and it reduces pain and improves function.",
+        "Most non-traumatic knee pain in active people is a loading problem around the kneecap or the tendons.",
+        "Loading a painful knee progressively, including deep positions over time, is usually the treatment rather than the risk."
+      ],
+      "blocks": [
+        { "k": "h", "id": "wearing-out", "t": "The wearing out model, and why it fails" },
+        { "k": "p", "t": "Cartilage is not a brake pad. It is living tissue that responds to load, and studies of recreational runners consistently find equal or lower rates of knee osteoarthritis compared with sedentary people. Competitive and elite athletes in some sports do show higher rates, which is a different exposure from a few runs a week." },
+        { "k": "p", "t": "The same applies to squatting, stairs and kneeling. Loads within tolerance maintain joints. Loads that jump well beyond tolerance irritate them, which is a dose argument and not a case against the movement." },
+        { "k": "h", "id": "common-presentations", "t": "What usually hurts, and why" },
+        { "k": "ul", "items": [
+          "**Pain around or under the kneecap,** often with squatting, stairs and sitting. Commonly follows an increase in training volume or a long period of relatively little.",
+          "**Pain at the tendon below the kneecap,** typical in jumping sports, with a characteristic pattern of warming up and then hurting afterwards.",
+          "**Pain on the outside of the knee in runners,** usually related to volume and running mechanics rather than a structure that needs releasing.",
+          "**Osteoarthritic knee pain,** usually with stiffness after rest, better with movement, worse with sudden increases."
+        ] },
+        { "k": "p", "t": "What these share is a relationship with recent load. The single most informative question in a knee history is what changed in the eight weeks before it started." },
+        { "k": "h", "id": "osteoarthritis", "t": "Osteoarthritis and exercise" },
+        { "k": "p", "t": "Exercise is recommended as a core treatment for knee osteoarthritis in every major guideline, and it reduces pain and improves function with effect sizes comparable to medication. Arthroscopic surgery for degenerative knee disease, including for degenerative meniscal tears, has repeatedly failed to outperform exercise or placebo procedures in trials." },
+        { "k": "p", "t": "The practical version: a knee with arthritic change still needs loading, it still gets stronger, and strength is one of the few things that reliably changes how it feels." },
+        { "k": "h", "id": "how-to-load", "t": "How to load a painful knee" },
+        { "k": "ol", "items": [
+          "Start with the range and the load you tolerate today, which may be partial-range or isometric.",
+          "Load the quadriceps properly. Insufficient quadriceps strength is the most common finding and the most consistently useful thing to fix.",
+          "Add range gradually, including deeper positions, over weeks rather than in one jump.",
+          "Use the 24-hour rule: discomfort during loading that settles by the next day is acceptable.",
+          "Keep going for three months. Knee tendon and strength changes are slow and reliably frustrating."
+        ] },
+        { "k": "uncertain", "t": "Which specific exercises are best for patellofemoral and tendon-related knee pain is not settled, and most comparisons find similar outcomes. Why some knees develop osteoarthritis and others do not remains largely unexplained, and the relationship between cartilage findings and symptoms is weak. What is clear is that the use-wears-it-out model is not supported." }
+      ],
+      "related": ["when-rest-has-not-worked", "hip-and-groin-pain", "how-long-does-rehab-take"]
+    },
+    {
+      "slug": "hip-and-groin-pain",
+      "title": "Hip and groin pain in active people",
+      "blurb": "An area with several plausible sources, a lot of overlap, and a much better response to loading than its reputation suggests.",
+      "desc": "The common causes of hip and groin pain in active adults, what hip shape findings mean, why the area is hard to diagnose precisely, and what rehabilitation involves.",
+      "stand": "Groin pain is one of the harder regions to attribute precisely, which is why the plan is usually built around what you can tolerate rather than around a label.",
+      "key": [
+        "Several structures around the hip and groin produce overlapping symptoms, so precise diagnosis is often difficult.",
+        "Adductor-related pain is the most common presentation in kicking and change-of-direction sports.",
+        "Hip shape variations including cam and pincer morphology are **common in people without symptoms**.",
+        "Progressive strengthening, particularly of the adductors and the hip in general, has the best support."
+      ],
+      "blocks": [
+        { "k": "h", "id": "why-hard", "t": "Why this region is difficult" },
+        { "k": "p", "t": "The hip joint, the adductors, the hip flexors, the abdominal wall, the pubic bone and the lower back all refer pain into a small area, and more than one is frequently involved at the same time. Clinical tests for the region overlap considerably, and imaging finds variations in nearly everybody." },
+        { "k": "p", "t": "Clinical groupings used in practice are deliberately descriptive rather than structural: adductor-related, iliopsoas-related, inguinal-related, pubic-related, and hip-joint-related. They are useful because they point towards what to load, which is what the plan needs." },
+        { "k": "h", "id": "common", "t": "What usually causes it" },
+        { "k": "ul", "items": [
+          "**Adductor-related groin pain,** the most common in football and sports with kicking and cutting. Tender adductors, pain with squeezing the legs together.",
+          "**Hip flexor related pain,** often with sprinting and kicking, and frequently alongside the adductors.",
+          "**Hip joint related pain,** typically deep in the groin, worse with deep flexion and rotation, sometimes with clicking or catching.",
+          "**Bone stress and other causes,** uncommon but important, which is why a persistent groin problem that is not responding deserves reassessment rather than more of the same."
+        ] },
+        { "k": "h", "id": "hip-shape", "t": "Hip shape findings, and what they mean" },
+        { "k": "p", "t": "Cam and pincer morphology, the bony shapes associated with femoroacetabular impingement, are found commonly in people with no hip symptoms at all, and at high rates in athletes in several sports. Having the shape is not the same as having the syndrome, which requires symptoms, clinical signs and imaging findings together." },
+        { "k": "p", "t": "Where the full syndrome is present, both exercise-based management and surgery are used, and trials comparing them show benefit from both with no decisive advantage for surgery. A properly run loading programme first is reasonable for most people." },
+        { "k": "h", "id": "rehab", "t": "What rehabilitation involves" },
+        { "k": "ol", "items": [
+          "**Adductor strength** is the priority in most athletic groin pain, and the Copenhagen adduction exercise has the best supporting evidence of any single exercise here, for both treatment and prevention.",
+          "**Whole-hip strength,** including abductors, extensors and flexors, through the range the sport needs.",
+          "**Trunk and pelvic control,** because the region transfers load between the legs and the torso.",
+          "**Graded return to sport-specific work:** kicking, cutting and sprinting progressed deliberately rather than resumed.",
+          "**Patience.** Groin problems commonly take two to four months, and longer when they have been present for a year."
+        ] },
+        { "k": "uncertain", "t": "Diagnostic categories for groin pain are consensus-based descriptions, not validated entities, and clinicians disagree in individual cases. Long-term outcomes for femoroacetabular impingement, including whether it leads to osteoarthritis and whether surgery changes that, are not resolved. Adductor strengthening has good evidence; most of the rest of the management is reasoned from principle." }
+      ],
+      "related": ["knee-pain-and-loading", "when-rest-has-not-worked", "how-long-does-rehab-take"]
+    },
+    {
+      "slug": "how-long-does-rehab-take",
+      "title": "How long does rehabilitation actually take?",
+      "blurb": "The honest answer has ranges in it, and the ranges are longer than most people hope and shorter than they fear.",
+      "desc": "Realistic timeframes for musculoskeletal rehabilitation, what tissue healing times mean, why pain improves before capacity, and what makes recovery faster or slower.",
+      "stand": "Everybody asks this in the first session, and they deserve a real answer rather than a reassuring one.",
+      "key": [
+        "Different tissues heal on different timelines; tendon and bone are considerably slower than muscle.",
+        "Pain usually improves **before** capacity does, which is why people stop too early and recur.",
+        "Most persistent problems need **eight to twelve weeks** of consistent work for durable change, and often longer.",
+        "The strongest predictors of a slower recovery are how long it has already been going on, sleep, and how much you can keep doing."
+      ],
+      "blocks": [
+        { "k": "h", "id": "tissue-times", "t": "Tissue healing is the floor, not the answer" },
+        { "k": "p", "t": "Biological healing gives a minimum. Muscle strains resolve in weeks, with the specific muscle and the severity mattering. Tendons remodel over months. Bone stress injuries typically need six to twelve weeks before loading can progress normally, and longer at certain high-risk sites. Ligaments vary widely." },
+        { "k": "p", "t": "Healing is necessary and not sufficient. Rebuilding the capacity that was lost while the tissue healed, which is a separate process, usually takes longer than the healing did." },
+        { "k": "h", "id": "pain-first", "t": "Pain improves first, and that is a trap" },
+        { "k": "p", "t": "The usual sequence is pain, then function, then capacity. People typically feel substantially better around weeks three to six and conclude they are better. Strength and tolerance at that point are frequently still well below where they started, which is why resuming full activity then produces the familiar recurrence." },
+        { "k": "p", "t": "This is the single most common reason rehabilitation fails: not a bad programme, but a programme stopped at the point it felt unnecessary." },
+        { "k": "h", "id": "ranges", "t": "Realistic ranges" },
+        { "k": "ul", "items": [
+          "**Acute, straightforward problem, caught early:** often two to six weeks.",
+          "**Persistent problem of a few months:** usually eight to twelve weeks of consistent work before the gains are stable.",
+          "**Problem present for a year or more:** three to six months is a realistic expectation, with progress visible much earlier.",
+          "**Return to high-demand sport after a significant injury:** months, decided by criteria rather than dates.",
+          "**Scoliosis and other structural conditions:** managed over years rather than resolved, with the aim stated honestly in each plan."
+        ] },
+        { "k": "p", "t": "These are ranges, and anybody giving you a single number for your case before assessing you is guessing." },
+        { "k": "h", "id": "what-changes-it", "t": "What makes it faster or slower" },
+        { "k": "ol", "items": [
+          "**Duration so far.** The best single predictor. Longstanding problems take longer, which is the argument for coming in earlier rather than later.",
+          "**What you can keep doing.** People who maintain some loading throughout recover considerably faster than people who stop.",
+          "**Consistency.** Three sessions a week for ten weeks beats daily work for two weeks and then nothing.",
+          "**Sleep and stress,** both of which change pain sensitivity and recovery capacity directly.",
+          "**Other health factors,** including diabetes, smoking, inflammatory conditions and age, all of which affect tissue healing rates.",
+          "**Expectations.** What a person believes about their recovery is a measured predictor of their outcome, which is a reason to be accurate rather than either optimistic or grim."
+        ] },
+        { "k": "uncertain", "t": "Prognosis in musculoskeletal conditions is genuinely imprecise. Prediction models exist for low back pain and some other conditions and perform modestly at the individual level. The ranges above come from clinical practice and typical presentations, and individual recoveries fall outside them in both directions regularly." }
+      ],
+      "related": ["when-rest-has-not-worked", "low-back-pain", "knee-pain-and-loading"]
+    }
+  ]
+}

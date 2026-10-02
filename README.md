@@ -15,7 +15,7 @@ step and no framework. Open `site/index.html` or serve the `site/` directory.
 > **This site is live and publicly indexed while the items under
 > [Before launch](#before-launch) are still open.** That was a deliberate
 > decision, not an oversight. It means clinical photographs of identifiable
-> patients and 24 articles still marked "Awaiting clinical review" are
+> patients and 48 articles still marked "Awaiting clinical review" are
 > publicly reachable. Close those items, or take the deploy down, before
 > treating this as finished.
 
@@ -45,10 +45,12 @@ and JS between edits. Hard-refresh when something looks unchanged.
 ## Layout
 
 ```
-site/                        the website, 43 pages
+site/                        the website, 72 pages
   index.html                 home
   about.html  contact.html  results.html  education.html  book.html
   scoliosis/                 hub, 4 pillar indexes, 3 audience routes, 24 articles
+  exercise/  sport/  posture/  mobility/  injury/
+                             5 education hubs, 24 articles between them
   services/                  index + 4 service pages
   assets/css/                rayhab.css (design system), mobile.css, booking.css
   assets/js/                 ui.js, booking.js, modal.js, contact.js
@@ -60,20 +62,23 @@ brief.txt                    the original written brief
 
 ## Regenerating content
 
-The 24 scoliosis articles and the 3 supporting service pages are generated, not
-hand-written as HTML. Prose lives in JSON so it can be edited without touching
-43 files.
+The 48 articles, the 5 non-scoliosis education hubs and the 3 supporting service
+pages are generated, not hand-written as HTML. Prose lives in JSON so it can be
+edited without touching 72 files.
 
 ```bash
 cd content
-python build_articles.py     # 24 articles + 4 pillar index pages
+python build_articles.py     # 24 scoliosis articles + 4 pillar index pages
+python build_topics.py       # 5 education hubs + 24 articles
 python build_services.py     # 3 supporting service pages
 python wire.py               # audience routes + cross-links + sitemap
 python wire_services.py      # service cards, footers, sitemap
 ```
 
-`build_articles.py` derives each article's reading time from its own word count,
-so the label cannot drift from the text. Both builders wrap trailing
+`build_articles.py` and `build_topics.py` derive each article's reading time from
+its own word count, so the label cannot drift from the text. The scoliosis library
+carries the Schroth byline; the five general hubs carry the credential that
+actually applies to them, which is set per topic. All three builders wrap trailing
 navigational arrows for the hover animation; data arrows such as `29° → 20°`
 are deliberately left alone.
 
@@ -96,9 +101,11 @@ there.
 
 Known gaps, all deliberate rather than overlooked:
 
-- [ ] **Clinical review.** All 24 articles display "Awaiting clinical review".
+- [ ] **Clinical review.** All 48 articles display "Awaiting clinical review".
       Rayan reads them, then one flag per article in `content/articles*.json`
-      flips the status to a real reviewed date. This is blocking.
+      and `content/topics/*.json` flips the status to a real reviewed date.
+      This is blocking, and it now covers 24 general musculoskeletal articles
+      on back, knee, hip, shoulder and neck pain as well as the scoliosis set.
 - [ ] **Patient consent.** Confirm written consent covers website use for all
       five case studies, in particular the Instagram comment used for Case 04.
 - [ ] **Photography.** Every page carries art-directed photo slots with

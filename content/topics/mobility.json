@@ -1,0 +1,167 @@
+{
+  "topic": {
+    "dir": "mobility",
+    "name": "Mobility & joint health",
+    "short": "Mobility & joint health",
+    "desc": "The difference between range you can reach and range you can control, why stretching alone stalls, what controlled articular rotations are for, and why hypermobility is not an advantage.",
+    "stand": "Flexibility is how far a joint can be moved. Mobility is how far you can move it yourself, with control, under load. The gap between those two is where most joint problems live.",
+    "byline": "Rayan Halimeh, Certified Mobility Specialist (FRCms)",
+    "lede": "A joint you can push into a position but cannot get into on your own has range you do not own. Closing that gap is the whole point of mobility training, and it is why stretching alone so often stops producing results.",
+    "note": "This page explains mobility training in general terms. It cannot tell you which of your own joints are limited or why, and it does not replace an assessment.",
+    "cta_h": "Want to know which range you actually own?",
+    "cta_p": "An assessment measures active and passive range joint by joint and gives you the gap in numbers. Beirut or online."
+  },
+  "articles": [
+    {
+      "slug": "passive-versus-active-range",
+      "title": "Range you can reach versus range you can control",
+      "blurb": "Two numbers per joint, and the difference between them is the one that predicts problems.",
+      "desc": "The difference between passive and active range of motion, why the gap between them matters, and what closing it involves.",
+      "stand": "Being able to be put into a position is not the same as being able to get there. The second one is what your nervous system will actually use.",
+      "key": [
+        "**Passive range** is how far a joint can be moved by something else. **Active range** is how far you can move it yourself.",
+        "The gap between them is range you have access to but no control over, and it is where many strains happen.",
+        "Stretching generally improves passive range. Closing the gap requires strength at end range.",
+        "Active range is the number that transfers into sport, lifting and daily life."
+      ],
+      "blocks": [
+        { "k": "h", "id": "two-numbers", "t": "Two numbers, not one" },
+        { "k": "p", "t": "Every joint has two meaningful limits. Passive range is how far it goes when someone else, or gravity, or your other hand, moves it. Active range is how far you can move it under your own power, with nothing helping." },
+        { "k": "p", "t": "Most people only ever hear about the first. It is the one measured in a flexibility test and the one that improves with stretching. It is also the less useful of the two." },
+        { "k": "h", "id": "the-gap", "t": "Why the gap matters" },
+        { "k": "p", "t": "If your hip can be pushed to 120 degrees of flexion but you can only actively lift the leg to 95, you have 25 degrees of range you can enter but not control. That territory is reached by momentum, by a fall, by an opponent, or by a sport that takes you there, and in it you have little ability to produce force or resist it." },
+        { "k": "p", "t": "This is one of the more plausible explanations for strains occurring at end range, and it is why gaining passive range without the strength to use it can leave you no better protected than before." },
+        { "k": "h", "id": "measuring", "t": "What this looks like in an assessment" },
+        { "k": "p", "t": "Both numbers get taken, joint by joint, side by side. The useful outputs are the difference between active and passive on the same side, and the difference between left and right, because an asymmetry you can control matters much less than one you cannot." },
+        { "k": "ul", "items": [
+          "A large active-to-passive gap suggests a strength and control problem at end range.",
+          "A small gap with a low total suggests a genuine range limitation, which may be tissue, joint shape or bone.",
+          "A large gap on one side only is often the most informative finding of the session."
+        ] },
+        { "k": "h", "id": "closing-it", "t": "How the gap is closed" },
+        { "k": "p", "t": "Not by more stretching, which tends to widen it. The work is strength in the last part of the range: holding positions you have just reached, producing force there, and gradually loading them." },
+        { "k": "ol", "items": [
+          "Reach the end of your current active range deliberately and slowly, without momentum.",
+          "Hold it and contract hard, which is where most of the adaptation comes from.",
+          "Add light load once the position is reliable, and keep the load light for longer than feels necessary.",
+          "Re-measure every few weeks. Active range is a slow number and it does move."
+        ] },
+        { "k": "uncertain", "t": "The idea that a large passive-to-active gap increases injury risk is biologically reasonable and not strongly established by prospective evidence. Stretching alone has a poor record for injury prevention; strength training has a better one. Whether the mechanism is the control gap specifically or simply greater strength is not resolved." }
+      ],
+      "related": ["end-range-strength", "controlled-articular-rotations", "hypermobility"]
+    },
+    {
+      "slug": "end-range-strength",
+      "title": "End-range strength and why stretching alone stalls",
+      "blurb": "Six months of stretching with no lasting change usually means the limit was never tissue length.",
+      "desc": "Why stretching gains fade, what end-range strength training does differently, and how loaded range work changes mobility durably.",
+      "stand": "Stretching makes a position available for about twenty minutes. Strength at that position makes it yours.",
+      "key": [
+        "Acute stretching gains are largely **short-lived**; much of the immediate change is tolerance rather than tissue length.",
+        "Loaded work at long muscle lengths produces range gains that hold better than passive stretching alone.",
+        "Strength training through a full range improves flexibility, which surprises most people.",
+        "If stretching has not changed anything in months, the limit is probably control, joint shape or bone rather than muscle length."
+      ],
+      "blocks": [
+        { "k": "h", "id": "why-stretching-fades", "t": "Why stretching gains fade" },
+        { "k": "p", "t": "A single stretching session increases range measurably and the effect decays over the following minutes to hours. Longer-term stretching programmes do produce lasting change, and a substantial share of it comes from increased tolerance to the stretch sensation rather than a longer muscle." },
+        { "k": "p", "t": "That is not useless. Being able to tolerate a position is worth something. It is simply a smaller claim than the one usually made, and it explains why so many people stretch for years without their range settling at a new baseline." },
+        { "k": "h", "id": "loaded-range", "t": "What loading at length does instead" },
+        { "k": "p", "t": "Training a muscle while it is long, under load, through its full available range, produces both strength and range. Eccentric work and full-range resistance training have repeatedly been shown to improve flexibility, in some studies as much as stretching, while adding strength that stretching does not." },
+        { "k": "p", "t": "Mechanistically this is more satisfying too. The tissue is being asked to produce force in the position you want to own, which is the demand that would make owning it worthwhile." },
+        { "k": "h", "id": "how-to-train-it", "t": "How end-range work is actually done" },
+        { "k": "ol", "items": [
+          "Find the end of your **active** range, not the end of your passive range.",
+          "Hold there and contract, initially against nothing, for 10 to 20 seconds. Expect this to be surprisingly hard and occasionally to cramp.",
+          "Progress to holding a light weight, or to moving slowly in and out of the last few degrees.",
+          "Add full-range strength work for the same muscle group, loaded, with a slow lowering phase.",
+          "Keep the volume low and the frequency moderate. This is strength work, not stretching, and it needs recovery."
+        ] },
+        { "k": "h", "id": "when-it-is-not-muscle", "t": "When the limit is not muscle at all" },
+        { "k": "p", "t": "Some restrictions do not respond because nothing being done addresses the actual constraint." },
+        { "k": "ul", "items": [
+          "**Joint shape.** Hip socket depth and orientation vary considerably between people and set a hard ceiling on some positions.",
+          "**Bony contact.** When bone meets bone the range ends, and no programme changes that.",
+          "**Capsular and post-surgical restriction,** which behaves differently from muscular tightness.",
+          "**Protective guarding,** where range is limited because the system is defending an irritable structure. Here the answer is treating the irritation, not forcing the range."
+        ] },
+        { "k": "p", "t": "Recognising these saves months. A position you have been chasing for a year may be one your hip is not built for, and finding that out is a relief rather than a defeat." },
+        { "k": "uncertain", "t": "Whether long-term stretching lengthens tissue or mainly increases stretch tolerance is still debated, with evidence on both sides and likely some of each. The superiority of loaded end-range work over stretching for durable range gains is supported but not overwhelming, and most comparisons are short and in healthy young participants." }
+      ],
+      "related": ["passive-versus-active-range", "controlled-articular-rotations", "hypermobility"]
+    },
+    {
+      "slug": "controlled-articular-rotations",
+      "title": "Controlled articular rotations: what they are for",
+      "blurb": "Slow circles that look like nothing and are harder than they appear. What they do and do not claim.",
+      "desc": "What controlled articular rotations are, how they fit into Functional Range Conditioning, what they are useful for, and what the evidence behind them is.",
+      "stand": "A CAR takes ninety seconds, involves no equipment, and is one of the few mobility drills that tells you something about the joint while you do it.",
+      "key": [
+        "A controlled articular rotation is the **largest circle a joint can make actively**, performed slowly with the rest of the body still.",
+        "They are used as both a training input and an assessment: how the circle feels maps where control is missing.",
+        "They are a core element of Functional Range Conditioning, the system behind the FRCms credential.",
+        "The evidence base is largely mechanistic and clinical rather than trial-based, and the honest framing says so."
+      ],
+      "blocks": [
+        { "k": "h", "id": "what-it-is", "t": "What a CAR actually is" },
+        { "k": "p", "t": "You take one joint through the largest circle it can make, actively, as slowly as you can manage, with high tension in the surrounding muscles and with the rest of the body deliberately prevented from helping. A shoulder CAR means the shoulder moves and the ribcage and spine do not." },
+        { "k": "p", "t": "That last constraint is what makes it difficult. Most people's large shoulder circles are mostly spine. Removing the compensation reveals the real range, which is usually smaller and less even than expected." },
+        { "k": "h", "id": "what-it-is-for", "t": "What it is used for" },
+        { "k": "ul", "items": [
+          "**Maintaining range.** A daily input that asks each joint to visit its available range under its own power, which ordinary life and most training do not.",
+          "**Assessment.** The circle is not smooth in the same places for everyone. Hesitation, skipping, pain or loss of control in one arc localises where the work is needed.",
+          "**Preparation.** A sensible way into a session, because it warms the joint without fatiguing anything.",
+          "**Monitoring.** Doing the same circle daily makes change, in either direction, noticeable early."
+        ] },
+        { "k": "h", "id": "how-to-do-them", "t": "Doing them properly" },
+        { "k": "ol", "items": [
+          "One joint at a time, and keep everything else still. Use a wall or a mirror if you cannot tell.",
+          "Go slowly. Thirty seconds for a full circle is reasonable; faster is almost always compensating.",
+          "Generate tension through the whole range, roughly half of your maximum effort, rather than drifting round loosely.",
+          "Stay out of pain. These should be effortful, not provocative.",
+          "Two to three circles per direction, daily. Volume is not the variable here; consistency is."
+        ] },
+        { "k": "h", "id": "frc", "t": "Where this sits in the wider system" },
+        { "k": "p", "t": "Controlled articular rotations come from Functional Range Conditioning, a system built around active range, end-range strength and joint capacity. The other components include progressive and regressive angular isometric loading, which is the end-range strength work described elsewhere in this hub, and loaded stretching protocols." },
+        { "k": "p", "t": "Used sensibly it is a coherent framework for training joints rather than only muscles. Used as marketing it makes larger claims about joint health and longevity than anyone can currently support." },
+        { "k": "uncertain", "t": "Functional Range Conditioning has little direct trial evidence. Its components rest on reasonable principles, including active range mattering more than passive and tissue adapting to load, and the specific protocols have not been tested against alternatives in controlled studies. Claims about preventing arthritis or maintaining joint health over decades are not established. We use it because it is a useful, low-risk structure for joint work, and we say plainly that the proof is principle and practice rather than trials." }
+      ],
+      "related": ["passive-versus-active-range", "end-range-strength", "hypermobility"]
+    },
+    {
+      "slug": "hypermobility",
+      "title": "Hypermobility: more range is not better",
+      "blurb": "Being very flexible is not the same as being mobile, and it is often harder to train, not easier.",
+      "desc": "What hypermobility is, how it differs from trained mobility, why flexible people often have more pain rather than less, and what training should look like.",
+      "stand": "The most flexible people in the room are frequently the ones in the most discomfort, which makes very little sense until you separate range from control.",
+      "key": [
+        "Hypermobility means joints move **beyond the usual range**, often from inherited differences in connective tissue.",
+        "It is common, frequently harmless, and sometimes part of a broader condition that needs proper diagnosis.",
+        "Hypermobile people often have poor control at end range despite having plenty of it, and a worse sense of joint position.",
+        "The training priority is **strength and stability**, not stretching, which is the opposite of what feels natural."
+      ],
+      "blocks": [
+        { "k": "h", "id": "what-it-is", "t": "What hypermobility is" },
+        { "k": "p", "t": "Joints that move further than typical, usually because of inherited differences in collagen and connective tissue. It is often screened with a simple nine-point scale covering elbows, knees, thumbs, little fingers and the trunk. It is common, more so in women and in younger people, and it frequently causes no trouble at all." },
+        { "k": "p", "t": "Where it does cause trouble, the presentation can include joint pain, a history of sprains or dislocations, fatigue, and a sense that joints feel unstable or slip. Some people have a broader hypermobility spectrum disorder or a hereditary connective tissue condition, and those warrant a proper medical diagnosis rather than an assumption." },
+        { "k": "h", "id": "why-pain", "t": "Why more range can mean more pain" },
+        { "k": "p", "t": "Range without control is the recurring theme of this hub, and hypermobility is the extreme case of it. A joint that travels a long way needs a great deal of active control to manage that territory, and the usual pattern is a large passive range with relatively weak end-range strength." },
+        { "k": "p", "t": "Proprioception, the sense of where a joint is in space, also tends to be less accurate in hypermobile people. The combination of a large range, reduced control and a less reliable internal sense of position explains a lot of the symptoms without needing any tissue damage at all." },
+        { "k": "h", "id": "what-training", "t": "What training should look like" },
+        { "k": "p", "t": "Almost the reverse of the instinct. Flexible people enjoy stretching, are good at it, and generally need very little of it." },
+        { "k": "ol", "items": [
+          "**Strength, through range, loaded.** This is the priority and it is not optional.",
+          "**Work within a controlled range** rather than at the far end. Resist the urge to demonstrate the full range.",
+          "**Isometric holds** in mid and end positions, to build control where control is missing.",
+          "**Slow, deliberate tempo,** because speed and momentum are how hypermobile joints get to places they cannot manage.",
+          "**Reduce stretching,** which usually feels good briefly and adds nothing you need.",
+          "**Progress slowly.** Hypermobile people often tolerate less load initially than their flexibility suggests, and get flare-ups from large jumps."
+        ] },
+        { "k": "h", "id": "getting-diagnosed", "t": "When to get it properly diagnosed" },
+        { "k": "p", "t": "If hypermobility comes with recurrent dislocations, significant fatigue, skin that bruises or scars unusually, digestive symptoms, or cardiovascular symptoms, that combination deserves medical assessment rather than a training plan alone. Hereditary connective tissue disorders are managed by a team, and physiotherapy is one part of it rather than the whole." },
+        { "k": "uncertain", "t": "The relationship between hypermobility and pain is not fully explained, and many hypermobile people have no symptoms at all. Classification of hypermobility spectrum disorders has changed in recent years and continues to be refined. Strength-based management is the consensus approach and the trial evidence supporting specific protocols is limited." }
+      ],
+      "related": ["passive-versus-active-range", "end-range-strength", "controlled-articular-rotations"]
+    }
+  ]
+}

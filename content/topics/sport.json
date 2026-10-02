@@ -1,0 +1,200 @@
+{
+  "topic": {
+    "dir": "sport",
+    "name": "Sport & return to play",
+    "short": "Sport & return to play",
+    "desc": "Returning to sport on criteria rather than a calendar: what asymmetric sports actually do, why re-injury clusters in the first month back, growth-related overuse, and rehabilitating in-season.",
+    "stand": "The date on the calendar does not know how your knee is. These five articles cover what has to be true before you go back, what asymmetric sport actually does to a body, and why the first month back is the dangerous one.",
+    "byline": "Rayan Halimeh, Physiotherapist",
+    "lede": "Nearly every return-to-sport argument is really a disagreement about evidence: the athlete has the calendar, the clinician has the tests, and the conversation goes badly when nobody has written down what would count as ready.",
+    "note": "This page explains return-to-sport principles in general terms. It cannot tell you whether you personally are ready, and it does not replace an assessment.",
+    "cta_h": "Not sure whether you are ready to go back?",
+    "cta_p": "An assessment gives you criteria to clear rather than a date to wait for, in Beirut or online."
+  },
+  "articles": [
+    {
+      "slug": "return-criteria-not-calendar",
+      "title": "Return criteria, not a calendar",
+      "blurb": "Six weeks is not a test. What you should have to pass before going back, and who decides.",
+      "desc": "Why time-based return to sport is a poor standard, what criteria-based clearance tests, and how to agree the criteria before you need them.",
+      "stand": "Tissue heals on a timeline. Capacity does not. Confusing the two is how people return on schedule and get hurt in week two.",
+      "key": [
+        "Time tells you when tissue **could** be ready. Testing tells you whether it **is**.",
+        "Useful criteria cover strength, side-to-side symmetry, control under fatigue, sport-specific tasks and confidence.",
+        "A commonly used threshold is within **10 per cent of the other side**, tested when tired rather than fresh.",
+        "Agreeing the criteria at the start of rehabilitation prevents the argument at the end of it."
+      ],
+      "blocks": [
+        { "k": "h", "id": "why-time-fails", "t": "Why the calendar is the wrong instrument" },
+        { "k": "p", "t": "Healing timeframes are real: a muscle strain, a ligament repair and a bone stress injury each have a biological minimum. What they do not have is a maximum, and nothing about reaching week six guarantees that strength, control or confidence came back with it." },
+        { "k": "p", "t": "Two athletes at the same six-week mark can be in entirely different places. One trained everything that did not hurt and arrives with 95 per cent of their strength. The other rested and arrives with 60 per cent. Clearing both because the calendar says so is how the second one gets re-injured." },
+        { "k": "h", "id": "what-to-test", "t": "What a criteria set actually contains" },
+        { "k": "p", "t": "The specifics change with the injury and the sport, but the categories are consistent. A defensible set covers all five." },
+        { "k": "ul", "items": [
+          "**Strength.** Measured, on both sides, in the positions the sport needs. Not estimated by eye.",
+          "**Symmetry.** How the injured side compares with the other, usually expressed as a percentage.",
+          "**Control under fatigue.** Landing, cutting and deceleration tested late in a session, because that is when injuries happen.",
+          "**Sport-specific capacity.** Full training volume completed, at full intensity, without a reaction.",
+          "**Confidence.** A direct question, asked honestly. Athletes who do not trust the limb move differently and get hurt more."
+        ] },
+        { "k": "h", "id": "thresholds", "t": "The numbers people use, and what they are worth" },
+        { "k": "p", "t": "The most widely used benchmark is a limb symmetry index within 10 per cent, meaning the injured side produces at least 90 per cent of the other side. It is a reasonable floor and it has a well-known flaw: the uninjured side also detrains during months of reduced activity, so 90 per cent of a weakened reference is not as reassuring as it sounds." },
+        { "k": "p", "t": "Where a pre-injury measurement exists, it is the better comparison. Where it does not, expected values for the sport and position are the fallback. Either way, test when the athlete is tired, because fresh testing flatters everyone." },
+        { "k": "h", "id": "agree-early", "t": "Write the criteria down at the start" },
+        { "k": "p", "t": "The argument about readiness is almost always a failure of planning rather than a clash of personalities. If the criteria are agreed in week one, week ten is an objective conversation about a checklist. If they are not, it becomes the clinician's caution against the athlete's impatience, and the person with the most at stake usually wins." },
+        { "k": "p", "t": "This is also how a graded return gets built: not cleared or not cleared, but training with restrictions, then full training, then limited competition, then full. Each step has its own entry condition." },
+        { "k": "uncertain", "t": "Criteria-based return is widely recommended and only moderately well evidenced. Passing a test battery reduces re-injury risk in some studies and not in others, and no battery predicts individual outcomes reliably. It is better than a calendar, which is a lower bar than it sounds, and it is not a guarantee." }
+      ],
+      "related": ["training-load-and-reinjury", "in-season-rehab", "asymmetric-sports"]
+    },
+    {
+      "slug": "asymmetric-sports",
+      "title": "Asymmetric sports: tennis, swimming, throwing",
+      "blurb": "One-sided sport builds a one-sided body. What that actually means, and what it does not mean.",
+      "desc": "What repeated one-sided loading does in tennis, swimming, throwing and racket sports, which adaptations are normal, and when asymmetry is worth addressing.",
+      "stand": "A career of serving on one side leaves visible marks. Most of them are adaptations rather than problems, and knowing which is which saves a lot of unnecessary worry.",
+      "key": [
+        "Side-to-side differences in one-sided athletes are **normal adaptations**, not automatically faults.",
+        "The spine and shoulder adapt to repeated rotation; bone, muscle and range all change measurably.",
+        "Asymmetry is worth addressing when it comes with symptoms, lost range you need, or a drop in performance.",
+        "Correcting a useful adaptation can cost performance, so the aim is capacity on both sides rather than symmetry for its own sake."
+      ],
+      "blocks": [
+        { "k": "h", "id": "what-adapts", "t": "What one-sided sport actually changes" },
+        { "k": "p", "t": "The body is specific. Load one side thousands of times and it adapts: muscle grows on the dominant side, bone mineral density in the dominant arm of racket players is measurably higher, and the shoulder's rotation range redistributes, typically gaining external and losing internal rotation in throwing athletes." },
+        { "k": "p", "t": "These are adaptations to demand, not errors. A tennis player whose dominant shoulder is different from the other one is a tennis player. The question is never whether asymmetry exists; it is whether this particular asymmetry is costing something." },
+        { "k": "h", "id": "spine", "t": "Rotation and the spine" },
+        { "k": "p", "t": "Asymmetric sports are often blamed for spinal curves, and the relationship is less direct than the blame suggests. Certain sports do show a higher prevalence of scoliosis in their athletes, and that association does not establish cause; sports also select for particular body types, and the loading, growth and selection effects are difficult to separate." },
+        { "k": "p", "t": "What matters clinically is more practical: a spine that rotates repeatedly under load needs the capacity to control that rotation, and it needs enough exposure to the other direction that it retains the option. That is a training argument, not a reason to give up a sport." },
+        { "k": "h", "id": "when-it-matters", "t": "When an asymmetry is worth doing something about" },
+        { "k": "p", "t": "Three signals move an asymmetry from interesting to relevant." },
+        { "k": "ol", "items": [
+          "**Symptoms.** Pain, impingement or a loss of tolerance on the loaded side.",
+          "**Lost range you need.** A throwing shoulder that cannot reach the positions the throw requires is a performance and injury problem at once.",
+          "**Performance decline.** Power or control falling away on either side, including the non-dominant one, which is often simply undertrained."
+        ] },
+        { "k": "p", "t": "Absent all three, a measured difference between sides is usually best left alone and monitored." },
+        { "k": "h", "id": "what-to-do", "t": "What we actually do about it" },
+        { "k": "p", "t": "The aim is not a symmetrical athlete. It is an athlete with enough capacity on the non-dominant side to share the work, and enough control of rotation to do the sport repeatedly without accumulating a problem." },
+        { "k": "ul", "items": [
+          "Train the non-dominant side deliberately, because the sport will not do it for you.",
+          "Build strength in the ranges the sport uses, especially at end range where control is usually weakest.",
+          "Keep the opposite rotation available with loaded, controlled work rather than passive stretching alone.",
+          "Manage the dose. Serving volume and throwing counts matter more than any corrective exercise."
+        ] },
+        { "k": "uncertain", "t": "Whether correcting asymmetry prevents injury in one-sided athletes is not established. There is reasonable evidence for the adaptations themselves and much weaker evidence that normalising them reduces risk. Throwing volume limits in youth baseball are among the few load guidelines with genuine support behind them, and they are about dose rather than symmetry." }
+      ],
+      "related": ["youth-athletes-and-growth", "return-criteria-not-calendar", "training-load-and-reinjury"]
+    },
+    {
+      "slug": "training-load-and-reinjury",
+      "title": "Why most re-injuries happen in the first month back",
+      "blurb": "The riskiest period is not the injury. It is the four weeks after you are told you are fine.",
+      "desc": "Why re-injury rates cluster early after return to sport, what changes in that window, and how to structure the first month back.",
+      "stand": "Clearance feels like a finish line. Statistically it is the start of the most dangerous month of the whole process.",
+      "key": [
+        "Re-injury risk is **highest in the first weeks** after return, then falls.",
+        "Three things change at once: load jumps, supervision stops, and nobody is tracking symptoms any more.",
+        "Rehabilitation usually ends at the level of ordinary training, while sport demands considerably more than that.",
+        "A graded first month, with volume limits and a continued strength programme, is the practical answer."
+      ],
+      "blocks": [
+        { "k": "h", "id": "the-pattern", "t": "The pattern" },
+        { "k": "p", "t": "Across sports and injuries, a disproportionate share of re-injuries occur early after return, and the rate declines with time back in full training. The tissue did not become more fragile at clearance. The circumstances changed." },
+        { "k": "h", "id": "what-changes", "t": "What changes at clearance" },
+        { "k": "ul", "items": [
+          "**Load jumps.** Controlled rehabilitation sessions are replaced by full training, which is more variable, faster, and far less predictable.",
+          "**Supervision ends.** The weekly check that caught a reaction early stops happening.",
+          "**The strength work gets dropped.** It was rehabilitation, and rehabilitation is over, so it quietly disappears from the week.",
+          "**Chaos returns.** Opponents, fatigue, weather and competitive intent reintroduce exactly the conditions rehabilitation could not simulate."
+        ] },
+        { "k": "h", "id": "the-gap", "t": "The gap between rehabilitation and sport" },
+        { "k": "p", "t": "Most programmes finish when the athlete can train normally. Sport is not normal training: a match involves accelerations, decelerations and changes of direction at intensities no rehabilitation session reproduces, repeated while tired and while thinking about something else entirely." },
+        { "k": "p", "t": "Closing that gap is the last third of rehabilitation, and it is the part most often skipped. It means reactive work, unplanned movement, contact where the sport has contact, and deliberate exposure to fatigue before the limb has to perform." },
+        { "k": "h", "id": "first-month", "t": "How to structure the first month" },
+        { "k": "ol", "items": [
+          "Cap minutes or volume for the first two to three weeks, and decide the cap in advance rather than in the moment.",
+          "Keep the strength programme running at two sessions a week. This is the single most commonly dropped and most protective element.",
+          "Track symptoms daily for the first month, on a simple scale. A rising trend is actionable; a single sore day is not.",
+          "Build in one genuinely easy week in the first month, which is counterintuitive and well worth it.",
+          "Agree in advance what would trigger a step back, so that decision is not made by a disappointed athlete on a Saturday."
+        ] },
+        { "k": "uncertain", "t": "The size of the early risk and its causes are not fully resolved, and studies differ by injury and sport. Load-monitoring methods including acute-to-chronic workload ratios have been widely adopted on thinner evidence than their popularity suggests. The direction of the advice is well supported; the precise numbers are not." }
+      ],
+      "related": ["return-criteria-not-calendar", "in-season-rehab", "youth-athletes-and-growth"]
+    },
+    {
+      "slug": "youth-athletes-and-growth",
+      "title": "Young athletes, growth spurts and overuse",
+      "blurb": "Growing athletes are not small adults. What changes during a growth spurt, and what to do about it.",
+      "desc": "Why injury risk rises during adolescent growth, how growth-plate and apophyseal injuries differ from adult ones, and how to manage load through a spurt.",
+      "stand": "A fourteen-year-old who grew nine centimetres this year is, for training purposes, a different athlete from the one you were coaching in January.",
+      "key": [
+        "Rapid growth temporarily changes coordination, strength relative to limb length, and tissue tolerance.",
+        "Growing athletes get **growth-plate and apophyseal** injuries that adults do not, which behave differently and need respecting.",
+        "Early specialisation and year-round single-sport play are associated with higher overuse injury rates.",
+        "The protective factors are mundane: varied sport, limited volume, real off-seasons and enough sleep."
+      ],
+      "blocks": [
+        { "k": "h", "id": "what-changes", "t": "What a growth spurt changes" },
+        { "k": "p", "t": "Bones lengthen before muscles and tendons catch up, which transiently reduces flexibility and changes the leverage the athlete has been using for years. Coordination that was automatic becomes approximate. Strength relative to the new limb length falls even though absolute strength is rising." },
+        { "k": "p", "t": "None of this is pathological, and all of it matters for load. The same training week that was appropriate six months ago may now be too much, delivered through a body that controls itself slightly less well than it did." },
+        { "k": "h", "id": "different-injuries", "t": "Injuries adults do not get" },
+        { "k": "p", "t": "The growing skeleton has weak points adults do not have. Growth plates and apophyses, the attachment sites where tendons pull on growing bone, are more vulnerable than the tendon itself." },
+        { "k": "ul", "items": [
+          "Knee pain at the lower kneecap attachment and heel pain at the back of the heel are common and are bone-attachment problems, not tendon ones.",
+          "Persistent, localised bone pain in a young athlete deserves assessment rather than a stretching programme.",
+          "A young athlete with pain in a joint after a specific incident needs imaging considered, because growth-plate injuries can look unremarkable clinically."
+        ] },
+        { "k": "p", "t": "These conditions are usually self-limiting and manageable with load adjustment, and they are not improved by being trained through blindly." },
+        { "k": "h", "id": "specialisation", "t": "Specialisation and volume" },
+        { "k": "p", "t": "The pattern associated with overuse injury in young athletes is a recognisable one: a single sport, year-round, often with more hours per week than the athlete's age in years, frequently across a club team and a school team at the same time, with no genuine off-season." },
+        { "k": "p", "t": "Playing several sports, and taking real breaks, is associated with lower overuse injury rates and no apparent cost to long-term development. This is one of the few places in sports medicine where the cautious advice and the performance advice point the same way." },
+        { "k": "h", "id": "practical", "t": "What to actually do" },
+        { "k": "ol", "items": [
+          "Track height every few months. A spurt is a reason to review the training week, not to stop training.",
+          "Keep total organised sport within sensible weekly limits, counting every team the athlete plays for.",
+          "Build in at least one day a week off and extended breaks across the year.",
+          "Add strength training; properly supervised resistance training is safe for adolescents and is protective.",
+          "Take persistent localised pain seriously and early, especially around joints and bony attachments."
+        ] },
+        { "k": "uncertain", "t": "The association between early specialisation and injury is reasonably consistent and largely observational, so causation is not settled and the families who specialise differ in other ways too. Specific weekly hour limits are pragmatic consensus figures rather than established thresholds." }
+      ],
+      "related": ["asymmetric-sports", "training-load-and-reinjury", "return-criteria-not-calendar"]
+    },
+    {
+      "slug": "in-season-rehab",
+      "title": "Rehabilitating in-season without losing the season",
+      "blurb": "Competing and rehabilitating at once is a dose problem with a deadline. It is usually solvable.",
+      "desc": "How to manage a rehabilitation programme during a competitive season: what to prioritise, what to cut, and how to decide week by week.",
+      "stand": "In-season rehabilitation is not a compromised version of real rehabilitation. It is a different problem, with a fixed calendar and non-negotiable commitments.",
+      "key": [
+        "The constraint is total weekly load, so something has to come out before rehabilitation goes in.",
+        "Cut training volume before cutting competition, and cut the least sport-specific work first.",
+        "Two short strength sessions a week maintain most of what you have; maintenance is a legitimate goal in-season.",
+        "Decide the week on how the athlete responded to the last one, not on the plan written in August."
+      ],
+      "blocks": [
+        { "k": "h", "id": "the-real-constraint", "t": "The constraint is the week, not the willingness" },
+        { "k": "p", "t": "An athlete mid-season already has a full load: training sessions, matches, travel, school or work. Adding rehabilitation to a full week does not produce rehabilitation; it produces a larger total load applied to an already compromised tissue, which is the mechanism behind most in-season flare-ups." },
+        { "k": "p", "t": "So the first conversation is subtraction. What comes out of this week to make room? If the answer is nothing, the plan will fail, and it is better to know that in week one." },
+        { "k": "h", "id": "what-to-cut", "t": "What to cut, in order" },
+        { "k": "ol", "items": [
+          "General conditioning that the sport already provides.",
+          "Secondary training: a second sport, extra skills sessions, additional gym work unrelated to the problem.",
+          "Training volume within sessions, by reducing repetitions of the provocative task rather than removing the session.",
+          "Minutes played, which is the decision most athletes resist and most often the one that works.",
+          "Competition itself, last, and only when the alternative is losing considerably more of the season."
+        ] },
+        { "k": "h", "id": "maintenance", "t": "Maintenance is a real goal" },
+        { "k": "p", "t": "You rarely build maximum strength in-season, and you do not need to. Two brief, hard, low-volume sessions a week preserve most of the strength and tendon tolerance an athlete already has, at a fatigue cost small enough to survive a competitive week." },
+        { "k": "p", "t": "Keep them heavy and short rather than light and long. High-volume light work costs more fatigue for less adaptation, which is exactly the wrong trade in-season." },
+        { "k": "h", "id": "week-by-week", "t": "Deciding week by week" },
+        { "k": "p", "t": "In-season plans are reviewed constantly because the inputs change constantly. A simple daily symptom score and a note of what was done is enough to make the Monday decision defensible: symptoms trending down means progress, flat means hold, rising means subtract something now rather than after the next match." },
+        { "k": "p", "t": "The honest framing for the athlete is that the season is being managed rather than rescued, and that the full rebuild happens in the off-season. Most athletes accept that readily when it is said out loud at the start." },
+        { "k": "uncertain", "t": "In-season rehabilitation is under-researched compared with post-injury protocols, and most of what is practised comes from applied sports-medicine experience rather than trials. How much can be maintained on a minimal dose, and for how long, varies considerably between individuals." }
+      ],
+      "related": ["training-load-and-reinjury", "return-criteria-not-calendar", "youth-athletes-and-growth"]
+    }
+  ]
+}

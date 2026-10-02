@@ -1,0 +1,164 @@
+{
+  "topic": {
+    "dir": "posture",
+    "name": "Posture",
+    "short": "Posture",
+    "desc": "What posture does and does not explain: the evidence on posture and pain, why schoolbags and screens carry more blame than they deserve, desk work, and what posture training can genuinely change.",
+    "stand": "Posture is the most confidently discussed and least well evidenced topic in musculoskeletal health. These four articles separate what the research supports from what has simply been repeated for decades.",
+    "byline": "Rayan Halimeh, Physiotherapist",
+    "lede": "Posture advice is unusual in how certain it sounds and how little supports it. The honest position is narrower than either side of the argument claims: posture matters less than people are told, and it is not nothing.",
+    "note": "This page discusses posture in general terms. It is not an assessment of your posture, and it cannot tell you what is causing your symptoms.",
+    "cta_h": "Worried it is your posture?",
+    "cta_p": "An assessment looks at what you actually do, how much you tolerate, and what is driving the symptoms. Beirut or online."
+  },
+  "articles": [
+    {
+      "slug": "does-posture-cause-pain",
+      "title": "Does posture cause pain?",
+      "blurb": "The short answer is: far less than you have been told, and not never. Here is what the research shows.",
+      "desc": "What studies actually show about the relationship between posture and musculoskeletal pain, why the correlation is weak, and what a better explanation looks like.",
+      "stand": "If bad posture reliably caused pain, we would be able to pick out the people in pain from a photograph. Repeatedly, researchers have tried, and they cannot.",
+      "key": [
+        "Measured posture correlates **weakly** with pain. Many people with unusual posture are pain-free and many with textbook posture are not.",
+        "No posture has been shown to be the correct one, and no single position is safe indefinitely.",
+        "What you do with a position over time, meaning duration, load and variety, matters more than the position itself.",
+        "Posture can still be relevant to an individual: if a specific position reliably reproduces your symptoms, that is useful information."
+      ],
+      "blocks": [
+        { "k": "h", "id": "what-studies-show", "t": "What the studies actually found" },
+        { "k": "p", "t": "The idea that postural deviation causes pain has been tested extensively, in neck pain, low back pain and shoulder pain, and the associations found are consistently weak and inconsistent between studies. Measurements such as forward head position, lumbar curvature and sitting posture do not separate people with pain from people without it reliably enough to be useful." },
+        { "k": "p", "t": "This is not a fringe position; it is the mainstream reading of the evidence in musculoskeletal research. It sits awkwardly alongside how confidently posture is discussed in clinics, workplaces and social media." },
+        { "k": "h", "id": "no-correct-posture", "t": "There is no single correct posture" },
+        { "k": "p", "t": "Spines vary. The amount of curvature considered normal spans a wide range, and the people at either end of it are not in more pain than those in the middle. Attempts to define an ideal alignment have produced standards that most healthy, comfortable people fail." },
+        { "k": "p", "t": "The more defensible version of the advice is about variation rather than position: no posture is harmful briefly, and any posture becomes uncomfortable if held long enough. The problem is usually duration, not geometry." },
+        { "k": "h", "id": "why-it-persists", "t": "Why the belief is so durable" },
+        { "k": "ul", "items": [
+          "It is visible. Posture can be seen and photographed, which makes it feel like an explanation in a way that load history does not.",
+          "It offers a fix. Sit up straight is actionable, and uncertainty is not.",
+          "Correcting posture often does reduce symptoms in the short term, usually because it changes position after a long period in one position, which would have helped regardless.",
+          "It has been taught for a century, which is its own form of evidence in people's minds."
+        ] },
+        { "k": "h", "id": "when-it-matters", "t": "When posture genuinely is relevant" },
+        { "k": "p", "t": "Dismissing posture entirely overcorrects. It is worth attention in several specific situations." },
+        { "k": "ol", "items": [
+          "A position reliably reproduces your symptoms, and changing it reliably eases them. That is a usable finding for your case, whatever the population data says.",
+          "A sustained position is part of a load problem: eight hours in one arrangement is a dose, and doses can be reduced.",
+          "A structural condition is present. Scoliosis and significant kyphosis are not posture habits and are assessed differently.",
+          "Posture is being used as a performance variable, in lifting or sport, where position changes the loads on tissue substantially."
+        ] },
+        { "k": "p", "t": "What we avoid is the leap from your posture is unusual to your posture is why you hurt, because that leap is where unnecessary worry and years of pointless correction come from." },
+        { "k": "uncertain", "t": "The weak association between static posture and pain is well established; the right amount of attention to give posture clinically is not. Reasonable clinicians differ, particularly for neck pain and for occupations with sustained fixed positions. What is clear is that the strength of the usual public advice is not supported by the data behind it." }
+      ],
+      "related": ["schoolbags-and-blame", "sitting-and-desk-work", "posture-you-can-change"]
+    },
+    {
+      "slug": "schoolbags-and-blame",
+      "title": "Schoolbags, screens and the blame they carry",
+      "blurb": "The most common thing parents are told about their child's spine, and the least supported.",
+      "desc": "Whether heavy schoolbags and screen time cause scoliosis or back pain in children, what the research shows, and the cost of blaming families.",
+      "stand": "Almost every parent who walks into the clinic with a newly diagnosed curve has already been told it was the bag. It was not the bag.",
+      "key": [
+        "Carrying a schoolbag does **not** cause scoliosis. Adolescent idiopathic scoliosis has a genetic and developmental basis.",
+        "Heavy bags can cause short-term discomfort, which is a different claim from causing a structural condition.",
+        "Screen use is associated with neck discomfort in some studies, weakly, and no evidence shows it causes structural change.",
+        "Blaming a family changes nothing clinically and adds guilt to a diagnosis that is already frightening."
+      ],
+      "blocks": [
+        { "k": "h", "id": "the-claim", "t": "Where the claim comes from" },
+        { "k": "p", "t": "It is intuitive. A heavy bag on one shoulder, a child who stands crookedly, and a curve discovered at thirteen form an obvious-looking story. The story requires only that one thing preceded another, which is how most incorrect causal beliefs are built." },
+        { "k": "h", "id": "scoliosis", "t": "Bags do not cause scoliosis" },
+        { "k": "p", "t": "Adolescent idiopathic scoliosis is a three-dimensional structural condition with a substantial genetic component and a strong relationship to growth. It involves rotation of the vertebrae, which no amount of asymmetric carrying produces. It typically appears during the growth spurt, which is when it would appear regardless of what a child carries." },
+        { "k": "p", "t": "Studies examining schoolbag weight and spinal curvature have not found that bags cause scoliosis. What they do find is that heavy bags can produce temporary discomfort and postural adjustment while being carried, which resolves when the bag comes off." },
+        { "k": "p", "t": "If a curve has been found, the useful questions are about growth remaining, curve magnitude and progression risk. The bag is not one of them." },
+        { "k": "h", "id": "screens", "t": "Screens and neck pain" },
+        { "k": "p", "t": "Prolonged screen use is associated with reported neck and shoulder discomfort in adolescents in a number of studies, and the associations are modest and complicated by sleep, activity levels and mood, all of which travel with screen time." },
+        { "k": "p", "t": "The popular idea of a permanently deformed neck caused by phone use is not supported. Necks tolerate flexion; they tolerate sustained anything less well. The relevant variable is how long, not whether." },
+        { "k": "h", "id": "what-to-do", "t": "What is actually worth doing" },
+        { "k": "p", "t": "Sensible without being guilt-laden:" },
+        { "k": "ul", "items": [
+          "Use both straps and keep the bag reasonably light, because comfort is worth having even if nothing structural is at stake.",
+          "Break up long stretches in any single position, with movement rather than correction.",
+          "Keep children physically active, which has far better evidence behind it than any postural intervention.",
+          "If a curve is suspected, get it assessed properly rather than managed through bag rules."
+        ] },
+        { "k": "h", "id": "the-cost", "t": "Why the blame itself matters" },
+        { "k": "p", "t": "Parents arrive believing they caused their child's condition by letting them carry a bag or sit badly. That belief is both wrong and costly: it adds guilt to a diagnosis, it directs effort towards irrelevant changes, and it can delay the assessment that would actually help. Correcting it is part of the clinical work, not a side conversation." },
+        { "k": "uncertain", "t": "Schoolbag load does have some measurable short-term effects on gait and trunk position, and whether very heavy loads over years contribute to back pain in adolescents is not fully resolved. What is clear is that bags do not cause scoliosis, and that the confidence of the usual advice far exceeds the evidence for it." }
+      ],
+      "related": ["does-posture-cause-pain", "sitting-and-desk-work", "posture-you-can-change"]
+    },
+    {
+      "slug": "sitting-and-desk-work",
+      "title": "Sitting, desk work and the best posture myth",
+      "blurb": "The best sitting position is the next one. What that means practically for an eight-hour day.",
+      "desc": "Whether sitting is bad for your back, what ergonomic advice is worth, and how to structure a desk day around movement rather than position.",
+      "stand": "Sitting has been called the new smoking, which is both inaccurate and unhelpful. The problem with a desk day is not the chair; it is that nothing changes for eight hours.",
+      "key": [
+        "Sitting itself is **not** established as a cause of back pain. Prolonged static positions of any kind are the more consistent problem.",
+        "No single sitting posture has been shown to be protective, and expensive chairs do not resolve symptoms on their own.",
+        "Changing position frequently has better support than getting the position right.",
+        "Overall physical activity across the week matters more for back pain than desk setup does."
+      ],
+      "blocks": [
+        { "k": "h", "id": "is-sitting-bad", "t": "Is sitting actually bad for your back?" },
+        { "k": "p", "t": "Reviews looking for an association between occupational sitting and low back pain have not found a convincing one. People with desk jobs do report back pain, and so do people with physically demanding jobs, and so do people who do neither." },
+        { "k": "p", "t": "What does show up repeatedly is duration. Discomfort rises with time in one position, and it falls when the position changes, regardless of which position it was. That is a different problem from sitting, and it has a different solution." },
+        { "k": "h", "id": "ergonomics", "t": "What ergonomics is worth" },
+        { "k": "p", "t": "Ergonomic adjustment can make a workstation more comfortable, which is a reasonable goal in itself. What the evidence does not support is the idea that a correct setup prevents or cures back and neck pain; workplace ergonomic interventions on their own have produced modest and inconsistent results." },
+        { "k": "p", "t": "The practical implication: a chair and a monitor height that let you work comfortably are worth having, and they are not a treatment. If symptoms are persistent, the setup is rarely the whole story." },
+        { "k": "h", "id": "what-helps", "t": "What actually helps a desk day" },
+        { "k": "ol", "items": [
+          "Change position every 30 to 60 minutes. Standing, walking, leaning, a different chair; the variety is the active ingredient.",
+          "Take short movement breaks rather than long infrequent ones. Two minutes of walking several times a day beats one longer break.",
+          "Use a sit-stand desk as a way to add variety, not as a replacement posture. Standing all day produces its own complaints.",
+          "Keep the week physically active outside work hours, which is the intervention with the strongest evidence behind it.",
+          "Build strength. Tolerance for sustained positions is a capacity question as much as a positioning one."
+        ] },
+        { "k": "h", "id": "slouching", "t": "On slouching" },
+        { "k": "p", "t": "Slouching is not dangerous. Spines flex comfortably and are built to. Studies comparing upright and slouched sitting have not shown the upright group to be protected from pain, and intensive postural correction programmes have not outperformed general activity advice." },
+        { "k": "p", "t": "Where slouching becomes relevant is when it is the only position used for hours, or when it reliably reproduces a specific person's symptoms. Then it is worth addressing, as a dose problem rather than a moral one." },
+        { "k": "uncertain", "t": "How much sitting matters for back pain specifically remains debated, and the evidence is mostly observational and confounded by overall activity levels. Prolonged sitting does have well-supported effects on general health that are separate from back pain, and those are a good enough reason to move regularly on their own." }
+      ],
+      "related": ["does-posture-cause-pain", "posture-you-can-change", "schoolbags-and-blame"]
+    },
+    {
+      "slug": "posture-you-can-change",
+      "title": "What posture training can actually change",
+      "blurb": "Not the shape of your skeleton. Often the strength, the range and the comfort, which is usually what you wanted.",
+      "desc": "What posture-focused training can and cannot change: the difference between structural and habitual posture, what improves with strength and range work, and realistic expectations.",
+      "stand": "The useful question is not whether posture can be fixed. It is which part of what you are looking at is structure, which part is habit, and which part is capacity.",
+      "key": [
+        "Structural posture, set by bone shape and vertebral rotation, is **not** changed by exercise.",
+        "Habitual posture, which is the position you default to, does change, and it changes with capacity more than with reminders.",
+        "What reliably improves is strength, endurance in sustained positions, available range and comfort.",
+        "Expect a different experience of the same body rather than a different silhouette."
+      ],
+      "blocks": [
+        { "k": "h", "id": "three-things", "t": "Three different things get called posture" },
+        { "k": "p", "t": "Separating them resolves most of the confusion in this topic." },
+        { "k": "ul", "items": [
+          "**Structure.** Bone shape, vertebral rotation, a structural curve, longstanding changes in older spines. Not modifiable by exercise.",
+          "**Habit.** The position you adopt without thinking about it, at a desk, standing, carrying. Modifiable.",
+          "**Capacity.** How long you can hold a position before it becomes uncomfortable. Highly modifiable, and usually the thing people actually want changed."
+          ] },
+        { "k": "p", "t": "A person who says they want better posture almost always means they want to stop feeling sore at 4 pm, and that is a capacity target rather than an alignment one." },
+        { "k": "h", "id": "what-does-not-change", "t": "What does not change" },
+        { "k": "p", "t": "Exercise does not straighten a structural scoliotic curve, and no amount of strengthening alters the shape of a vertebra. Scoliosis-specific exercise has a different and more defensible aim: influencing progression during growth, improving control and posture within the available range, and managing symptoms. That is worth doing, and it is not the same claim as correction." },
+        { "k": "p", "t": "Similarly, a longstanding thoracic kyphosis in an older adult will not return to a twenty-year-old's silhouette. Strength, balance and function all improve; the outline largely does not." },
+        { "k": "h", "id": "what-does-change", "t": "What does change, reliably" },
+        { "k": "ol", "items": [
+          "**Strength through range,** particularly in the positions you spend time in, which raises the time before discomfort appears.",
+          "**Endurance of the trunk and shoulder girdle,** which is usually what fails during a long day.",
+          "**Available range,** when limited range was genuinely the constraint rather than an assumed one.",
+          "**Awareness,** meaning the ability to find and hold a different position when the current one has become uncomfortable.",
+          "**Confidence,** which sounds soft and changes behaviour more than any of the above."
+          ] },
+        { "k": "h", "id": "expectations", "t": "Setting the expectation honestly" },
+        { "k": "p", "t": "Programmes sold on photographs set up a disappointment that is entirely avoidable. A before-and-after image can be produced in an afternoon by standing differently, and it tells you nothing about structure or symptoms." },
+        { "k": "p", "t": "A better target: in eight to twelve weeks of consistent work, most people can expect more tolerance for sustained positions, more strength in the ranges they use, and less discomfort. That is a real outcome. It is simply not a photographic one." },
+        { "k": "uncertain", "t": "How much postural habit can be changed durably, and whether changing it affects symptoms independently of the strength gained alongside it, is not well established. Most trials of postural exercise improve symptoms modestly and do not isolate whether posture or general strengthening did the work." }
+      ],
+      "related": ["does-posture-cause-pain", "sitting-and-desk-work", "schoolbags-and-blame"]
+    }
+  ]
+}

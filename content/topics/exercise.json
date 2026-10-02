@@ -1,0 +1,208 @@
+{
+  "topic": {
+    "dir": "exercise",
+    "name": "Exercise & loading",
+    "short": "Exercise & loading",
+    "desc": "How load actually works: what a training dose is, how it is progressed without flare-ups, when stopping is the wrong advice, and how to tell soreness from injury.",
+    "stand": "Most people are not training too hard. They are training the same amount, in the same way, for months, and calling the result a plateau. These five articles cover what load is, how it is moved, and what to do when something hurts.",
+    "byline": "Rayan Halimeh, Physiotherapist",
+    "lede": "Tissue responds to the demand placed on it. That is the whole mechanism behind rehabilitation and behind training, and it is the reason rest alone so rarely fixes anything that has lasted months.",
+    "note": "This page explains loading in general terms. It cannot tell you how much your own body currently tolerates, and it does not replace an assessment.",
+    "cta_h": "Want to know what your own body currently tolerates?",
+    "cta_p": "A 60-minute assessment gives you a starting load and a way to progress it, in Beirut or online."
+  },
+  "articles": [
+    {
+      "slug": "what-load-actually-means",
+      "title": "What load actually means",
+      "blurb": "Load is a dose, not a number on a bar. Four dials move it, and only one of them is weight.",
+      "desc": "Load is the total demand placed on tissue: intensity, volume, frequency and recovery together. What each dial does, and why changing only weight stalls progress.",
+      "stand": "Ask most people what their training load is and they will tell you what they lift. That answers roughly a quarter of the question.",
+      "key": [
+        "Load is a **dose**: how hard, how much, how often, and how much recovery sits in between.",
+        "Tissue adapts to load that is slightly more than it is used to, then stops adapting when the demand stops changing.",
+        "Too little load is a problem in rehabilitation far more often than too much.",
+        "The same absolute weight is a heavy day for one person and a warm-up for another, so load is always relative to current capacity."
+      ],
+      "blocks": [
+        { "k": "h", "id": "a-dose", "t": "Load is a dose, not a weight" },
+        { "k": "p", "t": "In the clinic, load means the total mechanical demand placed on a tissue over time. A 40 kg squat done twice is a small load. The same 40 kg squat done for ten sets, four days a week, with no easy weeks, is a large one. The weight did not change. The dose did." },
+        { "k": "p", "t": "This matters because almost every loading problem we see is a dose problem rather than an exercise-selection problem. The squat was not the issue; forty-eight hard sets in a week after six months off was." },
+        { "k": "h", "id": "four-dials", "t": "The four dials" },
+        { "k": "p", "t": "Any loading decision moves one of four things. Keeping them separate in your head is the single most useful habit you can build." },
+        { "k": "ul", "items": [
+          "**Intensity.** How hard each repetition is, relative to what you could do at most. Usually expressed as a percentage of a maximum, or as how many repetitions you had left in reserve.",
+          "**Volume.** How much total work: sets multiplied by repetitions, or minutes, or distance.",
+          "**Frequency.** How often the tissue is loaded in a week.",
+          "**Recovery.** What sits between sessions. Sleep, food, stress and the other training you are doing all live here."
+        ] },
+        { "k": "p", "t": "Progress comes from moving one dial at a time and leaving the rest alone long enough to see what happened. Move three at once and you learn nothing about which one mattered." },
+        { "k": "h", "id": "capacity", "t": "Load only means something relative to capacity" },
+        { "k": "p", "t": "Capacity is how much a tissue can currently handle before it complains. It is specific: your calf can have a high capacity for walking and a low one for hopping. It also changes, in both directions, within weeks." },
+        { "k": "p", "t": "This is why a number on a programme sheet is close to meaningless on its own. Two people doing the same 3 sets of 10 are having completely different experiences if one of them is at 60 per cent of capacity and the other is at 98. The job of an assessment is to find out roughly where you are on that scale, so the number can be chosen rather than guessed." },
+        { "k": "h", "id": "too-little", "t": "Underloading is the more common mistake" },
+        { "k": "p", "t": "The warning most people have heard is about doing too much. In rehabilitation the opposite is more common. Pain appears, activity drops, capacity falls, and the lower capacity makes the same ordinary tasks feel provocative. Rest resolves the flare-up and leaves the cause untouched." },
+        { "k": "p", "t": "A tendon that hurts under load generally needs load, applied carefully and progressed slowly, rather than removed. Which load, and how slowly, is the part that needs judgement." },
+        { "k": "h", "id": "what-to-do", "t": "What to do with this" },
+        { "k": "ol", "items": [
+          "Write down what you are actually doing, in sets and repetitions, for two weeks. Most people are surprised, in one direction or the other.",
+          "Change one dial. Give it two to three weeks.",
+          "Judge it on how the tissue responds over days, not on how the session felt.",
+          "If something hurts, reduce the dose rather than stopping; stopping usually costs more than it saves."
+        ] },
+        { "k": "uncertain", "t": "There is no agreed formula that converts a person's history into a safe starting load. Acute-to-chronic workload ratios were popular for predicting injury and have not held up well under scrutiny; they are a way of thinking rather than a calculator. Starting loads in practice are an informed estimate, checked against how you respond over the first fortnight and adjusted." }
+      ],
+      "related": ["progressive-overload-without-flare-ups", "sore-or-injured", "deloads-and-recovery"]
+    },
+    {
+      "slug": "progressive-overload-without-flare-ups",
+      "title": "Progressive overload without flare-ups",
+      "blurb": "The principle is simple and the application is where it goes wrong. How to add load and keep it.",
+      "desc": "Progressive overload means asking slightly more of tissue over time. How to progress load in practice, how fast is too fast, and what to do when a progression does not hold.",
+      "stand": "Everyone knows you have to add load to get stronger. Far fewer people know what to do in the week after the load is added and it did not go well.",
+      "key": [
+        "Add roughly **one variable at a time**, in small increments, and hold it long enough to see the response.",
+        "A session that felt fine means less than three days without a flare-up afterwards.",
+        "Progression is not linear. Planned easy weeks are part of going up, not a break from it.",
+        "If a progression fails twice in a row, the problem is usually the step size, not your commitment."
+      ],
+      "blocks": [
+        { "k": "h", "id": "the-principle", "t": "The principle, stated plainly" },
+        { "k": "p", "t": "Tissue adapts to demands slightly beyond what it is used to. Apply the same demand indefinitely and adaptation stops. Apply a far larger one and the tissue is overwhelmed before it can respond. Progressive overload is the narrow band in between, and the whole skill is finding it for the person in front of you." },
+        { "k": "h", "id": "small-steps", "t": "Smaller steps than feel satisfying" },
+        { "k": "p", "t": "The most common error is step size. Adding 20 per cent to a lift because it felt easy skips the stage where the tissue was supposed to adapt. Adding 5 per cent feels pointlessly cautious in week one and gets you considerably further by week twelve." },
+        { "k": "p", "t": "A workable default for most people rehabilitating something: increase one variable by around 5 to 10 per cent per week, and only after a clean week at the current level." },
+        { "k": "h", "id": "order", "t": "The order matters" },
+        { "k": "p", "t": "When several things could go up, there is a sensible sequence. Earn the repetitions before the weight, and the weight before the speed." },
+        { "k": "ol", "items": [
+          "**Range and control.** Can you do the movement well, through the range you intend to load?",
+          "**Volume.** More sets or repetitions at the same weight.",
+          "**Intensity.** More weight, or a harder variation, with volume pulled back slightly.",
+          "**Speed and impact.** Fast, reactive and plyometric work last, because it loads tissue many times the body weight in a fraction of a second."
+        ] },
+        { "k": "h", "id": "reading-response", "t": "Reading the response" },
+        { "k": "p", "t": "The useful signal is not how the session felt. It is what the tissue did for the next two to three days. A practical rule we use with most people: symptoms that rise during a session but settle within 24 hours, and are no worse than before the following week, are acceptable. Symptoms that are still raised at 48 to 72 hours mean the dose was too big." },
+        { "k": "p", "t": "Some soreness is expected when load changes, particularly in the first fortnight. Pain that is sharp, that arrives earlier in the session each time, or that starts affecting sleep is a different signal and worth getting looked at." },
+        { "k": "h", "id": "when-it-fails", "t": "When a progression does not hold" },
+        { "k": "p", "t": "Go back to the last level you tolerated, stay there for a week or two longer than feels necessary, then take half the step you took last time. If that fails too, the limiting factor is probably not the load: sleep, stress, a second sport, or an irritable structure that needs a different entry point." },
+        { "k": "p", "t": "Failing a progression twice is information, not a verdict. It usually means the plan needs a smaller step or a different exercise, and it almost never means the tissue cannot be loaded at all." },
+        { "k": "uncertain", "t": "The 24-hour and 72-hour rules above are clinical conventions that work well in practice; they are not derived from strong trial evidence and they are not equally valid for every structure. Nerve-related and persistent pain in particular can behave differently, and more load is not automatically the answer there." }
+      ],
+      "related": ["what-load-actually-means", "sore-or-injured", "deloads-and-recovery"]
+    },
+    {
+      "slug": "stop-training-advice",
+      "title": "When “stop training” is the wrong advice",
+      "blurb": "Rest is a tool with a short half-life. Why de-training usually costs more than the flare-up it prevents.",
+      "desc": "Why complete rest is rarely the right prescription for a persistent musculoskeletal problem, what it costs, and what to modify instead of stopping.",
+      "stand": "Stopping is the easiest advice to give and the hardest to undo. It is sometimes right, and it is given far more often than it is right.",
+      "key": [
+        "Complete rest reduces symptoms and reduces capacity at the same time, so the problem is often waiting when you return.",
+        "Strength and tendon tolerance start measurably declining within **one to two weeks** of unloading.",
+        "Most problems need the load **modified**, not removed: lighter, slower, shorter range, fewer sets.",
+        "Genuine reasons to stop exist, including fractures, acute significant injury and specific medical restrictions."
+      ],
+      "blocks": [
+        { "k": "h", "id": "why-it-is-given", "t": "Why the advice gets given" },
+        { "k": "p", "t": "It works in the short term. Remove the provoking load and symptoms settle, which looks like a successful intervention to both parties. It is also safe to say. Nobody is blamed for telling a patient to rest." },
+        { "k": "p", "t": "The cost arrives later, which is why it is so easy to miss. Six weeks off resolves the pain and leaves a tissue that tolerates less than it did before, so the ordinary life you return to is now relatively heavier." },
+        { "k": "h", "id": "what-rest-costs", "t": "What rest actually costs" },
+        { "k": "ul", "items": [
+          "Strength begins to decline within one to two weeks of unloading, faster in older adults.",
+          "Tendon stiffness and load tolerance fall when tendons stop being loaded, which is precisely the property you need back.",
+          "Confidence falls with capacity. Fear of a movement outlasts the tissue problem in a large share of cases.",
+          "Fitness, sleep, mood and weight all tend to move in the unhelpful direction, and all of them feed back into pain."
+        ] },
+        { "k": "h", "id": "modify-instead", "t": "Modify instead of stop" },
+        { "k": "p", "t": "There is almost always a version of the movement you can tolerate today. Finding it is most of the clinical work. The usual levers, roughly in the order we try them:" },
+        { "k": "ol", "items": [
+          "Reduce the load and keep everything else.",
+          "Shorten the range, avoiding the painful end of it rather than the movement.",
+          "Slow it down, which removes the impact and the stretch-shortening demand.",
+          "Change the variation: a leg press instead of a squat, an isometric hold instead of a full repetition.",
+          "Reduce frequency and volume last, because those are what build tolerance back."
+        ] },
+        { "k": "p", "t": "Keeping something is also worth more than it looks on paper. A person who trains three modified sessions a week through a flare-up returns to full load in a fraction of the time it takes someone who stopped." },
+        { "k": "h", "id": "when-to-stop", "t": "When stopping is right" },
+        { "k": "p", "t": "This is not an argument for training through everything. Stop, and get assessed, when any of the following apply: a suspected fracture or bone stress injury, a sudden loss of strength or function, significant swelling after a specific incident, pain that wakes you in the night or does not settle at rest, any red-flag symptom such as unexplained weight loss or fever, or an explicit restriction from a surgeon or physician after a procedure." },
+        { "k": "p", "t": "In those cases the question is not whether to rest but what you can still load safely elsewhere, which is almost always more than people assume." },
+        { "k": "uncertain", "t": "How much load is optimal during a flare-up is genuinely unsettled, and it differs by tissue. Tendons have reasonable evidence for continued loading. For acute muscle injury and for some persistent pain presentations, the best early dose is less clear, and the honest answer is that it is decided case by case and reviewed." }
+      ],
+      "related": ["what-load-actually-means", "sore-or-injured", "progressive-overload-without-flare-ups"]
+    },
+    {
+      "slug": "sore-or-injured",
+      "title": "Sore or injured: reading the difference",
+      "blurb": "Two sensations that feel similar on the day and behave completely differently over three.",
+      "desc": "How to tell training soreness from an injury: timing, location, behaviour over 72 hours, and the signs that mean getting assessed rather than waiting.",
+      "stand": "The information you need is not in how much it hurts. It is in when it started, where exactly it is, and what it does over the next three days.",
+      "key": [
+        "Ordinary muscle soreness peaks around **24 to 48 hours** after a new load, is diffuse, and eases as you move.",
+        "Injury tends to be localised, often has a moment attached to it, and gets worse with the movement rather than better.",
+        "Behaviour over 72 hours separates the two more reliably than intensity does.",
+        "A short list of signs means getting assessed rather than monitoring: loss of strength, swelling, night pain, locking or giving way."
+      ],
+      "blocks": [
+        { "k": "h", "id": "soreness", "t": "What ordinary soreness looks like" },
+        { "k": "p", "t": "Delayed onset muscle soreness follows a load your tissue was not used to, particularly one with a lot of lowering under tension. It typically begins some hours later, peaks around 24 to 48 hours, and resolves within a few days." },
+        { "k": "ul", "items": [
+          "It is spread across the muscle rather than at one point you can press.",
+          "It is often symmetrical, in both legs or both arms.",
+          "It feels worse in the first minutes of moving and better once you are warm.",
+          "Strength is slightly down but function is intact."
+        ] },
+        { "k": "h", "id": "injury", "t": "What injury tends to look like" },
+        { "k": "p", "t": "Injury is usually more specific, in location and often in origin. People can frequently name the repetition." },
+        { "k": "ul", "items": [
+          "You can point to it with one finger, and pressing there reproduces it.",
+          "It is on one side only, with no obvious reason for the asymmetry.",
+          "Warming up does not improve it, or improves it briefly and then it returns worse.",
+          "It is provoked by a specific movement or direction every time, reliably.",
+          "Something changed functionally: you cannot push off, raise the arm, or take full weight."
+        ] },
+        { "k": "h", "id": "72-hours", "t": "The 72-hour test" },
+        { "k": "p", "t": "If you are unsure, do not decide on the day. Reduce load to something comfortable and watch for three days. Soreness follows a curve: up, then down, then gone. An injury tends to plateau, or to settle at rest and return identically the moment the movement comes back." },
+        { "k": "p", "t": "A useful second question: is it the same at 72 hours as it was at 24? Soreness should be clearly better. Something that is unchanged, or that is now bothering you during ordinary activity, deserves looking at." },
+        { "k": "h", "id": "get-it-seen", "t": "When to get it seen rather than wait" },
+        { "k": "p", "t": "Some findings do not benefit from a watch-and-see week. Book an assessment, or seek urgent care where relevant, for: an audible pop with immediate swelling, inability to bear weight, a joint that locks or gives way, visible deformity, numbness or pins and needles in a defined area, pain that wakes you from sleep, bone pain that is worse with impact and localised to one point, or any pain accompanied by fever, unexplained weight loss or a history of cancer." },
+        { "k": "p", "t": "Nothing on that list is common. All of it changes what the right plan is, which is why it is worth ruling out early rather than at week six." },
+        { "k": "uncertain", "t": "There is no test, clinical or imaging, that cleanly separates benign training soreness from early tissue injury in every case. Experienced clinicians get this wrong too, which is why the plan is reviewed rather than set once. If a presentation does not behave as expected within a few weeks, that is itself a reason to reassess rather than to persist." }
+      ],
+      "related": ["progressive-overload-without-flare-ups", "what-load-actually-means", "stop-training-advice"]
+    },
+    {
+      "slug": "deloads-and-recovery",
+      "title": "Deloads, rest and why recovery is part of the programme",
+      "blurb": "Adaptation happens between sessions. If that part is missing, the sessions are just damage.",
+      "desc": "Why planned easy weeks make progress faster rather than slower, what recovery actually consists of, and how sleep and stress change how much load you tolerate.",
+      "stand": "Training is the stimulus. Recovery is where the adaptation happens. Most stalled programmes have plenty of the first and none of the second.",
+      "key": [
+        "Adaptation occurs during recovery, so recovery is a training variable rather than its absence.",
+        "A planned easy week every **four to eight weeks** generally produces more progress over a quarter, not less.",
+        "Sleep is the single largest recovery lever, and the one most often ignored.",
+        "Life stress reduces how much training load you tolerate, which is why a programme that worked in March can fail in October."
+      ],
+      "blocks": [
+        { "k": "h", "id": "why-deload", "t": "Why an easy week speeds things up" },
+        { "k": "p", "t": "Load creates fatigue and fitness at the same time. Fatigue masks the fitness, which is why you often feel weakest at the end of a hard block and strongest ten days later. A deload removes the fatigue so the adaptation shows up, and it gives connective tissue, which remodels more slowly than muscle, a chance to catch up." },
+        { "k": "p", "t": "In practice this means a planned reduction every four to eight weeks, depending on how hard the block was and how old and how trained you are. Older adults and people returning from injury generally need them more often, not less." },
+        { "k": "h", "id": "how-to-deload", "t": "How to deload without losing anything" },
+        { "k": "p", "t": "Cut volume, keep some intensity. Roughly half the sets, at a weight that still feels like something, tends to work better than a week of nothing at all. Stopping entirely for seven days leaves many people feeling worse when they return, because they have shed fitness along with the fatigue." },
+        { "k": "ul", "items": [
+          "Halve the number of hard sets and keep the exercises.",
+          "Keep the weight within about 10 per cent and stop each set well short of failure.",
+          "Keep frequency the same, so the movement pattern stays grooved.",
+          "Do not add anything new in a deload week; it defeats the purpose."
+        ] },
+        { "k": "h", "id": "sleep", "t": "Sleep does more than anything else you can buy" },
+        { "k": "p", "t": "Restricted sleep reduces strength expression, slows reaction time, raises perceived effort and is associated with higher injury rates in athletes. It also raises pain sensitivity, which means the same tissue load hurts more after a bad week." },
+        { "k": "p", "t": "If sleep is genuinely limited, by a newborn, shift work or insomnia, the right response is to reduce the load to match rather than to push through. The programme has to fit the life it sits inside." },
+        { "k": "h", "id": "stress", "t": "Everything else counts as load too" },
+        { "k": "p", "t": "The body does not keep separate accounts for work stress, exams, illness and training. All of it draws on the same capacity. This is the usual explanation for the programme that worked perfectly for two months and then stopped: nothing changed in the gym, and a great deal changed outside it." },
+        { "k": "p", "t": "Practically, this means a programme should be written with a lighter version built in, so a difficult fortnight reduces the dose rather than ending the habit." },
+        { "k": "uncertain", "t": "Optimal deload frequency has no established answer and almost certainly varies by person, age and training history. Much of the recovery industry, from compression garments to ice baths to supplements, has weak or mixed evidence; cold-water immersion in particular may blunt some strength adaptations when used routinely after training. Sleep, food and sensible dose management are the parts with real support behind them." }
+      ],
+      "related": ["progressive-overload-without-flare-ups", "what-load-actually-means", "sore-or-injured"]
+    }
+  ]
+}
