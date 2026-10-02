@@ -193,13 +193,10 @@ a{color:inherit;text-decoration:none}
 .slot::before{content:"";position:absolute;inset:0;background-image:
   linear-gradient(#0e2a170a 1px,transparent 1px),linear-gradient(90deg,#0e2a170a 1px,transparent 1px);
   background-size:28px 28px}
-.slot-txt{position:relative;font:400 13px/1.5 var(--sans);color:var(--muted);text-align:center;max-width:32ch}
 .slot-dark{background:var(--forest-850)}
-.slot-dark .slot-txt{color:var(--on-dark-3)}
 .slot-dark::before{background-image:
   linear-gradient(#ffffff0a 1px,transparent 1px),linear-gradient(90deg,#ffffff0a 1px,transparent 1px)}
 .slot-circle{border-radius:50%;padding:0}
-.slot-circle .slot-txt{display:none}
 
 /* ---- Cards ---- */
 .card{background:var(--paper);border:1px solid var(--border);border-radius:18px;padding:26px 26px 28px}
@@ -1427,3 +1424,36 @@ html{scrollbar-color:var(--sb-thumb) transparent}
     stroke-dashoffset:0;animation:none}
   .hero-device line,.svc-device line,.hub-device line{opacity:1;animation:none}
 }
+
+
+/* ---- Cross-silo note ----
+   One line under the related cards that leaves the silo. The scoliosis
+   library and the five topic hubs previously never referred to each other,
+   so a reader who finished a pillar had no route into the other half of
+   the writing. */
+.cross-note{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;
+  margin-top:22px;padding-top:20px;border-top:1px solid var(--border);
+  font:400 15px/1.5 var(--sans);color:var(--text-3)}
+.cross-kicker{font:600 11px/1 var(--sans);letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted)}
+
+
+/* ==========================================================
+   Cross-document view transitions
+   Three declarations, no JavaScript, and no router. Browsers
+   without support navigate exactly as before, and the spec
+   skips the transition under prefers-reduced-motion, so the
+   kill-switch above does not need to repeat itself here.
+   ========================================================== */
+@view-transition{ navigation:auto }
+
+::view-transition-old(root){ animation:vt-out .16s var(--ease-out) both }
+::view-transition-new(root){ animation:vt-in .22s var(--ease-out) both }
+@keyframes vt-out{ to{opacity:0} }
+@keyframes vt-in{ from{opacity:0} }
+
+/* The nav and the mobile book bar persist across pages, so they are held
+   out of the cross-fade. Without this they fade out and back in on every
+   navigation, which reads as the page reloading rather than moving. */
+.site-nav{view-transition-name:site-nav}
+.m-bookbar{view-transition-name:book-bar}

@@ -112,6 +112,34 @@ CTA = '''  <section class="cta-band" style="padding:56px var(--pad-x)" data-reve
 '''
 
 
+# Where each pillar reaches out of the scoliosis library. One destination
+# per pillar rather than per article: the pillar is the subject, so the
+# target is subject-appropriate without needing a separate editorial call on
+# all 24 pieces, which is where per-article picks drift.
+CROSS = {
+    "p1": ("../posture/does-posture-cause-pain.html", "Posture",
+           "Does posture cause pain?"),
+    "p2": ("../mobility/end-range-strength.html", "Mobility and joint health",
+           "End-range strength and why stretching alone stalls"),
+    "p3": ("../exercise/progressive-overload-without-flare-ups.html", "Exercise and loading",
+           "Progressive overload without flare-ups"),
+    "p4": ("../injury/how-long-does-rehab-take.html", "Injury rehabilitation",
+           "How long does rehabilitation actually take?"),
+}
+
+
+# Closing lines rotate by position so two articles read in a row never
+# share one. The first entry keeps the original wording.
+CTA_ROTATE = [
+    ("Still not sure what applies to you?",
+     "A 60-minute assessment answers it for your curve, in Beirut or online."),
+    ("Does this match what you were told?",
+     "Bring the report and the questions. Sixty minutes, in Beirut or online."),
+    ("Where does your own curve sit in this?",
+     "An assessment measures it rather than estimating, in Beirut or online."),
+]
+
+
 def wrap_arrows(html):
     """Wrap trailing navigational arrows so they can animate on hover.
     The leading space is what separates a navigational arrow from a data
@@ -232,11 +260,16 @@ def render_article(a, lookup, pillars):
                  '<p class="eyebrow" style="margin-bottom:14px">Keep reading</p>'
                  '<h2 class="h2-sm" style="color:var(--forest-900)">Related in this pillar</h2>'
                  '</div>\n      <a class="textlink" href="%s.html">All %s \u2192</a>\n    </div>'
-                 '\n    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>\n  </section>\n'
-                 % (pil["slug"], esc(pil["name"].lower()), related))
+                 '\n    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>'
+                 '\n    <p class="cross-note"><span class="cross-kicker">%s</span>'
+                 '<a class="textlink" href="%s">%s →</a></p>\n  </section>\n'
+                 % (pil["slug"], esc(pil["name"].lower()), related,
+                    esc(CROSS[a["pillar"]][1]), CROSS[a["pillar"]][0],
+                    esc(CROSS[a["pillar"]][2])))
 
-    body += "\n" + CTA.format(h=esc(a.get("cta_h", "Still not sure what applies to you?")),
-                              p=esc(a.get("cta_p", "A 60-minute assessment answers it for your curve, in Beirut or online.")))
+    rot = CTA_ROTATE[a.get("_i", 0) % len(CTA_ROTATE)]
+    body += "\n" + CTA.format(h=esc(a.get("cta_h", rot[0])),
+                              p=esc(a.get("cta_p", rot[1])))
     body += "\n</article>\n\n</main>\n\n" + FOOTER + TAIL
     return body
 
@@ -287,6 +320,12 @@ def main():
     pillars = {p["id"]: p for p in data["pillars"]}
     arts = data["articles"] + extra["articles"]
     lookup = {a["slug"]: a for a in arts}
+
+    # Position within the pillar, used to rotate the closing line.
+    seen = {}
+    for a in arts:
+        seen[a["pillar"]] = seen.get(a["pillar"], 0) + 1
+        a["_i"] = seen[a["pillar"]] - 1
 
     n = 0
     for a in arts:

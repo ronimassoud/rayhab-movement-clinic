@@ -52,16 +52,16 @@ CROSS = {
          "Controlled articular rotations and end-range work, programmed and progressed."),
         ("../exercise/progressive-overload-without-flare-ups.html", "Exercise &amp; loading", "Progressive overload",
          "How load is added without provoking the thing you are trying to build."),
-        ("../injury/hip-and-groin-pain.html", "Injury rehabilitation", "Hip and groin pain",
-         "What hip shape findings mean, and why loading beats releasing."),
+        ("../scoliosis/rotation-and-the-rib-hump.html", "Scoliosis", "Rotation and the rib hump",
+         "The three-dimensional part of a curve, and what range work can reach."),
     ],
     "injury": [
         ("../services/physiotherapy.html", "Service", "Physiotherapy",
          "Assessment, diagnosis and an active plan you leave with."),
         ("../exercise/stop-training-advice.html", "Exercise &amp; loading", "When stopping is the wrong advice",
          "Why rest resolves the flare-up and leaves the cause in place."),
-        ("../sport/return-criteria-not-calendar.html", "Sport", "Return criteria, not a calendar",
-         "What has to be true before you go back to something demanding."),
+        ("../scoliosis/scoliosis-and-pain.html", "Scoliosis", "Scoliosis and pain",
+         "Where a curve does and does not explain the pain you have."),
     ],
 }
 
@@ -164,6 +164,34 @@ CTA = '''  <section class="cta-band" style="padding:56px var(--pad-x)" data-reve
     </div>
   </section>
 '''
+
+
+# Each topic's way into the scoliosis library. The topic articles reached it
+# only through nav and footer chrome before, which is site furniture rather
+# than a recommendation.
+ARTICLE_CROSS = {
+    "exercise": ("../scoliosis/lifting-with-scoliosis.html", "Scoliosis",
+                 "Lifting with scoliosis"),
+    "sport":    ("../scoliosis/return-to-sport.html", "Scoliosis",
+                 "Returning to sport with a curve"),
+    "posture":  ("../scoliosis/what-scoliosis-actually-is.html", "Scoliosis",
+                 "What scoliosis actually is"),
+    "mobility": ("../scoliosis/rotation-and-the-rib-hump.html", "Scoliosis",
+                 "Rotation and the rib hump"),
+    "injury":   ("../scoliosis/scoliosis-and-pain.html", "Scoliosis",
+                 "Scoliosis and pain"),
+}
+
+
+# Alternates that keep each topic's own line as the first of three, so
+# consecutive articles in a hub never close on the same words.
+CTA_ALT = [
+    None,   # the topic's own, from topics/*.json
+    ("Is this what is happening to you?",
+     "An assessment answers it for your case rather than in general. Beirut or online."),
+    ("Want this turned into a plan you can run?",
+     "Sixty minutes, and you leave with the first version of it. Beirut or online."),
+]
 
 
 def wrap_arrows(html):
@@ -281,11 +309,16 @@ def render_article(a, topic, lookup):
                  '<p class="eyebrow" style="margin-bottom:14px">Keep reading</p>'
                  '<h2 class="h2-sm" style="color:var(--forest-900)">Related in this hub</h2>'
                  '</div>\n      <a class="textlink" href="./">All %s →</a>\n    </div>'
-                 '\n    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>\n  </section>\n'
-                 % (esc(topic["name"].lower()), related))
+                 '\n    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>'
+                 '\n    <p class="cross-note"><span class="cross-kicker">%s</span>'
+                 '<a class="textlink" href="%s">%s →</a></p>\n  </section>\n'
+                 % (esc(topic["name"].lower()), related,
+                    esc(ARTICLE_CROSS[topic["dir"]][1]), ARTICLE_CROSS[topic["dir"]][0],
+                    esc(ARTICLE_CROSS[topic["dir"]][2])))
 
-    body += "\n" + CTA.format(h=esc(a.get("cta_h", topic["cta_h"])),
-                              p=esc(a.get("cta_p", topic["cta_p"])),
+    alt = CTA_ALT[a.get("_i", 0) % len(CTA_ALT)]
+    body += "\n" + CTA.format(h=esc(a.get("cta_h", alt[0] if alt else topic["cta_h"])),
+                              p=esc(a.get("cta_p", alt[1] if alt else topic["cta_p"])),
                               href="./", label="Back to " + esc(topic["name"].lower()))
     body += "\n</article>\n\n</main>\n\n" + FOOTER + TAIL
     return body
@@ -363,7 +396,8 @@ def main():
 
         io.open(os.path.join(out, "index.html"), "w", encoding="utf-8",
                 newline="\n").write(inject(wrap_arrows(render_hub(topic, arts))))
-        for a in arts:
+        for i, a in enumerate(arts):
+            a["_i"] = i                      # position, for the CTA rotation
             html = render_article(a, topic, lookup)
             io.open(os.path.join(out, a["slug"] + ".html"), "w", encoding="utf-8",
                     newline="\n").write(inject(wrap_arrows(html)))

@@ -161,7 +161,7 @@ def build(s, n):
 
   <section class="svc-hero on-dark">
     <div class="svc-hero-copy">
-      <p class="crumbs crumbs-dark" style="margin-bottom:26px"><a href="./">Services</a> <span aria-hidden="true">/</span> %(name)s</p>
+      <p class="crumbs crumbs-dark" style="margin-bottom:26px"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="./">Services</a> <span aria-hidden="true">/</span> %(name)s</p>
       <p class="hero-pill" style="margin-bottom:22px"><span class="dot" aria-hidden="true"></span>Supporting service</p>
       <h1 class="h1">%(h1)s</h1>
       <p class="body-l d-only" style="margin-top:24px;max-width:560px;color:var(--on-dark);font-size:19px;line-height:1.65">%(lede)s</p>
@@ -175,7 +175,7 @@ def build(s, n):
     </div>
     <div class="svc-hero-media">
       <div class="slot slot-dark svc-hero-slot">
-        <p class="slot-txt">%(slot)s</p>
+        <!-- shot: %(slot)s -->
       </div>
       <div class="measure-card">
         <svg viewBox="0 0 70 70" aria-hidden="true">
