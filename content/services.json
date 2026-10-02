@@ -1,122 +1,484 @@
-{"services":[
 {
- "slug":"sports-rehabilitation","name":"Sports Rehabilitation","h1":"Sports<br>Rehabilitation",
- "title":"Sports Rehabilitation, Rayhab Movement Clinic, Beirut",
- "desc":"Injury rehabilitation and a criteria-based route back to sport in Beirut or online, built on work with basketball and football athletes in Amman and Beirut.",
- "lede":"Injury rehabilitation and a structured route back to your sport, built on work with basketball and football athletes in Amman and Beirut. Progression decided by criteria, not by a calendar.",
- "lede_m":"Injury rehabilitation and a structured route back to your sport, decided by criteria rather than a calendar.",
- "stats":[["60 min","First assessment, including a movement screen and the demands of your sport"],
-          ["Amman","Sports rehabilitation experience with basketball and football athletes"],
-          ["In-clinic<br>&amp; online","Beirut clinic, or remote programme design and review"]],
- "mspec":[["First assessment","60 min"],["Approach","Criteria-based"],["Delivered","Beirut &amp; online"]],
- "measure_k":"Criteria, not calendars",
- "measure_v":"Return is decided by what you can demonstrate, re-tested at every stage.",
- "slot":"Drop a training photo, an athlete loading under supervision, side light",
- "approach_h":"Return is a decision, not a date",
- "approach_p":"Most re-injury happens when someone returns because enough weeks have passed rather than because they can handle what the sport asks. The work here is building that capacity back deliberately, then testing it before it is trusted.",
- "minis":[["Criteria at every stage","Each progression has something you have to demonstrate before it is granted."],
-          ["Loading rebuilt deliberately","Tissue capacity is regained in steps, with the dose written down rather than guessed."],
-          ["The sport's real demands","Cutting, landing, throwing or sprinting rehearsed as they actually occur, not approximated."]],
- "process_h":"Six stages, one direction",
- "process_p":"How long each stage takes depends on the injury, the sport and the person. The order does not change.",
- "stages":[["Assessment","Injury, history, loading tolerance and the demands of your sport."],
-           ["Explanation","What the problem is, what is irritable, and what the realistic timeline looks like."],
-           ["Early loading","Restoring range and beginning to load the tissue at a dose it can handle."],
-           ["Strength restoration","Rebuilding strength and capacity, including the side that was not injured."],
-           ["Sport-specific","Speed, change of direction, landing and contact reintroduced under supervision."],
-           ["Return and prevention","Cleared against criteria, with the work that keeps it from recurring."]],
- "who":[["athlete","Athletes returning from injury","Structured progression with the demands of your sport built into it, rather than general exercise until it feels better."],
-        ["adult","Recreational and weekend players","The same reasoning applied to a body that trains around a job, without pretending the schedule is professional."],
-        ["parent","Young athletes in a growth phase","Loading managed around growth, with parents and coaches part of the conversation."]],
- "includes":["Injury and loading assessment","Sport-specific movement screen","Progressive loading programme","Strength and capacity restoration","Return-to-sport criteria testing","Home and gym programme","Injury prevention and movement preparation"],
- "consults":[["Sports assessment","Full injury assessment, movement screen, and the first version of your loading plan.","60 min","Beirut clinic","Start here"],
-             ["Rehabilitation session","Coached loading, progression, and updates to your gym and home programme.","45 min","Beirut clinic",""],
-             ["Online consultation","For athletes outside Lebanon: programme design, progression and review by video.","40 min","Video call",""]],
- "faq":[["Do I need a scan or a diagnosis first?","No. Bring any imaging or reports you already have. The assessment goes ahead without them, and you will be told honestly if imaging would change the plan."],
-        ["How long until I am back playing?","It depends on the injury and on how you respond, and anyone who gives you a number before assessing you is guessing. What you will get at the first appointment is the criteria you have to meet, so you can see where you are against them."],
-        ["Can I keep training while I rehabilitate?","Almost always something can continue. Stopping entirely costs fitness, strength and morale, and those losses have to be rebuilt too. What changes is what you train and how much."],
-        ["Do you work with my coach?","Where you want that, yes. Rehabilitation that ignores what happens at training is rehabilitation that ends at the clinic door."],
-        ["What if the injury keeps coming back?","Recurring injury usually means capacity was never fully restored, or the load that caused it has not changed. Both are assessable, and both are addressable."]],
- "cta_h":"Start with an assessment","cta_p":"Sixty minutes in Beirut or online. You leave knowing what the problem is and what has to be true before you play again."
-},
-{
- "slug":"frc-joint-training","name":"FRC &amp; Joint Training","h1":"FRC &amp;<br>Joint Training",
- "title":"FRC and Joint Training, Rayhab Movement Clinic, Beirut",
- "desc":"Functional Range Conditioning applied to real joint capacity in Beirut or online: active mobility, joint control, end-range strength and usable movement variability.",
- "lede":"Functional Range Conditioning principles applied to real joint capacity: mobility you can control, not just range you can reach. Range that disappears the moment nobody is holding you there is not mobility.",
- "lede_m":"Functional Range Conditioning applied to real joint capacity: mobility you can control, not just range you can reach.",
- "stats":[["60 min","First assessment, joint by joint, with active and passive range compared"],
-          ["FRC","Functional Range Conditioning certified, alongside Certified Schroth Practitioner and ACE"],
-          ["In-clinic<br>&amp; online","Beirut clinic, or remote assessment and programme review"]],
- "mspec":[["First assessment","60 min"],["Certification","Certified Mobility Specialist (FRCms)"],["Delivered","Beirut &amp; online"]],
- "measure_k":"Active range, measured",
- "measure_v":"Active and passive range are recorded separately, because the gap between them is the work.",
- "slot":"Drop a training photo, controlled articular rotations at a shoulder or hip",
- "approach_h":"Range you cannot control is not mobility",
- "approach_p":"Most people can be stretched into more range than they can produce themselves. That difference is where injuries happen, because the joint has positions it can reach and cannot support. The work here is closing that gap.",
- "minis":[["Active before passive","Range you can produce under your own control, before range someone else puts you into."],
-          ["End-range strength","Strength trained where joints are least protected, rather than only in the comfortable middle."],
-          ["Variability","More than one way to perform a movement, so a single stiff joint does not dictate everything."]],
- "process_h":"Six stages, one direction",
- "process_p":"This is slow, unglamorous work that compounds. The stages describe the order, not a fixed number of weeks.",
- "stages":[["Assessment","Joint-by-joint screen, with active and passive range recorded separately."],
-           ["Explanation","Where the gaps are, which ones matter for you, and which are simply variation."],
-           ["Controlled articular work","Rotational joint control drilled deliberately, one joint at a time."],
-           ["End-range strength","Loading the positions the joint could previously reach but not support."],
-           ["Capacity","Building tolerance so the new range survives training, work and fatigue."],
-           ["Independent maintenance","A short daily routine you run yourself, with periodic review."]],
- "who":[["athlete","Lifters and athletes","Where a position is limiting a lift or a skill, and stretching has stopped producing change."],
-        ["adult","People who feel stiff and stuck","Where range has slowly narrowed over years and general stretching has not held."],
-        ["parent","People managing a joint long term","After injury, or alongside a condition, where the goal is capacity rather than a cure."]],
- "includes":["Joint-by-joint range assessment","Active and passive range recorded separately","Controlled articular rotation programme","End-range strength and capacity work","Integration into existing training","Short daily maintenance routine","Periodic re-measurement"],
- "consults":[["Joint assessment","Full joint-by-joint screen, with active and passive range recorded and explained.","60 min","Beirut clinic","Start here"],
-             ["Training session","Coached joint work, progression, and integration into your existing training.","45 min","Beirut clinic",""],
-             ["Online consultation","For clients outside Lebanon: assessment by video, programme design and review.","40 min","Video call",""]],
- "faq":[["Is this just stretching?","No, and in some respects it is the opposite. Stretching usually adds passive range. This trains range you can produce and support yourself, which is what actually holds."],
-        ["How long before I notice a change?","Control tends to change within weeks. Range changes more slowly, and how much is available to you depends on your joints, not on effort alone."],
-        ["Can I do this alongside my normal training?","Yes, and it works better that way. The point is more usable range inside the training you already do, not a separate project competing with it."],
-        ["Does it help with pain?","Sometimes, particularly where a joint is being asked to work in positions it cannot support. It is not a pain treatment in itself, and pain that is escalating should be assessed properly."],
-        ["Do I need equipment at home?","Very little. Most of the maintenance work needs a floor and somewhere to sit."]],
- "cta_h":"Start with an assessment","cta_p":"Sixty minutes in Beirut or online. You leave knowing which joints are limiting you and what to do about it."
-},
-{
- "slug":"physiotherapy","name":"Physiotherapy","h1":"Physiotherapy",
- "title":"Physiotherapy, Rayhab Movement Clinic, Beirut",
- "desc":"Musculoskeletal physiotherapy in Beirut or online for neck, back, shoulder, hip and knee, treated with an active, exercise-led approach.",
- "lede":"Musculoskeletal rehabilitation for the common complaints, neck, back, shoulder, hip and knee, treated with the same active, exercise-led approach used everywhere else in the clinic.",
- "lede_m":"Neck, back, shoulder, hip and knee rehabilitation, treated actively rather than passively.",
- "stats":[["60 min","First assessment, including a movement screen and what actually provokes it"],
-          ["5+ yrs","Clinical and movement-based practice across patients, clients and athletes"],
-          ["In-clinic<br>&amp; online","Beirut clinic, or remote assessment and programme review"]],
- "mspec":[["First assessment","60 min"],["Approach","Exercise-led"],["Delivered","Beirut &amp; online"]],
- "measure_k":"Progress you can see",
- "measure_v":"What you can do, load and tolerate is re-tested, so change is recorded rather than recalled.",
- "slot":"Drop a clinic photo, Rayan assessing a shoulder or a knee, natural light",
- "approach_h":"Treated actively, not passively",
- "approach_p":"Passive treatment can feel good and rarely changes much on its own. What reliably changes a musculoskeletal problem is loading the tissue properly, restoring capacity, and understanding what provokes it. That is where the time goes here.",
- "minis":[["Loaded, not just rested","Tissue adapts to load. The question is the dose, not whether to load at all."],
-          ["Provocation understood","What makes it worse, what settles it, and what it means, explained rather than worked around."],
-          ["Discharged with a plan","You leave knowing what to do if it returns, which it sometimes does."]],
- "process_h":"Six stages, one direction",
- "process_p":"Not every problem needs all six. Simple problems move quickly, and being told that is part of an honest assessment.",
- "stages":[["Assessment","History, examination, and what specifically you cannot currently do."],
-           ["Explanation","What the problem is and is not, in terms you can repeat to someone else."],
-           ["Symptom control","Settling irritability enough that useful loading becomes possible."],
-           ["Loading","Progressive exercise at a dose the tissue tolerates and benefits from."],
-           ["Capacity","Building past where you were, so the same demand no longer provokes it."],
-           ["Discharge with a plan","What to keep doing, what to watch for, and what to do if it returns."]],
- "who":[["adult","Neck, back and shoulder complaints","Including the ones that have been present for a long time and have been managed passively so far."],
-        ["athlete","Hip and knee rehabilitation","Post-injury and post-operative conditioning, and the long-standing niggles that limit training."],
-        ["parent","People who want to understand it","Where the goal is knowing what is happening and what to do, not open-ended appointments."]],
- "includes":["Full musculoskeletal assessment","Explanation of findings in plain terms","Manual and symptom-control techniques where useful","Progressive exercise programme","Strength and capacity restoration","Home programme you can actually run","Discharge plan and review point"],
- "consults":[["Initial assessment","Full assessment, movement screen, explanation, and the first version of your plan.","60 min","Beirut clinic","Start here"],
-             ["Follow-up session","Coached exercise, progression, and updates to your home programme.","45 min","Beirut clinic",""],
-             ["Online consultation","For patients outside Lebanon: assessment by video, programme design and review.","40 min","Video call",""]],
- "faq":[["Do I need a referral?","No. You can book directly. If something needs a medical opinion or imaging, you will be told at the first appointment rather than after a course of treatment."],
-        ["Will you do manual therapy or just exercise?","Both, where manual work is useful. It is used to make loading possible rather than as the treatment in itself, because on its own it rarely produces lasting change."],
-        ["How many sessions will I need?","It depends on the problem, and you will get an honest estimate at the first appointment. The aim is discharge with a plan, not an open-ended course."],
-        ["What should I wear?","Something you can move and be assessed in. For a knee or hip, shorts are useful."],
-        ["What if it is not a musculoskeletal problem?","Then you will be told, and pointed towards the right person. Recognising what is not ours to treat is part of the assessment."]],
- "cta_h":"Start with an assessment","cta_p":"Sixty minutes in Beirut or online. You leave understanding the problem and holding the plan."
+  "services": [
+    {
+      "slug": "sports-rehabilitation",
+      "name": "Sports Rehabilitation",
+      "h1": "Sports<br>Rehabilitation",
+      "title": "Sports Rehabilitation, Rayhab Movement Clinic, Beirut",
+      "desc": "Injury rehabilitation and a criteria-based route back to sport in Beirut or online, built on work with basketball and football athletes in Amman and Beirut.",
+      "lede": "Injury rehabilitation and a structured route back to your sport, built on work with basketball and football athletes in Amman and Beirut. Progression decided by criteria, not by a calendar.",
+      "lede_m": "Injury rehabilitation and a structured route back to your sport, decided by criteria rather than a calendar.",
+      "stats": [
+        [
+          "60 min",
+          "First assessment, including a movement screen and the demands of your sport"
+        ],
+        [
+          "Amman",
+          "Sports rehabilitation experience with basketball and football athletes"
+        ],
+        [
+          "In-clinic<br>&amp; online",
+          "Beirut clinic, or remote programme design and review"
+        ]
+      ],
+      "mspec": [
+        [
+          "First assessment",
+          "60 min"
+        ],
+        [
+          "Approach",
+          "Criteria-based"
+        ],
+        [
+          "Delivered",
+          "Beirut &amp; online"
+        ]
+      ],
+      "measure_k": "Criteria, not calendars",
+      "measure_v": "Return is decided by what you can demonstrate, re-tested at every stage.",
+      "slot": "Drop a training photo, an athlete loading under supervision, side light",
+      "approach_h": "Return is a decision, not a date",
+      "approach_p": "Most re-injury happens when someone returns because enough weeks have passed rather than because they can handle what the sport asks. The work here is building that capacity back deliberately, then testing it before it is trusted.",
+      "minis": [
+        [
+          "Criteria at every stage",
+          "Each progression has something you have to demonstrate before it is granted."
+        ],
+        [
+          "Loading rebuilt deliberately",
+          "Tissue capacity is regained in steps, with the dose written down rather than guessed."
+        ],
+        [
+          "The sport's real demands",
+          "Cutting, landing, throwing or sprinting rehearsed as they actually occur, not approximated."
+        ]
+      ],
+      "process_h": "Six stages, one direction",
+      "process_p": "How long each stage takes depends on the injury, the sport and the person. The order does not change.",
+      "stages": [
+        [
+          "Assessment",
+          "Injury, history, loading tolerance and the demands of your sport."
+        ],
+        [
+          "Explanation",
+          "What the problem is, what is irritable, and what the realistic timeline looks like."
+        ],
+        [
+          "Early loading",
+          "Restoring range and beginning to load the tissue at a dose it can handle."
+        ],
+        [
+          "Strength restoration",
+          "Rebuilding strength and capacity, including the side that was not injured."
+        ],
+        [
+          "Sport-specific",
+          "Speed, change of direction, landing and contact reintroduced under supervision."
+        ],
+        [
+          "Return and prevention",
+          "Cleared against criteria, with the work that keeps it from recurring."
+        ]
+      ],
+      "who": [
+        [
+          "athlete",
+          "Athletes returning from injury",
+          "Structured progression with the demands of your sport built into it, rather than general exercise until it feels better."
+        ],
+        [
+          "adult",
+          "Recreational and weekend players",
+          "The same reasoning applied to a body that trains around a job, without pretending the schedule is professional."
+        ],
+        [
+          "parent",
+          "Young athletes in a growth phase",
+          "Loading managed around growth, with parents and coaches part of the conversation."
+        ]
+      ],
+      "includes": [
+        "Injury and loading assessment",
+        "Sport-specific movement screen",
+        "Progressive loading programme",
+        "Strength and capacity restoration",
+        "Return-to-sport criteria testing",
+        "Home and gym programme",
+        "Injury prevention and movement preparation"
+      ],
+      "consults": [
+        [
+          "Sports assessment",
+          "Full injury assessment, movement screen, and the first version of your loading plan.",
+          "60 min",
+          "Beirut clinic",
+          "Start here",
+          "sports"
+        ],
+        [
+          "Rehabilitation session",
+          "Coached loading, progression, and updates to your gym and home programme.",
+          "45 min",
+          "Beirut clinic",
+          "",
+          "sports"
+        ],
+        [
+          "Online consultation",
+          "For athletes outside Lebanon: programme design, progression and review by video.",
+          "40 min",
+          "Video call",
+          "",
+          ""
+        ]
+      ],
+      "faq": [
+        [
+          "Do I need a scan or a diagnosis first?",
+          "No. Bring any imaging or reports you already have. The assessment goes ahead without them, and you will be told honestly if imaging would change the plan."
+        ],
+        [
+          "How long until I am back playing?",
+          "It depends on the injury and on how you respond, and anyone who gives you a number before assessing you is guessing. What you will get at the first appointment is the criteria you have to meet, so you can see where you are against them."
+        ],
+        [
+          "Can I keep training while I rehabilitate?",
+          "Almost always something can continue. Stopping entirely costs fitness, strength and morale, and those losses have to be rebuilt too. What changes is what you train and how much."
+        ],
+        [
+          "Do you work with my coach?",
+          "Where you want that, yes. Rehabilitation that ignores what happens at training is rehabilitation that ends at the clinic door."
+        ],
+        [
+          "What if the injury keeps coming back?",
+          "Recurring injury usually means capacity was never fully restored, or the load that caused it has not changed. Both are assessable, and both are addressable."
+        ]
+      ],
+      "cta_h": "Start with an assessment",
+      "cta_p": "Sixty minutes in Beirut or online. You leave knowing what the problem is and what has to be true before you play again."
+    },
+    {
+      "slug": "frc-joint-training",
+      "name": "FRC &amp; Joint Training",
+      "h1": "FRC &amp;<br>Joint Training",
+      "title": "FRC and Joint Training, Rayhab Movement Clinic, Beirut",
+      "desc": "Functional Range Conditioning applied to real joint capacity in Beirut or online: active mobility, joint control, end-range strength and usable movement variability.",
+      "lede": "Functional Range Conditioning principles applied to real joint capacity: mobility you can control, not just range you can reach. Range that disappears the moment nobody is holding you there is not mobility.",
+      "lede_m": "Functional Range Conditioning applied to real joint capacity: mobility you can control, not just range you can reach.",
+      "stats": [
+        [
+          "60 min",
+          "First assessment, joint by joint, with active and passive range compared"
+        ],
+        [
+          "FRC",
+          "Functional Range Conditioning certified, alongside Certified Schroth Practitioner and ACE"
+        ],
+        [
+          "In-clinic<br>&amp; online",
+          "Beirut clinic, or remote assessment and programme review"
+        ]
+      ],
+      "mspec": [
+        [
+          "First assessment",
+          "60 min"
+        ],
+        [
+          "Certification",
+          "Certified Mobility Specialist (FRCms)"
+        ],
+        [
+          "Delivered",
+          "Beirut &amp; online"
+        ]
+      ],
+      "measure_k": "Active range, measured",
+      "measure_v": "Active and passive range are recorded separately, because the gap between them is the work.",
+      "slot": "Drop a training photo, controlled articular rotations at a shoulder or hip",
+      "approach_h": "Range you cannot control is not mobility",
+      "approach_p": "Most people can be stretched into more range than they can produce themselves. That difference is where injuries happen, because the joint has positions it can reach and cannot support. The work here is closing that gap.",
+      "minis": [
+        [
+          "Active before passive",
+          "Range you can produce under your own control, before range someone else puts you into."
+        ],
+        [
+          "End-range strength",
+          "Strength trained where joints are least protected, rather than only in the comfortable middle."
+        ],
+        [
+          "Variability",
+          "More than one way to perform a movement, so a single stiff joint does not dictate everything."
+        ]
+      ],
+      "process_h": "Six stages, one direction",
+      "process_p": "This is slow, unglamorous work that compounds. The stages describe the order, not a fixed number of weeks.",
+      "stages": [
+        [
+          "Assessment",
+          "Joint-by-joint screen, with active and passive range recorded separately."
+        ],
+        [
+          "Explanation",
+          "Where the gaps are, which ones matter for you, and which are simply variation."
+        ],
+        [
+          "Controlled articular work",
+          "Rotational joint control drilled deliberately, one joint at a time."
+        ],
+        [
+          "End-range strength",
+          "Loading the positions the joint could previously reach but not support."
+        ],
+        [
+          "Capacity",
+          "Building tolerance so the new range survives training, work and fatigue."
+        ],
+        [
+          "Independent maintenance",
+          "A short daily routine you run yourself, with periodic review."
+        ]
+      ],
+      "who": [
+        [
+          "athlete",
+          "Lifters and athletes",
+          "Where a position is limiting a lift or a skill, and stretching has stopped producing change."
+        ],
+        [
+          "adult",
+          "People who feel stiff and stuck",
+          "Where range has slowly narrowed over years and general stretching has not held."
+        ],
+        [
+          "parent",
+          "People managing a joint long term",
+          "After injury, or alongside a condition, where the goal is capacity rather than a cure."
+        ]
+      ],
+      "includes": [
+        "Joint-by-joint range assessment",
+        "Active and passive range recorded separately",
+        "Controlled articular rotation programme",
+        "End-range strength and capacity work",
+        "Integration into existing training",
+        "Short daily maintenance routine",
+        "Periodic re-measurement"
+      ],
+      "consults": [
+        [
+          "Joint assessment",
+          "Full joint-by-joint screen, with active and passive range recorded and explained.",
+          "60 min",
+          "Beirut clinic",
+          "Start here",
+          "sports"
+        ],
+        [
+          "Training session",
+          "Coached joint work, progression, and integration into your existing training.",
+          "45 min",
+          "Beirut clinic",
+          "",
+          "sports"
+        ],
+        [
+          "Online consultation",
+          "For clients outside Lebanon: assessment by video, programme design and review.",
+          "40 min",
+          "Video call",
+          "",
+          ""
+        ]
+      ],
+      "faq": [
+        [
+          "Is this just stretching?",
+          "No, and in some respects it is the opposite. Stretching usually adds passive range. This trains range you can produce and support yourself, which is what actually holds."
+        ],
+        [
+          "How long before I notice a change?",
+          "Control tends to change within weeks. Range changes more slowly, and how much is available to you depends on your joints, not on effort alone."
+        ],
+        [
+          "Can I do this alongside my normal training?",
+          "Yes, and it works better that way. The point is more usable range inside the training you already do, not a separate project competing with it."
+        ],
+        [
+          "Does it help with pain?",
+          "Sometimes, particularly where a joint is being asked to work in positions it cannot support. It is not a pain treatment in itself, and pain that is escalating should be assessed properly."
+        ],
+        [
+          "Do I need equipment at home?",
+          "Very little. Most of the maintenance work needs a floor and somewhere to sit."
+        ]
+      ],
+      "cta_h": "Start with an assessment",
+      "cta_p": "Sixty minutes in Beirut or online. You leave knowing which joints are limiting you and what to do about it."
+    },
+    {
+      "slug": "physiotherapy",
+      "name": "Physiotherapy",
+      "h1": "Physiotherapy",
+      "title": "Physiotherapy, Rayhab Movement Clinic, Beirut",
+      "desc": "Musculoskeletal physiotherapy in Beirut or online for neck, back, shoulder, hip and knee, treated with an active, exercise-led approach.",
+      "lede": "Musculoskeletal rehabilitation for the common complaints, neck, back, shoulder, hip and knee, treated with the same active, exercise-led approach used everywhere else in the clinic.",
+      "lede_m": "Neck, back, shoulder, hip and knee rehabilitation, treated actively rather than passively.",
+      "stats": [
+        [
+          "60 min",
+          "First assessment, including a movement screen and what actually provokes it"
+        ],
+        [
+          "5+ yrs",
+          "Clinical and movement-based practice across patients, clients and athletes"
+        ],
+        [
+          "In-clinic<br>&amp; online",
+          "Beirut clinic, or remote assessment and programme review"
+        ]
+      ],
+      "mspec": [
+        [
+          "First assessment",
+          "60 min"
+        ],
+        [
+          "Approach",
+          "Exercise-led"
+        ],
+        [
+          "Delivered",
+          "Beirut &amp; online"
+        ]
+      ],
+      "measure_k": "Progress you can see",
+      "measure_v": "What you can do, load and tolerate is re-tested, so change is recorded rather than recalled.",
+      "slot": "Drop a clinic photo, Rayan assessing a shoulder or a knee, natural light",
+      "approach_h": "Treated actively, not passively",
+      "approach_p": "Passive treatment can feel good and rarely changes much on its own. What reliably changes a musculoskeletal problem is loading the tissue properly, restoring capacity, and understanding what provokes it. That is where the time goes here.",
+      "minis": [
+        [
+          "Loaded, not just rested",
+          "Tissue adapts to load. The question is the dose, not whether to load at all."
+        ],
+        [
+          "Provocation understood",
+          "What makes it worse, what settles it, and what it means, explained rather than worked around."
+        ],
+        [
+          "Discharged with a plan",
+          "You leave knowing what to do if it returns, which it sometimes does."
+        ]
+      ],
+      "process_h": "Six stages, one direction",
+      "process_p": "Not every problem needs all six. Simple problems move quickly, and being told that is part of an honest assessment.",
+      "stages": [
+        [
+          "Assessment",
+          "History, examination, and what specifically you cannot currently do."
+        ],
+        [
+          "Explanation",
+          "What the problem is and is not, in terms you can repeat to someone else."
+        ],
+        [
+          "Symptom control",
+          "Settling irritability enough that useful loading becomes possible."
+        ],
+        [
+          "Loading",
+          "Progressive exercise at a dose the tissue tolerates and benefits from."
+        ],
+        [
+          "Capacity",
+          "Building past where you were, so the same demand no longer provokes it."
+        ],
+        [
+          "Discharge with a plan",
+          "What to keep doing, what to watch for, and what to do if it returns."
+        ]
+      ],
+      "who": [
+        [
+          "adult",
+          "Neck, back and shoulder complaints",
+          "Including the ones that have been present for a long time and have been managed passively so far."
+        ],
+        [
+          "athlete",
+          "Hip and knee rehabilitation",
+          "Post-injury and post-operative conditioning, and the long-standing niggles that limit training."
+        ],
+        [
+          "parent",
+          "People who want to understand it",
+          "Where the goal is knowing what is happening and what to do, not open-ended appointments."
+        ]
+      ],
+      "includes": [
+        "Full musculoskeletal assessment",
+        "Explanation of findings in plain terms",
+        "Manual and symptom-control techniques where useful",
+        "Progressive exercise programme",
+        "Strength and capacity restoration",
+        "Home programme you can actually run",
+        "Discharge plan and review point"
+      ],
+      "consults": [
+        [
+          "Initial assessment",
+          "Full assessment, movement screen, explanation, and the first version of your plan.",
+          "60 min",
+          "Beirut clinic",
+          "Start here",
+          "sports"
+        ],
+        [
+          "Follow-up session",
+          "Coached exercise, progression, and updates to your home programme.",
+          "45 min",
+          "Beirut clinic",
+          "",
+          "sports"
+        ],
+        [
+          "Online consultation",
+          "For patients outside Lebanon: assessment by video, programme design and review.",
+          "40 min",
+          "Video call",
+          "",
+          ""
+        ]
+      ],
+      "faq": [
+        [
+          "Do I need a referral?",
+          "No. You can book directly. If something needs a medical opinion or imaging, you will be told at the first appointment rather than after a course of treatment."
+        ],
+        [
+          "Will you do manual therapy or just exercise?",
+          "Both, where manual work is useful. It is used to make loading possible rather than as the treatment in itself, because on its own it rarely produces lasting change."
+        ],
+        [
+          "How many sessions will I need?",
+          "It depends on the problem, and you will get an honest estimate at the first appointment. The aim is discharge with a plan, not an open-ended course."
+        ],
+        [
+          "What should I wear?",
+          "Something you can move and be assessed in. For a knee or hip, shorts are useful."
+        ],
+        [
+          "What if it is not a musculoskeletal problem?",
+          "Then you will be told, and pointed towards the right person. Recognising what is not ours to treat is part of the assessment."
+        ]
+      ],
+      "cta_h": "Start with an assessment",
+      "cta_p": "Sixty minutes in Beirut or online. You leave understanding the problem and holding the plan."
+    }
+  ]
 }
-]}

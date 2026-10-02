@@ -9,7 +9,11 @@ import re
 import sys
 
 ROOT = sys.argv[1] if len(sys.argv) > 1 else "site"
-REF = re.compile(r'(?:src|href)="([^"#:]+)(#[^"]*)?"')
+# The path is what has to exist on disk; a query string and a fragment are
+# both read by the browser, not the filesystem. Fragments were already
+# stripped here, queries were not, so a link like book.html?type=assessment
+# was looked up as a filename and reported broken.
+REF = re.compile(r'(?:src|href)="([^"#?:]+)(\?[^"#]*)?(#[^"]*)?"')
 SKIP = ("http://", "https://", "mailto:", "tel:", "//", "data:")
 
 broken = []

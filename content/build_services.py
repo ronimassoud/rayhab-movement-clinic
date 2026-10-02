@@ -101,7 +101,9 @@ def build(s, n):
     inc = "".join("<li>%s</li>" % i for i in s["includes"])
 
     consults = ""
-    for i, (t, d, dur, loc, tag) in enumerate(s["consults"]):
+    for i, (t, d, dur, loc, tag, bk) in enumerate(s["consults"]):
+        # A named option should arrive at the flow already chosen.
+        href = "../book.html" + ("?type=" + bk if bk else "")
         if i == 0:
             consults += ('<div class="consult consult-lead"><div class="consult-head">'
                          '<p class="consult-t" style="max-width:200px">%s</p>'
@@ -110,7 +112,7 @@ def build(s, n):
                          '<dl class="consult-spec"><div><dt>Duration</dt><dd>%s</dd></div>'
                          '<div><dt>Location</dt><dd>%s</dd></div></dl>'
                          '<a class="btn btn-spring" style="font-size:15px;padding:15px 24px" '
-                         'href="../book.html">Book this</a></div>' % (t, tag, d, dur, loc))
+                         'href="%s">Book this</a></div>' % (t, tag, d, dur, loc, href))
         else:
             consults += ('<div class="consult consult-alt on-dark">'
                          '<p class="consult-t" style="margin-bottom:16px">%s</p>'
@@ -119,8 +121,8 @@ def build(s, n):
                          '<div><dt>Duration</dt><dd>%s</dd></div>'
                          '<div><dt>Location</dt><dd>%s</dd></div></dl>'
                          '<a class="btn" style="font-size:15px;padding:14px 24px;'
-                         'border-color:#ffffff33;color:var(--bone)" href="../book.html">Book this</a>'
-                         '</div>' % (t, d, dur, loc))
+                         'border-color:#ffffff33;color:var(--bone)" href="%s">Book this</a>'
+                         '</div>' % (t, d, dur, loc, href))
 
     faq = ""
     for i, (q, a) in enumerate(s["faq"], 1):

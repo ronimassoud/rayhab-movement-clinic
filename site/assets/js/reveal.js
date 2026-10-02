@@ -107,6 +107,47 @@
   if (reduce.addEventListener) reduce.addEventListener('change', onReduce);
   else if (reduce.addListener) reduce.addListener(onReduce);
 
+  /* ---------- Measured angles count to their result ----------
+     The four Cobb angles on the site are its only measured outcome, and
+     they sit on the page as flat text. Counting the result down from the
+     starting angle puts the eye on the change rather than on the number.
+
+     The markup already contains the true final value, so this only ever
+     animates towards what the page would show anyway. Nothing here invents
+     a figure, and the screen-reader text is left alone. */
+  var counters = document.querySelectorAll('.metric-now[data-count-from]');
+  if (counters.length) {
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        cio.unobserve(e.target);
+        count(e.target);
+      });
+    }, { threshold: 0.6 });
+    for (var c = 0; c < counters.length; c++) cio.observe(counters[c]);
+  }
+
+  function count(el) {
+    var suffix = el.textContent.replace(/[\d.]/g, '');
+    var to = parseFloat(el.textContent);
+    var from = parseFloat(el.getAttribute('data-count-from'));
+    if (isNaN(to) || isNaN(from) || from === to) return;
+
+    var DUR = 900;
+    var t0 = 0;
+    function frame(now) {
+      if (!t0) t0 = now;
+      var p = Math.min(1, (now - t0) / DUR);
+      // Ease out, so it decelerates into the real figure rather than
+      // stopping dead on it.
+      var v = from + (to - from) * (1 - Math.pow(1 - p, 3));
+      el.textContent = Math.round(v) + suffix;
+      if (p < 1) window.requestAnimationFrame(frame);
+      else el.textContent = to + suffix;   // land exactly, never on a rounding
+    }
+    window.requestAnimationFrame(frame);
+  }
+
   /* ---------- Reading progress and section spy ---------- */
 
   var prose = document.querySelector('.artwrap .prose');

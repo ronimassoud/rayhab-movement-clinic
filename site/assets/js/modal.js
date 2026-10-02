@@ -59,15 +59,30 @@
     return dialog;
   }
 
-  function wire(body) {
+  function wire(body, opts) {
     // Inside the modal the rail's wordmark and "Exit" should dismiss the
     // dialog rather than navigate away from the page behind it.
     Array.prototype.forEach.call(body.querySelectorAll('.bk-rail a[href]'), function (a) {
       a.addEventListener('click', function (e) { e.preventDefault(); close(); });
     });
     if (typeof window.mountBooking === 'function') {
-      window.mountBooking(body.querySelector('#booking'));
+      window.mountBooking(body.querySelector('#booking'), opts);
     }
+  }
+
+  /* The dialog never navigates, so a query string on the trigger link would
+     otherwise be dropped. "Book this" on a service page and the router
+     cards use it to name the service, so it has to survive the hand-off. */
+  function opened(href) {
+    var out = {};
+    try {
+      var q = new URL(href, location.href).search;
+      var t = /[?&]type=([^&#]*)/.exec(q);
+      var w = /[?&]for=([^&#]*)/.exec(q);
+      if (t) out.type = decodeURIComponent(t[1]);
+      if (w) out.forWhom = decodeURIComponent(w[1]);
+    } catch (e) { /* a malformed href just means no preselection */ }
+    return out;
   }
 
   function present() {
@@ -89,7 +104,7 @@
     if (cached) {
       body.innerHTML = '';
       body.appendChild(cached.cloneNode(true));
-      wire(body);
+      wire(body, opened(url));
       present();
       return Promise.resolve();
     }
@@ -105,7 +120,7 @@
         cached = node;
         body.innerHTML = '';
         body.appendChild(cached.cloneNode(true));
-        wire(body);
+        wire(body, opened(url));
         present();
       });
   }

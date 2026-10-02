@@ -10,9 +10,10 @@
 
   /* Mounts the flow onto a given #booking root. Exposed so the modal can
      mount a freshly fetched copy; the standalone page mounts on load. */
-  function mountBooking(root) {
+  function mountBooking(root, opts) {
     if (!root || root.dataset.mounted) return;
     root.dataset.mounted = '1';
+    opts = opts || {};
 
   /* ---------- Fixture data ---------- */
   var TYPES = [
@@ -110,7 +111,7 @@
   /* ---------- State ---------- */
   var st = {
     step: 1, forWhom: 'me', type: 'assessment', mode: 'clinic',
-    winStart: 0, date: null, slot: null, blurred: {}, blurred: {},
+    winStart: 0, date: null, slot: null, blurred: {},
     first: '', last: '', email: '', phone: '', note: '', consent: false,
     touched: false, loading: false, done: false
   };
@@ -555,7 +556,29 @@
   }
 
     st.date = nextOpenFrom(firstBookable());
+
+    /* A link can name the service and who it is for, so arriving from
+       "Book this" on a service page, or from a router card that already
+       says "my child", does not ask the same question twice. Anything
+       unrecognised is ignored and the default stands. */
+    var wanted = opts.type || param('type');
+    if (wanted) {
+      for (var t = 0; t < TYPES.length; t++) {
+        if (TYPES[t].id === wanted) { st.type = wanted; break; }
+      }
+    }
+    var who = opts.forWhom || param('for');
+    if (who === 'child' || who === 'me') st.forWhom = who;
+
     render();
+  }
+
+  /* Reads a query parameter from the current URL. The standalone page is
+     reached by navigation, so its preselection arrives this way; inside the
+     modal there is no navigation and modal.js passes opts instead. */
+  function param(name) {
+    var m = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.search);
+    return m ? decodeURIComponent(m[1]) : '';
   }
 
   window.mountBooking = mountBooking;
