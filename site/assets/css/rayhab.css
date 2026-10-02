@@ -1261,8 +1261,12 @@ a:focus-visible .arw,button:focus-visible .arw{transform:translateX(4px)}
    tone, inset from the edge so a rounded corner cannot slice it.
    ========================================================== */
 :root{
-  --sb-thumb:var(--border);
-  --sb-thumb-hover:var(--muted);
+  /* The light thumb sits a shade darker than the browser's own default so
+     the bar is easy to find and grab against bone. It was --border first,
+     which was lighter than the default and too easy to lose. Hover deepens
+     it again, so the control still answers the cursor. */
+  --sb-thumb:var(--muted);
+  --sb-thumb-hover:var(--text-3);
   --sb-thumb-dark:#3B5942;
   --sb-thumb-dark-hover:#4E7257;
 }
