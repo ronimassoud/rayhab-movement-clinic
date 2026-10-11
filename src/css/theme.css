@@ -1,0 +1,77 @@
+/* ==========================================================
+   Design tokens. The single source for colour, type, radius,
+   breakpoints and elevation. Tailwind turns each entry into
+   both a CSS variable and a family of utilities, so a value
+   changed here reaches the component layer and the markup.
+
+   Tailwind's own palette, fonts, radii, shadows and breakpoints
+   are cleared first. Only brand values exist, which means an
+   off-brand utility such as bg-blue-500 cannot be written.
+   ========================================================== */
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --breakpoint-*: initial;
+  --text-*: initial;
+
+  /* ---- Forest: the dark surfaces ---- */
+  --color-ink-950: #08190E;      /* deepest: nav pill, footer */
+  --color-forest-900: #0E2A17;   /* the dark canvas */
+  --color-forest-850: #123018;
+  --color-brand-800: #174924;    /* matches the clinic's progress composites */
+  --color-forest-700: #1F5C2E;
+  --color-forest-600: #2A7440;   /* quiet accent on light: kickers, links */
+
+  /* ---- Spring: the one action colour ---- */
+  --color-spring-600: #3DBF48;   /* pressed */
+  --color-spring-400: #4FD65A;   /* hover */
+  --color-spring-500: #62E36B;
+  --color-spring-200: #A8F0AC;
+  --color-spring-50: #DFF8E1;    /* soft status surface */
+
+  /* ---- Warm neutrals: the light surfaces ---- */
+  --color-white: #FFFFFF;
+  --color-paper: #FBFAF5;        /* page */
+  --color-bone: #F5F3EC;         /* elevated card, tinted band */
+  --color-sand: #EFEDE4;
+  --color-line: #DCD8CB;         /* subtle border */
+  --color-hairline: #C3CEC5;     /* firmer border */
+  --color-error: #C4442F;
+
+  /* ---- Text ---- */
+  --color-fg: #101C13;
+  --color-fg-2: #3E4C43;
+  --color-fg-3: #6C7A70;
+  --color-body: #5A6A5E;
+  --color-muted: #8A9490;
+  --color-on-dark: #B4C7B8;
+  --color-on-dark-2: #8FA994;
+  --color-on-dark-3: #6E8A76;
+  --color-nav-link: #C6D8C9;
+  --color-foot-head: #4A6650;
+  --color-dot-dark: #2F4A38;
+  --color-on-spring: #123018;
+
+  /* ---- Translucent white, for surfaces laid on forest ---- */
+  --color-veil-06: #ffffff0f;
+  --color-veil-07: #ffffff12;
+  --color-veil-08: #ffffff14;
+  --color-veil-12: #ffffff1f;
+  --color-veil-15: #ffffff26;
+
+  /* ---- Type families: the brand's own two ---- */
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-sans: "Public Sans", system-ui, -apple-system, sans-serif;
+
+  /* ---- Breakpoints ----
+     The site was written desktop-first against max-width 560, 700, 900,
+     1060 and 1180. Each step sits one pixel above, so md: and max-md:
+     split at exactly the same place those queries do. */
+  --breakpoint-sm: 561px;
+  --breakpoint-md: 701px;
+  --breakpoint-lg: 901px;
+  --breakpoint-xl: 1061px;
+  --breakpoint-2xl: 1181px;
+}

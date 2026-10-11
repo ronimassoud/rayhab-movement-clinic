@@ -116,12 +116,12 @@ def build(s, n):
         else:
             consults += ('<div class="consult consult-alt on-dark">'
                          '<p class="consult-t" style="margin-bottom:16px">%s</p>'
-                         '<p class="body-s" style="margin-bottom:20px;color:var(--on-dark)">%s</p>'
+                         '<p class="body-s" style="margin-bottom:20px;color:var(--color-on-dark)">%s</p>'
                          '<dl class="consult-spec consult-spec-dark">'
                          '<div><dt>Duration</dt><dd>%s</dd></div>'
                          '<div><dt>Location</dt><dd>%s</dd></div></dl>'
                          '<a class="btn" style="font-size:15px;padding:14px 24px;'
-                         'border-color:#ffffff33;color:var(--bone)" href="%s">Book this</a>'
+                         'border-color:#ffffff33;color:var(--color-bone)" href="%s">Book this</a>'
                          '</div>' % (t, d, dur, loc, href))
 
     faq = ""
@@ -146,8 +146,6 @@ def build(s, n):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/rayhab.css">
-<link rel="stylesheet" href="../assets/css/mobile.css">
-<link rel="stylesheet" href="../assets/css/booking.css">
 <link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
 </head>
@@ -164,8 +162,8 @@ def build(s, n):
       <p class="crumbs crumbs-dark" style="margin-bottom:26px"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="./">Services</a> <span aria-hidden="true">/</span> %(name)s</p>
       <p class="hero-pill" style="margin-bottom:22px"><span class="dot" aria-hidden="true"></span>Supporting service</p>
       <h1 class="h1">%(h1)s</h1>
-      <p class="body-l d-only" style="margin-top:24px;max-width:560px;color:var(--on-dark);font-size:19px;line-height:1.65">%(lede)s</p>
-      <p class="body-l m-only" style="color:var(--on-dark)">%(lede_m)s</p>
+      <p class="body-l d-only" style="margin-top:24px;max-width:560px;color:var(--color-on-dark);font-size:19px;line-height:1.65">%(lede)s</p>
+      <p class="body-l m-only" style="color:var(--color-on-dark)">%(lede_m)s</p>
       <div class="hero-btns" style="margin-top:32px">
         <a class="btn btn-spring" style="padding:17px 28px" href="../book.html">Book an assessment</a>
         <a class="btn btn-ghost-dark" style="padding:16px 27px" href="./">See all services</a>
@@ -197,7 +195,7 @@ def build(s, n):
       <h2 class="h3 sec-h mw400">%(approach_h)s</h2>
     </div>
     <div>
-      <p class="body-l" style="margin-bottom:28px;max-width:660px;color:var(--text-2)">%(approach_p)s</p>
+      <p class="body-l" style="margin-bottom:28px;max-width:660px;color:var(--color-fg-2)">%(approach_p)s</p>
       <div class="approach-grid">%(minis)s</div>
     </div>
   </section>
@@ -228,7 +226,7 @@ def build(s, n):
   <section class="svc-consult">
     <div class="sechead" style="margin-bottom:32px">
       <div>
-        <p class="eyebrow" style="color:var(--spring-500);margin-bottom:14px">Consultation types</p>
+        <p class="eyebrow" style="color:var(--color-spring-500);margin-bottom:14px">Consultation types</p>
         <h2 class="h3 on-dark sec-h sec-h-dark">Start with an assessment</h2>
       </div>
     </div>
@@ -243,7 +241,7 @@ def build(s, n):
         <div><p class="tile-k">Amman</p><p class="tile-v">Sports rehabilitation with basketball and football athletes</p></div>
       </div>
       <div class="card" style="margin-top:12px">
-        <p class="h6" style="margin-bottom:8px;color:var(--forest-900)">No case studies published yet</p>
+        <p class="h6" style="margin-bottom:8px;color:var(--color-forest-900)">No case studies published yet</p>
         <p class="body-s">Consented patient journeys are published for scoliosis rehabilitation, where the clinic has permission to do so. Nothing is written up for this service yet, and an empty section is more honest than a borrowed quote.</p>
         <p style="margin-top:20px"><a class="btn btn-ghost-light" href="../results.html">See the scoliosis journeys</a></p>
       </div>

@@ -133,8 +133,6 @@ HEAD = '''<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/rayhab.css">
-<link rel="stylesheet" href="../assets/css/mobile.css">
-<link rel="stylesheet" href="../assets/css/booking.css">
 <link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
 </head>
@@ -294,7 +292,7 @@ def render_article(a, topic, lookup):
         <p class="review-v">Physiotherapist, Certified Schroth Practitioner, Certified Mobility Specialist (FRCms), ACE Medical Exercise Specialist.</p>
         <span class="review-pending">Awaiting clinical review</span>
       </div>
-      <div class="reviewbox" style="background:var(--bone)">
+      <div class="reviewbox" style="background:var(--color-bone)">
         <p class="review-k">General information</p>
         <p class="review-v">%s</p>
       </div>
@@ -307,7 +305,7 @@ def render_article(a, topic, lookup):
     if related:
         body += ('\n  <section class="art-more">\n    <div class="sechead">\n      <div>'
                  '<p class="eyebrow" style="margin-bottom:14px">Keep reading</p>'
-                 '<h2 class="h2-sm" style="color:var(--forest-900)">Related in this hub</h2>'
+                 '<h2 class="h2-sm" style="color:var(--color-forest-900)">Related in this hub</h2>'
                  '</div>\n      <a class="textlink" href="./">All %s →</a>\n    </div>'
                  '\n    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>'
                  '\n    <p class="cross-note"><span class="cross-kicker">%s</span>'
@@ -352,11 +350,11 @@ def render_hub(topic, arts):
     <p class="art-stand">%s</p>
   </section>
 
-  <section class="band" style="background:var(--paper)">
+  <section class="band" style="background:var(--color-paper)">
     <div class="sechead">
       <div>
         <p class="eyebrow" style="margin-bottom:14px">%d articles</p>
-        <h2 class="h2-sm" style="color:var(--forest-900)">Read in order, or jump in</h2>
+        <h2 class="h2-sm" style="color:var(--color-forest-900)">Read in order, or jump in</h2>
       </div>
       <a class="textlink" href="../education.html">All topic areas →</a>
     </div>
@@ -365,11 +363,11 @@ def render_hub(topic, arts):
     <p class="disclaimer" style="margin-top:26px">Every article on this page is written for patients and families, not clinicians, and carries a named clinical reviewer. Where the evidence is genuinely unsettled, the article says so rather than picking a side. General information cannot tell you what is happening in your own case.</p>
   </section>
 
-  <section class="art-more" style="background:var(--bone)">
+  <section class="art-more" style="background:var(--color-bone)">
     <div class="sechead">
       <div>
         <p class="eyebrow" style="margin-bottom:14px">Related elsewhere</p>
-        <h2 class="h2-sm" style="color:var(--forest-900)">Where this connects</h2>
+        <h2 class="h2-sm" style="color:var(--color-forest-900)">Where this connects</h2>
       </div>
       <a class="textlink" href="../services/">All services →</a>
     </div>

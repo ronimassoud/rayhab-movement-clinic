@@ -10,8 +10,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/rayhab.css">
-<link rel="stylesheet" href="assets/css/mobile.css">
-<link rel="stylesheet" href="assets/css/booking.css">
 <link rel="icon" href="assets/img/favicon.png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 </head>
@@ -54,7 +52,7 @@
     </ol>
 
     <div class="bk-summary" id="bk-aside">
-      <p class="eyebrow" style="color:var(--spring-500);margin-bottom:16px">Your request</p>
+      <p class="eyebrow" style="color:var(--color-spring-500);margin-bottom:16px">Your request</p>
       <dl>
         <div><dt>Service</dt><dd id="sumType">Scoliosis assessment</dd></div>
         <div><dt>Duration</dt><dd id="sumDur">60 min</dd></div>
@@ -206,7 +204,7 @@
           <button class="bk-edit" type="button" data-step="2">Change</button>
         </div>
         <div class="bk-row">
-          <div><dt>Patient</dt><dd id="rvName">Not entered yet</dd><dd id="rvContact" style="font:300 14px/1.4 var(--sans);color:var(--text-3)">Not entered yet</dd></div>
+          <div><dt>Patient</dt><dd id="rvName">Not entered yet</dd><dd id="rvContact" style="font:300 14px/1.4 var(--font-sans);color:var(--color-fg-3)">Not entered yet</dd></div>
           <button class="bk-edit" type="button" data-step="3">Change</button>
         </div>
       </dl>
@@ -228,8 +226,8 @@
     <section id="bk-done" hidden aria-live="polite">
       <div class="bk-donemark" aria-hidden="true">✓</div>
       <h2 class="bk-h">Request sent</h2>
-      <p class="body-m" style="margin-top:16px;color:var(--text-2)">We've got your request for <strong id="doneWhen">…</strong>. The clinic confirms by WhatsApp within one working day. Nothing has been charged.</p>
-      <h3 class="h6" style="margin-top:32px;color:var(--forest-900)">Before your first visit</h3>
+      <p class="body-m" style="margin-top:16px;color:var(--color-fg-2)">We've got your request for <strong id="doneWhen">…</strong>. The clinic confirms by WhatsApp within one working day. Nothing has been charged.</p>
+      <h3 class="h6" style="margin-top:32px;color:var(--color-forest-900)">Before your first visit</h3>
       <ul class="bk-checklist">
         <li><span class="d-only">Bring any X-ray or report you already have; no need to get a new one.</span><span class="m-only">Bring any X-ray or report you already have.</span></li>
         <li>Wear clothing you can move and be assessed in.</li>

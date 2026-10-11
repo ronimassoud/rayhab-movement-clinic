@@ -1,0 +1,19 @@
+/* Rayhab Movement Clinic, stylesheet entry point.
+   Compiled by Tailwind into site/assets/css/rayhab.css:
+
+     npm run build     one minified build
+     npm run dev       rebuild on save
+
+   Class names are only picked up from the places listed under @source,
+   so the design mockups and loose scripts in the repo root cannot leak
+   utilities into the build. */
+@import "tailwindcss" source(none);
+
+@source "../../site";
+@source "../../content";
+
+@import "./theme.css";
+
+@import "./legacy/rayhab.css" layer(components);
+@import "./legacy/mobile.css" layer(components);
+@import "./legacy/booking.css" layer(components);

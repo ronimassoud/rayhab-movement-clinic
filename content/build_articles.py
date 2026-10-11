@@ -79,8 +79,6 @@ HEAD = '''<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/rayhab.css">
-<link rel="stylesheet" href="../assets/css/mobile.css">
-<link rel="stylesheet" href="../assets/css/booking.css">
 <link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
 </head>
@@ -258,7 +256,7 @@ def render_article(a, lookup, pillars):
         <p class="review-v">Physiotherapist, Certified Schroth Practitioner, Certified Mobility Specialist (FRCms), ACE Medical Exercise Specialist.</p>
         %s
       </div>
-      <div class="reviewbox" style="background:var(--bone)">
+      <div class="reviewbox" style="background:var(--color-bone)">
         <p class="review-k">General information</p>
         <p class="review-v">This page explains scoliosis in general terms. It cannot tell you what your own curve is doing, and it does not replace an assessment.</p>
       </div>
@@ -271,7 +269,7 @@ def render_article(a, lookup, pillars):
     if related:
         body += ('\n  <section class="art-more">\n    <div class="sechead">\n      <div>'
                  '<p class="eyebrow" style="margin-bottom:14px">Keep reading</p>'
-                 '<h2 class="h2-sm" style="color:var(--forest-900)">Related in this pillar</h2>'
+                 '<h2 class="h2-sm" style="color:var(--color-forest-900)">Related in this pillar</h2>'
                  '</div>\n      <a class="textlink" href="%s.html">All %s \u2192</a>\n    </div>'
                  '\n    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>'
                  '\n    <p class="cross-note"><span class="cross-kicker">%s</span>'
@@ -336,11 +334,11 @@ def render_index(view, arts, views):
     <p class="art-stand">%s</p>
   </section>
 
-  <section class="band" style="background:var(--paper)">
+  <section class="band" style="background:var(--color-paper)">
     <div class="sechead" style="margin-bottom:20px">
       <div>
         <p class="eyebrow" style="margin-bottom:14px">%s</p>
-        <h2 class="h2-sm" style="color:var(--forest-900)">%s</h2>
+        <h2 class="h2-sm" style="color:var(--color-forest-900)">%s</h2>
       </div>
       <a class="textlink" href="./">Back to the hub \u2192</a>
     </div>
