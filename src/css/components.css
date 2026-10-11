@@ -395,3 +395,10 @@ a.svc-primary,.svcidx-primary.is-linked{transition:background-color var(--t-move
   .footcols{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 24px}
 }
 @media (max-width:560px){ .footcols{grid-template-columns:1fr 1fr} }
+
+/* On a phone the two actions stack at full width, so neither label has to
+   wrap, and the drawing steps back so it does not run through the text. */
+@media (max-width:560px){
+  .cta-band .btns{flex-direction:column;align-self:stretch}
+  .cta-band::before,.cta-band .cta-art{opacity:.2}
+}

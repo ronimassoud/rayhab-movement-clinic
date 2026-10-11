@@ -18,7 +18,7 @@
     /* The floating nav. --nav-h is the space it takes from the top of the
        viewport, offset included, because that is what scroll-padding-top,
        the case-progress pill, the drawer and the section spy all need. It
-       is a plain length, not a calc, so reveal.js can parse it. */
+       is a plain length, not a calc, so the section spy in ui.js can parse it. */
     --nav-top: 12px;
     --nav-pill: 64px;
     --nav-h: 76px;

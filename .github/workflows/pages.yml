@@ -27,6 +27,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # The compiled stylesheet is committed, so the site can be previewed with
+      # nothing installed. It is rebuilt here anyway, so what is published
+      # always matches src/css.
+      - name: Build the stylesheet
+        run: npm ci && npm run build
+
       - name: Check every internal link resolves
         run: python3 .github/scripts/check_links.py site
 

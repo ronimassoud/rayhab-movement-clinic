@@ -42,7 +42,7 @@
   }
   .m-bookbar-txt{flex:1;min-width:0}
   .m-bookbar-t{margin:0;font:600 15px/1.3 var(--font-sans);color:var(--color-fg)}
-  .m-bookbar-d{margin:0;font:400 13px/1.3 var(--font-sans);color:var(--color-fg-3)}
+  .m-bookbar-d{margin:0;font:400 13px/1.3 var(--font-sans);color:var(--color-body)}
   .m-bookbar-1{margin:0;flex:1;min-width:0;font:400 14px/1.4 var(--font-sans);color:var(--color-fg-2)}
   .m-bookbar .btn{flex:none;min-height:48px;padding:12px 24px}
 
@@ -89,7 +89,7 @@
   .founder-slot{height:260px}
 
   /* ---- SERVICE DETAIL (03 mobile) ---- */
-  .svc-hero{display:flex;flex-direction:column;padding:8px 20px 32px;gap:0;align-items:stretch}
+  .svc-hero{display:flex;flex-direction:column;padding-inline:var(--pad-x);padding-bottom:var(--section-y);gap:0;align-items:stretch}
   .svc-hero .hero-pill{align-self:flex-start}
   .svc-hero-copy{padding-top:0;display:contents}
   .svc-hero .crumbs{order:0;font-size:12px;margin-bottom:16px}
@@ -193,7 +193,7 @@
   .pillar-body{display:block;min-width:0}
   .pillar-head{display:none}
   .pillar-t,.pillar-t-lg{font:600 var(--text-sub)/var(--text-sub--line-height) var(--font-display);margin:0}
-  .pillar-count{display:block;font:400 13px/1.4 var(--font-sans);color:var(--color-fg-3);margin:0}
+  .pillar-count{display:block;font:400 13px/1.4 var(--font-sans);color:var(--color-body);margin:0}
   .pillar-d,.pillar-tags{display:none}
 
   .hub-myths{padding:var(--section-y) var(--pad-x)}

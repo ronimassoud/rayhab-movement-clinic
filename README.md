@@ -39,6 +39,21 @@ python -m http.server 4488 --directory site
 Then open <http://localhost:4488>. A `.claude/launch.json` config is included for
 the editor's preview pane.
 
+The pages are static and the compiled stylesheet is committed, so viewing the
+site needs nothing but that. Changing the styles needs Node:
+
+```bash
+npm install
+```
+
+```bash
+npm run dev
+```
+
+`npm run dev` rebuilds `site/assets/css/rayhab.css` on every save; `npm run build`
+does one minified build. The deploy workflow runs the build again before it
+publishes, so the live stylesheet cannot lag the source.
+
 `python -m http.server` sends no cache headers, so browsers hold on to stale CSS
 and JS between edits. Hard-refresh when something looks unchanged.
 
@@ -52,12 +67,15 @@ site/                        the website, 72 pages
   exercise/  sport/  posture/  mobility/  injury/
                              5 education hubs, 24 articles between them
   services/                  index + 4 service pages
-  assets/css/                rayhab.css (design system), mobile.css, booking.css
-  assets/js/                 ui.js, booking.js, modal.js, contact.js
+  assets/css/rayhab.css      the one stylesheet, compiled. Do not edit it by hand
+  assets/js/                 ui.js, booking.js, modal.js, contact.js, motion.js
+  assets/js/vendor/          GSAP, ScrollTrigger, SplitText (pinned, self-hosted)
   assets/img/cases/          consented patient progress photographs
   assets/img/favicon.png     32px R monogram, cut from the wordmark
   assets/img/rayhab-logo.png the full-resolution master, not served
+src/css/                     stylesheet source (see Design system)
 content/                     generators and source content (see below)
+package.json                 Tailwind and the pinned GSAP version, build only
 Rayhab UI.dc.html            the original Claude Design canvas, byte-exact
 brief.txt                    the original written brief
 ```
@@ -118,7 +136,7 @@ twenty-four appeared on more than one page with no way to tell.
 
 Every view now carries the same bar of chips, so the relationship is
 visible and switching is one click. The bar is plain links, so it works
-without JavaScript; `reveal.js` only nudges the horizontal track on a phone
+without JavaScript; `ui.js` only nudges the horizontal track on a phone
 so the active chip is not off-screen.
 
 Adding a view means adding an entry to `routes` in `articles.json` and a
@@ -126,90 +144,133 @@ label in `VIEW_LABEL`. Nothing else changes.
 
 ## Motion
 
-Reveals are CSS transitions driven by an IntersectionObserver in
-`site/assets/js/reveal.js`. They are deliberately not done in JavaScript:
-the global `prefers-reduced-motion` kill-switch in `rayhab.css` neutralises
-CSS transitions and has no effect on inline styles written per frame, so a
-JS-driven reveal would need a second copy of that policy, and the two would
-eventually disagree.
+GSAP 3.13 with ScrollTrigger drives all movement, from one file,
+`site/assets/js/motion.js`, on every page except `book.html`. SplitText is
+loaded on the home page only, where a headline is split.
 
-Markup API, so the generators emit reveals without the script holding a
-list of selectors:
+| Scene | What it does |
+|---|---|
+| reveals | sections rise as they enter, driven by `data-reveal` in the markup |
+| hero | the floating cards and the photo fan settle into place |
+| headline | the home headline rises line by line |
+| tilt | the three quotes close from a wider fan as they scroll in |
+| nav | the floating pill steps aside going down and returns going up |
+| line art | the Cobb-angle drawing in the closing band draws with the scroll |
+| process | the rule above each of the six stages fills in turn |
+| count | the measured angles count to their result |
+| reading | progress across an article's body |
+| cases | where you are in the five case studies |
+
+The markup API for reveals, so the Python generators can emit them without the
+script carrying a list of selectors:
 
 ```
 data-reveal                 fade and rise this element
 data-reveal="children"      stagger its direct children instead
 data-reveal-stagger="60"    ms between children (default 70)
 data-reveal-delay="120"     ms before the group starts
-data-reveal-y="8"           px of travel (default 14; 0 fades only)
+data-reveal-y="8"           px of travel (default 14)
 ```
 
-Three rules this system lives by:
+Three rules hold for every scene.
 
-- **Nothing hides without `html.js-motion`.** An inline script in the head
-  adds it, and arms a 2600 ms failsafe that removes it again. If `reveal.js`
-  is blocked, 404s or fails to parse, the class comes off and the page is
-  simply visible. Tested by pointing the script at a missing file.
-- **A revealed element loses its `data-reveal` attribute.** The reveal rules
-  tie with the card hover-lift rules on specificity and win on source order,
-  so leaving them matching would silently kill the lift on every linked
-  card. Removing the attribute is what prevents that.
-- **Heroes are never revealed.** They are the LCP element, and hiding one to
-  fade it in is how a fast page is made to feel slow.
+- **Nothing is required.** An inline script in the head adds `.js-motion` to
+  `<html>`, which is the only thing that hides a reveal target, and arms a
+  2600 ms failsafe that removes it again. `motion.js` disarms it when it takes
+  over. If GSAP is blocked or never arrives, `ui.js` drops the class as soon as
+  the page has loaded. Either way the page is simply visible.
+- **Reduced motion is checked in the script.** The stylesheet's global
+  `prefers-reduced-motion` switch stops CSS transitions but cannot reach the
+  inline styles GSAP writes each frame. Every scene is therefore registered
+  inside `gsap.matchMedia()` on that query, and the head script never adds the
+  class when the preference is set.
+- **No scroll hijacking.** `normalizeScroll` and ScrollSmoother are never used.
+  Either would break the fixed nav, the fixed booking bar and scrolling inside
+  the booking dialog.
 
-`content/motion_tags.py` injects the gate and the script tag, after
-formatting, the same way `wrap_arrows()` already works. The same function
-serves the hand-written pages, so there is one definition. `book.html` is
-excluded by construction: it has no `modal.js`, which is the anchor.
-`check_links.py` fails the deploy if any other page is missing either.
+`content/motion_tags.py` injects the head script and the script tags into all
+63 generated pages and the 8 hand-written ones, and `.github/scripts/check_links.py`
+fails the deploy if any page but `book.html` is missing them.
 
 ## GSAP
 
-GSAP 3.13.0 and ScrollTrigger are vendored in
-`site/assets/js/vendor/`, with provenance and SHA-256 in the README there.
-They load on **results.html only**, where `assets/js/motion.js` drives the
-sticky progress strip over the five case studies.
+Self-hosted in `site/assets/js/vendor/`, pinned to 3.13.0 in `package.json`, with
+hashes in `vendor/README.md`. It is not loaded from a CDN: that would add a
+second origin to every first visit, and on a health site it would hand a third
+party the visitor's address together with the page they were reading.
 
-They are not on the home page. The services section was the other
-candidate, and `reveal.js` already staggers it correctly for nothing; adding
-46 KB gzipped to the site's main entry point to redo something that works
-is the behaviour the brief warns against. One page, one scene, because that
-is the one place a reader loses their place in a set.
+Cost: about 46 KB gzipped for the core and ScrollTrigger on every page, plus
+3.5 KB for SplitText on the home page. All three load with `defer`.
 
-`motion.js` owns `[data-scene]` and nothing else; `reveal.js` owns
-`[data-reveal]` and never reads `[data-scene]`. Disjoint namespaces, so the
-two cannot animate the same element.
+Things to keep when adding a scene:
 
-Four things it must keep doing, each for a reason that bit:
-
-- Its own `prefers-reduced-motion` check. The kill-switch at `rayhab.css:79`
-  stops CSS transitions and does nothing to the inline styles GSAP writes.
-- `gsap.matchMedia()` above 1061px only, so the scene tears itself down on
-  a narrow viewport instead of running against a one-column grid.
-- `document.fonts.ready` then `ScrollTrigger.refresh()`. The display font
-  loads with swap and every measurement taken before it lands is wrong.
-- A `MutationObserver` on `html.modal-open`, which sets `overflow:hidden`
-  and changes the scroller's height while the booking dialog is open.
-
-Never `normalizeScroll` (it takes over touch scrolling, which would break
-scrolling inside the booking flow) and never `ScrollSmoother` (it wraps the
-body in a transformed element, which breaks `position:sticky` on the nav
-and `position:fixed` on the mobile book bar).
+- Use `gsap.matchMedia()` and the site's own breakpoints (700, 1060).
+- Scrubbed and pinned work is desktop only.
+- `document.fonts.ready` already triggers a refresh. Bricolage loads with
+  `display=swap`, and the swap moves every heading.
+- Triggers are disabled while the booking dialog is open, because
+  `html.modal-open` changes the scroller's height.
+- Animate `--tilt`, not `rotation`, on a tilted card. The lean is the CSS
+  `rotate` property, which leaves `transform` free.
 
 ## Design system
 
-Tokens are defined once at the top of `assets/css/rayhab.css` and transcribed
-from the design canvas rather than from a summary table. Forest and spring
-greens, warm neutrals, Bricolage Grotesque for display and Public Sans for text.
+Rayhab's own palette and typefaces, arranged on the structure of the Tomorro
+reference system: a 1200px column on full-bleed bands, a floating pill
+navigation, editorial display type, flat cards, and elevation held back for the
+few things that float.
 
-Motion follows one rule: colour transitions at `0.15s`, movement at `0.24s` on
-`cubic-bezier(.2,.8,.2,1)`, imagery at `0.55s`. Anything that moves sits behind
-`@media (hover:hover) and (pointer:fine)` so touch devices do not get stuck
-hover states, and `prefers-reduced-motion` strips transforms throughout.
+**Source.** `src/css/` compiles through Tailwind v4 into one file.
 
-Cards that lift and cast a shadow on hover are cards you can click. Placeholder
-cards warm slightly but never lift, so a hover never promises a link that is not
-there.
+| File | Holds |
+|---|---|
+| `theme.css` | the tokens, in Tailwind's `@theme`. Colour, type scale, radius, breakpoints, shadow |
+| `base.css` | document defaults, focus, runtime variables, the reduced-motion switch |
+| `components.css` | surfaces, type classes, navigation, buttons, cards, media, tilt, closing band, footer |
+| `site.css` | page composition and interaction |
+| `mobile.css` | the phone compositions, which are separate layouts rather than reflowed desktop |
+| `booking.css` | the booking flow and its dialog |
+
+Tailwind's default palette, fonts, radii and shadows are cleared in `theme.css`,
+so only brand values exist as utilities. Utilities in the markup handle one-off
+spacing, width and colour; anything repeated is a named component, because 63
+pages are generated and there is no component framework to hold fifteen
+utilities in one place.
+
+**Tokens.**
+
+| | |
+|---|---|
+| Surfaces | `forest-900` dark, `paper` page, `bone` elevated and tinted, `ink-950` nav and footer |
+| Action | `spring-500`, hover `spring-400`, pressed `spring-600`. The only filled action colour |
+| Text | `fg`, `fg-2`, `body` on light; `bone`, `on-dark`, `on-dark-2` on dark. `muted` and `fg-3` are for non-text only: they do not reach 4.5:1 |
+| Type | Bricolage Grotesque 700 for display, Public Sans 400 to 600 for everything read |
+| Scale | `display-2xl` 80, `display-xl` 56, `display` 40, `heading-lg` 32, `heading` 24, `heading-sm` 20, `sub` 18, `body` 16, `body-sm` 14, `caption` 12. The top four are fluid |
+| Radius | `xs` 8, `sm` 12, `md` 16, `lg` 24, `xl` 28, `2xl` 40, `pill` |
+| Spacing | 4px steps below 24, 8px steps from 24. Sections use `--section-y` |
+| Shadow | `nav` and `float`. Nothing else has one |
+
+**Surfaces.** A section is `.s-light`, `.s-tint` or `.s-dark`. Each sets
+`--card-bg` and `--card-line`, and cards read those, so a card never needs to
+know which band it sits in.
+
+**Buttons.** A pill (`.btn`, with `.btn-md` and `.btn-sm`) moves the visitor on.
+The compact 8px `.btn-compact` is a control inside an interface.
+
+**Cards** are flat: a surface and a hairline. A card that is a link answers the
+cursor with its edge and its arrow. One that is not does nothing, so a response
+always means there is somewhere to go.
+
+**Tilted cards.** `.tilt` leans a card by `--tilt` (default 5 degrees, `.tilt-l`
+for the other way) and gives it the floating shadow. A leaning card straightens
+on hover and on keyboard focus. Text cards flatten below 700px; the photo fan on
+the results page keeps its lean. Under reduced motion the lean stays, as a pose,
+and stops animating.
+
+**Empty photo wells.** Photography for the services and the articles has not
+been shot. A small well inside a card collapses until it has an image, and a
+large one becomes a forest panel with the clinic's Cobb-angle line drawing. The
+art direction for each shot is still in the markup as a comment.
 
 ## Before launch
 

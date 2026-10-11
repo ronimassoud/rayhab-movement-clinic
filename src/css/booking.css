@@ -27,7 +27,7 @@
 .bk-summary dl>div{display:flex;justify-content:space-between;gap:16px}
 .bk-summary dt{font:400 14px/1.4 var(--font-sans);color:var(--color-on-dark-2);flex:none}
 .bk-summary dd{margin:0;font:500 14px/1.4 var(--font-sans);color:var(--color-bone);text-align:right}
-.bk-note{margin:20px 0 0;font:400 13px/1.6 var(--font-sans);color:var(--color-on-dark-3)}
+.bk-note{margin:20px 0 0;font:400 13px/1.6 var(--font-sans);color:var(--color-on-dark-2)}
 @media (max-width:1000px){
   .bk-rail{padding:26px var(--pad-x)}
   .bk-rail .wordmark{margin-bottom:26px}
@@ -40,7 +40,7 @@
 .bk-panel{padding:44px 48px;display:flex;flex-direction:column;background:var(--color-bone)}
 @media (max-width:700px){ .bk-panel{padding:28px var(--pad-x)} }
 .bk-stephead{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:26px}
-.bk-eyebrow{margin:0 0 8px;font:600 12px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--color-muted)}
+.bk-eyebrow{margin:0 0 8px;font:600 12px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--color-body)}
 .bk-h{margin:0;font:600 var(--text-heading-lg)/var(--text-heading-lg--line-height) var(--font-display);letter-spacing:-.03em;color:var(--color-forest-900)}
 .bk-h:focus{outline:none}
 .bk-h:focus-visible{outline:2px solid var(--color-ink-950);outline-offset:4px}
@@ -76,7 +76,7 @@
 .bk-calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .bk-month{margin:0;font:600 16px/1 var(--font-sans);color:var(--color-fg)}
 .bk-nav{display:flex;gap:8px}
-.bk-nav span{width:34px;height:34px;border-radius:50%;border:1px solid var(--color-line);display:flex;align-items:center;justify-content:center;color:var(--color-muted);font-size:14px}
+.bk-nav span{width:34px;height:34px;border-radius:50%;border:1px solid var(--color-line);display:flex;align-items:center;justify-content:center;color:var(--color-body);font-size:14px}
 .bk-nav span:last-child{color:var(--color-brand-800)}
 .bk-daybar{display:flex;gap:8px;margin-bottom:22px}
 .bk-day{
@@ -85,7 +85,7 @@
 }
 .bk-day:hover{border-color:var(--color-forest-600)}
 .bk-day.is-active{background:var(--color-brand-800);border-color:var(--color-brand-800)}
-.bk-dow{margin:0;font:500 12px/1 var(--font-sans);color:var(--color-muted)}
+.bk-dow{margin:0;font:500 12px/1 var(--font-sans);color:var(--color-body)}
 .bk-day.is-active .bk-dow{color:#8FD69A}
 .bk-num{margin:0;font:600 var(--text-heading-sm)/var(--text-heading-sm--line-height) var(--font-display);color:var(--color-fg)}
 .bk-day.is-active .bk-num{color:var(--color-bone)}
@@ -104,8 +104,8 @@
 @media (max-width:520px){ .bk-slotgrid{grid-template-columns:repeat(3,1fr)} }
 .bk-noslots{text-align:center;background:#fff;border:1px dashed var(--color-hairline);border-radius:var(--radius-md);padding:34px 20px}
 .bk-noslots-t{margin:0 0 5px;font:600 17px/1.3 var(--font-sans);color:var(--color-fg)}
-.bk-noslots-d{margin:0 0 16px;font:400 15px/1.5 var(--font-sans);color:var(--color-fg-3)}
-.bk-hold{margin:16px 0 0;font:400 13px/1.6 var(--font-sans);color:var(--color-fg-3)}
+.bk-noslots-d{margin:0 0 16px;font:400 15px/1.5 var(--font-sans);color:var(--color-body)}
+.bk-hold{margin:16px 0 0;font:400 13px/1.6 var(--font-sans);color:var(--color-body)}
 
 /* Details form */
 .bk-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -120,7 +120,7 @@
 .input:focus,.textarea:focus{outline:2px solid var(--color-ink-950);outline-offset:2px;border-color:var(--color-brand-800)}
 .input[aria-invalid="true"],.textarea[aria-invalid="true"]{border:1.5px solid var(--color-error)}
 .textarea{min-height:104px;resize:vertical;line-height:1.55}
-.field-hint{display:block;margin-top:6px;font:400 13px/1.5 var(--font-sans);color:var(--color-fg-3)}
+.field-hint{display:block;margin-top:6px;font:400 13px/1.5 var(--font-sans);color:var(--color-body)}
 .bk-consent{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;padding:0;cursor:pointer}
 .bk-checkbox{
   width:22px;height:22px;border-radius:var(--radius-xs);flex:none;margin-top:2px;background:#fff;
@@ -135,13 +135,13 @@
 /* Review */
 .bk-review{border-top:1px solid var(--color-line)}
 .bk-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:18px 0;border-bottom:1px solid var(--color-line)}
-.bk-row dt{font:400 13px/1.5 var(--font-sans);color:var(--color-muted);margin-bottom:3px}
+.bk-row dt{font:400 13px/1.5 var(--font-sans);color:var(--color-body);margin-bottom:3px}
 .bk-row dd{margin:0;font:500 16px/1.45 var(--font-sans);color:var(--color-fg)}
 .bk-edit{background:none;border:0;cursor:pointer;flex:none;font:500 14px/1 var(--font-sans);color:var(--color-brand-800);text-decoration:underline;min-height:44px;padding:0 2px}
 
 /* Actions */
 .bk-actions{display:flex;align-items:center;gap:16px;margin-top:auto;padding-top:32px}
-.bk-hint{margin:0;flex:1;font:400 14px/1.5 var(--font-sans);color:var(--color-fg-3)}
+.bk-hint{margin:0;flex:1;font:400 14px/1.5 var(--font-sans);color:var(--color-body)}
 .btn-disabled{background:var(--color-sand);color:#9AA79E;cursor:not-allowed}
 .bk-linkbtn{background:none;border:0;cursor:pointer;min-height:44px;font:500 15px/1 var(--font-sans);color:var(--color-fg-2);padding:0 4px}
 .bk-linkbtn:hover{color:var(--color-brand-800)}
@@ -241,7 +241,7 @@
 
   /* Success body */
   #bk-done .bk-donemark,#bk-done .bk-h,#bk-done>.body-m{display:none}
-  #bk-done .h6{margin:0 0 12px;font:600 12px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--color-muted)}
+  #bk-done .h6{margin:0 0 12px;font:600 12px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--color-body)}
   .bk-checklist{gap:1px;background:var(--color-line);border-radius:var(--radius-md);overflow:hidden;margin:0 0 20px}
   .bk-checklist li{background:var(--color-paper);padding:14px 16px;font:400 15px/1.5 var(--font-sans);color:var(--color-fg-2);display:block}
   .bk-checklist li::before{content:none}
@@ -263,6 +263,9 @@
 html.modal-open{overflow:hidden}
 
 dialog.modal{
+  /* Tailwind's reset zeroes every margin, and a modal dialog is centred by
+     its auto margins, so they are put back here. */
+  margin:auto;
   padding:0;border:0;background:transparent;
   max-width:none;max-height:none;overflow:visible;
   width:min(1120px, calc(100vw - 48px));
@@ -527,7 +530,7 @@ dialog.modal.is-open::backdrop{background:rgba(8,25,14,.72)}
 /* ---- Scrollbars inside the dialog ----
    The rail and the panel each scroll on their own, so the browser paints a
    scrollbar in each one. Everything about them now comes from the
-   site-wide scrollbar layer in rayhab.css; the rail is the one surface
+   site-wide scrollbar layer in site.css; the rail is the one surface
    here that is dark, and it is not marked .on-dark because the class sets
    a text colour the rail already handles itself. So it takes the dark
    thumb directly. */
