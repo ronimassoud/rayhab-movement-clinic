@@ -1,4 +1,5 @@
-/* Rayhab, shared UI behaviour: mobile nav + accordions.
+/* Rayhab, shared UI behaviour: mobile nav, accordions, library bar,
+   section spy.
    Progressive enhancement: every control works as markup first. */
 (function () {
   'use strict';
@@ -93,5 +94,67 @@
         if (mark) mark.textContent = isOpen ? '+' : '−';
       });
     });
+  });
+
+  /* ---- Library view bar ----
+     On a phone the bar is one horizontal track, and the active view can sit
+     a long way along it. Nudging the track, rather than calling
+     scrollIntoView, avoids yanking the page vertically as a side effect. */
+  var bar = document.querySelector('.libbar');
+  if (bar) {
+    var active = bar.querySelector('[aria-current="page"]');
+    if (active && bar.scrollWidth > bar.clientWidth) {
+      var lead = active.offsetLeft - 16;
+      var trail = active.offsetLeft + active.offsetWidth + 16 - bar.clientWidth;
+      bar.scrollLeft = Math.max(0, Math.min(Math.max(lead, trail), bar.scrollWidth - bar.clientWidth));
+    }
+  }
+
+  /* ---- Section spy ----
+     Marks the table-of-contents entry for the section being read.
+     aria-current is the attribute the state actually is, so it reaches
+     assistive technology for free. It is a state, not an animation, so it
+     lives here rather than in motion.js and works with motion turned off. */
+  var prose = document.querySelector('.artwrap .prose');
+  var toc = document.querySelector('.toc');
+  var heads = prose ? prose.querySelectorAll('h2[id]') : [];
+  if (toc && heads.length) {
+    var tocLinks = {};
+    Array.prototype.forEach.call(toc.querySelectorAll('a[href^="#"]'), function (a) {
+      tocLinks[a.getAttribute('href').slice(1)] = a;
+    });
+    var current = null, ticking = false;
+    var measure = function () {
+      ticking = false;
+      var line = (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'), 10) || 76) + 24;
+      var found = null;
+      for (var j = 0; j < heads.length; j++) {
+        if (heads[j].getBoundingClientRect().top <= line) found = heads[j].id;
+        else break;
+      }
+      if (found === current) return;
+      if (current && tocLinks[current]) tocLinks[current].removeAttribute('aria-current');
+      if (found && tocLinks[found]) tocLinks[found].setAttribute('aria-current', 'true');
+      current = found;
+    };
+    var onScroll = function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(measure);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    measure();
+  }
+
+  /* ---- Motion failsafe, the fast path ----
+     The head script hides reveal targets and gives motion.js 2.6s to take
+     over. If the page has finished loading and GSAP is not there, it is
+     not coming, so there is no reason to make the reader wait it out. */
+  window.addEventListener('load', function () {
+    if (window.gsap) return;
+    var el = document.documentElement;
+    el.className = el.className.replace(/ ?js-motion/, '');
+    if (window.rhMotionFail) { window.clearTimeout(window.rhMotionFail); window.rhMotionFail = null; }
   });
 })();

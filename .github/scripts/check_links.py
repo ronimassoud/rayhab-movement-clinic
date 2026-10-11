@@ -33,15 +33,18 @@ for base, _dirs, files in os.walk(ROOT):
         with open(page, encoding="utf-8") as fh:
             html = fh.read()
 
-        # The gate and reveal.js reach 63 generated pages through
+        # The gate and the GSAP scripts reach 63 generated pages through
         # content/motion_tags.py and 8 hand-written ones through the same
         # function. Asserting it here is what actually stops the two halves
         # drifting apart; a note in the README would not.
         if name not in NO_MOTION:
             if "js-motion" not in html:
                 missing_motion.append("%s -> no motion gate" % page)
-            if "assets/js/reveal.js" not in html:
-                missing_motion.append("%s -> no reveal.js" % page)
+            for need in ("assets/js/vendor/gsap.min.js",
+                         "assets/js/vendor/ScrollTrigger.min.js",
+                         "assets/js/motion.js"):
+                if need not in html:
+                    missing_motion.append("%s -> no %s" % (page, need))
         for match in REF.finditer(html):
             target = match.group(1)
             if target.startswith(SKIP):

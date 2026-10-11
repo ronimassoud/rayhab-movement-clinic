@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Inject the motion gate and reveal.js into a finished page.
+"""Inject the motion gate and the GSAP motion scripts into a finished page.
 
 Applied after formatting, exactly the way wrap_arrows() already is in all
 three generators. That ordering matters: the gate script is almost entirely
@@ -20,7 +20,7 @@ VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1">
 
 # Runs before the stylesheets so the class is set before first paint, and
 # touches no computed style so it forces no recalculation. The failsafe is
-# the whole safety story: if reveal.js is blocked, fails to parse or never
+# the whole safety story: if GSAP or motion.js is blocked, fails to parse or never
 # arrives, the class comes off by itself and the page is simply visible.
 GATE = ('<script>!function(d,w){var e=d.documentElement,m=0;'
         'try{m=w.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}'
@@ -40,8 +40,12 @@ def _prefix(html):
 
 
 def inject(html):
-    """Add the gate and the reveal.js tag. Idempotent, so re-running a
-    generator over pages that already carry them changes nothing."""
+    """Add the gate and the motion scripts. Idempotent, so re-running a
+    generator over pages that already carry them changes nothing.
+
+    GSAP, ScrollTrigger and motion.js go on every page with the modal.
+    SplitText is only wanted where a headline is split, which is the home
+    hero, so it is keyed off that markup rather than shipped everywhere."""
     pre = _prefix(html)
     if pre is None:          # book.html, and anything else without the modal
         return html
@@ -49,9 +53,14 @@ def inject(html):
     if 'js-motion' not in html:
         html = html.replace(VIEWPORT, VIEWPORT + '\n' + GATE, 1)
 
-    tag = '<script src="%sassets/js/reveal.js" defer></script>' % pre
-    if tag not in html:
+    names = ['vendor/gsap.min.js', 'vendor/ScrollTrigger.min.js']
+    if 'class="home-hero' in html:
+        names.append('vendor/SplitText.min.js')
+    names.append('motion.js')
+
+    if 'assets/js/motion.js' not in html:
         modal = '<script src="%sassets/js/modal.js"></script>' % pre
-        html = html.replace(modal, modal + '\n' + tag, 1)
+        tags = '\n'.join('<script src="%sassets/js/%s" defer></script>' % (pre, n) for n in names)
+        html = html.replace(modal, modal + '\n' + tags, 1)
 
     return html

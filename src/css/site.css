@@ -881,45 +881,46 @@ html{scrollbar-color:var(--sb-thumb) transparent}
 
 
 /* ==========================================================
-   Scroll reveals, reading progress and section spy
-   Every rule here is scoped under html.js-motion, which an
-   inline script in the head adds only when motion is wanted.
-   No class means nothing is hidden, so a failed or blocked
-   reveal.js leaves an ordinary, fully visible page.
+   Motion states
+   motion.js (GSAP) does the moving. The stylesheet only holds
+   the starting pose, and only while <html> carries .js-motion,
+   which an inline script in the head adds when motion is wanted
+   and removes again after 2.6s if motion.js never takes over.
+   No class means nothing is hidden, so a blocked or failed
+   script leaves an ordinary, fully visible page.
    ========================================================== */
-
 .js-motion [data-reveal]:not([data-reveal="children"]),
-.js-motion [data-reveal="children"]>*{
-  opacity:0;transform:translateY(var(--rv-y,14px));
-  transition:opacity .5s var(--ease-out),transform .5s var(--ease-out)}
-.js-motion [data-reveal].rv-in,
-.js-motion [data-reveal="children"].rv-in>*{opacity:1;transform:none}
+.js-motion [data-reveal="children"]>*{opacity:0}
 
-/* Placeholder wells are excluded on purpose. Easing a dashed grey box into
-   view points the eye at the one thing on the page that is unfinished. */
-.js-motion .slot[data-reveal],.js-motion [data-reveal="children"]>.slot{
-  opacity:1;transform:none;transition:none}
+/* The floating cards and the photo fan arrive after the hero text. */
+.js-motion .hero-card,.js-motion .hero-shot,.js-motion .measure-card,
+.js-motion .tilt-fan img{opacity:0}
 
-@media (max-width:700px){
-  /* A stagger down a single column is just a delay, and on the hairline
-     divided lists it strobes, so the group arrives as one on a phone. */
-  .js-motion [data-reveal="children"]>*{transition-delay:0ms !important}
-}
-
-@media (prefers-reduced-motion:reduce){
-  .js-motion [data-reveal]:not([data-reveal="children"]),
-  .js-motion [data-reveal="children"]>*{
-    opacity:1 !important;transform:none !important;transition:none}
-}
+/* The home headline rises line by line, so it waits out of sight rather
+   than showing finished and then replaying. The portrait beside it is the
+   largest paint on that page, so this does not hold the page back. */
+.js-motion .home-hero .d1{visibility:hidden}
 
 /* ---- Reading progress ----
-   One custom property written per animation frame, no layout read in the
-   paint path. Sits directly under the nav, which is why it needs --nav-h. */
-.read-bar{position:fixed;top:var(--nav-h);left:0;right:0;height:2px;z-index:98;
-  pointer-events:none;background:transparent}
-.read-bar span{display:block;height:100%;width:100%;background:var(--color-spring-500);
-  transform:scaleX(var(--read,0));transform-origin:left center}
-@media (prefers-reduced-motion:reduce){ .read-bar{display:none} }
+   A hairline across the top edge of the viewport, above the floating nav.
+   The element is created by motion.js, so it does not exist without it. */
+.read-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:101;pointer-events:none}
+.read-bar span{display:block;height:100%;background:var(--color-spring-500);
+  transform:scaleX(0);transform-origin:left center}
+
+/* ---- The six stages ----
+   A heavier rule that fills across each stage's hairline as the section
+   scrolls. --fill is driven by motion.js and rests at 0, which leaves the
+   plain hairline and the static lead-stage rule. */
+.stage::before{content:"";position:absolute;left:0;right:0;top:-1px;height:2px;
+  background:var(--color-forest-600);transform:scaleX(var(--fill,0));transform-origin:left center}
+
+/* ---- Line art in the closing band ----
+   With motion on, an inline drawing replaces the painted background so its
+   strokes can follow the scroll. */
+.cta-band.has-art::before{content:none}
+.cta-art{position:absolute;z-index:-1;left:50%;top:50%;width:min(760px,120%);height:auto;
+  translate:-50% -50%;opacity:.34;pointer-events:none}
 
 /* ---- Section spy ----
    The entry for the section being read. aria-current is the attribute the
