@@ -151,14 +151,14 @@ TAIL = '''
 </html>
 '''
 
-CTA = '''  <section class="cta-band" style="padding:56px var(--pad-x)" data-reveal="children" data-reveal-stagger="90">
+CTA = '''  <section class="cta-band" data-reveal="children" data-reveal-stagger="90">
     <div>
       <h2 class="h2-sm cta-h2">{h}</h2>
       <p class="body-m cta-lede">{p}</p>
     </div>
     <div class="btns">
-      <a class="btn btn-forest" href="../book.html">Book an assessment</a>
-      <a class="btn btn-ghost-ink" href="{href}">{label}</a>
+      <a class="btn btn-spring" href="../book.html">Book an assessment</a>
+      <a class="btn btn-ghost-dark" href="{href}">{label}</a>
     </div>
   </section>
 '''
@@ -262,7 +262,7 @@ def render_article(a, topic, lookup):
     body += '''  <article>
   <header class="art-hero">
     <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="../education.html">Education</a> <span aria-hidden="true">/</span> <a href="./">%s</a></p>
-    <p class="art-eyebrow" style="margin-top:18px">%s</p>
+    <p class="art-eyebrow mt-5">%s</p>
     <h1 class="art-h1">%s</h1>
     <p class="art-stand">%s</p>
     <div class="art-metarow">
@@ -292,7 +292,7 @@ def render_article(a, topic, lookup):
         <p class="review-v">Physiotherapist, Certified Schroth Practitioner, Certified Mobility Specialist (FRCms), ACE Medical Exercise Specialist.</p>
         <span class="review-pending">Awaiting clinical review</span>
       </div>
-      <div class="reviewbox" style="background:var(--color-bone)">
+      <div class="reviewbox bg-bone">
         <p class="review-k">General information</p>
         <p class="review-v">%s</p>
       </div>
@@ -304,8 +304,8 @@ def render_article(a, topic, lookup):
 
     if related:
         body += ('\n  <section class="art-more">\n    <div class="sechead">\n      <div>'
-                 '<p class="eyebrow" style="margin-bottom:14px">Keep reading</p>'
-                 '<h2 class="h2-sm" style="color:var(--color-forest-900)">Related in this hub</h2>'
+                 '<p class="eyebrow mb-4">Keep reading</p>'
+                 '<h2 class="h2-sm text-forest-900">Related in this hub</h2>'
                  '</div>\n      <a class="textlink" href="./">All %s →</a>\n    </div>'
                  '\n    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>'
                  '\n    <p class="cross-note"><span class="cross-kicker">%s</span>'
@@ -327,8 +327,8 @@ def render_hub(topic, arts):
     for i, a in enumerate(arts, 1):
         rows += ('<a class="pidx" href="%s.html">'
                  '<span class="pidx-n">%02d</span>'
-                 '<span><span class="pidx-t" style="display:block">%s</span>'
-                 '<span class="pidx-d" style="display:block">%s</span></span>'
+                 '<span><span class="pidx-t block">%s</span>'
+                 '<span class="pidx-d block">%s</span></span>'
                  '<span class="pidx-go">Read →</span></a>'
                  % (a["slug"], i, esc(a["title"]), esc(a["blurb"])))
 
@@ -345,29 +345,29 @@ def render_hub(topic, arts):
     body += NAV + "\n\n<main id=\"main\">\n\n"
     body += '''  <section class="art-hero">
     <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="../education.html">Education</a></p>
-    <p class="art-eyebrow" style="margin-top:18px">Education hub</p>
+    <p class="art-eyebrow mt-5">Education hub</p>
     <h1 class="art-h1">%s</h1>
     <p class="art-stand">%s</p>
   </section>
 
-  <section class="band" style="background:var(--color-paper)">
+  <section class="band s-light">
     <div class="sechead">
       <div>
-        <p class="eyebrow" style="margin-bottom:14px">%d articles</p>
-        <h2 class="h2-sm" style="color:var(--color-forest-900)">Read in order, or jump in</h2>
+        <p class="eyebrow mb-4">%d articles</p>
+        <h2 class="h2-sm text-forest-900">Read in order, or jump in</h2>
       </div>
       <a class="textlink" href="../education.html">All topic areas →</a>
     </div>
-    <p class="body-m" style="max-width:720px;margin-bottom:30px">%s</p>
+    <p class="body-m max-w-[720px] mb-8">%s</p>
     <div class="pidx-list" data-reveal="children" data-reveal-stagger="55">%s</div>
-    <p class="disclaimer" style="margin-top:26px">Every article on this page is written for patients and families, not clinicians, and carries a named clinical reviewer. Where the evidence is genuinely unsettled, the article says so rather than picking a side. General information cannot tell you what is happening in your own case.</p>
+    <p class="disclaimer mt-7">Every article on this page is written for patients and families, not clinicians, and carries a named clinical reviewer. Where the evidence is genuinely unsettled, the article says so rather than picking a side. General information cannot tell you what is happening in your own case.</p>
   </section>
 
-  <section class="art-more" style="background:var(--color-bone)">
+  <section class="art-more">
     <div class="sechead">
       <div>
-        <p class="eyebrow" style="margin-bottom:14px">Related elsewhere</p>
-        <h2 class="h2-sm" style="color:var(--color-forest-900)">Where this connects</h2>
+        <p class="eyebrow mb-4">Related elsewhere</p>
+        <h2 class="h2-sm text-forest-900">Where this connects</h2>
       </div>
       <a class="textlink" href="../services/">All services →</a>
     </div>

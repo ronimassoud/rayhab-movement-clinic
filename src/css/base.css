@@ -1,0 +1,86 @@
+/* ==========================================================
+   Base
+   Runtime variables that are not design tokens, document
+   defaults, focus, and the global reduced-motion switch.
+   Tailwind's preflight has already run by this point, so there
+   is no reset here.
+   ========================================================== */
+@layer base {
+  :root {
+    /* Content is capped at 1200 and centred; below that the gutter is
+       fluid. Every band pads with --pad-x, so backgrounds still run the
+       full width of the viewport while the content column holds. */
+    --gutter: clamp(18px, 4vw, 40px);
+    --pad-x: max(var(--gutter), calc((100% - 1200px) / 2));
+    --section-y: clamp(44px, 8vw, 112px);
+    --section-y-sm: clamp(36px, 6vw, 80px);
+
+    /* The floating nav. --nav-h is the space it takes from the top of the
+       viewport, offset included, because that is what scroll-padding-top,
+       the case-progress pill, the drawer and the section spy all need. It
+       is a plain length, not a calc, so reveal.js can parse it. */
+    --nav-top: 12px;
+    --nav-pill: 64px;
+    --nav-h: 76px;
+
+    /* A card asks its surface what to look like rather than knowing
+       which band it sits in. The .s-* surfaces set these. */
+    --card-bg: var(--color-bone);
+    --card-line: var(--color-line);
+
+    --t-tint: .15s;    /* colour */
+    --t-move: .24s;    /* position */
+    --t-media: .55s;   /* imagery */
+    --lift-sm: 0 6px 18px rgba(8, 25, 14, .10);
+
+    --tilt: 5deg;
+
+    /* The clinic's own line drawing: the two end-plate lines and the arc
+       between them that define a Cobb angle, over a spinal curve. It is
+       the brand's existing motif, used wherever the layout wants
+       atmosphere. Colours mirror spring-500 and bone. */
+    --device-art: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 280' fill='none'%3E%3Cline x1='30' y1='80' x2='250' y2='66' stroke='%2362E36B' stroke-width='1.2'/%3E%3Cline x1='34' y1='212' x2='254' y2='226' stroke='%2362E36B' stroke-width='1.2'/%3E%3Cpath d='M240 74A140 140 0 0 1 246 220' stroke='%2362E36B' stroke-dasharray='3 6'/%3E%3Cpath d='M140 30C100 92 186 148 132 254' stroke='%23F5F3EC' stroke-width='2' stroke-linecap='round' opacity='.55'/%3E%3C/svg%3E");
+  }
+  @media (max-width: 700px) {
+    :root { --nav-top: 8px; --nav-pill: 56px; --nav-h: 64px; }
+  }
+
+  /* Anchors land below the floating nav, with a little air. */
+  html { scroll-padding-top: calc(var(--nav-h) + 16px); -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-fg);
+    font: 400 var(--text-body)/var(--text-body--line-height) var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-wrap: break-word;
+  }
+
+  /* A heading with no class still belongs to the system. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -.02em;
+    color: inherit;
+  }
+  h2 { font-size: var(--text-heading); line-height: var(--text-heading--line-height); }
+  h3 { font-size: var(--text-sub); line-height: 1.35; }
+
+  :focus-visible { outline: 2px solid var(--color-ink-950); outline-offset: 3px; border-radius: 2px; }
+  .on-dark :focus-visible, .s-dark :focus-visible,
+  .site-nav :focus-visible, .site-footer :focus-visible { outline-color: var(--color-spring-500); }
+
+  .skip { position: absolute; left: -9999px; top: 0; z-index: 200; background: var(--color-spring-500);
+    color: var(--color-ink-950); padding: 12px 20px; font-weight: 600; border-radius: 0 0 var(--radius-xs) 0; }
+  .skip:focus { left: 0; }
+  .vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* One switch for every CSS transition and animation. It cannot reach the
+     inline styles GSAP writes, which is why motion.js carries its own
+     matchMedia guard. */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  }
+}

@@ -8,7 +8,9 @@ import io, json, os, re
 
 from motion_tags import inject
 
-SITE = r"C:/Users/Roni Massoud/Desktop/Dr. Rayhab/site"
+# Relative to this file, so the generator writes into whichever checkout
+# it is run from. It used to be an absolute path to one folder.
+SITE = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "site"))
 OUT = os.path.join(SITE, "scoliosis")
 
 NAV = '''<nav class="site-nav" aria-label="Primary">
@@ -97,14 +99,14 @@ TAIL = '''
 </html>
 '''
 
-CTA = '''  <section class="cta-band" style="padding:56px var(--pad-x)" data-reveal="children" data-reveal-stagger="90">
+CTA = '''  <section class="cta-band" data-reveal="children" data-reveal-stagger="90">
     <div>
       <h2 class="h2-sm cta-h2">{h}</h2>
       <p class="body-m cta-lede">{p}</p>
     </div>
     <div class="btns">
-      <a class="btn btn-forest" href="../book.html">Book an assessment</a>
-      <a class="btn btn-ghost-ink" href="./">Back to the hub</a>
+      <a class="btn btn-spring" href="../book.html">Book an assessment</a>
+      <a class="btn btn-ghost-dark" href="./">Back to the hub</a>
     </div>
   </section>
 '''
@@ -226,7 +228,7 @@ def render_article(a, lookup, pillars):
     body += '''  <article>
   <header class="art-hero">
     <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="../education.html">Education</a> <span aria-hidden="true">/</span> <a href="./">Scoliosis</a> <span aria-hidden="true">/</span> <a href="%s.html">%s</a></p>
-    <p class="art-eyebrow" style="margin-top:18px">%s</p>
+    <p class="art-eyebrow mt-5">%s</p>
     <h1 class="art-h1">%s</h1>
     <p class="art-stand">%s</p>
     <div class="art-metarow">
@@ -256,7 +258,7 @@ def render_article(a, lookup, pillars):
         <p class="review-v">Physiotherapist, Certified Schroth Practitioner, Certified Mobility Specialist (FRCms), ACE Medical Exercise Specialist.</p>
         %s
       </div>
-      <div class="reviewbox" style="background:var(--color-bone)">
+      <div class="reviewbox bg-bone">
         <p class="review-k">General information</p>
         <p class="review-v">This page explains scoliosis in general terms. It cannot tell you what your own curve is doing, and it does not replace an assessment.</p>
       </div>
@@ -268,8 +270,8 @@ def render_article(a, lookup, pillars):
 
     if related:
         body += ('\n  <section class="art-more">\n    <div class="sechead">\n      <div>'
-                 '<p class="eyebrow" style="margin-bottom:14px">Keep reading</p>'
-                 '<h2 class="h2-sm" style="color:var(--color-forest-900)">Related in this pillar</h2>'
+                 '<p class="eyebrow mb-4">Keep reading</p>'
+                 '<h2 class="h2-sm text-forest-900">Related in this pillar</h2>'
                  '</div>\n      <a class="textlink" href="%s.html">All %s \u2192</a>\n    </div>'
                  '\n    <div class="morelist" data-reveal="children" data-reveal-stagger="60">%s</div>'
                  '\n    <p class="cross-note"><span class="cross-kicker">%s</span>'
@@ -318,8 +320,8 @@ def render_index(view, arts, views):
     for i, a in enumerate(arts, 1):
         rows += ('<a class="pidx" href="%s.html">'
                  '<span class="pidx-n">%02d</span>'
-                 '<span><span class="pidx-t" style="display:block">%s</span>'
-                 '<span class="pidx-d" style="display:block">%s</span></span>'
+                 '<span><span class="pidx-t block">%s</span>'
+                 '<span class="pidx-d block">%s</span></span>'
                  '<span class="pidx-go">Read \u2192</span></a>'
                  % (a["slug"], i, esc(a["title"]), esc(a["blurb"])))
 
@@ -329,22 +331,22 @@ def render_index(view, arts, views):
     body += NAV + "\n\n<main id=\"main\">\n\n"
     body += '''  <section class="art-hero">
     <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="../education.html">Education</a> <span aria-hidden="true">/</span> <a href="./">Scoliosis</a> <span aria-hidden="true">/</span> <a href="library.html">Library</a></p>
-    <p class="art-eyebrow" style="margin-top:18px">%s</p>
+    <p class="art-eyebrow mt-5">%s</p>
     <h1 class="art-h1">%s</h1>
     <p class="art-stand">%s</p>
   </section>
 
-  <section class="band" style="background:var(--color-paper)">
-    <div class="sechead" style="margin-bottom:20px">
+  <section class="band s-light">
+    <div class="sechead mb-5">
       <div>
-        <p class="eyebrow" style="margin-bottom:14px">%s</p>
-        <h2 class="h2-sm" style="color:var(--color-forest-900)">%s</h2>
+        <p class="eyebrow mb-4">%s</p>
+        <h2 class="h2-sm text-forest-900">%s</h2>
       </div>
       <a class="textlink" href="./">Back to the hub \u2192</a>
     </div>
     %s
     <div class="pidx-list" data-reveal="children" data-reveal-stagger="55">%s</div>
-    <p class="disclaimer" style="margin-top:26px">Every article here is written for patients and families, not clinicians, and carries a named clinical reviewer. The topic and situation views above are the same twenty-four articles ordered differently, so one article can appear in several. General information cannot tell you what your own curve is doing.</p>
+    <p class="disclaimer mt-7">Every article here is written for patients and families, not clinicians, and carries a named clinical reviewer. The topic and situation views above are the same twenty-four articles ordered differently, so one article can appear in several. General information cannot tell you what your own curve is doing.</p>
   </section>
 ''' % (esc(p["short"]), esc(p["name"]), esc(p["stand"]),
        "%d of 24 articles" % len(arts) if len(arts) < 24 else "All 24 articles",

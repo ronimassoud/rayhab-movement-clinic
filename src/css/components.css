@@ -1,0 +1,395 @@
+/* ==========================================================
+   Components
+   The shared parts every page is built from. Each is written
+   against the theme tokens, so a change there reaches all 72
+   pages. Page-specific composition lives in site.css.
+
+   Contents
+     1. Surfaces and layout
+     2. Type
+     3. Navigation
+     4. Buttons and links
+     5. Cards, chips and tags
+     6. Media: placeholder wells, portraits, avatars
+     7. Tilted cards
+     8. Closing call to action
+     9. Footer
+   ========================================================== */
+
+/* ---------- 1. Surfaces and layout ----------
+   Three surfaces carry the page rhythm. A section takes one, either by
+   class or by being listed here, and its cards read --card-bg and
+   --card-line from it. Nothing downstream needs to know which band it
+   is in. */
+.frame{background:var(--color-paper)}
+.band{padding:var(--section-y) var(--pad-x)}
+
+.s-light,
+.svc-approach,.svc-who,.svc-proof,.hub-route,.hub-latest,
+.svcidx-primary-band,.svcidx-support,.artwrap{
+  background:var(--color-paper);--card-bg:var(--color-bone);--card-line:var(--color-line)}
+
+.s-tint,
+.svc-process,.hub-pillars,.router-band,.art-more{
+  background:var(--color-bone);--card-bg:var(--color-paper);--card-line:var(--color-line)}
+
+.s-dark,
+.home-hero,.svc-hero,.svcidx-hero,.hub-hero,.art-hero,.svc-consult,.hub-myths,.cta-band{
+  background:var(--color-forest-900);color:var(--color-bone);
+  --card-bg:var(--color-veil-06);--card-line:var(--color-veil-12);
+  scrollbar-color:var(--sb-thumb-dark) transparent}
+
+.on-dark{color:var(--color-bone)}
+.dim{color:var(--color-body)}
+
+/* Every page opens on a dark hero, and the nav floats over it. The hero
+   therefore starts at the very top of the page and clears the nav with
+   its own padding. */
+.home-hero,.svc-hero,.svcidx-hero,.hub-hero,.art-hero{
+  padding-top:calc(var(--nav-h) + clamp(28px,5vw,64px))}
+
+/* Section header: heading left, link or note right. */
+.sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;
+  margin-bottom:clamp(28px,4vw,48px)}
+.sechead .eyebrow{margin-bottom:16px}
+@media (max-width:760px){ .sechead{flex-direction:column;align-items:flex-start;gap:16px} }
+
+
+/* ---------- 2. Type ----------
+   Display type is Bricolage at 700 with tight leading; everything that
+   is read rather than glanced at is Public Sans at 400. Hierarchy comes
+   from size and from colour, not from heavier body weights. */
+.d1,.h1,.h2,.h2-sm,.h3,.hub-h1,.sec-h,.cta-h2,.svcidx-h2{
+  margin:0;font-family:var(--font-display);font-weight:700;text-wrap:balance}
+.d1{font-size:var(--text-display-2xl);line-height:var(--text-display-2xl--line-height);letter-spacing:-.045em}
+.h1,.hub-h1{font-size:var(--text-display-xl);line-height:var(--text-display-xl--line-height);letter-spacing:-.04em}
+.h2,.h2-sm,.h3,.sec-h,.cta-h2,.svcidx-h2{
+  font-size:var(--text-display);line-height:var(--text-display--line-height);letter-spacing:-.035em}
+.h4,.latest-h{margin:0;font:600 var(--text-heading-lg)/var(--text-heading-lg--line-height) var(--font-display);letter-spacing:-.03em}
+.h5{margin:0;font:600 var(--text-heading-sm)/var(--text-heading-sm--line-height) var(--font-display);letter-spacing:-.02em}
+.h6{margin:0;font:600 var(--text-sub)/1.3 var(--font-display);letter-spacing:-.015em}
+
+.hub-h1{max-width:14ch}
+.sec-h,.latest-h{color:var(--color-forest-900)}
+.sec-h-dark{color:var(--color-bone)}
+.mw400{max-width:400px}
+
+/* The accent word. One per hero headline, never more: it is the system's
+   only emphasis, so it is spent once. */
+.hl{color:var(--color-spring-500)}
+.s-light .hl,.s-tint .hl{color:var(--color-forest-600)}
+
+/* 12px is the floor. These were 10 and 11px in a tone that measured about
+   3:1 on the page; --color-body is 5.6:1. */
+.eyebrow{margin:0;font:600 var(--text-caption)/1 var(--font-sans);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--color-body)}
+.s-dark .eyebrow,.on-dark .eyebrow{color:var(--color-on-dark-2)}
+
+.lede{margin:0;font:400 clamp(1.0625rem,1.5vw,1.25rem)/1.55 var(--font-sans)}
+.body-l{margin:0;font:400 var(--text-sub)/1.65 var(--font-sans)}
+.body-m,.cta-lede{margin:0;font:400 clamp(1rem,1.3vw,1.125rem)/1.6 var(--font-sans)}
+.body-s{margin:0;font:400 .9375rem/1.6 var(--font-sans);color:var(--color-body)}
+.body-xs{margin:0;font:400 var(--text-body-sm)/var(--text-body-sm--line-height) var(--font-sans)}
+.quote{margin:0;font:400 var(--text-sub)/1.55 var(--font-sans)}
+.pillar-d-lg{max-width:460px;font-size:1.0625rem}
+
+
+/* ---------- 3. Navigation ----------
+   A floating pill. The nav is fixed, sits clear of the viewport edge and
+   takes no space in the flow, so the hero runs underneath it. The deep
+   ink at high opacity keeps the links legible over both the dark heroes
+   and the light sections further down. */
+.site-nav{
+  position:fixed;top:var(--nav-top);left:0;right:0;z-index:100;
+  width:min(var(--container-page),calc(100% - 2 * var(--gutter)));margin-inline:auto;
+  height:var(--nav-pill);padding:0 10px 0 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  background:color-mix(in oklab,var(--color-ink-950) 88%,transparent);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);
+  border:1px solid var(--color-veil-08);border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-nav);
+  transition:background-color var(--t-move),box-shadow var(--t-move)}
+/* Once the page has moved, the pill firms up so it reads over anything. */
+.site-nav.is-stuck{background:color-mix(in oklab,var(--color-ink-950) 94%,transparent)}
+
+.wordmark{display:block;width:100px;height:33px;flex:none;background:var(--color-bone);
+  -webkit-mask:url(../img/rayhab-wordmark.png) left center/contain no-repeat;
+  mask:url(../img/rayhab-wordmark.png) left center/contain no-repeat}
+
+.navgroup{display:flex;align-items:center;gap:2px}
+.navgroup a,.navgroup span{
+  position:relative;font:500 .875rem/1 var(--font-sans);color:var(--color-nav-link);
+  padding:10px 13px;border-radius:var(--radius-xs);white-space:nowrap;
+  transition:color var(--t-tint),background-color var(--t-tint)}
+.navgroup a:hover,.navgroup a:focus-visible{color:var(--color-bone);background:var(--color-veil-08)}
+.navgroup .soon{color:var(--color-on-dark-3);cursor:default}
+
+/* The current page is marked with a spring dot rather than a filled spring
+   pill. The pill competed with the booking button beside it: two fills of
+   the action colour in one bar, and only one of them an action. */
+.navgroup [aria-current="page"]{color:var(--color-bone);background:var(--color-veil-08);padding-left:25px}
+.navgroup [aria-current="page"]::before{
+  content:"";position:absolute;left:11px;top:50%;width:6px;height:6px;margin-top:-3px;
+  border-radius:50%;background:var(--color-spring-500)}
+
+/* Scoliosis is a child of Education, so it reads as a sub-entry: a chevron
+   drawn from two borders (silent to screen readers, unlike a glyph) and a
+   slightly quieter label. */
+.navgroup .nav-sub{color:var(--color-on-dark);padding-left:24px}
+.navgroup .nav-sub::after{
+  content:"";position:absolute;left:11px;top:50%;width:4px;height:4px;
+  border-top:1.5px solid var(--color-on-dark-3);border-right:1.5px solid var(--color-on-dark-3);
+  transform:translateY(-50%) rotate(45deg);pointer-events:none}
+.navgroup .nav-sub[aria-current="page"]{color:var(--color-bone)}
+.navgroup .nav-sub[aria-current="page"]::before{content:none}
+.navgroup .nav-sub[aria-current="page"]::after{
+  border-top-color:var(--color-spring-500);border-right-color:var(--color-spring-500)}
+
+.nav-right{display:flex;align-items:center;gap:16px;flex:none}
+.nav-meta{font:400 .8125rem/1 var(--font-sans);color:var(--color-on-dark-2)}
+
+/* The menu button: three bars that fold into a cross. */
+.nav-toggle{display:none;flex:none;width:44px;height:44px;padding:0;cursor:pointer;
+  align-items:center;justify-content:center;
+  background:var(--color-veil-08);border:1px solid var(--color-veil-08);border-radius:var(--radius-sm);
+  transition:background-color var(--t-tint),border-color var(--t-tint),transform var(--t-move) var(--ease-out)}
+.nav-toggle i,.nav-toggle i::before,.nav-toggle i::after{
+  display:block;width:18px;height:1.5px;border-radius:2px;background:var(--color-bone);
+  transition:transform var(--t-move) var(--ease-out),top var(--t-move) var(--ease-out),background-color var(--t-tint)}
+.nav-toggle i{position:relative}
+.nav-toggle i::before,.nav-toggle i::after{content:"";position:absolute;left:0}
+.nav-toggle i::before{top:-6px}
+.nav-toggle i::after{top:6px}
+.nav-toggle[aria-expanded="true"] i{background:transparent}
+.nav-toggle[aria-expanded="true"] i::before{top:0;transform:rotate(45deg)}
+.nav-toggle[aria-expanded="true"] i::after{top:0;transform:rotate(-45deg)}
+@media (hover:hover) and (pointer:fine){
+  .nav-toggle:hover{background:var(--color-veil-12);border-color:var(--color-veil-15)}
+}
+.nav-toggle:active{transform:scale(.94);transition-duration:.06s}
+
+@keyframes nav-drop{ from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
+
+@media (max-width:1180px){
+  .site-nav{padding:0 10px 0 20px;gap:12px}
+  .nav-toggle{display:flex;order:3}
+  .nav-right{margin-left:auto;order:2}
+  .nav-meta{display:none}
+  /* The links become a panel that hangs under the pill. It overlays the
+     page rather than growing the bar, so --nav-h stays true while it is
+     open, and it scrolls on its own if the screen is short. */
+  .navgroup{
+    display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:99;
+    flex-direction:column;align-items:stretch;gap:2px;padding:10px;
+    background:color-mix(in oklab,var(--color-ink-950) 97%,transparent);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border:1px solid var(--color-veil-08);border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-float);
+    max-height:calc(100dvh - var(--nav-h) - 24px);overflow-y:auto}
+  .navgroup.open{display:flex;animation:nav-drop var(--t-move) var(--ease-out) both}
+  .navgroup a,.navgroup span{padding:15px 16px;font-size:1rem;border-radius:var(--radius-sm)}
+  .navgroup [aria-current="page"]{padding-left:32px}
+  .navgroup [aria-current="page"]::before{left:15px}
+  .navgroup .nav-sub{padding-left:36px}
+  .navgroup .nav-sub::after{left:20px;width:5px;height:5px}
+}
+@media (max-width:700px){
+  /* The booking button lives in the bar at the foot of the screen here. */
+  .site-nav{padding:0 6px 0 18px}
+  .site-nav .wordmark{width:88px;height:29px}
+  .nav-right{display:none}
+  .nav-toggle{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  .navgroup.open{animation:none}
+  .nav-toggle:active{transform:none}
+}
+
+
+/* ---------- 4. Buttons and links ----------
+   Two shapes with two jobs. A pill is an action that moves the visitor
+   on: book, explore, read. The compact 8px button is a control inside an
+   interface: a calendar arrow, a filter, an edit link. */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:52px;padding:14px 28px;border:1px solid transparent;border-radius:var(--radius-pill);
+  font:600 1rem/1.2 var(--font-sans);letter-spacing:-.005em;text-align:center;cursor:pointer;
+  transition:background-color var(--t-tint),border-color var(--t-tint),color var(--t-tint),
+             transform var(--t-move) var(--ease-out)}
+.btn-md{min-height:48px;padding:12px 24px}
+.btn-sm{min-height:40px;padding:9px 18px;font-size:.875rem}
+.btn-compact{min-height:36px;padding:8px 14px;border-radius:var(--radius-xs);font:500 .875rem/1.2 var(--font-sans)}
+@media (pointer:coarse){ .btn-sm,.btn-compact{min-height:44px} }
+
+.btn-spring{background:var(--color-spring-500);color:var(--color-ink-950)}
+.btn-spring:hover{background:var(--color-spring-400)}
+.btn-spring:active{background:var(--color-spring-600)}
+.btn-forest{background:var(--color-forest-900);color:var(--color-bone)}
+.btn-forest:hover{background:var(--color-brand-800)}
+.btn-brand{background:var(--color-brand-800);color:var(--color-bone)}
+.btn-brand:hover{background:var(--color-forest-700);color:var(--color-bone)}
+.btn-ghost-dark{background:transparent;border-color:var(--color-veil-15);color:var(--color-bone)}
+.btn-ghost-dark:hover{background:var(--color-veil-08);border-color:var(--color-on-dark-2)}
+.btn-ghost-light{background:transparent;border-color:var(--color-hairline);color:var(--color-brand-800)}
+.btn-ghost-light:hover{background:var(--color-bone);border-color:var(--color-forest-600)}
+.btn-ghost-ink{background:transparent;border-color:color-mix(in oklab,var(--color-ink-950) 30%,transparent);color:var(--color-ink-950)}
+.btn-ghost-ink:hover{background:color-mix(in oklab,var(--color-ink-950) 8%,transparent)}
+.btn[disabled],.btn[aria-disabled="true"]{
+  background:var(--color-sand);color:#9AA79E;border-color:transparent;cursor:not-allowed}
+
+/* A press, not a lift. Buttons used to rise 2px and grow a shadow on hover,
+   which is the "everything floats" habit this system avoids. */
+.btn:active{transform:scale(.98);transition-duration:.06s}
+@media (prefers-reduced-motion:reduce){ .btn:active{transform:none} }
+
+.textlink{display:inline-flex;align-items:center;gap:6px;flex:none;
+  font:600 .9375rem/1.2 var(--font-sans);color:var(--color-brand-800);transition:color var(--t-tint)}
+.textlink:hover{color:var(--color-forest-600)}
+.textlink-dark{color:var(--color-spring-500)}
+.textlink-dark:hover{color:var(--color-spring-200)}
+.case-more{display:inline-block;margin-top:10px;font:600 var(--text-body-sm)/1 var(--font-sans);color:var(--color-brand-800)}
+
+
+/* ---------- 5. Cards, chips and tags ----------
+   Flat. A card is a surface with a hairline, and it stays where it is.
+   A card that is a link answers the cursor with its edge and its arrow;
+   one that is not a link does nothing, so a response always means
+   there is somewhere to go. */
+.card{background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius-lg);padding:28px}
+.card-forest{background:var(--color-forest-900);border-color:transparent}
+.card-forest .h6{color:var(--color-bone)}
+.card-forest .body-s{color:var(--color-on-dark)}
+
+a.edu-card,a.routecard,a.router-card,a.case-link,a.svc-card,a.morecard,a.pidx,a.artcard,
+.pillar.is-linked,.supcard.is-linked{
+  transition:border-color var(--t-tint),background-color var(--t-tint)}
+@media (hover:hover) and (pointer:fine){
+  a.edu-card:hover,a.routecard:hover,a.router-card:hover,a.case-link:hover,a.svc-card:hover,
+  a.morecard:hover,a.pidx:hover,a.artcard:hover,.pillar.is-linked:hover,.supcard.is-linked:hover{
+    border-color:var(--color-forest-600)}
+  .is-linked:hover .textlink,.is-linked:hover .supcard-link{color:var(--color-forest-600)}
+}
+a.edu-card:focus-visible,a.routecard:focus-visible,a.router-card:focus-visible,
+a.case-link:focus-visible,a.svc-card:focus-visible,.pillar.is-linked:focus-within{
+  border-color:var(--color-forest-600)}
+
+/* The two dark lead cards warm slightly instead: they have no edge to firm. */
+a.svc-primary,.svcidx-primary.is-linked{transition:background-color var(--t-move)}
+@media (hover:hover) and (pointer:fine){
+  a.svc-primary:hover,.svcidx-primary.is-linked:hover{background:var(--color-forest-850)}
+}
+
+.chip{display:inline-flex;align-items:center;font:500 .8125rem/1 var(--font-sans);
+  color:var(--color-spring-50);background:var(--color-veil-08);border:1px solid var(--color-veil-12);
+  border-radius:var(--radius-pill);padding:8px 14px}
+.chip-light{color:var(--color-fg-2);background:var(--color-sand);border-color:transparent}
+
+/* Case photographs invite a closer look, so they ease up under the cursor. */
+.case-media img{transition:transform var(--t-media) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .case:hover .case-media img,a.case-link:hover .case-media img{transform:scale(1.035)}
+}
+@media (prefers-reduced-motion:reduce){
+  .case:hover .case-media img,a.case-link:hover .case-media img{transform:none !important}
+}
+
+
+/* ---------- 6. Media ----------
+   Placeholder wells. Photography for the service pages and the articles
+   has not been shot. A grey hatched box says "unfinished" louder than
+   anything else on the page, so:
+     - a large well becomes a forest panel carrying the brand line drawing
+     - a small well inside a card collapses, and the card becomes
+       typographic until its image exists
+   The art-direction comment for each shot stays in the markup. */
+.slot{position:relative;overflow:hidden;display:grid;place-items:center;
+  background:var(--color-forest-850) var(--device-art) center/min(62%,340px) no-repeat}
+.slot-circle{border-radius:50%}
+.edu-media.slot:not(:has(img)),.supcard-media.slot:not(:has(img)),.art-media.slot:not(:has(img)){display:none}
+.artcard:not(:has(img)){grid-template-columns:1fr}
+
+/* A cut-out portrait stands in a coloured panel rather than sitting in a
+   photographic box, so the figure reads against the brand colour. */
+.photo{position:relative;overflow:hidden;display:block;background:var(--color-forest-850)}
+.photo-light{background:var(--color-sand)}
+.photo img{width:100%;height:100%;display:block;object-fit:contain;object-position:bottom center}
+
+.avatar{border-radius:50%;overflow:hidden;flex:none;background:var(--color-sand)}
+.avatar img{width:100%;height:100%;display:block;object-fit:cover;object-position:center top}
+
+
+/* ---------- 7. Tilted cards ----------
+   The system's one flourish, and one of only two things allowed a
+   shadow. A card leans a few degrees and floats over its neighbour.
+
+     .tilt            lean, default 5 degrees clockwise
+     .tilt-l          lean the other way
+     --tilt           set the angle directly, 4 to 8 degrees
+     .tilt-stack      overlap two or three, deepest first
+
+   Rotation uses the individual `rotate` property, which leaves
+   `transform` free for layout offsets and for GSAP.
+
+   A leaning card straightens under the cursor and on keyboard focus, so
+   text is always readable square-on. On a phone the lean is dropped:
+   there is no room for it and a stack is just a column. Under reduced
+   motion the lean stays, because it is a pose rather than movement, but
+   it no longer animates. */
+.tilt{rotate:var(--tilt);box-shadow:var(--shadow-float);
+  transition:rotate .5s var(--ease-out),translate .5s var(--ease-out)}
+.tilt-l{--tilt:-5deg}
+@media (hover:hover) and (pointer:fine){
+  .tilt:hover{rotate:0deg}
+}
+.tilt:focus-within{rotate:0deg}
+
+.tilt-stack{display:grid;place-items:center}
+.tilt-stack>*{grid-area:1/1}
+
+@media (max-width:700px){
+  .tilt{rotate:none}
+}
+
+
+/* ---------- 8. Closing call to action ----------
+   Dark and centred, with the spring button as the only colour. It used to
+   be a full-bleed band of spring green, which spent the action colour on
+   a background and left the button itself in forest. */
+.cta-band{
+  position:relative;isolation:isolate;overflow:hidden;
+  padding:var(--section-y) var(--pad-x);
+  display:flex;flex-direction:column;align-items:center;gap:clamp(28px,3vw,40px);text-align:center}
+.cta-band::before{
+  content:"";position:absolute;z-index:-1;left:50%;top:50%;
+  width:min(760px,120%);aspect-ratio:1;translate:-50% -50%;
+  background:var(--device-art) center/contain no-repeat;opacity:.34;pointer-events:none}
+.cta-band h2{
+  margin:0 auto 16px;max-width:16ch;color:var(--color-bone);
+  font:700 var(--text-display-xl)/var(--text-display-xl--line-height) var(--font-display);
+  letter-spacing:-.04em;text-wrap:balance}
+.cta-band p{margin-inline:auto;max-width:52ch;color:var(--color-on-dark)}
+.cta-band .btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+
+
+/* ---------- 9. Footer ---------- */
+.site-footer{
+  background:var(--color-ink-950);color:var(--color-on-dark);
+  padding:clamp(48px,7vw,88px) var(--pad-x) clamp(36px,4vw,56px);
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:48px 80px;align-items:start}
+.site-footer .wordmark{width:148px;height:49px}
+.foot-tag{margin:14px 0 0;font:500 var(--text-caption)/1 var(--font-sans);letter-spacing:.28em;color:var(--color-spring-500)}
+.socials{display:flex;gap:10px;margin-top:28px}
+.socials a{width:44px;height:44px;border-radius:50%;border:1px solid var(--color-veil-15);
+  display:flex;align-items:center;justify-content:center}
+.footcols{display:grid;grid-template-columns:repeat(3,auto);gap:32px 64px}
+.footcol{display:flex;flex-direction:column;gap:10px}
+.footcol h2{margin:0 0 6px;font:600 var(--text-caption)/1 var(--font-sans);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--color-on-dark-2)}
+.footcol a,.footcol span{font:400 .9375rem/1.4 var(--font-sans);color:var(--color-on-dark)}
+.footcol a:hover{color:var(--color-bone)}
+.footcol .soon{color:var(--color-on-dark-3)}
+@media (max-width:900px){
+  .site-footer{grid-template-columns:1fr}
+  .footcols{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 24px}
+}
+@media (max-width:560px){ .footcols{grid-template-columns:1fr 1fr} }

@@ -5,7 +5,9 @@ import io, json, os
 
 from motion_tags import inject
 
-SITE = r"C:/Users/Roni Massoud/Desktop/Dr. Rayhab/site"
+# Relative to this file, so the generator writes into whichever checkout
+# it is run from. It used to be an absolute path to one folder.
+SITE = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "site"))
 OUT = os.path.join(SITE, "services")
 here = os.path.dirname(os.path.abspath(__file__))
 
@@ -106,22 +108,22 @@ def build(s, n):
         href = "../book.html" + ("?type=" + bk if bk else "")
         if i == 0:
             consults += ('<div class="consult consult-lead"><div class="consult-head">'
-                         '<p class="consult-t" style="max-width:200px">%s</p>'
+                         '<p class="consult-t max-w-[200px]">%s</p>'
                          '<span class="tag-start">%s</span></div>'
-                         '<p class="body-s" style="margin-bottom:20px">%s</p>'
+                         '<p class="body-s mb-5">%s</p>'
                          '<dl class="consult-spec"><div><dt>Duration</dt><dd>%s</dd></div>'
                          '<div><dt>Location</dt><dd>%s</dd></div></dl>'
-                         '<a class="btn btn-spring" style="font-size:15px;padding:15px 24px" '
+                         '<a class="btn btn-spring text-[15px] py-4 px-6" '
                          'href="%s">Book this</a></div>' % (t, tag, d, dur, loc, href))
         else:
             consults += ('<div class="consult consult-alt on-dark">'
-                         '<p class="consult-t" style="margin-bottom:16px">%s</p>'
-                         '<p class="body-s" style="margin-bottom:20px;color:var(--color-on-dark)">%s</p>'
+                         '<p class="consult-t mb-4">%s</p>'
+                         '<p class="body-s mb-5 text-on-dark">%s</p>'
                          '<dl class="consult-spec consult-spec-dark">'
                          '<div><dt>Duration</dt><dd>%s</dd></div>'
                          '<div><dt>Location</dt><dd>%s</dd></div></dl>'
-                         '<a class="btn" style="font-size:15px;padding:14px 24px;'
-                         'border-color:#ffffff33;color:var(--color-bone)" href="%s">Book this</a>'
+                         '<a class="btn text-[15px] py-4 px-6 text-bone" style="'
+                         'border-color:#ffffff33" href="%s">Book this</a>'
                          '</div>' % (t, d, dur, loc, href))
 
     faq = ""
@@ -159,14 +161,14 @@ def build(s, n):
 
   <section class="svc-hero on-dark">
     <div class="svc-hero-copy">
-      <p class="crumbs crumbs-dark" style="margin-bottom:26px"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="./">Services</a> <span aria-hidden="true">/</span> %(name)s</p>
-      <p class="hero-pill" style="margin-bottom:22px"><span class="dot" aria-hidden="true"></span>Supporting service</p>
+      <p class="crumbs crumbs-dark mb-7"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="./">Services</a> <span aria-hidden="true">/</span> %(name)s</p>
+      <p class="hero-pill mb-6"><span class="dot" aria-hidden="true"></span>Supporting service</p>
       <h1 class="h1">%(h1)s</h1>
-      <p class="body-l d-only" style="margin-top:24px;max-width:560px;color:var(--color-on-dark);font-size:19px;line-height:1.65">%(lede)s</p>
-      <p class="body-l m-only" style="color:var(--color-on-dark)">%(lede_m)s</p>
-      <div class="hero-btns" style="margin-top:32px">
-        <a class="btn btn-spring" style="padding:17px 28px" href="../book.html">Book an assessment</a>
-        <a class="btn btn-ghost-dark" style="padding:16px 27px" href="./">See all services</a>
+      <p class="body-l d-only mt-6 max-w-[560px] text-on-dark text-[19px] leading-[1.65]">%(lede)s</p>
+      <p class="body-l m-only text-on-dark">%(lede_m)s</p>
+      <div class="hero-btns mt-8">
+        <a class="btn btn-spring py-4 px-7" href="../book.html">Book an assessment</a>
+        <a class="btn btn-ghost-dark py-4 px-7" href="./">See all services</a>
       </div>
       <div class="svc-stats">%(stats)s</div>
       <div class="m-spec svc-mspec m-only">%(mspec)s</div>
@@ -191,42 +193,42 @@ def build(s, n):
 
   <section class="svc-approach">
     <div>
-      <p class="eyebrow" style="margin-bottom:14px">The approach</p>
+      <p class="eyebrow mb-4">The approach</p>
       <h2 class="h3 sec-h mw400">%(approach_h)s</h2>
     </div>
     <div>
-      <p class="body-l" style="margin-bottom:28px;max-width:660px;color:var(--color-fg-2)">%(approach_p)s</p>
+      <p class="body-l mb-7 max-w-[660px] text-fg-2">%(approach_p)s</p>
       <div class="approach-grid">%(minis)s</div>
     </div>
   </section>
 
   <section class="svc-process">
-    <div class="sechead" style="margin-bottom:36px">
+    <div class="sechead mb-9">
       <div>
-        <p class="eyebrow" style="margin-bottom:14px">The rehabilitation process</p>
+        <p class="eyebrow mb-4">The rehabilitation process</p>
         <h2 class="h3 sec-h">%(process_h)s</h2>
       </div>
-      <p class="body-s" style="max-width:360px">%(process_p)s</p>
+      <p class="body-s max-w-[360px]">%(process_p)s</p>
     </div>
     <ol class="stages" data-reveal="children" data-reveal-stagger="70">%(stages)s</ol>
   </section>
 
   <section class="svc-who">
     <div>
-      <p class="eyebrow" style="margin-bottom:14px">Who this is for</p>
+      <p class="eyebrow mb-4">Who this is for</p>
       <div class="wholist">%(who)s</div>
     </div>
     <div>
-      <p class="eyebrow" style="margin-bottom:14px">What the programme includes</p>
+      <p class="eyebrow mb-4">What the programme includes</p>
       <ul class="inclist">%(inc)s</ul>
-      <p class="disclaimer" style="margin-top:16px">Rehabilitation outcomes vary between individuals. Rayhab does not promise a specific result or timeline.</p>
+      <p class="disclaimer mt-4">Rehabilitation outcomes vary between individuals. Rayhab does not promise a specific result or timeline.</p>
     </div>
   </section>
 
   <section class="svc-consult">
-    <div class="sechead" style="margin-bottom:32px">
+    <div class="sechead mb-8">
       <div>
-        <p class="eyebrow" style="color:var(--color-spring-500);margin-bottom:14px">Consultation types</p>
+        <p class="eyebrow text-spring-500 mb-4">Consultation types</p>
         <h2 class="h3 on-dark sec-h sec-h-dark">Start with an assessment</h2>
       </div>
     </div>
@@ -235,31 +237,31 @@ def build(s, n):
 
   <section class="svc-proof">
     <div>
-      <p class="eyebrow" style="margin-bottom:14px">Experience behind the work</p>
+      <p class="eyebrow mb-4">Experience behind the work</p>
       <div class="stat-tiles">
         <div><p class="tile-k">5+ yrs</p><p class="tile-v">Clinical and movement-based experience</p></div>
         <div><p class="tile-k">Amman</p><p class="tile-v">Sports rehabilitation with basketball and football athletes</p></div>
       </div>
-      <div class="card" style="margin-top:12px">
-        <p class="h6" style="margin-bottom:8px;color:var(--color-forest-900)">No case studies published yet</p>
+      <div class="card mt-3">
+        <p class="h6 mb-2 text-forest-900">No case studies published yet</p>
         <p class="body-s">Consented patient journeys are published for scoliosis rehabilitation, where the clinic has permission to do so. Nothing is written up for this service yet, and an empty section is more honest than a borrowed quote.</p>
-        <p style="margin-top:20px"><a class="btn btn-ghost-light" href="../results.html">See the scoliosis journeys</a></p>
+        <p class="mt-5"><a class="btn btn-ghost-light" href="../results.html">See the scoliosis journeys</a></p>
       </div>
     </div>
     <div>
-      <p class="eyebrow" style="margin-bottom:14px">Common questions</p>
+      <p class="eyebrow mb-4">Common questions</p>
       <div class="faq-card" data-reveal="children" data-reveal-stagger="50">%(faq)s</div>
     </div>
   </section>
 
-  <section class="cta-band" style="padding:56px var(--pad-x)" data-reveal="children" data-reveal-stagger="90">
+  <section class="cta-band" data-reveal="children" data-reveal-stagger="90">
     <div>
       <h2 class="h2-sm cta-h2">%(cta_h)s</h2>
       <p class="body-m cta-lede">%(cta_p)s</p>
     </div>
     <div class="btns">
-      <a class="btn btn-forest" href="../book.html">Book an assessment</a>
-      <a class="btn btn-ghost-ink" href="./">See all services</a>
+      <a class="btn btn-spring" href="../book.html">Book an assessment</a>
+      <a class="btn btn-ghost-dark" href="./">See all services</a>
     </div>
   </section>
 

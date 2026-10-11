@@ -6,14 +6,21 @@
 
    Class names are only picked up from the places listed under @source,
    so the design mockups and loose scripts in the repo root cannot leak
-   utilities into the build. */
+   utilities into the build.
+
+   Order matters. Everything below sits in Tailwind's components layer,
+   where later files win, and the utilities layer beats all of it, so a
+   utility in the markup always overrides a component default. */
 @import "tailwindcss" source(none);
 
-@source "../../site";
-@source "../../content";
+@source "../../site/**/*.html";
+@source "../../site/assets/js/*.js";
+@source "../../content/*.py";
+@source not "../../site/_old";
 
-@import "./theme.css";
-
-@import "./legacy/rayhab.css" layer(components);
-@import "./legacy/mobile.css" layer(components);
-@import "./legacy/booking.css" layer(components);
+@import "./theme.css";       /* tokens */
+@import "./base.css";        /* document defaults */
+@import "./components.css" layer(components);   /* shared parts */
+@import "./site.css" layer(components);         /* page composition, interaction */
+@import "./mobile.css" layer(components);       /* phone compositions */
+@import "./booking.css" layer(components);      /* booking flow and dialog */

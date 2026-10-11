@@ -15,7 +15,7 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<div class="frame" style="padding:0">
+<div class="frame p-0">
 <main id="main">
 <div class="bk" id="booking">
 
@@ -52,7 +52,7 @@
     </ol>
 
     <div class="bk-summary" id="bk-aside">
-      <p class="eyebrow" style="color:var(--color-spring-500);margin-bottom:16px">Your request</p>
+      <p class="eyebrow text-spring-500 mb-4">Your request</p>
       <dl>
         <div><dt>Service</dt><dd id="sumType">Scoliosis assessment</dd></div>
         <div><dt>Duration</dt><dd id="sumDur">60 min</dd></div>
@@ -147,7 +147,7 @@
           <div class="bk-noslots">
             <p class="bk-noslots-t" id="bk-noslots-t">&nbsp;</p>
             <p class="bk-noslots-d" id="bk-noslots-d">&nbsp;</p>
-            <button class="btn btn-spring" style="font-size:15px;padding:14px 22px" type="button" id="bk-jump">&nbsp;</button>
+            <button class="btn btn-spring text-[15px] py-4 px-6" type="button" id="bk-jump">&nbsp;</button>
           </div>
         </div>
       </div>
@@ -179,7 +179,7 @@
           <span class="body-s">I agree to Rayhab storing these details to arrange my appointment. They are not shared with anyone outside the clinic.</span>
         </button>
       </div>
-      <p class="notice notice-error" id="bk-detailerr" hidden role="alert" aria-live="assertive" style="margin-top:20px">Fill in the highlighted fields and tick the consent box so we can reach you to confirm.</p>
+      <p class="notice notice-error mt-5" id="bk-detailerr" hidden role="alert" aria-live="assertive">Fill in the highlighted fields and tick the consent box so we can reach you to confirm.</p>
     </section>
 
     <!-- Step 4 -->
@@ -204,11 +204,11 @@
           <button class="bk-edit" type="button" data-step="2">Change</button>
         </div>
         <div class="bk-row">
-          <div><dt>Patient</dt><dd id="rvName">Not entered yet</dd><dd id="rvContact" style="font:300 14px/1.4 var(--font-sans);color:var(--color-fg-3)">Not entered yet</dd></div>
+          <div><dt>Patient</dt><dd id="rvName">Not entered yet</dd><dd class="font-sans font-normal text-[14px]/[1.4] text-fg-3" id="rvContact">Not entered yet</dd></div>
           <button class="bk-edit" type="button" data-step="3">Change</button>
         </div>
       </dl>
-      <p class="notice notice-info" style="margin-top:24px">This is a request, not a locked booking. The clinic confirms by WhatsApp within one working day, and payment happens in clinic.</p>
+      <p class="notice notice-info mt-6">This is a request, not a locked booking. The clinic confirms by WhatsApp within one working day, and payment happens in clinic.</p>
     </section>
 
     <!-- Loading -->
@@ -226,8 +226,8 @@
     <section id="bk-done" hidden aria-live="polite">
       <div class="bk-donemark" aria-hidden="true">✓</div>
       <h2 class="bk-h">Request sent</h2>
-      <p class="body-m" style="margin-top:16px;color:var(--color-fg-2)">We've got your request for <strong id="doneWhen">…</strong>. The clinic confirms by WhatsApp within one working day. Nothing has been charged.</p>
-      <h3 class="h6" style="margin-top:32px;color:var(--color-forest-900)">Before your first visit</h3>
+      <p class="body-m mt-4 text-fg-2">We've got your request for <strong id="doneWhen">…</strong>. The clinic confirms by WhatsApp within one working day. Nothing has been charged.</p>
+      <h3 class="h6 mt-8 text-forest-900">Before your first visit</h3>
       <ul class="bk-checklist">
         <li><span class="d-only">Bring any X-ray or report you already have; no need to get a new one.</span><span class="m-only">Bring any X-ray or report you already have.</span></li>
         <li>Wear clothing you can move and be assessed in.</li>
