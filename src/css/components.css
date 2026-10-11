@@ -346,8 +346,10 @@ a.svc-primary,.svcidx-primary.is-linked{transition:background-color var(--t-move
 .tilt-stack{display:grid;place-items:center}
 .tilt-stack>*{grid-area:1/1}
 
+/* Text cards flatten on a phone. The photo fan does not: it is three
+   images at thumbnail size, and it still fits. */
 @media (max-width:700px){
-  .tilt{rotate:none}
+  .tilt:not(.tilt-fan img){rotate:none}
 }
 
 

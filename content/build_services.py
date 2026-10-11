@@ -177,7 +177,7 @@ def build(s, n):
       <div class="slot slot-dark svc-hero-slot">
         <!-- shot: %(slot)s -->
       </div>
-      <div class="measure-card">
+      <div class="measure-card tilt">
         <svg viewBox="0 0 70 70" aria-hidden="true">
           <circle cx="35" cy="35" r="26" fill="none" stroke="#174924" stroke-width="1.6"></circle>
           <path d="M35 9 A 26 26 0 0 1 61 35" fill="none" stroke="#62E36B" stroke-width="2.4" stroke-linecap="round"></path>
