@@ -1,6 +1,9 @@
-# Normalise text to LF in the repository, check out native on each platform.
+# Text is LF in the repository and LF in every checkout, Windows included.
+# content/stamp.py versions each stylesheet and script URL by an MD5 of the
+# file's bytes, and CI computes it on LF files; a CRLF checkout gave every
+# file a different hash locally, so a branch switch restamped all 75 pages.
 # Explicit here so the repo does not depend on anyone's core.autocrlf setting.
-* text=auto
+* text=auto eol=lf
 
 *.html  text
 *.css   text
