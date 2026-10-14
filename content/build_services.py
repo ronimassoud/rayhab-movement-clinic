@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Build the three supporting service pages on the same template as
+"""Build the four supporting service pages on the same template as
 services/scoliosis-rehabilitation.html."""
 import io, json, os
 
