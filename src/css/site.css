@@ -456,12 +456,12 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 .float-card{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--lift,0px));
   transition:transform .6s var(--ease-out),box-shadow .6s var(--ease-out);will-change:transform}
 .float-card.is-tracking{transition:transform .14s linear,box-shadow .3s var(--ease-out)}
-/* The home page's scoliosis card keeps its hover darkening alongside the
-   lean, and casts the floating shadow while it is lifted. */
-a.svc-primary.float-card{transition:background-color var(--t-move),transform .6s var(--ease-out),box-shadow .6s var(--ease-out)}
-a.svc-primary.float-card.is-tracking{transition:background-color var(--t-move),transform .14s linear,box-shadow .3s var(--ease-out);
+/* The scoliosis cards (home and services) keep their hover darkening
+   alongside the lean, and cast the floating shadow while lifted. */
+a.svc-primary.float-card,.svcidx-primary.float-card{transition:background-color var(--t-move),transform .6s var(--ease-out),box-shadow .6s var(--ease-out)}
+a.svc-primary.float-card.is-tracking,.svcidx-primary.float-card.is-tracking{transition:background-color var(--t-move),transform .14s linear,box-shadow .3s var(--ease-out);
   box-shadow:var(--shadow-float)}
-@media (prefers-reduced-motion:reduce){ .float-card,a.svc-primary.float-card{transform:none;transition:none} }
+@media (prefers-reduced-motion:reduce){ .float-card,a.svc-primary.float-card,.svcidx-primary.float-card{transform:none;transition:none} }
 @media (max-width:1040px){ .hub-hero-grid{grid-template-columns:1fr;gap:32px} .hub-device{left:auto;right:-240px;opacity:.25} }
 
 .hub-route{padding:var(--section-y) var(--pad-x)}
