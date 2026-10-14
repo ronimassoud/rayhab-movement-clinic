@@ -478,3 +478,19 @@ a.edu-card,.routecard,a.router-card,a.svc-card,a.morecard,a.pidx,a.artcard,
 a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
   --spot-color:var(--color-spring-200);--spot-fill:.12;
   --spot-edge-color:var(--color-spring-500);--spot-rim:.5}
+
+
+/* ---------- 11. FAQ section ----------
+   After React Bits Pro's FAQ 5: a centred heading with an inline link to
+   ask the clinic, then the question tiles in two columns, one below 900px.
+   Built by content/faq5.py. The tiles themselves are in site.css. */
+.faq5{padding:var(--section-y) var(--pad-x)}
+.faq5-head{max-width:40rem;margin:0 auto clamp(28px,4vw,48px);text-align:center}
+.faq5-title{margin:0;font:700 var(--text-display)/var(--text-display--line-height) var(--font-display);
+  letter-spacing:-.035em;color:var(--color-forest-900);text-wrap:balance}
+.faq5-sub{margin:14px 0 0;font:400 1.0625rem/1.5 var(--font-sans);color:var(--color-body)}
+.faq5-talk{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--color-fg);transition:color var(--t-tint)}
+.faq5-talk:hover{color:var(--color-forest-600)}
+.faq-card.faq5-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start;max-width:1040px;margin-inline:auto}
+.faq5-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+@media (max-width:900px){ .faq-card.faq5-cols{grid-template-columns:1fr} }

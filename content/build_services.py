@@ -6,6 +6,7 @@ import io, re, json, os
 from motion_tags import inject
 from navcards import inject_navcards
 from stamp import stamp
+import faq5
 
 # Relative to this file, so the generator writes into whichever checkout
 # it is run from. It used to be an absolute path to one folder.
@@ -161,15 +162,8 @@ def build(s, n):
                          'border-color:#ffffff33" href="%s">Book this</a>'
                          '</div>' % (t, d, dur, loc, href))
 
-    faq = ""
-    for i, (q, a) in enumerate(s["faq"], 1):
-        fid = "%s%d" % (s["slug"][:2], i)
-        faq += ('<div class="acc-item faq-item"><h3><button class="acc-btn faq-btn" type="button" '
-                'aria-expanded="%s" aria-controls="%s">%s<span class="acc-mark faq-mark" '
-                'aria-hidden="true">%s</span></button></h3>'
-                '<div class="acc-panel faq-panel" id="%s"%s>%s</div></div>'
-                % ("true" if i == 1 else "false", fid, q, "\u2212" if i == 1 else "+",
-                   fid, "" if i == 1 else " hidden", a))
+    # Its own section now, in the FAQ 5 format (content/faq5.py).
+    faq = faq5.section(s["faq"], s["slug"][:2], "../")
 
     return '''<!DOCTYPE html>
 <html lang="en">
@@ -277,17 +271,15 @@ def build(s, n):
         <div><p class="tile-k">5+ yrs</p><p class="tile-v">Clinical and movement-based experience</p></div>
         <div><p class="tile-k">Amman</p><p class="tile-v">Sports rehabilitation with basketball and football athletes</p></div>
       </div>
-      <div class="card mt-3">
+    </div>
+    <div class="card self-start">
         <p class="h6 mb-2 text-forest-900">No case studies published yet</p>
         <p class="body-s">Consented patient journeys are published for scoliosis rehabilitation, where the clinic has permission to do so. Nothing is written up for this service yet, and an empty section is more honest than a borrowed quote.</p>
         <p class="mt-5"><a class="btn btn-ghost-light" href="../results.html">See the scoliosis journeys</a></p>
-      </div>
-    </div>
-    <div>
-      <p class="eyebrow mb-4">Common questions</p>
-      <div class="faq-card" data-reveal="children" data-reveal-stagger="50">%(faq)s</div>
     </div>
   </section>
+
+  %(faq)s
 
   <section class="cta-band" data-reveal="children" data-reveal-stagger="90">
     <div>

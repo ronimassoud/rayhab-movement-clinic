@@ -346,12 +346,36 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 .stat-tiles>div{flex:1;background:var(--color-forest-900);border-radius:var(--radius-md);padding:24px}
 .tile-k{margin:0 0 6px;font:600 var(--text-heading-lg)/var(--text-heading-lg--line-height) var(--font-display);color:var(--color-spring-500)}
 .tile-v{margin:0;font:400 14px/1.5 var(--font-sans);color:var(--color-on-dark)}
-.faq-card{border-top:1px solid var(--color-line)}
-.faq-item{border-bottom:1px solid var(--color-line)}
-.faq-btn{padding:24px 0;font:600 1.0625rem/1.4 var(--font-sans)}
-.faq-mark{border:0;width:auto;height:auto;font:400 20px/1 var(--font-sans);color:var(--color-brand-800);background:none}
-.acc-btn[aria-expanded="true"] .faq-mark{background:none;color:var(--color-brand-800)}
-.faq-panel{padding:0 0 24px;font:400 .9375rem/1.65 var(--font-sans);color:var(--color-body);max-width:600px}
+/* FAQ, after React Bits Pro's FAQ 5: each question is its own tile, the
+   mark is a plus that folds into a minus, and an answer can end in an inline
+   link to the page that goes deeper. Section layout is in components.css. */
+.faq-card{display:flex;flex-direction:column;gap:12px}
+.faq-item{background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius-md);
+  transition:border-color var(--t-tint),background-color var(--t-tint)}
+.faq-item:has(.acc-btn[aria-expanded="true"]){border-color:var(--color-hairline)}
+.faq-btn{padding:18px 20px;gap:16px;font:500 1rem/1.4 var(--font-sans);color:var(--color-fg)}
+.acc-btn[aria-expanded="true"].faq-btn{font-weight:600}
+/* The + and the - are drawn, so the vertical stroke can fold away. The
+   glyph ui.js writes stays in the markup for anything without CSS. */
+.faq-mark{position:relative;flex:none;width:16px;height:16px;border:0;background:none;font-size:0;color:transparent}
+.faq-mark::before,.faq-mark::after{content:"";position:absolute;left:1px;right:1px;top:50%;height:1.5px;margin-top:-.75px;
+  border-radius:2px;background:var(--color-fg-2);transition:transform var(--t-move) var(--ease-out),background-color var(--t-tint)}
+.faq-mark::after{transform:rotate(90deg)}
+.acc-btn[aria-expanded="true"] .faq-mark::after{transform:rotate(90deg) scaleX(0)}
+.acc-btn[aria-expanded="true"] .faq-mark{background:none}
+.faq-panel{padding:0 20px 20px;font:400 .9375rem/1.65 var(--font-sans);color:var(--color-body)}
+.faq-panel p{margin:0;max-width:62ch}
+.faq-link{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:6px 12px;border-radius:var(--radius-pill);
+  background:var(--color-bone);border:1px solid var(--color-line);font:600 .8125rem/1.3 var(--font-sans);color:var(--color-fg);
+  transition:border-color var(--t-tint),color var(--t-tint)}
+.s-tint .faq-link{background:var(--color-sand)}
+.faq-link-arw{flex:none;transition:transform var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .faq-link:hover{border-color:var(--color-forest-600);color:var(--color-forest-600)}
+  .faq-link:hover .faq-link-arw{transform:translate(2px,-2px)}
+  .faq-item:hover{border-color:var(--color-hairline)}
+}
+@media (prefers-reduced-motion:reduce){ .faq-mark::before,.faq-mark::after,.faq-link-arw{transition:none} }
 @media (max-width:1040px){ .svc-proof{grid-template-columns:1fr;gap:40px} }
 @media (max-width:520px){ .stat-tiles{flex-direction:column} }
 
