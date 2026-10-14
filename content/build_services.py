@@ -81,6 +81,20 @@ def wrap_arrows(html):
     return html.replace(u" →</", u' <span class="arw" aria-hidden="true">→</span></')
 
 
+# Every service page shows the one clinic photograph, cropped to the part of
+# the room the service happens in: the treatment rooms for physiotherapy, the
+# training floor for sports rehabilitation and joint training.
+CLINIC_POS = {'sports-rehabilitation': '88% 50%', 'frc-joint-training': '72% 50%', 'physiotherapy': '14% 50%'}
+CLINIC_ALT = 'Inside Rayhab Movement Clinic: treatment rooms on the left, the reception desk ahead and a training floor with free weights on the right.'
+
+
+def clinic_img(slug):
+    return ('<img src="../assets/img/clinic/clinic-1600.webp" '
+            'srcset="../assets/img/clinic/clinic-960.webp 960w, ../assets/img/clinic/clinic-1600.webp 1600w" '
+            'sizes="(max-width:900px) 100vw, 46vw" width="1600" height="900" fetchpriority="high" '
+            'decoding="async" style="--pos:%s" alt="%s">' % (CLINIC_POS.get(slug, '50% 50%'), CLINIC_ALT))
+
+
 def build(s, n):
     stats = "".join('<div><p class="stat-k">%s</p><p class="stat-v">%s</p></div>' % (k, v)
                     for k, v in s["stats"])
@@ -174,8 +188,8 @@ def build(s, n):
       <div class="m-spec svc-mspec m-only">%(mspec)s</div>
     </div>
     <div class="svc-hero-media">
-      <div class="slot slot-dark svc-hero-slot">
-        <!-- shot: %(slot)s -->
+      <div class="photo photo-cover svc-hero-slot">
+        %(clinic)s
       </div>
       <div class="measure-card tilt">
         <svg viewBox="0 0 70 70" aria-hidden="true">
@@ -276,7 +290,8 @@ def build(s, n):
 </body>
 </html>
 ''' % dict(s, nav=NAV, footer=FOOTER, stats=stats, mspec=mspec, minis=minis,
-           stages=stages, who=who, inc=inc, consults=consults, faq=faq)
+           stages=stages, who=who, inc=inc, consults=consults, faq=faq,
+           clinic=clinic_img(s['slug']))
 
 
 data = json.load(io.open(os.path.join(here, "services.json"), encoding="utf-8"))

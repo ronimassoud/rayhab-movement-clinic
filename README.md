@@ -71,6 +71,8 @@ site/                        the website, 72 pages
   assets/js/                 ui.js, booking.js, modal.js, contact.js, motion.js
   assets/js/vendor/          GSAP, ScrollTrigger, SplitText (pinned, self-hosted)
   assets/img/cases/          consented patient progress photographs
+  assets/img/team/           Rayan's portrait (cut out) and the reviewer avatar
+  assets/img/clinic/         the clinic interior, 1600 and 960 wide
   assets/img/favicon.png     32px R monogram, cut from the wordmark
   assets/img/rayhab-logo.png the full-resolution master, not served
 src/css/                     stylesheet source (see Design system)
@@ -104,7 +106,7 @@ produced, the audience routes under `scoliosis/`, are maintained by hand.
 its own word count, so the label cannot drift from the text. The scoliosis library
 carries the Schroth byline; the five general hubs carry the credential that
 actually applies to them, which is set per topic. All three builders wrap trailing
-navigational arrows for the hover animation; data arrows such as `29° → 20°`
+navigational arrows for the hover animation; data arrows such as `29Â° â†’ 20Â°`
 are deliberately left alone.
 
 ## Brand assets

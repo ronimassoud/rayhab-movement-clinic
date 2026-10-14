@@ -321,6 +321,16 @@ a.svc-primary,.svcidx-primary.is-linked{transition:background-color var(--t-move
 .photo-light{background:var(--color-sand)}
 .photo img{width:100%;height:100%;display:block;object-fit:contain;object-position:bottom center}
 
+/* A photograph rather than a cut-out: it fills the panel and is cropped to
+   the part that matters. Each image sets --pos, so one clinic photograph
+   can show the treatment rooms on one page and the training floor on
+   another. */
+.photo-cover img{object-fit:cover;object-position:var(--pos,50% 50%)}
+
+/* The clinic, full width above the practical details on the contact page. */
+.clinic-shot{grid-column:1/-1;margin:0;aspect-ratio:21/9;border-radius:var(--radius-2xl)}
+@media (max-width:700px){ .clinic-shot{aspect-ratio:4/3;border-radius:var(--radius-lg)} }
+
 .avatar{border-radius:50%;overflow:hidden;flex:none;background:var(--color-sand)}
 .avatar img{width:100%;height:100%;display:block;object-fit:cover;object-position:center top}
 
