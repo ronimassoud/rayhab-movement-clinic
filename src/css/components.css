@@ -523,6 +523,17 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard,.s
    glows around and behind him, and the spring edge runs round the card. */
 .portrait{--spot-color:var(--color-spring-200);--spot-fill:.16;
   --spot-edge-color:var(--color-spring-500);--spot-rim:.55}
+/* Every button catches the light too, with a tighter pool so it reads as
+   a sheen moving across the button rather than a wash. The colour follows
+   the button: white on the bright spring fill, pale spring on dark and
+   outlined buttons, forest on light ones. Neighbouring buttons share it. */
+.btn,.pc-btn{--spot-size:110px;--spot-color:var(--color-spring-200);--spot-fill:.14;
+  --spot-edge-color:var(--color-spring-500);--spot-rim:.6}
+.btn-spring{--spot-color:#fff;--spot-fill:.45;--spot-edge-color:#fff;--spot-rim:.8}
+.btn-ghost-light{--spot-color:var(--color-forest-600);--spot-fill:.1;--spot-edge-color:var(--color-forest-600);--spot-rim:.55}
+.btn-ghost-ink{--spot-color:var(--color-ink-950);--spot-fill:.08;--spot-edge-color:var(--color-ink-950);--spot-rim:.4}
+.btn[disabled] .spot-light,.btn[disabled] .spot-edge,
+.btn[aria-disabled="true"] .spot-light,.btn[aria-disabled="true"] .spot-edge{display:none}
 .portrait.photo-light{--spot-color:var(--color-forest-600);--spot-fill:.12;
   --spot-edge-color:var(--color-forest-600);--spot-rim:.5}
 

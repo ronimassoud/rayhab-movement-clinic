@@ -256,7 +256,7 @@
     var stillQ = window.matchMedia('(prefers-reduced-motion: reduce)');
     var SEL = 'a.edu-card, .routecard, a.router-card, a.svc-card, a.morecard, a.pidx, a.artcard, ' +
               '.pillar.is-linked, .supcard.is-linked, .consult-lead, .consult-alt, .bk-type, ' +
-              'a.svc-primary, .svcidx-primary.is-linked, .navcard, .startlist a, .portrait';
+              'a.svc-primary, .svcidx-primary.is-linked, .navcard, .startlist a, .portrait, .btn, .pc-btn';
     var SIZE = 240, SOFTNESS = 0.7, PROXIMITY = 80, SMOOTHING = 0.3;
     var clampN = function (v, lo, hi) { return Math.min(hi, Math.max(lo, v)); };
 
@@ -313,6 +313,9 @@
         fill: stops(color, SOFTNESS), rim: stops(rimColor, 1),
         intensity: parseFloat(cs.getPropertyValue('--spot-fill')) || 0.05,
         glow: parseFloat(cs.getPropertyValue('--spot-rim')) || 0.45,
+        // A light sized for a card would flood a button, so --spot-size
+        // can shrink it per element.
+        size: parseFloat(cs.getPropertyValue('--spot-size')) || SIZE,
         x: 0, y: 0, presence: 0, flare: 0, pressed: false, drawn: ''
       };
       cards.push(el._spot);
@@ -321,7 +324,7 @@
     Array.prototype.forEach.call(document.querySelectorAll(SEL), register);
 
     var paint = function (s) {
-      var size = SIZE * (1 + 0.2 * s.flare), boost = 1 + 0.7 * s.flare;
+      var size = s.size * (1 + 0.2 * s.flare), boost = 1 + 0.7 * s.flare;
       var key = s.x.toFixed(1) + ',' + s.y.toFixed(1) + ',' + size.toFixed(1);
       if (key !== s.drawn) {
         s.drawn = key;
