@@ -25,8 +25,7 @@ NAV = '''<nav class="site-nav" aria-label="Primary">
   <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navgroup"><i></i><span class="vh">Menu</span></button>
   <div class="navgroup" id="navgroup">
     <a href="../">Home</a>
-    <a href="../education.html">Education</a>
-    <a class="nav-sub" href="../scoliosis/">Scoliosis</a>
+    <span class="nav-drop"><a href="../education.html">Education</a><span class="nav-menu"><a class="nav-sub" href="../scoliosis/">Scoliosis</a></span></span>
     <a href="./" aria-current="page">Services</a>
     <a href="../about.html">About</a>
     <a href="../results.html">Results</a>

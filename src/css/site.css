@@ -481,7 +481,7 @@ body{overflow-wrap:break-word}
 /* 3. Touch targets. The design's 14–15px links are correct for a mouse;
    on a coarse pointer the spec's 44px floor applies. */
 @media (pointer:coarse){
-  .navgroup a,.navgroup span,.footcol a,.footcol span,
+  .navgroup a,.navgroup>span,.footcol a,.footcol span,
   .textlink,.supcard-link,.route-more,.bk-edit,.bk-linkbtn,.crumbs a{
     min-height:44px;display:inline-flex;align-items:center;
   }

@@ -107,9 +107,20 @@
     var J = { swell: 0.2, barge: 6, shrink: 0.05, jelly: 1, bounce: 0.25, stagger: 22, stiffness: 580 };
     var wideMq = window.matchMedia('(min-width:1181px)');
     var stillMq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    var chips = Array.prototype.slice.call(row.querySelectorAll('a'));
+    // The row's labels. Education and its Scoliosis dropdown count as one
+    // label, the Education link: the dropdown hangs below it and is not part
+    // of the row. On a scoliosis page Education is the current section, so
+    // it is the label that stands proud at rest.
+    var chips = [];
+    Array.prototype.forEach.call(row.children, function (el) {
+      var a = el.classList.contains('nav-drop') ? el.querySelector('a') : el;
+      if (a && a.tagName === 'A') chips.push(a);
+    });
     var home = -1;
-    chips.forEach(function (a, i) { if (a.getAttribute('aria-current') === 'page') home = i; });
+    chips.forEach(function (a, i) {
+      var drop = a.parentElement && a.parentElement.classList.contains('nav-drop') ? a.parentElement : null;
+      if (a.getAttribute('aria-current') === 'page' || (drop && drop.querySelector('[aria-current="page"]'))) home = i;
+    });
 
     var spring = function (p) { return { p: p, v: 0, to: p, k: 1, c: 0, m: 1, at: 0, live: false }; };
     var state = chips.map(function () { return { x: spring(0), sx: spring(1), sy: spring(1) }; });
@@ -198,6 +209,9 @@
 
     var indexOf = function (el) {
       var a = el && el.closest ? el.closest('a') : null;
+      // Inside the dropdown, the label that owns it stays the chosen one.
+      var drop = el && el.closest ? el.closest('.nav-drop') : null;
+      if (drop) a = drop.querySelector('a');
       return a ? chips.indexOf(a) : -1;
     };
     row.addEventListener('pointerover', function (e) {

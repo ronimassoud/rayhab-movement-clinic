@@ -114,7 +114,7 @@ produced, the audience routes under `scoliosis/`, are maintained by hand.
 its own word count, so the label cannot drift from the text. The scoliosis library
 carries the Schroth byline; the five general hubs carry the credential that
 actually applies to them, which is set per topic. All three builders wrap trailing
-navigational arrows for the hover animation; data arrows such as `29Ã‚Â° Ã¢â€ â€™ 20Ã‚Â°`
+navigational arrows for the hover animation; data arrows such as `29Ãƒâ€šÃ‚Â° ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ 20Ãƒâ€šÃ‚Â°`
 are deliberately left alone.
 
 ## Brand assets
@@ -278,7 +278,8 @@ the results page keeps its lean. Under reduced motion the lean stays, as a pose,
 and stops animating.
 
 **Navigation.** On desktop (1181px and up) the floating pill shows the link
-row, with the jelly motion on the labels (`ui.js`). Below that, the menu button
+row, with the jelly motion on the labels (`ui.js`). Scoliosis sits in a small dropdown
+under Education that opens on hover or keyboard focus. Below that, the menu button
 opens the card panel, after React Bits' CardNav: the pill grows downward and three
 cards of grouped links drop in (Care, Learn, Clinic). The panel's markup comes from
 `content/navcards.py` on every page, `ui.js` owns its state, focus and closing
