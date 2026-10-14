@@ -518,6 +518,13 @@ a.edu-card,.routecard,a.router-card,a.svc-card,a.morecard,a.pidx,a.artcard,
 a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard,.startlist a{
   --spot-color:var(--color-spring-200);--spot-fill:.12;
   --spot-edge-color:var(--color-spring-500);--spot-rim:.5}
+/* Dr. Rayan's portrait cards (home hero, founder section, About) float
+   and catch the same pale light: the cut-out photo sits over it, so it
+   glows around and behind him, and the spring edge runs round the card. */
+.portrait{--spot-color:var(--color-spring-200);--spot-fill:.16;
+  --spot-edge-color:var(--color-spring-500);--spot-rim:.55}
+.portrait.photo-light{--spot-color:var(--color-forest-600);--spot-fill:.12;
+  --spot-edge-color:var(--color-forest-600);--spot-rim:.5}
 
 
 /* ---------- 11. FAQ section ----------

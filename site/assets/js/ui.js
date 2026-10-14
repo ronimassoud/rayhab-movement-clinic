@@ -256,7 +256,7 @@
     var stillQ = window.matchMedia('(prefers-reduced-motion: reduce)');
     var SEL = 'a.edu-card, .routecard, a.router-card, a.svc-card, a.morecard, a.pidx, a.artcard, ' +
               '.pillar.is-linked, .supcard.is-linked, .consult-lead, .consult-alt, .bk-type, ' +
-              'a.svc-primary, .svcidx-primary.is-linked, .navcard, .startlist a';
+              'a.svc-primary, .svcidx-primary.is-linked, .navcard, .startlist a, .portrait';
     var SIZE = 240, SOFTNESS = 0.7, PROXIMITY = 80, SMOOTHING = 0.3;
     var clampN = function (v, lo, hi) { return Math.min(hi, Math.max(lo, v)); };
 
