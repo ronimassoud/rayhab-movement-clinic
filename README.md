@@ -114,7 +114,7 @@ produced, the audience routes under `scoliosis/`, are maintained by hand.
 its own word count, so the label cannot drift from the text. The scoliosis library
 carries the Schroth byline; the five general hubs carry the credential that
 actually applies to them, which is set per topic. All three builders wrap trailing
-navigational arrows for the hover animation; data arrows such as `29Â° â†’ 20Â°`
+navigational arrows for the hover animation; data arrows such as `29Ã‚Â° Ã¢â€ â€™ 20Ã‚Â°`
 are deliberately left alone.
 
 ## Brand assets
@@ -286,7 +286,7 @@ rules, and `motion.js` animates it. With motion off it opens instantly.
 
 **Spotlight.** Cards that are links or controls catch a soft light that follows the
 pointer, after React Bits' SpotlightCard: service, article, route and library cards,
-the consultation cards, the booking options in the popup, the menu cards and the dark
+the consultation cards, the booking options (in the popup and on `book.html`), the menu cards and the dark
 lead cards. The light reaches 80px past each card, so a grid shares one light, and it
 swells when pressed. One controller in `ui.js` lights them all from a single loop that
 stops when nothing moves; colours come from `--spot-*` properties in
