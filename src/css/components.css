@@ -187,8 +187,8 @@
 /* The menu button: three bars that fold into a cross. */
 .nav-toggle{display:none;flex:none;width:44px;height:44px;padding:0;cursor:pointer;
   align-items:center;justify-content:center;
-  background:var(--color-veil-08);border:1px solid var(--color-veil-08);border-radius:var(--radius-sm);
-  transition:background-color var(--t-tint),border-color var(--t-tint),transform var(--t-move) var(--ease-out)}
+  background:var(--color-veil-08);border:0;border-radius:var(--radius-sm);
+  transition:background-color var(--t-tint),transform var(--t-move) var(--ease-out)}
 .nav-toggle i,.nav-toggle i::before,.nav-toggle i::after{
   display:block;width:18px;height:1.5px;border-radius:2px;background:var(--color-bone);
   transition:transform var(--t-move) var(--ease-out),top var(--t-move) var(--ease-out),background-color var(--t-tint)}
@@ -200,7 +200,7 @@
 .nav-toggle[aria-expanded="true"] i::before{top:0;transform:rotate(45deg)}
 .nav-toggle[aria-expanded="true"] i::after{top:0;transform:rotate(-45deg)}
 @media (hover:hover) and (pointer:fine){
-  .nav-toggle:hover{background:var(--color-veil-12);border-color:var(--color-veil-15)}
+  .nav-toggle:hover{background:var(--color-veil-12)}
 }
 .nav-toggle:active{transform:scale(.94);transition-duration:.06s}
 
