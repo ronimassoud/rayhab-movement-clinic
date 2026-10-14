@@ -1,7 +1,7 @@
 # Rayhab Movement Clinic
 
 Website for Rayhab Movement Clinic, Beirut. Specialised scoliosis rehabilitation,
-Schroth-based, plus sports rehabilitation, FRC and joint training, and general
+Schroth-based, plus sports rehabilitation, joint training and mobility, and general
 physiotherapy.
 
 Static site: plain HTML, CSS custom properties and vanilla JavaScript. No build

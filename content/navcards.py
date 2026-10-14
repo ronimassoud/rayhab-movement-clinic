@@ -26,7 +26,7 @@ CARDS = [
         ('services/pain-management.html', 'Pain management'),
         ('services/physiotherapy.html', 'Physiotherapy'),
         ('services/sports-rehabilitation.html', 'Sports rehabilitation'),
-        ('services/frc-joint-training.html', 'FRC &amp; joint training'),
+        ('services/joint-training-mobility.html', 'Joint training &amp; mobility'),
         ('services/', 'All services'),
     ]),
     ('learn', 'Learn', [

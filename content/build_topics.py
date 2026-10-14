@@ -26,7 +26,7 @@ ORDER = ["exercise", "sport", "posture", "mobility", "injury"]
 # producing a hub with no onward links.
 CROSS = {
     "exercise": [
-        ("../services/frc-joint-training.html", "Service", "FRC &amp; joint training",
+        ("../services/joint-training-mobility.html", "Service", "Joint training &amp; mobility",
          "Where the loading principles on this page turn into a programme."),
         ("../scoliosis/lifting-with-scoliosis.html", "Scoliosis", "Lifting with scoliosis",
          "The same loading logic, applied to a spine with a known curve."),
@@ -50,7 +50,7 @@ CROSS = {
          "Why capacity in a position matters more than the position itself."),
     ],
     "mobility": [
-        ("../services/frc-joint-training.html", "Service", "FRC &amp; joint training",
+        ("../services/joint-training-mobility.html", "Service", "Joint training &amp; mobility",
          "Controlled articular rotations and end-range work, programmed and progressed."),
         ("../exercise/progressive-overload-without-flare-ups.html", "Exercise &amp; loading", "Progressive overload",
          "How load is added without provoking the thing you are trying to build."),
@@ -106,7 +106,7 @@ FOOTER = '''<footer class="site-footer">
       <h2>Services</h2>
       <a href="../services/scoliosis-rehabilitation.html">Scoliosis rehabilitation</a>
       <a href="../services/sports-rehabilitation.html">Sports rehabilitation</a>
-      <a href="../services/frc-joint-training.html">FRC &amp; joint training</a>
+      <a href="../services/joint-training-mobility.html">Joint training &amp; mobility</a>
       <a href="../services/physiotherapy.html">Physiotherapy</a>
       <a href="../services/pain-management.html">Pain management</a>
     </div>

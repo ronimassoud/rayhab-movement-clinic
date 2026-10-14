@@ -54,7 +54,7 @@ FOOTER = '''<footer class="site-footer">
       <h2>Services</h2>
       <a href="../services/scoliosis-rehabilitation.html">Scoliosis rehabilitation</a>
       <a href="../services/sports-rehabilitation.html">Sports rehabilitation</a>
-      <a href="../services/frc-joint-training.html">FRC &amp; joint training</a>
+      <a href="../services/joint-training-mobility.html">Joint training &amp; mobility</a>
       <a href="../services/physiotherapy.html">Physiotherapy</a>
       <a href="../services/pain-management.html">Pain management</a>
     </div>

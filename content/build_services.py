@@ -58,7 +58,7 @@ FOOTER = '''<footer class="site-footer">
       <h2>Services</h2>
       <a href="scoliosis-rehabilitation.html">Scoliosis rehabilitation</a>
       <a href="sports-rehabilitation.html">Sports rehabilitation</a>
-      <a href="frc-joint-training.html">FRC &amp; joint training</a>
+      <a href="joint-training-mobility.html">Joint training &amp; mobility</a>
       <a href="physiotherapy.html">Physiotherapy</a>
       <a href="pain-management.html">Pain management</a>
     </div>
@@ -82,7 +82,7 @@ FOOTER = '''<footer class="site-footer">
 # The booking option each page opens on. Without it the page's general
 # "Book" buttons (nav, hero, closing band, phone bar) opened the flow on its
 # first option, the scoliosis assessment, whichever service you were reading.
-BOOK_TYPE = {'sports-rehabilitation': 'sports', 'frc-joint-training': 'sports',
+BOOK_TYPE = {'sports-rehabilitation': 'sports', 'joint-training-mobility': 'sports',
              'physiotherapy': 'sports', 'pain-management': 'pain'}
 SPRING_BOOK = re.compile(r'(<a class="btn btn-spring[^"]*" href="\.\./book\.html)(")')
 
@@ -105,7 +105,7 @@ def wrap_arrows(html):
 # Every service page shows the one clinic photograph, cropped to the part of
 # the room the service happens in: the treatment rooms for physiotherapy, the
 # training floor for sports rehabilitation and joint training.
-CLINIC_POS = {'sports-rehabilitation': '88% 50%', 'frc-joint-training': '72% 50%', 'physiotherapy': '14% 50%', 'pain-management': '30% 50%'}
+CLINIC_POS = {'sports-rehabilitation': '88% 50%', 'joint-training-mobility': '72% 50%', 'physiotherapy': '14% 50%', 'pain-management': '30% 50%'}
 CLINIC_ALT = 'Inside Rayhab Movement Clinic: treatment rooms on the left, the reception desk ahead and a training floor with free weights on the right.'
 
 
