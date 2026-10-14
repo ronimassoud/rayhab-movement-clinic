@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/rayhab.css?v=80d295bc">
+<link rel="stylesheet" href="assets/css/rayhab.css?v=8d7a3b97">
 <link rel="icon" href="assets/img/favicon.png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 </head>
@@ -60,25 +60,17 @@
   <!-- Panel -->
   <div class="bk-panel">
 
-    <!-- Stepper: where you are in the four steps. Finished steps are buttons back to them. -->
+    <!-- Stepper, after React Bits' Stepper: the four steps in one track, a
+         tile that glides to the current one, and a drawn tick on each step
+         that is finished. Finished steps are buttons back to themselves. -->
     <nav class="bk-stepper" aria-label="Booking steps">
-      <ol>
-        <li class="bk-st is-current" id="st1">
-          <button class="bk-st-btn" type="button" data-step="1" aria-current="step"><span class="bk-dot is-current" id="dot1">1</span><span class="bk-steplabel is-current" id="lbl1">What you need</span></button>
-          <span class="bk-st-line" aria-hidden="true"><i></i></span>
-        </li>
-        <li class="bk-st" id="st2">
-          <button class="bk-st-btn" type="button" data-step="2" disabled><span class="bk-dot" id="dot2">2</span><span class="bk-steplabel" id="lbl2">Date &amp; time</span></button>
-          <span class="bk-st-line" aria-hidden="true"><i></i></span>
-        </li>
-        <li class="bk-st" id="st3">
-          <button class="bk-st-btn" type="button" data-step="3" disabled><span class="bk-dot" id="dot3">3</span><span class="bk-steplabel" id="lbl3">Your details</span></button>
-          <span class="bk-st-line" aria-hidden="true"><i></i></span>
-        </li>
-        <li class="bk-st" id="st4">
-          <button class="bk-st-btn" type="button" data-step="4" disabled><span class="bk-dot" id="dot4">4</span><span class="bk-steplabel" id="lbl4">Review &amp; confirm</span></button>
-        </li>
-      </ol>
+      <div class="bk-track" id="bk-track">
+        <span class="bk-glider" id="bk-glider" aria-hidden="true"></span>
+        <button class="bk-seg" id="st1" type="button" data-step="1" data-status="active" aria-current="step"><span class="bk-badge" id="dot1">1</span><span class="bk-segtitle" id="lbl1">What you need</span></button>
+        <button class="bk-seg" id="st2" type="button" data-step="2" data-status="upcoming" disabled><span class="bk-badge" id="dot2">2</span><span class="bk-segtitle" id="lbl2">Date &amp; time</span></button>
+        <button class="bk-seg" id="st3" type="button" data-step="3" data-status="upcoming" disabled><span class="bk-badge" id="dot3">3</span><span class="bk-segtitle" id="lbl3">Your details</span></button>
+        <button class="bk-seg" id="st4" type="button" data-step="4" data-status="upcoming" disabled><span class="bk-badge" id="dot4">4</span><span class="bk-segtitle" id="lbl4">Review &amp; confirm</span></button>
+      </div>
     </nav>
 
     <!-- Step 1 -->
@@ -272,15 +264,15 @@
 
     <!-- Actions -->
     <div class="bk-actions" id="bk-actions">
-      <button class="bk-linkbtn" type="button" id="bk-back" hidden>← Back</button>
+      <button class="bk-backbtn" type="button" id="bk-back" hidden><svg class="bk-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg><span>Back</span></button>
       <p class="bk-hint" id="bk-hint"></p>
-      <button class="btn btn-spring" type="button" id="bk-next">Continue</button>
+      <button class="btn btn-spring bk-nextbtn" type="button" id="bk-next"><span class="bk-nextlabel">Continue</span><svg class="bk-ico bk-ico-next" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg><svg class="bk-ico bk-ico-done" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></button>
     </div>
 
   </div>
 </div>
 </main>
 </div>
-<script src="assets/js/booking.js?v=85b9ab7f"></script>
+<script src="assets/js/booking.js?v=f46cb4bb"></script>
 </body>
 </html>

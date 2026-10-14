@@ -211,25 +211,103 @@
     if (dw) dw.textContent = whenLabel() + ' at the Beirut clinic. We confirm by WhatsApp within one working day.';
   }
 
+  /* ---- Stepper ----
+     After React Bits' Stepper. A tile glides along the track to the current
+     step on a spring; a finished step shows a tick that draws itself; and
+     when the four titles no longer fit beside their badges, only the
+     current one keeps its title. */
+  var SPRING = 'linear(0, 0.0603, 0.2033, 0.3821, 0.5633, 0.7258, 0.8584, 0.9574, 1.0242, 1.0634, 1.0809, 1.0828, 1.0747, 1.0613, 1.046, 1.0313, 1.0186, 1.0085, 1.0012, 0.9965, 0.994, 0.9931, 0.9933, 0.9941, 0.9953, 0.9966, 0.9978, 0.9988, 1)';
+  var spring = (window.CSS && CSS.supports && CSS.supports('transition-timing-function', 'linear(0, 1)'))
+    ? SPRING : 'cubic-bezier(0.34, 1.4, 0.64, 1)';
+  var stillMq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var still = function () { return !!(stillMq && stillMq.matches); };
+  var TICK_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>';
+  var wasComplete = [false, false, false, false];
+  var gliderPlaced = false;
+  var titleWidths = null;
+
+  function placeGlider(animate) {
+    var track = $('#bk-track'), glider = $('#bk-glider');
+    if (!track || !glider) return;
+    var seg = $('#st' + Math.min(st.step, 4));
+    if (!seg) return;
+    glider.style.transition = animate
+      ? 'transform 560ms ' + spring + ', width 560ms ' + spring + ', height 560ms ' + spring + ', opacity 200ms ease'
+      : 'opacity 200ms ease';
+    glider.style.transform = 'translate3d(' + seg.offsetLeft + 'px,' + seg.offsetTop + 'px,0)';
+    glider.style.width = seg.offsetWidth + 'px';
+    glider.style.height = seg.offsetHeight + 'px';
+    glider.style.opacity = st.done ? '0' : '1';
+  }
+
+  // Tight when the badges and every title would not fit the track.
+  function fitTitles() {
+    var track = $('#bk-track');
+    if (!track || !track.clientWidth) return;
+    if (!titleWidths) {
+      track.classList.remove('is-tight');
+      titleWidths = [1, 2, 3, 4].map(function (n) { return $('#lbl' + n).scrollWidth + 8; });
+    }
+    var badges = [1, 2, 3, 4].reduce(function (s, n) { return s + $('#dot' + n).getBoundingClientRect().width + 20; }, 0);
+    var titles = titleWidths.reduce(function (s, w) { return s + w; }, 0);
+    track.classList.toggle('is-tight', badges + titles > track.clientWidth - 8 - 12);
+  }
+
   function renderProgress() {
     renderMobileHead();
     [1, 2, 3, 4].forEach(function (n) {
-      var dot = $('#dot' + n), lbl = $('#lbl' + n), item = $('#st' + n);
+      var seg = $('#st' + n), dot = $('#dot' + n), lbl = $('#lbl' + n);
       var complete = st.done || st.step > n;
       var current = st.step === n && !st.done;
-      dot.textContent = complete ? '✓' : String(n);
-      dot.className = 'bk-dot' + (complete ? ' is-done' : current ? ' is-current' : '');
-      lbl.className = 'bk-steplabel' + (current ? ' is-current' : '');
-      if (!item) return;
-      item.className = 'bk-st' + (complete ? ' is-done' : current ? ' is-current' : '');
-      // A finished step is a way back to it. The current and the later ones
-      // are not buttons in any useful sense, so they are disabled.
-      var btn = item.querySelector('.bk-st-btn');
-      btn.disabled = !complete || st.done || st.loading;
-      if (current) btn.setAttribute('aria-current', 'step');
-      else btn.removeAttribute('aria-current');
-      btn.setAttribute('aria-label', lbl.textContent + (complete ? ', done. Go back to this step' : current ? ', current step' : ''));
+      var status = complete ? 'complete' : current ? 'active' : 'upcoming';
+      seg.setAttribute('data-status', status);
+      dot.setAttribute('data-status', status);
+      lbl.setAttribute('data-status', status);
+      if (complete && !wasComplete[n - 1]) {
+        dot.innerHTML = TICK_SVG;
+        var path = dot.querySelector('path');
+        if (path && path.animate && !still()) {
+          path.style.strokeDasharray = '24';
+          path.animate([{ strokeDashoffset: 24 }, { strokeDashoffset: 0 }],
+                       { duration: 360, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+        }
+      } else if (!complete && wasComplete[n - 1]) {
+        dot.textContent = String(n);
+      }
+      wasComplete[n - 1] = complete;
+      // A finished step is a way back to it; the current and later ones are not.
+      seg.disabled = !complete || st.done || st.loading;
+      if (current) seg.setAttribute('aria-current', 'step');
+      else seg.removeAttribute('aria-current');
+      seg.setAttribute('aria-label', 'Step ' + n + ': ' + lbl.textContent +
+        (complete ? ', done. Go back to this step' : current ? ', current step' : ''));
     });
+    fitTitles();
+    placeGlider(gliderPlaced && !still());
+    gliderPlaced = true;
+  }
+
+  /* The step content slides in from the side it is coming from and fades
+     up, like the component's panes. Transform and opacity only, so nothing
+     reflows while it moves. */
+  var shownPane = null, shownStep = 0;
+  function animatePane() {
+    var pane = st.loading ? $('#bk-loading') : st.done ? $('#bk-done') : $('#step' + st.step);
+    if (!pane || pane === shownPane) return;
+    var dir = (st.done || st.loading || st.step >= shownStep) ? 1 : -1;
+    var first = !shownPane;
+    shownPane = pane; shownStep = st.step;
+    if (first || !pane.animate || still()) return;
+    pane.getAnimations().forEach(function (an) { an.cancel(); });
+    pane.animate([{ transform: 'translateX(' + (dir * 36) + 'px)' }, { transform: 'none' }],
+                 { duration: 560, easing: spring });
+    pane.animate([{ opacity: 0 }, { opacity: 0, offset: 0.25 }, { opacity: 1 }],
+                 { duration: 420, easing: 'ease-out' });
+  }
+
+  if (window.ResizeObserver) {
+    var track0 = $('#bk-track');
+    if (track0) new ResizeObserver(function () { fitTitles(); placeGlider(false); }).observe(track0);
   }
 
   function renderDays() {
@@ -385,6 +463,7 @@
     $('#mode-online').setAttribute('aria-pressed', String(st.mode === 'online'));
 
     renderProgress();
+    animatePane();
     renderDays();
     renderSlots();
     renderSummary();
@@ -395,7 +474,9 @@
     back.hidden = !(st.step > 1);
     var next = $('#bk-next');
     var last = st.step === 4;
-    next.textContent = last ? 'Confirm request' : st.step === 3 ? 'Review request' : 'Continue';
+    var nextLabel = next.querySelector('.bk-nextlabel') || next;
+    nextLabel.textContent = last ? 'Confirm request' : st.step === 3 ? 'Review request' : 'Continue';
+    next.classList.toggle('is-last', last);
     var ok = canNext();
     next.classList.toggle('btn-primary', ok);
     next.classList.toggle('btn-disabled', !ok);
@@ -474,7 +555,7 @@
     if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); st.consent = !st.consent; render(); }
   });
 
-  $$('.bk-edit, .bk-st-btn').forEach(function (b) {
+  $$('.bk-edit, .bk-seg').forEach(function (b) {
     b.addEventListener('click', function () {
       st.step = parseInt(b.dataset.step, 10);
       st.done = false;

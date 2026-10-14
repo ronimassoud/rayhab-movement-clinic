@@ -158,7 +158,7 @@
   .bk-actions{flex-wrap:wrap;gap:12px}
   .bk-actions .btn{width:100%;order:3}
   .bk-hint{order:2;flex:1 0 100%}
-  .bk-linkbtn{order:1}
+  .bk-linkbtn,.bk-backbtn{order:1}
 }
 @media (max-width:1000px){
   .bk{border-radius:0;border-left:0;border-right:0}
@@ -223,7 +223,7 @@
   .bk-availdot{display:none}
   .bk-slotgrid{grid-template-columns:repeat(4,1fr);gap:8px}
   .bk-actions{padding-top:20px;display:block}
-  .bk-actions .btn{display:block;width:100%;padding:17px 0}
+  .bk-actions .btn{display:flex;width:100%;padding:17px 0}
   .bk-hint{margin:0 0 12px}
   #bk-back{display:none}
 
@@ -566,58 +566,69 @@ dialog.modal.is-open::backdrop{
 
 
 /* ==========================================================
-   Stepper across the top of the panel
-   The four steps as one row: a numbered circle for each, joined
-   by a rule that fills as each step is finished. Finished steps
-   show a tick and are buttons back to themselves; the current
-   one is ringed and named in bold; the ones ahead wait in grey.
-   It replaces the vertical list that used to sit in the rail.
+   Stepper
+   After React Bits' Stepper, in the light theme and the site's
+   colours. The four steps sit in one recessed track; a raised
+   tile glides along it to the current step on a spring; a
+   finished step's badge fills forest and draws a spring-green
+   tick. When the titles no longer fit, only the current one
+   keeps its title (.is-tight, set by booking.js). It replaces
+   the vertical list that used to sit in the rail.
    ========================================================== */
-.bk-stepper{margin:0 0 32px;padding:0 0 20px;border-bottom:1px solid var(--color-line)}
-.bk-stepper ol{display:flex;align-items:center;margin:0;padding:0;list-style:none}
-.bk-st{display:flex;align-items:center;flex:1 1 0;min-width:0}
-.bk-st:last-child{flex:0 0 auto}
-.bk-st-btn{display:inline-flex;align-items:center;gap:10px;flex:none;min-height:36px;padding:2px 4px 2px 2px;
-  border:0;background:none;border-radius:var(--radius-pill);font:inherit;color:inherit;cursor:pointer;
-  transition:background-color var(--t-tint)}
-.bk-st-btn:disabled{cursor:default}
-@media (hover:hover) and (pointer:fine){
-  .bk-st.is-done .bk-st-btn:not(:disabled):hover{background:var(--color-sand)}
-  .bk-st.is-done .bk-st-btn:not(:disabled):hover .bk-steplabel{color:var(--color-forest-600)}
-}
+.bk-stepper{margin:0 0 28px}
+.bk-track{position:relative;display:flex;gap:4px;padding:4px;border-radius:16px;
+  background:color-mix(in oklab,var(--color-forest-900) 6%,transparent)}
+.bk-glider{position:absolute;top:0;left:0;border-radius:12px;opacity:0;pointer-events:none;
+  background:linear-gradient(180deg,#fff 0%,var(--color-paper) 100%);
+  box-shadow:inset 0 0 0 1px rgba(16,28,19,.08),inset 0 1px 0 #fff,0 4px 10px -5px rgba(8,25,14,.28)}
 
-.bk-stepper .bk-dot{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:50%;
-  border:1.5px solid var(--color-hairline);background:transparent;color:var(--color-body);
-  font:600 13px/1 var(--font-sans);transition:background-color .25s,border-color .25s,color .25s}
-.bk-stepper .bk-dot.is-current{border:2px solid var(--color-forest-900);background:var(--color-paper);color:var(--color-forest-900)}
-.bk-stepper .bk-dot.is-done{border-color:var(--color-forest-900);background:var(--color-forest-900);color:var(--color-spring-500)}
+.bk-seg{position:relative;display:flex;flex:1 1 auto;align-items:center;justify-content:center;gap:8px;
+  min-width:0;height:44px;padding:0 10px;border:0;border-radius:12px;background:none;
+  font:inherit;color:var(--color-body);cursor:pointer;transition:background-color .2s ease}
+.bk-seg:disabled{cursor:default}
+@media (hover:hover){ .bk-seg:not(:disabled):hover{background:rgba(16,28,19,.04)} }
+.bk-seg:focus-visible{outline:2px solid var(--color-ink-950);outline-offset:2px}
 
-.bk-stepper .bk-steplabel{margin:0;font:500 14px/1.2 var(--font-sans);color:var(--color-body);white-space:nowrap;
-  transition:color .25s}
-.bk-stepper .bk-steplabel.is-current{font-weight:600;color:var(--color-fg)}
-.bk-st.is-done .bk-steplabel{color:var(--color-fg-2)}
+.bk-badge{display:grid;flex:none;place-items:center;width:24px;height:24px;border-radius:50%;
+  box-shadow:inset 0 0 0 1px var(--color-hairline);color:var(--color-body);
+  font:600 12px/1 var(--font-sans);font-variant-numeric:tabular-nums;
+  transition:background-color .15s ease,box-shadow .15s ease,color .15s ease}
+.bk-badge[data-status="active"]{box-shadow:inset 0 0 0 1.5px var(--color-fg);color:var(--color-fg)}
+.bk-badge[data-status="complete"]{background:var(--color-forest-900);box-shadow:none;color:var(--color-spring-500)}
+.bk-badge svg{display:block}
 
-/* The joining rule. The fill is a second layer that grows from the left
-   when the step before it is finished. */
-.bk-st-line{flex:1 1 auto;min-width:16px;height:2px;margin:0 14px;border-radius:2px;
-  background:var(--color-line);overflow:hidden}
-.bk-st-line i{display:block;height:100%;background:var(--color-forest-900);
-  transform:scaleX(0);transform-origin:left center;transition:transform .45s var(--ease-out)}
-.bk-st.is-done .bk-st-line i{transform:scaleX(1)}
+.bk-segtitle{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font:600 13.5px/1.2 var(--font-sans);color:var(--color-body);transition:color .2s ease}
+.bk-segtitle:not([data-status="upcoming"]){color:var(--color-fg)}
+.bk-track.is-tight .bk-segtitle{display:none}
+.bk-track.is-tight .bk-segtitle[data-status="active"]{display:inline}
+.bk-track.is-tight .bk-seg:not([data-status="active"]){flex:0 0 auto}
 
-/* Narrow: four labels squeeze the joining rules to nothing, so only the
-   current step keeps its name. */
-@media (max-width:860px){
-  .bk-stepper{margin-bottom:24px;padding-bottom:16px}
-  .bk-stepper .bk-steplabel{display:none}
-  .bk-stepper .bk-steplabel.is-current{display:inline}
-  .bk-st-line{margin:0 8px}
-}
+/* Footer: Back is a raised tile with a chevron, Continue keeps the site's
+   spring pill with a chevron that becomes a tick on the last step. */
+.bk-backbtn{display:inline-flex;align-items:center;gap:6px;flex:none;height:44px;padding:0 16px 0 12px;
+  border:0;border-radius:12px;cursor:pointer;font:600 14px/1 var(--font-sans);color:var(--color-fg);
+  background:linear-gradient(180deg,#fff 0%,var(--color-paper) 100%);
+  box-shadow:inset 0 0 0 1px rgba(16,28,19,.08),inset 0 1px 0 #fff,0 4px 10px -5px rgba(8,25,14,.28);
+  transition:filter .2s ease,transform .2s ease}
+@media (hover:hover){ .bk-backbtn:hover{filter:brightness(.97)} }
+.bk-backbtn:active{transform:scale(.96);transition-duration:0s}
+.bk-backbtn:focus-visible{outline:2px solid var(--color-ink-950);outline-offset:2px}
+.bk-nextbtn{gap:8px}
+.bk-nextbtn .bk-ico-done{display:none}
+.bk-nextbtn.is-last .bk-ico-next{display:none}
+.bk-nextbtn.is-last .bk-ico-done{display:block}
+.bk-ico{flex:none}
+
 /* On a phone the stepper takes over from the segmented bar in the header. */
-@media (max-width:700px){ .bk-progress{display:none !important} }
+@media (max-width:700px){
+  .bk-progress{display:none !important}
+  .bk-stepper{margin-bottom:20px}
+  .bk-seg{height:40px;padding:0 8px}
+}
+@media (max-height:760px){ .modal-body .bk-stepper{margin-bottom:18px} }
 
-/* The modal fits the flow to the viewport height, so the stepper closes up
-   with the rest of the panel on short screens. */
-@media (max-height:760px){ .modal-body .bk-stepper{margin-bottom:20px;padding-bottom:14px} }
-
-@media (prefers-reduced-motion:reduce){ .bk-st-line i,.bk-stepper .bk-dot,.bk-stepper .bk-steplabel{transition:none} }
+@media (prefers-reduced-motion:reduce){
+  .bk-badge,.bk-segtitle,.bk-seg,.bk-backbtn{transition:none}
+  .bk-backbtn:active{transform:none}
+}
