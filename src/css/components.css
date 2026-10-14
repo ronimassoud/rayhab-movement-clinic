@@ -494,3 +494,65 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
 .faq-card.faq5-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start;max-width:1040px;margin-inline:auto}
 .faq5-col{display:flex;flex-direction:column;gap:12px;min-width:0}
 @media (max-width:900px){ .faq-card.faq5-cols{grid-template-columns:1fr} }
+
+
+/* ---------- 12. Case showcase (results.html) ----------
+   After React Bits Pro's Showcase 2: a draggable carousel with a 3D lean.
+   The track runs to the right edge of the screen so the next card always
+   peeks in, which is what says "drag me". Each card is a button that shows
+   its written case in the panel below. ui.js drives the drag, the momentum,
+   the lean (--rx, --ry, --lift) and the selection; without it the track
+   still scrolls natively and every case is listed in full. */
+.showcase{padding:var(--section-y) 0}
+.sc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;
+  padding:0 var(--pad-x);margin-bottom:clamp(20px,3vw,32px)}
+.sc-nav{display:flex;gap:8px;flex:none}
+.sc-arrow{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;cursor:pointer;
+  border:1px solid var(--color-hairline);background:var(--color-paper);color:var(--color-fg);
+  transition:border-color var(--t-tint),opacity var(--t-tint),transform var(--t-move) var(--ease-out)}
+.sc-arrow:disabled{opacity:.35;cursor:default}
+@media (hover:hover) and (pointer:fine){ .sc-arrow:not(:disabled):hover{border-color:var(--color-forest-600)} }
+.sc-arrow:not(:disabled):active{transform:scale(.94)}
+
+.sc-track{display:flex;gap:20px;overflow-x:auto;overscroll-behavior-x:contain;
+  padding:20px var(--pad-x) 32px;scroll-padding-inline:var(--pad-x);scroll-snap-type:x proximity;
+  scrollbar-width:none;cursor:grab}
+.sc-track::-webkit-scrollbar{display:none}
+.sc-track.is-dragging{cursor:grabbing;scroll-snap-type:none;user-select:none}
+.sc-track.is-dragging .sc-card{pointer-events:none}
+
+.sc-card{flex:0 0 clamp(240px,26vw,320px);scroll-snap-align:start;display:flex;flex-direction:column;gap:14px;
+  padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:inherit;
+  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--lift,0px));
+  transition:transform .55s var(--ease-out)}
+.sc-card.is-tracking{transition:transform .12s linear}
+.sc-media{display:block;aspect-ratio:4/5;overflow:hidden;border-radius:var(--radius-lg);background:var(--color-brand-800);
+  box-shadow:0 18px 40px -24px rgba(8,25,14,.5);transition:box-shadow .4s var(--ease-out),outline-color var(--t-tint);
+  outline:2px solid transparent;outline-offset:4px}
+.sc-media img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none;user-select:none}
+.sc-pair{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--color-line)}
+.sc-card.is-tracking .sc-media{box-shadow:var(--shadow-float)}
+.sc-card.is-on .sc-media{outline-color:var(--color-forest-600)}
+.sc-card:focus-visible{outline:none}
+.sc-card:focus-visible .sc-media{outline-color:var(--color-ink-950)}
+.sc-cap{display:flex;flex-direction:column;gap:4px;padding:0 4px}
+.sc-n{font:600 var(--text-caption)/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--color-forest-600)}
+.sc-t{font:600 var(--text-heading-sm)/1.25 var(--font-display);letter-spacing:-.02em;color:var(--color-forest-900);text-wrap:balance}
+.sc-c{font:400 var(--text-body-sm)/1.4 var(--font-sans);color:var(--color-body)}
+
+.sc-details{padding:0 var(--pad-x)}
+.case-detail{max-width:860px;background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius-lg);
+  padding:clamp(24px,4vw,40px)}
+.case-detail+.case-detail{margin-top:16px}
+.case-detail .case-t{font-size:var(--text-heading-lg)}
+.showcase .case-note{padding:0 var(--pad-x)}
+
+@media (max-width:700px){
+  .sc-head{flex-direction:column;align-items:flex-start}
+  .sc-nav{display:none}
+  .sc-card{flex-basis:76%}
+  .sc-track{gap:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  .sc-card,.sc-card.is-tracking{transform:none;transition:none}
+}
