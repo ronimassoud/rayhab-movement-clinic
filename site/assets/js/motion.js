@@ -7,7 +7,7 @@
      headline       the home headline rises line by line (SplitText)
      tilt           fanned cards close from a wider spread as they scroll in
      nav            the floating pill steps aside going down, returns going up
-     line art       the Cobb-angle drawing in the closing band draws with scroll
+     line art       the hero drawing traces on load; the closing band's with scroll
      process        the rule above each of the six stages fills in turn
      count          measured angles count to their result
      reading        progress across an article's body
@@ -230,6 +230,85 @@
         .to(strokes[3], { attr: { 'stroke-dashoffset': 0 }, ease: PEN, duration: 1.1 }, 1.35);
     }
 
+    /* ---------- Line art in the heroes ----------
+       The same pen as the closing band: the top line, the bottom one, the
+       spine where there is one, then the dashed arc, each easing in and out
+       and overlapping the last. On a clock rather than the scroll, because
+       a hero is on screen when the page opens. It takes over from the
+       stylesheet's draw-in, which stays as the version without GSAP. The
+       home and hub heroes carry the drawing inline; the index heroes
+       (services, results, contact) paint it as a background, so an inline
+       copy replaces it, as in the closing band. GSAP rounds px values it
+       writes to style, which would snap a 0 to 1 dash offset, hence
+       autoRound: false. */
+    var heroUndo = [];
+    var heroArt = $('.hero-device svg, .hub-device svg');
+    var idxHero = !heroArt && $('.svcidx-hero');
+    if (idxHero) {
+      heroArt = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      heroArt.setAttribute('class', 'hero-art');
+      heroArt.setAttribute('viewBox', '0 0 280 280');
+      heroArt.setAttribute('fill', 'none');
+      heroArt.setAttribute('aria-hidden', 'true');
+      heroArt.innerHTML =
+        '<line pathLength="1" x1="30" y1="80" x2="250" y2="66" stroke="#62E36B" stroke-width="1.2"/>' +
+        '<line pathLength="1" x1="34" y1="212" x2="254" y2="226" stroke="#62E36B" stroke-width="1.2"/>' +
+        '<path pathLength="1" d="M140 30C100 92 186 148 132 254" stroke="#F5F3EC" stroke-width="2" stroke-linecap="round" opacity=".55"/>' +
+        '<path d="M240 74A140 140 0 0 1 246 220" stroke="#62E36B" stroke-dasharray="3 6"/>';
+      idxHero.insertBefore(heroArt, idxHero.firstChild);
+      idxHero.classList.add('has-art');
+      heroUndo.push(function () { idxHero.classList.remove('has-art'); if (heroArt.parentNode) heroArt.parentNode.removeChild(heroArt); });
+    }
+    if (heroArt) {
+      var HERO_PEN = 'sine.inOut';
+      var shapes = $$('line, path', heroArt);
+      var hLines = shapes.filter(function (s) { return s.tagName.toLowerCase() === 'line'; });
+      var hSpine = shapes.filter(function (s) { return s.tagName.toLowerCase() === 'path' && !s.hasAttribute('stroke-dasharray'); });
+      var hArcs = shapes.filter(function (s) { return s.tagName.toLowerCase() === 'path' && s.hasAttribute('stroke-dasharray'); });
+      var vb = (heroArt.getAttribute('viewBox') || '0 0 0 0').split(/\s+/);
+      // A dashed stroke cannot be traced by its own dash offset, so each arc
+      // keeps its dashes and shows through a mask that traces instead.
+      var hMasks = hArcs.map(function (arc, i) {
+        var NS = 'http://www.w3.org/2000/svg', id = 'hero-arc-mask-' + i;
+        var mask = document.createElementNS(NS, 'mask');
+        mask.setAttribute('id', id);
+        mask.setAttribute('maskUnits', 'userSpaceOnUse');
+        mask.setAttribute('x', vb[0]); mask.setAttribute('y', vb[1]);
+        mask.setAttribute('width', vb[2]); mask.setAttribute('height', vb[3]);
+        var m = document.createElementNS(NS, 'path');
+        m.setAttribute('d', arc.getAttribute('d'));
+        m.setAttribute('pathLength', '1');
+        m.setAttribute('fill', 'none');
+        m.setAttribute('stroke', '#fff');
+        m.setAttribute('stroke-width', '8');
+        m.setAttribute('stroke-linecap', 'round');
+        mask.appendChild(m);
+        heroArt.insertBefore(mask, heroArt.firstChild);
+        // pathLength would scale the dash pattern to the whole path; without
+        // it the arc shows the dashes it was drawn with.
+        var len = arc.getAttribute('pathLength');
+        arc.removeAttribute('pathLength');
+        arc.setAttribute('mask', 'url(#' + id + ')');
+        gsap.set(arc, { animation: 'none', strokeDasharray: arc.getAttribute('stroke-dasharray').replace(/\s+/, ' '), strokeDashoffset: 0 });
+        heroUndo.push(function () {
+          if (mask.parentNode) mask.parentNode.removeChild(mask);
+          arc.removeAttribute('mask');
+          if (len) arc.setAttribute('pathLength', len);
+        });
+        return m;
+      });
+      var pens = hLines.concat(hSpine, hMasks);
+      gsap.set(pens, { animation: 'none', strokeDasharray: 1, strokeDashoffset: 1 });
+      gsap.set(hLines, { opacity: 1 });
+      var at = { line0: 0, line1: 0.55, spine: 1.1, arc: 1.9 };
+      var heroTl = gsap.timeline({ delay: 0.35 });
+      hLines.forEach(function (l, i) {
+        heroTl.to(l, { strokeDashoffset: 0, autoRound: false, ease: HERO_PEN, duration: 1.7 }, i ? at.line1 : at.line0);
+      });
+      hSpine.forEach(function (s) { heroTl.to(s, { strokeDashoffset: 0, autoRound: false, ease: HERO_PEN, duration: 2.2 }, at.spine); });
+      hMasks.forEach(function (m) { heroTl.to(m, { strokeDashoffset: 0, autoRound: false, ease: HERO_PEN, duration: 1.6 }, at.arc); });
+    }
+
     /* ---------- The six stages ----------
        Each stage sits under a hairline. A second, heavier rule fills across
        it as the section passes, one stage after the next, so the row reads
@@ -377,6 +456,7 @@
       if (cleanupNav) cleanupNav();
       if (h1) gsap.set(h1, { visibility: 'visible' });
       if (credUndo) credUndo();
+      heroUndo.forEach(function (f) { f(); });
     };
   });
 

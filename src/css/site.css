@@ -203,6 +203,11 @@
 .svcidx-hero{padding-inline:var(--pad-x);padding-bottom:var(--hero-pad);position:relative;isolation:isolate;overflow:hidden;text-align:center}
 .svcidx-hero::before{content:"";position:absolute;z-index:-1;left:50%;top:46%;width:min(720px,130%);aspect-ratio:1;
   translate:-50% -50%;background:var(--device-art) center/contain no-repeat;opacity:.2;pointer-events:none}
+/* With motion on, motion.js swaps the background for an inline copy that
+   traces itself; same place, same size. */
+.svcidx-hero.has-art::before{content:none}
+.svcidx-hero .hero-art{position:absolute;z-index:-1;left:50%;top:46%;width:min(720px,130%);height:auto;aspect-ratio:1;
+  translate:-50% -50%;opacity:.2;pointer-events:none}
 .svcidx-crumbs{margin-bottom:32px;justify-content:center}
 .svcidx-head{display:flex;flex-direction:column;align-items:center;gap:24px}
 .svcidx-head .h1{max-width:16ch}
