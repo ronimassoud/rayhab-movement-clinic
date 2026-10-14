@@ -32,9 +32,9 @@
    "slug": "the-assessment",
    "name": "The assessment",
    "short": "Pillar 04 · The assessment",
-   "claim": 4,
-   "desc": "What happens in a 60-minute scoliosis assessment at Rayhab, whether you need an X-ray first, what gets measured, and what to do straight after a diagnosis.",
-   "stand": "Everything starts with one appointment. These four articles explain what is measured, what you need to bring, and what you leave with."
+   "claim": 5,
+   "desc": "What happens in a 60-minute scoliosis assessment at Rayhab, whether you need an X-ray first, what gets measured, what to do straight after a diagnosis, and what monitoring leaves out.",
+   "stand": "Everything starts with one appointment. These five articles explain what is measured, what you need to bring, what you leave with, and what follow-up X-rays do not show."
   }
  ],
  "articles": [
@@ -1261,7 +1261,7 @@
    "short": "Situation · Parents of adolescents",
    "claim": 7,
    "desc": "The scoliosis articles that matter most to parents: what a diagnosis means, what predicts progression, how bracing works, and how to support a teenager doing daily exercises.",
-   "stand": "Seven of the twenty-four, in the order most parents need them, from the week of diagnosis onward.",
+   "stand": "Seven of the twenty-five, in the order most parents need them, from the week of diagnosis onward.",
    "items": [
     "just-diagnosed",
     "what-scoliosis-actually-is",
@@ -1279,7 +1279,7 @@
    "short": "Situation · Adults with a curve",
    "claim": 6,
    "desc": "Scoliosis articles for adults: how adult curves differ, what the link with pain really is, how to train for decades, and what an assessment covers.",
-   "stand": "Six of the twenty-four, for a curve that has stopped growing, where the questions are about pain, capacity and the next thirty years.",
+   "stand": "Six of the twenty-five, for a curve that has stopped growing, where the questions are about pain, capacity and the next thirty years.",
    "items": [
     "adult-scoliosis",
     "scoliosis-and-pain",
@@ -1296,7 +1296,7 @@
    "short": "Situation · Athletes and lifters",
    "claim": 4,
    "desc": "Scoliosis articles for athletes and lifters: loading a curved spine, asymmetric sports, returning to play on criteria, and why stopping is rarely the answer.",
-   "stand": "Four of the twenty-four, on loading a curved spine well rather than avoiding load and hoping.",
+   "stand": "Four of the twenty-five, on loading a curved spine well rather than avoiding load and hoping.",
    "items": [
     "lifting-with-scoliosis",
     "return-to-sport",

@@ -192,6 +192,19 @@ def render_blocks(blocks):
     return "\n      ".join(out)
 
 
+TOTAL, TOTAL_W = 0, ""
+
+
+def number_words(n):
+    """25 -> 'twenty-five', for copy that spells the count out."""
+    ones = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen "            "fifteen sixteen seventeen eighteen nineteen".split()
+    tens = "twenty thirty forty fifty sixty seventy eighty ninety".split()
+    if n < 20:
+        return ones[n]
+    t, o = divmod(n, 10)
+    return tens[t - 2] + ("-" + ones[o] if o else "")
+
+
 def reading_time(a):
     """Derive the reading time from the text itself. Hand-written estimates
     drifted to roughly double the real length."""
@@ -295,7 +308,7 @@ def filter_bar(views, active):
     """One row of views over one library.
 
     Every index page carries it, so a reader can see that the topic shelves
-    and the situation shelves are the same twenty-four articles seen two
+    and the situation shelves are the same library of articles seen two
     ways, and can move between them in a click. They are ordinary links, so
     this needs no JavaScript."""
     out = []
@@ -305,8 +318,8 @@ def filter_bar(views, active):
                    '<span class="libchip-n">%d</span></a>'
                    % (slug, cur, esc(label), count))
     whole = ('<a class="libchip libchip-all" href="library.html"%s>All'
-             '<span class="libchip-n">24</span></a>'
-             % (' aria-current="page"' if active == "library" else ''))
+             '<span class="libchip-n">%d</span></a>'
+             % (' aria-current="page"' if active == "library" else '', TOTAL))
     return ('<nav class="libbar" aria-label="Views of the scoliosis library">'
             '%s<span class="libbar-k">By topic</span>%s'
             '<span class="libbar-k">By situation</span>%s</nav>'
@@ -350,10 +363,10 @@ def render_index(view, arts, views):
     </div>
     %s
     <div class="pidx-list" data-reveal="children" data-reveal-stagger="55">%s</div>
-    <p class="disclaimer mt-7">Every article here is written for patients and families, not clinicians, and carries a named clinical reviewer. The topic and situation views above are the same twenty-four articles ordered differently, so one article can appear in several. General information cannot tell you what your own curve is doing.</p>
+    <p class="disclaimer mt-7">Every article here is written for patients and families, not clinicians, and carries a named clinical reviewer. The topic and situation views above are the same @@TOTAL_W@@ articles ordered differently, so one article can appear in several. General information cannot tell you what your own curve is doing.</p>
   </section>
 ''' % (esc(p["short"]), esc(p["name"]), esc(p["stand"]),
-       "%d of 24 articles" % len(arts) if len(arts) < 24 else "All 24 articles",
+       "%d of %d articles" % (len(arts), TOTAL) if len(arts) < TOTAL else "All %d articles" % TOTAL,
        "Everything, in reading order" if p["slug"] == "library" else "One library, seen one way",
        filter_bar(views, p["slug"]), rows)
 
@@ -370,6 +383,12 @@ def main():
     pillars = {p["id"]: p for p in data["pillars"]}
     arts = data["articles"] + extra["articles"]
     lookup = {a["slug"]: a for a in arts}
+
+    # The library's size is counted, not typed: it appears in the filter bar,
+    # each index's eyebrow, the library's stand-first and every disclaimer.
+    global TOTAL, TOTAL_W
+    TOTAL = len(arts)
+    TOTAL_W = number_words(TOTAL)
 
     # Position within the pillar, used to rotate the closing line.
     seen = {}
@@ -400,21 +419,21 @@ def main():
     LIBRARY = {
         "slug": "library", "name": "The scoliosis library",
         "short": "All of it, in one place",
-        "desc": "All 24 scoliosis articles in one list, with views by topic and by situation. "
+        "desc": "All %d scoliosis articles in one list, with views by topic and by situation. " % TOTAL +
                 "Every article carries a named clinical reviewer.",
-        "stand": "Twenty-four articles. The views below are the same library ordered by "
+        "stand": "%s articles. The views below are the same library ordered by " % TOTAL_W.capitalize() +
                  "topic or by the situation you are in, so one article can appear in several.",
     }
 
     for view in [LIBRARY] + data["pillars"] + data["routes"]:
         group = arts if view["slug"] == "library" else members[view["slug"]]
-        html = render_index(view, group, views)
+        html = render_index(view, group, views).replace("@@TOTAL_W@@", TOTAL_W)
         io.open(os.path.join(OUT, view["slug"] + ".html"), "w",
                 encoding="utf-8", newline="\n").write(stamp(inject_navcards(inject(wrap_arrows(html))), OUT))
 
     print("wrote %d articles and %d index views" % (n, len(views) + 1))
     for slug in order:
-        print("  %-26s %d of 24" % (slug, len(members[slug])))
+        print("  %-26s %d of %d" % (slug, len(members[slug]), TOTAL))
 
 
 if __name__ == "__main__":
