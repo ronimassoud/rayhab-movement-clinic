@@ -534,8 +534,9 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
    The track runs to the right edge of the screen so the next card always
    peeks in, which is what says "drag me". Each card is a button that shows
    its written case in the panel below. ui.js drives the drag, the momentum,
-   the lean (--rx, --ry, --lift) and the selection; without it the track
-   still scrolls natively and every case is listed in full. */
+   the lean (--rx, --ry, --lift), the drift to the right and the selection;
+   without it the track still scrolls natively and every case is listed in
+   full. */
 .showcase{padding:var(--section-y) 0}
 .sc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;
   padding:0 var(--pad-x);margin-bottom:clamp(20px,3vw,32px)}
@@ -551,6 +552,7 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
   padding:20px var(--pad-x) 32px;scroll-padding-inline:var(--pad-x);scroll-snap-type:x proximity;
   scrollbar-width:none;cursor:grab}
 .sc-track::-webkit-scrollbar{display:none}
+.sc-track.is-loop{scroll-snap-type:none}
 .sc-track.is-dragging{cursor:grabbing;scroll-snap-type:none;user-select:none}
 .sc-track.is-dragging .sc-card{pointer-events:none}
 

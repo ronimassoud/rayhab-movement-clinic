@@ -410,12 +410,17 @@
   })();
 
   /* ---- Case showcase (results.html) ----
-     After React Bits Pro's Showcase 2. The track drags with the mouse and
-     carries on with momentum when let go; touch uses the browser's own
-     scrolling. A card leans towards the cursor in 3D. Choosing a card shows
-     its written case in the panel below and puts its id in the address, so
-     the link can be shared; arriving on #case-0N opens that case. Arrow keys
-     move between cards. Without this, every case is simply listed. */
+     After React Bits Pro's Showcase 2. The cards drift slowly to the right
+     on their own, and copies of them run either side of the originals so the
+     row never ends. The drift eases to a stop while the pointer is over the
+     row, while a card has focus and for a moment after any drag, swipe or
+     arrow press, and it does not run at all with reduced motion. The track
+     drags with the mouse and carries on with momentum when let go; touch
+     uses the browser's own scrolling. A card leans towards the cursor in 3D.
+     Choosing a card shows its written case in the panel below and puts its
+     id in the address, so the link can be shared; arriving on #case-0N opens
+     that case. Arrow keys move between cards. Without this, every case is
+     simply listed. */
   var showcase = document.querySelector('.showcase');
   if (showcase) (function () {
     var track = showcase.querySelector('.sc-track');
@@ -428,14 +433,56 @@
     var fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
     if (!track || !cards.length) return;
 
+    /* -- The loop: one set of copies before the originals, two or more
+       after. The view is kept within the originals' stretch (between one and
+       two set-widths in); crossing either edge jumps back a set-width, onto
+       identical cards, so nothing visibly moves. -- */
+    var all = cards.slice();
+    var copy = function () {
+      return cards.map(function (c) {
+        var k = c.cloneNode(true);
+        k.classList.add('sc-copy');
+        k.setAttribute('aria-hidden', 'true');
+        k.setAttribute('tabindex', '-1');
+        k.removeAttribute('aria-controls');
+        k.removeAttribute('aria-pressed');
+        return k;
+      });
+    };
+    var before = copy();
+    before.forEach(function (k) { track.insertBefore(k, cards[0]); });
+    all = before.concat(all);
+    var setW = 0;
+    var measure = function () {
+      setW = cards[0].offsetLeft - all[0].offsetLeft;
+      for (var n = 0; n < 6 && setW > 0 && track.scrollWidth - track.clientWidth < 3 * setW; n++) {
+        var more = copy();
+        more.forEach(function (k) { track.appendChild(k); });
+        all = all.concat(more);
+      }
+    };
+    measure();
+    track.classList.add('is-loop');
+
+    var pos = 0;
+    var put = function () { track.scrollLeft = pos; };
+    var wrap = function () {
+      if (setW <= 0) return;
+      var s = pos < setW ? setW : pos >= 2 * setW ? -setW : 0;
+      if (!s) return;
+      pos += s;
+      if (drag) drag.left += s;
+      put();
+    };
+
     var select = function (id, how) {
       how = how || {};
       var found = false;
-      cards.forEach(function (c) {
+      all.forEach(function (c) {
         var on = c.getAttribute('data-case') === id;
         if (on) found = true;
         c.classList.toggle('is-on', on);
-        c.setAttribute('aria-pressed', String(on));
+        if (!c.classList.contains('sc-copy')) c.setAttribute('aria-pressed', String(on));
       });
       if (!found) return false;
       details.forEach(function (d) {
@@ -450,7 +497,7 @@
       if (how.history && window.history && history.replaceState) history.replaceState(null, '', '#' + id);
       if (how.showCard) {
         var card = cards.filter(function (c) { return c.getAttribute('data-case') === id; })[0];
-        if (card) track.scrollTo({ left: card.offsetLeft - track.offsetLeft - (parseFloat(getComputedStyle(track).paddingLeft) || 0), behavior: 'auto' });
+        if (card) { pos = card.offsetLeft - all[0].offsetLeft; put(); }
       }
       if (how.showPanel) {
         var r = panel.getBoundingClientRect();
@@ -459,7 +506,7 @@
       return true;
     };
 
-    // The case in the address wins; otherwise the first.
+    // The case in the address wins; otherwise the first, at the start of the originals.
     var fromHash = function () {
       var id = (location.hash || '').slice(1);
       if (/^case-\d+$/.test(id) && select(id, { showCard: true })) {
@@ -468,16 +515,68 @@
       }
       return false;
     };
+    pos = setW; put();
     if (!fromHash()) select(cards[0].getAttribute('data-case'));
     window.addEventListener('hashchange', fromHash);
 
-    /* -- Drag with momentum (mouse and pen) -- */
+    /* -- The drift: a slow pace to the right, eased in and out -- */
+    var SPEED = 28;           // px per second
+    var TAU = 0.35;           // easing time constant, seconds
+    var vel = 0, last = 0, raf = 0, onScreen = false;
+    var hovering = false, focused = false, touching = false, holdUntil = 0;
+    // A pause for something done by hand stops the drift at once, so it
+    // never pulls against a smooth scroll; the hover pause eases out instead.
+    var hold = function (ms) { vel = 0; holdUntil = Math.max(holdUntil, window.performance.now() + ms); };
     var drag = null, moved = false, vx = 0, coast = 0;
+    var running = function () { return onScreen && !document.hidden && !reduce(); };
+    var tick = function (now) {
+      var dt = Math.min(64, now - last) / 1000; last = now;
+      var paused = hovering || focused || touching || drag || coast || now < holdUntil;
+      vel += ((paused ? 0 : SPEED) - vel) * (1 - Math.exp(-dt / TAU));
+      if (drag || coast || touching) vel = 0;
+      if (vel > 0.3) { pos -= vel * dt; put(); wrap(); }
+      raf = running() ? window.requestAnimationFrame(tick) : 0;
+    };
+    var start = function () {
+      if (raf || !running()) return;
+      last = window.performance.now();
+      raf = window.requestAnimationFrame(tick);
+    };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        onScreen = entries[0].isIntersecting;
+        start();
+      }).observe(track);
+    } else { onScreen = true; start(); }
+    document.addEventListener('visibilitychange', start);
+    if (reduceQ && reduceQ.addEventListener) reduceQ.addEventListener('change', start);
+
+    track.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hovering = true; });
+    track.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') hovering = false; });
+    track.addEventListener('focusin', function () { focused = true; vel = 0; pos = track.scrollLeft; });
+    track.addEventListener('focusout', function () { focused = false; hold(1500); });
+
+    /* -- Scrolling by hand (touch, trackpad, wheel): follow it, pause, and
+       once it settles, step back into the originals' stretch -- */
+    var idle = 0;
+    track.addEventListener('scroll', function () {
+      if (Math.abs(track.scrollLeft - pos) > 1.5) { pos = track.scrollLeft; hold(1800); }
+      window.clearTimeout(idle);
+      idle = window.setTimeout(function () { if (!drag && !coast) { pos = track.scrollLeft; wrap(); } }, 140);
+    }, { passive: true });
+    track.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch') touching = true; });
+    var untouch = function (e) { if (e.pointerType === 'touch' && touching) { touching = false; hold(2500); } };
+    window.addEventListener('pointerup', untouch);
+    window.addEventListener('pointercancel', untouch);
+    track.addEventListener('touchend', function () { if (touching) { touching = false; hold(2500); } }, { passive: true });
+
+    /* -- Drag with momentum (mouse and pen) -- */
     var stopCoast = function () { if (coast) { window.cancelAnimationFrame(coast); coast = 0; } };
     track.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'touch' || e.button !== 0) return;
       stopCoast();
-      drag = { x: e.clientX, left: track.scrollLeft, lastX: e.clientX, t: window.performance.now(), id: e.pointerId };
+      pos = track.scrollLeft;
+      drag = { x: e.clientX, left: pos, lastX: e.clientX, t: window.performance.now(), id: e.pointerId };
       moved = false; vx = 0;
     });
     window.addEventListener('pointermove', function (e) {
@@ -489,7 +588,7 @@
         if (track.setPointerCapture) { try { track.setPointerCapture(drag.id); } catch (x) {} }
       }
       if (!moved) return;
-      track.scrollLeft = drag.left - dx;
+      pos = drag.left - dx; put(); wrap();
       var now = window.performance.now();
       vx = (e.clientX - drag.lastX) / Math.max(1, now - drag.t);   // px per ms
       drag.lastX = e.clientX; drag.t = now;
@@ -497,15 +596,16 @@
     var endDrag = function () {
       if (!drag) return;
       drag = null;
+      hold(1500);
       if (!moved) return;
       if (reduce() || Math.abs(vx) < 0.05) { track.classList.remove('is-dragging'); return; }
-      var last = window.performance.now();
+      var then = window.performance.now();
       var step = function (now) {
-        var dt = Math.min(32, now - last); last = now;
-        track.scrollLeft -= vx * dt;
+        var dt = Math.min(32, now - then); then = now;
+        pos -= vx * dt; put(); wrap();
         vx *= Math.pow(0.94, dt / 16);
         if (Math.abs(vx) > 0.02) coast = window.requestAnimationFrame(step);
-        else { coast = 0; track.classList.remove('is-dragging'); }
+        else { coast = 0; track.classList.remove('is-dragging'); hold(1500); }
       };
       coast = window.requestAnimationFrame(step);
     };
@@ -516,12 +616,13 @@
       if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
     }, true);
 
-    /* -- Choosing a case -- */
-    cards.forEach(function (c, i) {
+    /* -- Choosing a case: any card, copies included -- */
+    all.forEach(function (c) {
+      var i = cards.indexOf(c);
       c.addEventListener('click', function () {
         select(c.getAttribute('data-case'), { animate: true, history: true, showPanel: true });
       });
-      c.addEventListener('keydown', function (e) {
+      if (i >= 0) c.addEventListener('keydown', function (e) {
         var to = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? cards.length - 1 : -1;
         if (to < 0 || to >= cards.length || to === i) return;
         e.preventDefault();
@@ -546,25 +647,25 @@
       });
     });
 
-    /* -- Arrows: a card's width at a time, greyed at either end -- */
+    /* -- Arrows: a card's width at a time; the row has no ends now -- */
     var stepW = function () {
       var gap = parseFloat(getComputedStyle(track).columnGap) || 20;
       return cards[0].getBoundingClientRect().width + gap;
     };
-    var ends = function () {
-      var max = track.scrollWidth - track.clientWidth - 2;
-      if (arrows[0]) arrows[0].disabled = track.scrollLeft <= 2;
-      if (arrows[1]) arrows[1].disabled = track.scrollLeft >= max;
-    };
     arrows.forEach(function (a) {
+      a.disabled = false;
       a.addEventListener('click', function () {
         stopCoast();
+        hold(2500);
+        pos = track.scrollLeft; wrap();
         track.scrollBy({ left: (parseInt(a.getAttribute('data-dir'), 10) || 1) * stepW(), behavior: reduce() ? 'auto' : 'smooth' });
       });
     });
-    track.addEventListener('scroll', ends, { passive: true });
-    window.addEventListener('resize', ends);
-    ends();
+    window.addEventListener('resize', function () {
+      var off = setW ? track.scrollLeft - setW : 0;
+      measure();
+      pos = setW + off; put(); wrap();
+    });
   })();
 
   /* ---- Accordions ----
