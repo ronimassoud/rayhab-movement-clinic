@@ -7,8 +7,10 @@ untouched; this panel is hidden there.
 
 One definition for all 72 pages. The generators run it after formatting,
 like motion_tags.inject(), and the hand-written pages were run through it
-once. It is idempotent. check_links.py fails a deploy if any page with the
-nav lacks the panel, so the copies cannot drift apart.
+once. It is idempotent, and rebuilds a panel that is already there, so a
+change to CARDS reaches every page on the next run. check_links.py fails a
+deploy if any page with the nav lacks the panel, so the copies cannot drift
+apart.
 
 The current page is marked by ui.js, which compares paths, so the markup is
 identical on every page of the same folder depth.
@@ -21,6 +23,12 @@ ARROW = ('<svg class="navcard-arw" width="14" height="14" viewBox="0 0 24 24" fi
          'aria-hidden="true"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg>')
 
 CARDS = [
+    ('clinic', 'Clinic', [
+        ('', 'Home'),
+        ('about.html', 'About Rayan'),
+        ('contact.html', 'Contact'),
+        ('book.html', 'Book an assessment'),
+    ]),
     ('care', 'Care', [
         ('services/scoliosis-rehabilitation.html', 'Scoliosis rehabilitation'),
         ('services/pain-management.html', 'Pain management'),
@@ -34,12 +42,6 @@ CARDS = [
         ('scoliosis/', 'Understanding scoliosis'),
         ('scoliosis/library.html', 'Scoliosis library'),
         ('results.html', 'Case studies'),
-    ]),
-    ('clinic', 'Clinic', [
-        ('', 'Home'),
-        ('about.html', 'About Rayan'),
-        ('contact.html', 'Contact'),
-        ('book.html', 'Book an assessment'),
     ]),
 ]
 
@@ -66,7 +68,11 @@ def inject_navcards(html):
         return html
     html = html.replace('aria-controls="navgroup"', 'aria-controls="navcards"', 1)
     if 'id="navcards"' in html:
-        return html
+        # Already there: rebuild it, so a change to CARDS reaches every page.
+        i = html.index('<div class="navcards" id="navcards">')
+        i = html.rindex('\n', 0, i) + 1
+        j = html.index('</nav>', i)
+        return html[:i] + cards(pre) + '\n' + html[j:]
     start = html.index('class="site-nav"')
     end = html.index('</nav>', start)
     return html[:end] + cards(pre) + '\n' + html[end:]
