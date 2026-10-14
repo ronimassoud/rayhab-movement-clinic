@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Build the four supporting service pages on the same template as
 services/scoliosis-rehabilitation.html."""
-import io, json, os
+import io, re, json, os
 
 from motion_tags import inject
 
@@ -73,6 +73,22 @@ FOOTER = '''<footer class="site-footer">
   <p class="m-bookbar-1">Your plan starts with an assessment.</p>
   <a class="btn btn-spring" href="../book.html">Book</a>
 </div>'''
+
+
+# The booking option each page opens on. Without it the page's general
+# "Book" buttons (nav, hero, closing band, phone bar) opened the flow on its
+# first option, the scoliosis assessment, whichever service you were reading.
+BOOK_TYPE = {'sports-rehabilitation': 'sports', 'frc-joint-training': 'sports',
+             'physiotherapy': 'sports', 'pain-management': 'pain'}
+SPRING_BOOK = re.compile(r'(<a class="btn btn-spring[^"]*" href="\.\./book\.html)(")')
+
+
+def own_booking(html, slug):
+    """Point the page's primary booking buttons at its own option. Only the
+    spring buttons: the footer's "Online consultations" link and the online
+    card keep the plain flow, which is the right start for those."""
+    t = BOOK_TYPE.get(slug)
+    return SPRING_BOOK.sub(lambda m: m.group(1) + '?type=' + t + m.group(2), html) if t else html
 
 
 def wrap_arrows(html):
@@ -298,5 +314,5 @@ def build(s, n):
 data = json.load(io.open(os.path.join(here, "services.json"), encoding="utf-8"))
 for n, s in enumerate(data["services"]):
     io.open(os.path.join(OUT, s["slug"] + ".html"), "w",
-            encoding="utf-8", newline="\n").write(inject(wrap_arrows(build(s, n))))
+            encoding="utf-8", newline="\n").write(inject(own_booking(wrap_arrows(build(s, n)), s["slug"])))
     print("wrote services/%s.html" % s["slug"])
