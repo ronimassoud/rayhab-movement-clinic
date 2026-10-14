@@ -476,6 +476,9 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 .art-mins{font:400 13px/1 var(--font-sans);color:var(--color-body)}
 .art-t{margin:0 0 8px;font:600 var(--text-heading)/var(--text-heading--line-height) var(--font-display);letter-spacing:-.025em;color:var(--color-forest-900)}
 .art-d{margin:0;font:400 16px/1.6 var(--font-sans);color:var(--color-body)}
+/* The whole card is the link; the arrow at the end of the meta row says so,
+   and nudges right on hover with the site's other arrows. */
+.art-arw{margin-left:auto;font:400 18px/1 var(--font-sans);color:var(--color-forest-600)}
 .hub-side{display:flex;flex-direction:column;gap:12px}
 .sidecard{background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius-lg);padding:24px 32px}
 .sidecard-sand{background:var(--color-sand);border-color:transparent}

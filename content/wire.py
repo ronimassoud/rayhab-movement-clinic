@@ -98,17 +98,9 @@ pairs += [
 edit("scoliosis/index.html", pairs, must=False)
 
 # ---------------- latest-article cards, hub + education ----------------
-LATEST = [
- ("Reading your Cobb angle: what the number does and doesn't tell you", "cobb-angle"),
- ("What rotational breathing actually is", "rotational-breathing"),
- ("Getting a teenager to actually do their exercises", "teenager-exercises"),
-]
-for page, prefix in [("scoliosis/index.html", ""), ("education.html", "scoliosis/")]:
-    pr = []
-    for title, slug in LATEST:
-        pr.append(('<h3 class="art-t">%s</h3>' % title,
-                   '<h3 class="art-t"><a href="%s%s.html">%s</a></h3>' % (prefix, slug, title)))
-    edit(page, pr, must=False)
+# These cards are now whole links (<a class="artcard">) written into the two
+# hand pages, so there is nothing left to wire; re-linking the titles here
+# would nest a link inside the card's.
 
 # ---------------- home education cards ----------------
 HOME = [
