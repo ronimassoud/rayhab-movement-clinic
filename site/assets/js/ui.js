@@ -256,7 +256,7 @@
     var stillQ = window.matchMedia('(prefers-reduced-motion: reduce)');
     var SEL = 'a.edu-card, .routecard, a.router-card, a.svc-card, a.morecard, a.pidx, a.artcard, ' +
               '.pillar.is-linked, .supcard.is-linked, .consult-lead, .consult-alt, .bk-type, ' +
-              'a.svc-primary, .svcidx-primary.is-linked, .navcard';
+              'a.svc-primary, .svcidx-primary.is-linked, .navcard, .startlist a';
     var SIZE = 240, SOFTNESS = 0.7, PROXIMITY = 80, SMOOTHING = 0.3;
     var clampN = function (v, lo, hi) { return Math.min(hi, Math.max(lo, v)); };
 
@@ -407,6 +407,40 @@
     });
     document.addEventListener('focusout', function () { focusEl = null; wake(); });
     window.addEventListener('scroll', function () { if (pointer.active) wake(); }, { capture: true, passive: true });
+  })();
+
+  /* ---- Floating cards (.float-card) ----
+     The card leans toward the cursor, up to 6 degrees, and lifts 6px, then
+     settles back when the cursor leaves. The same lean the case cards had,
+     on one listener per card. Fine pointers only, never with reduced
+     motion; elsewhere the card simply stays put. */
+  (function () {
+    var floats = document.querySelectorAll('.float-card');
+    if (!floats.length || !window.matchMedia || !window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+    Array.prototype.forEach.call(floats, function (card) {
+      var raf = 0, ev = null;
+      var apply = function () {
+        raf = 0;
+        if (!ev || still.matches) return;
+        var r = card.getBoundingClientRect();
+        var nx = (ev.clientX - r.left) / r.width - 0.5, ny = (ev.clientY - r.top) / r.height - 0.5;
+        card.style.setProperty('--ry', (nx * 6).toFixed(2) + 'deg');
+        card.style.setProperty('--rx', (-ny * 5).toFixed(2) + 'deg');
+        card.style.setProperty('--lift', '-6px');
+      };
+      card.addEventListener('pointermove', function (e) {
+        if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+        ev = e;
+        card.classList.add('is-tracking');
+        if (!raf) raf = window.requestAnimationFrame(apply);
+      });
+      card.addEventListener('pointerleave', function () {
+        ev = null;
+        card.classList.remove('is-tracking');
+        card.style.removeProperty('--rx'); card.style.removeProperty('--ry'); card.style.removeProperty('--lift');
+      });
+    });
   })();
 
   /* ---- Case coverflow (results.html) ----

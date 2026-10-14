@@ -515,7 +515,7 @@ a.edu-card,.routecard,a.router-card,a.svc-card,a.morecard,a.pidx,a.artcard,
 .pillar.is-linked,.supcard.is-linked,.consult-lead,.bk-type{
   --spot-color:var(--color-forest-900);--spot-fill:.05;
   --spot-edge-color:var(--color-forest-600);--spot-rim:.45}
-a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
+a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard,.startlist a{
   --spot-color:var(--color-spring-200);--spot-fill:.12;
   --spot-edge-color:var(--color-spring-500);--spot-rim:.5}
 

@@ -429,11 +429,34 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 .hub-device svg{width:100%;height:100%}
 .hub-hero-inner{position:relative}
 .hub-hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(36px,6vw,72px);align-items:end}
+/* "Start here": a floating panel of three routes. The panel is frosted
+   rather than see-through, so the hero's line drawing passes behind the
+   copy instead of through it, and it leans toward the cursor (.float-card,
+   ui.js). Each row is a full-width link with its arrow, lit by the shared
+   spotlight like the other dark link cards. */
 .startbox{background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius-lg);padding:32px}
-.startlist{display:flex;flex-direction:column;gap:1px;background:var(--color-veil-12);border-radius:var(--radius-sm);overflow:hidden}
-.startlist li{background:var(--color-forest-900);padding:16px 16px;display:flex;justify-content:space-between;align-items:center;gap:16px;
-  font:500 15px/1.4 var(--font-sans);color:var(--color-bone)}
-.startlist .mins{font:400 13px/1 var(--font-sans);color:var(--color-on-dark-2);flex:none}
+.on-dark .startbox{background:rgba(18,48,24,.86);border-color:var(--color-veil-12);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:var(--shadow-float)}
+.startlist{display:flex;flex-direction:column;gap:1px;margin:0;padding:0;list-style:none;
+  background:var(--color-veil-12);border-radius:var(--radius-sm);overflow:hidden}
+.startlist a{display:flex;align-items:center;gap:12px;min-height:56px;padding:14px 16px;background:var(--color-forest-900);
+  font:500 15px/1.4 var(--font-sans);color:var(--color-bone);transition:background-color var(--t-tint),color var(--t-tint)}
+.startlist .sl-t{min-width:0}
+.startlist .mins{margin-left:auto;font:400 13px/1 var(--font-sans);color:var(--color-on-dark-2);flex:none}
+.startlist .sl-arw{flex:none;font-size:16px;color:var(--color-spring-500)}
+@media (hover:hover) and (pointer:fine){
+  .startlist a:hover{background:var(--color-forest-850)}
+}
+.startlist a:focus-visible{outline:2px solid var(--color-spring-500);outline-offset:-2px;background:var(--color-forest-850)}
+.startlist a:focus-visible .arw{transform:translateX(4px)}
+
+/* A card that floats: it leans toward the cursor and lifts, settling back
+   when the cursor leaves. ui.js writes --rx, --ry and --lift on fine
+   pointers; nothing moves on touch or with reduced motion. */
+.float-card{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--lift,0px));
+  transition:transform .6s var(--ease-out),box-shadow .6s var(--ease-out);will-change:transform}
+.float-card.is-tracking{transition:transform .14s linear,box-shadow .3s var(--ease-out)}
+@media (prefers-reduced-motion:reduce){ .float-card{transform:none;transition:none} }
 @media (max-width:1040px){ .hub-hero-grid{grid-template-columns:1fr;gap:32px} .hub-device{left:auto;right:-240px;opacity:.25} }
 
 .hub-route{padding:var(--section-y) var(--pad-x)}
@@ -541,7 +564,7 @@ body{overflow-wrap:break-word}
   .socials a{width:44px;height:44px}
   .site-nav>a{display:inline-flex;align-items:center;min-height:44px}
   .btn-sm{min-height:44px}
-  .startlist li{min-height:48px}
+  .startlist a{min-height:48px}
   .qa-btn,.faq-btn,.acc-btn{min-height:48px}
 }
 

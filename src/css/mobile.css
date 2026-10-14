@@ -169,7 +169,7 @@
   .startbox .eyebrow{font-size:12px;margin-bottom:12px}
   .startbox>p{display:none}
   .startlist{border-radius:var(--radius-sm)}
-  .startlist li{padding:12px 16px;font:500 14px/1.4 var(--font-sans)}
+  .startlist a{padding:12px 16px;font:500 14px/1.4 var(--font-sans)}
   .startlist .mins{font-size:12px}
 
   .hub-route{padding:var(--section-y) var(--pad-x)}
