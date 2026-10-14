@@ -94,7 +94,7 @@
         scrollTrigger: { trigger: el, start: 'top 88%', once: true },
         onComplete: function () {
           el.removeAttribute('data-reveal');
-          gsap.set(targets, { clearProps: 'opacity,transform' });
+          gsap.set(targets, { clearProps: 'opacity,transform,translate,rotate,scale' });
         }
       });
     });
@@ -109,14 +109,16 @@
         opacity: 1, y: 0, scale: 1, duration: 0.9, ease: EASE, stagger: 0.14, delay: 0.35,
         // Opacity stays inline: the stylesheet's starting pose still matches
         // while .js-motion is on <html>, and clearing it would hide them again.
-        onComplete: function () { gsap.set(floats, { clearProps: 'transform' }); }
+        onComplete: function () { gsap.set(floats, { clearProps: 'transform,translate,rotate,scale' }); }
       });
     }
 
     var fan = $$('.tilt-fan img');
     if (fan.length === 3) {
       // Dealt from a closed stack: the outer two start square behind the middle one.
-      gsap.fromTo(fan, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: EASE, stagger: 0.09, delay: 0.2 });
+      // Position goes through --lift rather than y: a y tween would hand the
+      // transform to GSAP, which folds the CSS lean into it and freezes it.
+      gsap.fromTo(fan, { opacity: 0, '--lift': '40px' }, { opacity: 1, '--lift': '0px', duration: 0.8, ease: EASE, stagger: 0.09, delay: 0.2 });
       gsap.fromTo([fan[0], fan[2]], { '--tilt': '0deg' }, {
         '--tilt': function (i) { return i === 0 ? '-7deg' : '7deg'; },
         duration: 1.1, ease: 'power2.out', delay: 0.45
@@ -152,8 +154,8 @@
       var quotes = $$('.proof-grid > .tilt');
       if (quotes.length === 3) {
         gsap.fromTo([quotes[0], quotes[2]],
-          { '--tilt': function (i) { return i === 0 ? '-11deg' : '11deg'; }, yPercent: 14 },
-          { '--tilt': function (i) { return i === 0 ? '-4deg' : '4deg'; }, yPercent: 0, ease: 'none',
+          { '--tilt': function (i) { return i === 0 ? '-11deg' : '11deg'; }, '--lift': '44px' },
+          { '--tilt': function (i) { return i === 0 ? '-4deg' : '4deg'; }, '--lift': '0px', ease: 'none',
             scrollTrigger: { trigger: '.proof-grid', start: 'top 92%', end: 'top 45%', scrub: 0.6 } });
       }
     }

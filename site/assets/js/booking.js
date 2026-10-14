@@ -208,11 +208,21 @@
   function renderProgress() {
     renderMobileHead();
     [1, 2, 3, 4].forEach(function (n) {
-      var dot = $('#dot' + n), lbl = $('#lbl' + n);
+      var dot = $('#dot' + n), lbl = $('#lbl' + n), item = $('#st' + n);
       var complete = st.done || st.step > n;
+      var current = st.step === n && !st.done;
       dot.textContent = complete ? '✓' : String(n);
-      dot.className = 'bk-dot' + (complete ? ' is-done' : st.step === n ? ' is-current' : '');
-      lbl.className = 'bk-steplabel' + (st.step === n && !st.done ? ' is-current' : '');
+      dot.className = 'bk-dot' + (complete ? ' is-done' : current ? ' is-current' : '');
+      lbl.className = 'bk-steplabel' + (current ? ' is-current' : '');
+      if (!item) return;
+      item.className = 'bk-st' + (complete ? ' is-done' : current ? ' is-current' : '');
+      // A finished step is a way back to it. The current and the later ones
+      // are not buttons in any useful sense, so they are disabled.
+      var btn = item.querySelector('.bk-st-btn');
+      btn.disabled = !complete || st.done || st.loading;
+      if (current) btn.setAttribute('aria-current', 'step');
+      else btn.removeAttribute('aria-current');
+      btn.setAttribute('aria-label', lbl.textContent + (complete ? ', done. Go back to this step' : current ? ', current step' : ''));
     });
   }
 
@@ -458,7 +468,7 @@
     if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); st.consent = !st.consent; render(); }
   });
 
-  $$('.bk-edit').forEach(function (b) {
+  $$('.bk-edit, .bk-st-btn').forEach(function (b) {
     b.addEventListener('click', function () {
       st.step = parseInt(b.dataset.step, 10);
       st.done = false;

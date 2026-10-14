@@ -12,16 +12,6 @@
 .bk-rail .wordmark{margin-bottom:44px}
 .bk-rail h1{margin:0 0 8px;font:600 var(--text-heading-lg)/var(--text-heading-lg--line-height) var(--font-display);letter-spacing:-.03em;color:var(--color-bone)}
 .bk-lede{margin:0 0 34px;font:400 16px/1.6 var(--font-sans);color:var(--color-on-dark-2)}
-.bk-steps{display:flex;flex-direction:column;gap:20px;margin-bottom:36px}
-.bk-stepitem{display:flex;gap:16px;align-items:center}
-.bk-dot{
-  width:26px;height:26px;border-radius:50%;flex:none;text-align:center;
-  border:1.5px solid #3B5942;color:#6E8A76;font:600 12px/23px var(--font-sans);
-}
-.bk-dot.is-current{background:var(--color-bone);color:var(--color-forest-900);border-color:var(--color-bone);line-height:26px}
-.bk-dot.is-done{background:var(--color-spring-500);color:var(--color-ink-950);border-color:var(--color-spring-500);line-height:26px}
-.bk-steplabel{margin:0;font:400 15px/1.3 var(--font-sans);color:var(--color-on-dark-2)}
-.bk-steplabel.is-current{font-weight:600;color:var(--color-bone)}
 .bk-summary{background:var(--color-veil-06);border:1px solid #ffffff1a;border-radius:var(--radius-md);padding:20px 22px;margin-top:auto}
 .bk-summary dl{display:flex;flex-direction:column;gap:13px;margin:0}
 .bk-summary dl>div{display:flex;justify-content:space-between;gap:16px}
@@ -31,8 +21,6 @@
 @media (max-width:1000px){
   .bk-rail{padding:26px var(--pad-x)}
   .bk-rail .wordmark{margin-bottom:26px}
-  .bk-steps{flex-direction:row;justify-content:space-between;gap:8px;margin-bottom:24px}
-  .bk-steplabel{display:none}
   .bk-summary{margin-top:0}
 }
 
@@ -195,7 +183,7 @@
 @media (max-width:700px){
   .bk{display:block;border:0;border-radius:0;min-height:0}
   .bk-rail{padding:16px 18px 20px;display:block}
-  .bk-rail>a,.bk-rail h1,.bk-lede,.bk-steps,.bk-summary,.bk-note{display:none}
+  .bk-rail>a,.bk-rail h1,.bk-lede,.bk-summary,.bk-note{display:none}
 
   .bk-mhead{display:block}
   .bk-mtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
@@ -332,7 +320,6 @@ dialog.modal.is-open::backdrop{background:rgba(8,25,14,.72)}
   .modal-body .bk-rail{padding:28px 36px}
   .modal-body .bk-rail .wordmark{margin-bottom:24px}
   .modal-body .bk-lede{margin-bottom:22px}
-  .modal-body .bk-steps{gap:16px;margin-bottom:24px}
   .modal-body .bk-note{margin-top:16px}
 }
 
@@ -347,7 +334,6 @@ dialog.modal.is-open::backdrop{background:rgba(8,25,14,.72)}
   .modal-body .bk-rail{padding:22px 32px}
   .modal-body .bk-rail .wordmark{margin-bottom:18px}
   .modal-body .bk-lede{margin-bottom:16px}
-  .modal-body .bk-steps{gap:12px;margin-bottom:18px}
   .modal-body .bk-summary{padding:16px 20px}
   .modal-body .bk-summary dl{gap:10px}
   .modal-body .bk-note{margin-top:12px}
@@ -366,7 +352,6 @@ dialog.modal.is-open::backdrop{background:rgba(8,25,14,.72)}
   .modal-body .bk-rail{padding:18px 28px}
   .modal-body .bk-rail .wordmark{margin-bottom:14px}
   .modal-body .bk-lede{margin-bottom:14px}
-  .modal-body .bk-steps{gap:10px;margin-bottom:14px}
   .modal-body .bk-summary{padding:14px 18px}
   .modal-body .bk-summary dl{gap:8px}
 }
@@ -578,3 +563,61 @@ dialog.modal.is-open::backdrop{
   dialog.modal,dialog.modal.is-open{transition:none;transform:none}
   dialog.modal::backdrop,dialog.modal.is-open::backdrop{transition:none}
 }
+
+
+/* ==========================================================
+   Stepper across the top of the panel
+   The four steps as one row: a numbered circle for each, joined
+   by a rule that fills as each step is finished. Finished steps
+   show a tick and are buttons back to themselves; the current
+   one is ringed and named in bold; the ones ahead wait in grey.
+   It replaces the vertical list that used to sit in the rail.
+   ========================================================== */
+.bk-stepper{margin:0 0 32px;padding:0 0 20px;border-bottom:1px solid var(--color-line)}
+.bk-stepper ol{display:flex;align-items:center;margin:0;padding:0;list-style:none}
+.bk-st{display:flex;align-items:center;flex:1 1 0;min-width:0}
+.bk-st:last-child{flex:0 0 auto}
+.bk-st-btn{display:inline-flex;align-items:center;gap:10px;flex:none;min-height:36px;padding:2px 4px 2px 2px;
+  border:0;background:none;border-radius:var(--radius-pill);font:inherit;color:inherit;cursor:pointer;
+  transition:background-color var(--t-tint)}
+.bk-st-btn:disabled{cursor:default}
+@media (hover:hover) and (pointer:fine){
+  .bk-st.is-done .bk-st-btn:not(:disabled):hover{background:var(--color-sand)}
+  .bk-st.is-done .bk-st-btn:not(:disabled):hover .bk-steplabel{color:var(--color-forest-600)}
+}
+
+.bk-stepper .bk-dot{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:50%;
+  border:1.5px solid var(--color-hairline);background:transparent;color:var(--color-body);
+  font:600 13px/1 var(--font-sans);transition:background-color .25s,border-color .25s,color .25s}
+.bk-stepper .bk-dot.is-current{border:2px solid var(--color-forest-900);background:var(--color-paper);color:var(--color-forest-900)}
+.bk-stepper .bk-dot.is-done{border-color:var(--color-forest-900);background:var(--color-forest-900);color:var(--color-spring-500)}
+
+.bk-stepper .bk-steplabel{margin:0;font:500 14px/1.2 var(--font-sans);color:var(--color-body);white-space:nowrap;
+  transition:color .25s}
+.bk-stepper .bk-steplabel.is-current{font-weight:600;color:var(--color-fg)}
+.bk-st.is-done .bk-steplabel{color:var(--color-fg-2)}
+
+/* The joining rule. The fill is a second layer that grows from the left
+   when the step before it is finished. */
+.bk-st-line{flex:1 1 auto;min-width:16px;height:2px;margin:0 14px;border-radius:2px;
+  background:var(--color-line);overflow:hidden}
+.bk-st-line i{display:block;height:100%;background:var(--color-forest-900);
+  transform:scaleX(0);transform-origin:left center;transition:transform .45s var(--ease-out)}
+.bk-st.is-done .bk-st-line i{transform:scaleX(1)}
+
+/* Narrow: four labels squeeze the joining rules to nothing, so only the
+   current step keeps its name. */
+@media (max-width:860px){
+  .bk-stepper{margin-bottom:24px;padding-bottom:16px}
+  .bk-stepper .bk-steplabel{display:none}
+  .bk-stepper .bk-steplabel.is-current{display:inline}
+  .bk-st-line{margin:0 8px}
+}
+/* On a phone the stepper takes over from the segmented bar in the header. */
+@media (max-width:700px){ .bk-progress{display:none !important} }
+
+/* The modal fits the flow to the viewport height, so the stepper closes up
+   with the rest of the panel on short screens. */
+@media (max-height:760px){ .modal-body .bk-stepper{margin-bottom:20px;padding-bottom:14px} }
+
+@media (prefers-reduced-motion:reduce){ .bk-st-line i,.bk-stepper .bk-dot,.bk-stepper .bk-steplabel{transition:none} }

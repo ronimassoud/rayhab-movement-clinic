@@ -44,13 +44,6 @@
     <h1>Book with Rayhab</h1>
     <p class="bk-lede">No account needed. You'll get a confirmation by WhatsApp within one working day.</p>
 
-    <ol class="bk-steps">
-      <li class="bk-stepitem"><span class="bk-dot is-current" id="dot1">1</span><p class="bk-steplabel is-current" id="lbl1">What you need</p></li>
-      <li class="bk-stepitem"><span class="bk-dot" id="dot2">2</span><p class="bk-steplabel" id="lbl2">Date &amp; time</p></li>
-      <li class="bk-stepitem"><span class="bk-dot" id="dot3">3</span><p class="bk-steplabel" id="lbl3">Your details</p></li>
-      <li class="bk-stepitem"><span class="bk-dot" id="dot4">4</span><p class="bk-steplabel" id="lbl4">Review &amp; confirm</p></li>
-    </ol>
-
     <div class="bk-summary" id="bk-aside">
       <p class="eyebrow text-spring-500 mb-4">Your request</p>
       <dl>
@@ -66,6 +59,27 @@
 
   <!-- Panel -->
   <div class="bk-panel">
+
+    <!-- Stepper: where you are in the four steps. Finished steps are buttons back to them. -->
+    <nav class="bk-stepper" aria-label="Booking steps">
+      <ol>
+        <li class="bk-st is-current" id="st1">
+          <button class="bk-st-btn" type="button" data-step="1" aria-current="step"><span class="bk-dot is-current" id="dot1">1</span><span class="bk-steplabel is-current" id="lbl1">What you need</span></button>
+          <span class="bk-st-line" aria-hidden="true"><i></i></span>
+        </li>
+        <li class="bk-st" id="st2">
+          <button class="bk-st-btn" type="button" data-step="2" disabled><span class="bk-dot" id="dot2">2</span><span class="bk-steplabel" id="lbl2">Date &amp; time</span></button>
+          <span class="bk-st-line" aria-hidden="true"><i></i></span>
+        </li>
+        <li class="bk-st" id="st3">
+          <button class="bk-st-btn" type="button" data-step="3" disabled><span class="bk-dot" id="dot3">3</span><span class="bk-steplabel" id="lbl3">Your details</span></button>
+          <span class="bk-st-line" aria-hidden="true"><i></i></span>
+        </li>
+        <li class="bk-st" id="st4">
+          <button class="bk-st-btn" type="button" data-step="4" disabled><span class="bk-dot" id="dot4">4</span><span class="bk-steplabel" id="lbl4">Review &amp; confirm</span></button>
+        </li>
+      </ol>
+    </nav>
 
     <!-- Step 1 -->
     <section id="step1">

@@ -153,10 +153,14 @@
 .proof-light{background:var(--color-bone);color:var(--color-fg)}
 .proof-dark{background:var(--color-forest-850);border:1px solid var(--color-veil-12)}
 /* The outer two lean away from the middle one, which sits forward. */
-.proof-grid>:nth-child(1){--tilt:-4deg;margin-right:-14px;translate:0 14px}
+/* The vertical offset is the CSS translate property, built from --drop (the
+   resting step) and --lift (motion.js). GSAP only ever writes the variables,
+   so it never takes over transform and freezes the lean. */
+.proof-grid>*{translate:0 calc(var(--drop,0px) + var(--lift,0px))}
+.proof-grid>:nth-child(1){--tilt:-4deg;--drop:14px;margin-right:-14px}
 .proof-grid>:nth-child(2){--tilt:0deg;z-index:2;margin-inline:-6px}
-.proof-grid>:nth-child(3){--tilt:4deg;margin-left:-14px;translate:0 14px}
-@media (hover:hover) and (pointer:fine){ .proof-grid>.tilt:hover{z-index:3;translate:0 0} }
+.proof-grid>:nth-child(3){--tilt:4deg;--drop:14px;margin-left:-14px}
+@media (hover:hover) and (pointer:fine){ .proof-grid>.tilt:hover{z-index:3;--drop:0px} }
 .proof-card blockquote{margin:0 0 24px}
 .proof-by{display:flex;gap:12px;align-items:center;margin-top:auto}
 .avatar{width:40px;height:40px;flex:none}
@@ -197,9 +201,10 @@
   margin:clamp(40px,6vw,72px) auto 0;padding:0 0 32px;width:fit-content;max-width:100%}
 .tilt-fan img{display:block;width:clamp(120px,19vw,236px);height:auto;border-radius:var(--radius-md);
   background:var(--color-brand-800)}
-.tilt-fan img:nth-child(1){--tilt:-7deg;margin-right:clamp(-44px,-3vw,-20px);translate:0 20px}
+.tilt-fan img{translate:0 calc(var(--drop,0px) + var(--lift,0px))}
+.tilt-fan img:nth-child(1){--tilt:-7deg;--drop:20px;margin-right:clamp(-44px,-3vw,-20px)}
 .tilt-fan img:nth-child(2){--tilt:0deg;z-index:2;width:clamp(136px,21vw,264px)}
-.tilt-fan img:nth-child(3){--tilt:7deg;margin-left:clamp(-44px,-3vw,-20px);translate:0 20px}
+.tilt-fan img:nth-child(3){--tilt:7deg;--drop:20px;margin-left:clamp(-44px,-3vw,-20px)}
 
 .svcidx-primary-band{padding:var(--section-y) var(--pad-x) 0}
 .svcidx-primary{background:var(--color-forest-900);border-radius:var(--radius-2xl);overflow:hidden;display:grid;grid-template-columns:1.12fr .88fr}
