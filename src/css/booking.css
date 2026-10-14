@@ -52,7 +52,8 @@
 .bk-type.is-on{border:1.5px solid var(--color-brand-800);padding:20.5px 22.5px}
 .bk-radio{width:20px;height:20px;border-radius:50%;flex:none;margin-top:3px;border:1.5px solid var(--color-hairline);background:#fff}
 .bk-type.is-on .bk-radio{border:6px solid var(--color-brand-800);background:var(--color-spring-500)}
-.bk-type>span:last-child{flex:1;display:block}
+/* The text block. Not :last-child: the spotlight appends its ring after it. */
+.bk-type>span:not(.bk-radio):not(.spot-light):not(.spot-edge){flex:1;display:block}
 .bk-typetop{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .bk-typename{display:block;font:600 16px/1.35 var(--font-sans);color:var(--color-fg)}
 .bk-typedesc{display:block;margin-top:5px;font:400 14px/1.55 var(--font-sans);color:var(--color-body)}

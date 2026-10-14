@@ -284,6 +284,15 @@ cards of grouped links drop in (Care, Learn, Clinic). The panel's markup comes f
 `content/navcards.py` on every page, `ui.js` owns its state, focus and closing
 rules, and `motion.js` animates it. With motion off it opens instantly.
 
+**Spotlight.** Cards that are links or controls catch a soft light that follows the
+pointer, after React Bits' SpotlightCard: service, article, route and library cards,
+the consultation cards, the booking options in the popup, the menu cards and the dark
+lead cards. The light reaches 80px past each card, so a grid shares one light, and it
+swells when pressed. One controller in `ui.js` lights them all from a single loop that
+stops when nothing moves; colours come from `--spot-*` properties in
+`components.css`. Fine pointers only; under reduced motion the light snaps rather than
+trails. Content cards (quotes, case studies, info cards) are left out on purpose.
+
 **Empty photo wells.** Photography for the services and the articles has not
 been shot. A small well inside a card collapses until it has an image, and a
 large one becomes a forest panel with the clinic's Cobb-angle line drawing. The

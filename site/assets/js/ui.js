@@ -221,6 +221,180 @@
     sync();
   }
 
+  /* ---- Spotlight on clickable cards ----
+     After React Bits' SpotlightCard. A soft light follows the pointer across
+     a card and its edge catches the light. The light reaches 80px past each
+     card, so cards in a grid share one light. Pressing makes it swell.
+
+     Only cards that are links or controls get it, which keeps the system's
+     rule: a card that answers the cursor is a card you can click.
+
+     One controller for the page, not one per card: a single set of
+     listeners, and one animation loop that runs only while something is
+     moving and stops once the light has settled. Each card gets two layers
+     (a light under its content, a 1px ring over it) and takes its colours
+     from CSS (--spot-color, --spot-fill, --spot-edge-color, --spot-rim).
+     Fine pointers only; touch gets nothing. Under reduced motion the light
+     snaps to the pointer instead of trailing it, and does not flare. */
+  (function () {
+    if (!window.matchMedia || !window.requestAnimationFrame || !window.IntersectionObserver) return;
+    if (!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    var stillQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var SEL = 'a.edu-card, .routecard, a.router-card, a.svc-card, a.morecard, a.pidx, a.artcard, ' +
+              '.pillar.is-linked, .supcard.is-linked, .consult-lead, .consult-alt, .bk-type, ' +
+              'a.svc-primary, .svcidx-primary.is-linked, .navcard';
+    var SIZE = 240, SOFTNESS = 0.7, PROXIMITY = 80, SMOOTHING = 0.3;
+    var clampN = function (v, lo, hi) { return Math.min(hi, Math.max(lo, v)); };
+
+    // The component's gradient: a core, then a smoothstep blended with a
+    // gaussian glow by `softness`.
+    var falloff = function (color, softness) {
+      var soft = clampN(softness, 0, 1);
+      var core = Math.pow(1 - soft, 1.5) * 0.85;
+      var stop = function (alpha, at) {
+        return 'color-mix(in srgb, ' + color + ' ' + (alpha * 100).toFixed(2) + '%, transparent) ' + (at * 100).toFixed(2) + '%';
+      };
+      var list = [stop(1, 0)];
+      for (var i = 0; i <= 14; i++) {
+        var t = core + (1 - core) * i / 14;
+        var g = (t - core) / (1 - core);
+        var smooth = 1 - g * g * (3 - 2 * g);
+        var glow = Math.exp(-4.6 * g * g) * (1 - Math.pow(g, 6));
+        list.push(stop(smooth + (glow - smooth) * soft, t));
+      }
+      return list.join(', ');
+    };
+    var stopsCache = {};
+    var stops = function (color, softness) {
+      var key = color + '|' + softness;
+      return stopsCache[key] || (stopsCache[key] = falloff(color, softness));
+    };
+
+    var cards = [], visible = [];
+    var pointer = { x: 0, y: 0, active: false };
+    var focusEl = null, raf = 0, last = 0;
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var s = e.target._spot, at = visible.indexOf(s);
+        if (e.isIntersecting && at < 0) visible.push(s);
+        else if (!e.isIntersecting && at > -1) visible.splice(at, 1);
+      });
+      wake();
+    });
+
+    var register = function (el) {
+      if (el._spot) return;
+      var cs = getComputedStyle(el);
+      var light = document.createElement('span'), edge = document.createElement('span');
+      light.className = 'spot-light'; edge.className = 'spot-edge';
+      light.setAttribute('aria-hidden', 'true'); edge.setAttribute('aria-hidden', 'true');
+      el.insertBefore(light, el.firstChild);
+      el.appendChild(edge);
+      el.classList.add('spot');
+      var color = cs.getPropertyValue('--spot-color').trim() || '#101C13';
+      var rimColor = cs.getPropertyValue('--spot-edge-color').trim() || color;
+      el._spot = {
+        el: el, light: light, edge: edge,
+        fill: stops(color, SOFTNESS), rim: stops(rimColor, 1),
+        intensity: parseFloat(cs.getPropertyValue('--spot-fill')) || 0.05,
+        glow: parseFloat(cs.getPropertyValue('--spot-rim')) || 0.45,
+        x: 0, y: 0, presence: 0, flare: 0, pressed: false, drawn: ''
+      };
+      cards.push(el._spot);
+      io.observe(el);
+    };
+    Array.prototype.forEach.call(document.querySelectorAll(SEL), register);
+
+    var paint = function (s) {
+      var size = SIZE * (1 + 0.2 * s.flare), boost = 1 + 0.7 * s.flare;
+      var key = s.x.toFixed(1) + ',' + s.y.toFixed(1) + ',' + size.toFixed(1);
+      if (key !== s.drawn) {
+        s.drawn = key;
+        s.light.style.background = 'radial-gradient(circle ' + size.toFixed(1) + 'px at ' + s.x.toFixed(1) + 'px ' +
+          s.y.toFixed(1) + 'px, ' + s.fill + ')';
+        s.edge.style.background = 'radial-gradient(circle ' + (size * 0.6).toFixed(1) + 'px at ' + s.x.toFixed(1) + 'px ' +
+          s.y.toFixed(1) + 'px, ' + s.rim + ')';
+      }
+      s.light.style.opacity = String(Math.min(1, s.presence * s.intensity * boost));
+      s.edge.style.opacity = String(Math.min(1, s.presence * s.glow * boost));
+    };
+
+    var tick = function (now) {
+      raf = 0;
+      var dt = clampN((now - last) / 1000, 0.001, 0.05);
+      last = now;
+      var reduce = stillQ.matches, busy = false;
+      for (var i = 0; i < visible.length; i++) {
+        var s = visible[i], r = s.el.getBoundingClientRect();
+        var tx = s.x, ty = s.y, target = 0;
+        if (focusEl && s.el.contains(focusEl)) {
+          var b = focusEl.getBoundingClientRect();
+          tx = b.left + b.width / 2 - r.left; ty = b.top + b.height / 2 - r.top; target = 1;
+        } else if (pointer.active) {
+          tx = pointer.x - r.left; ty = pointer.y - r.top;
+          var gap = Math.hypot(Math.max(0, -tx, tx - r.width), Math.max(0, -ty, ty - r.height));
+          target = gap === 0 ? 1 : Math.pow(Math.max(0, 1 - gap / PROXIMITY), 2);
+        }
+        if (target === 0 && s.presence === 0) continue;        // dark and staying dark
+        if (s.presence < 0.02 && target > 0) { s.x = tx; s.y = ty; }   // arrive where the pointer is
+        var follow = reduce ? 1 : 1 - Math.exp(-dt / (0.015 + SMOOTHING * 0.22));
+        s.x += (tx - s.x) * follow; s.y += (ty - s.y) * follow;
+        var fade = reduce ? 1 : 1 - Math.exp(-dt / (target > s.presence ? 0.1 : 0.32));
+        s.presence += (target - s.presence) * fade;
+        if (Math.abs(target - s.presence) < 0.002) s.presence = target;
+        var press = s.pressed && !reduce ? 1 : 0;
+        s.flare += (press - s.flare) * (1 - Math.exp(-dt / (press ? 0.05 : 0.28)));
+        if (Math.abs(press - s.flare) < 0.002) s.flare = press;
+        paint(s);
+        if (Math.abs(tx - s.x) > 0.1 || Math.abs(ty - s.y) > 0.1 || s.presence !== target || s.flare !== press) busy = true;
+      }
+      if (busy) raf = window.requestAnimationFrame(tick);
+    };
+    var wake = function () {
+      if (raf || !visible.length) return;
+      last = window.performance.now();
+      raf = window.requestAnimationFrame(tick);
+    };
+
+    window.addEventListener('pointermove', function (e) {
+      if (e.pointerType === 'touch') return;
+      pointer.x = e.clientX; pointer.y = e.clientY; pointer.active = true;
+      wake();
+    }, { passive: true });
+    document.addEventListener('pointerout', function (e) {
+      if (e.relatedTarget) return;            // still on the page
+      pointer.active = false; wake();
+    });
+    // Cards that arrive later: the booking dialog is cloned in after load.
+    // The first time the pointer reaches one, it and its siblings join.
+    document.addEventListener('pointerover', function (e) {
+      var c = e.target.closest && e.target.closest(SEL);
+      if (!c || c._spot) return;
+      var group = c.parentElement ? c.parentElement.querySelectorAll(SEL) : [c];
+      Array.prototype.forEach.call(group, register);
+      register(c);
+    });
+    document.addEventListener('pointerdown', function (e) {
+      var c = e.target.closest && e.target.closest('.spot');
+      if (c && c._spot) { c._spot.pressed = true; wake(); }
+    });
+    var release = function () {
+      cards.forEach(function (s) { s.pressed = false; });
+      wake();
+    };
+    window.addEventListener('pointerup', release);
+    window.addEventListener('pointercancel', release);
+    document.addEventListener('focusin', function (e) {
+      var t = e.target;
+      if (!(t instanceof Element) || !t.closest('.spot')) return;
+      try { if (!t.matches(':focus-visible')) return; } catch (x) { /* older engines */ }
+      focusEl = t; wake();
+    });
+    document.addEventListener('focusout', function () { focusEl = null; wake(); });
+    window.addEventListener('scroll', function () { if (pointer.active) wake(); }, { capture: true, passive: true });
+  })();
+
   /* ---- Accordions ----
      Markup: <button class="acc-btn" aria-expanded aria-controls="id">
              <div class="acc-panel" id="id" hidden>

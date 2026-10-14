@@ -455,3 +455,26 @@ a.svc-primary,.svcidx-primary.is-linked{transition:background-color var(--t-move
   .cta-band .btns{flex-direction:column;align-self:stretch}
   .cta-band::before,.cta-band .cta-art{opacity:.2}
 }
+
+
+/* ---------- 10. Spotlight ----------
+   After React Bits' SpotlightCard, on cards that are links or controls.
+   ui.js adds .spot and two layers to each: a light under the content and a
+   1px ring over it, drawn from radial gradients that follow the pointer.
+   The colours come from here, so a card never needs to know which band it
+   is in. Light cards take a faint forest light; dark cards a pale spring
+   one, with a spring edge. Fine pointers only, by construction in ui.js. */
+.spot{position:relative;isolation:isolate}
+.spot-light,.spot-edge{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0}
+.spot-light{z-index:-1}
+.spot-edge{z-index:1;padding:1px;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+
+a.edu-card,.routecard,a.router-card,a.svc-card,a.morecard,a.pidx,a.artcard,
+.pillar.is-linked,.supcard.is-linked,.consult-lead,.bk-type{
+  --spot-color:var(--color-forest-900);--spot-fill:.05;
+  --spot-edge-color:var(--color-forest-600);--spot-rim:.45}
+a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
+  --spot-color:var(--color-spring-200);--spot-fill:.12;
+  --spot-edge-color:var(--color-spring-500);--spot-rim:.5}
