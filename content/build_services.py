@@ -247,7 +247,7 @@ def build(s, n):
       <div class="wholist">%(who)s</div>
     </div>
     <div>
-      <p class="eyebrow mb-4">What the programme includes</p>
+      <p class="eyebrow mb-4">What the program includes</p>
       <ul class="inclist">%(inc)s</ul>
       <p class="disclaimer mt-4">Rehabilitation outcomes vary between individuals. Rayhab does not promise a specific result or timeline.</p>
     </div>

@@ -26,7 +26,7 @@
       ],
       "blocks": [
         { "k": "h", "id": "the-cycle", "t": "The cycle most people arrive in" },
-        { "k": "p", "t": "It is recognisable within a minute of hearing the history. Something hurts, so activity stops. The pain settles, which confirms that stopping was right. Activity resumes at roughly the previous level, the pain returns, and the conclusion drawn is that the tissue is damaged and needs more rest." },
+        { "k": "p", "t": "It is recognizable within a minute of hearing the history. Something hurts, so activity stops. The pain settles, which confirms that stopping was right. Activity resumes at roughly the previous level, the pain returns, and the conclusion drawn is that the tissue is damaged and needs more rest." },
         { "k": "p", "t": "Each round of this leaves capacity lower than the round before. By the third or fourth cycle, tasks that were never a problem are provocative, and the person reasonably concludes they are getting worse." },
         { "k": "h", "id": "what-rest-cannot-do", "t": "What rest cannot do" },
         { "k": "p", "t": "Rest is genuinely useful for a short period after an acute injury, when the tissue needs protecting. What it cannot do is increase tolerance, because tolerance is built by load. A tendon, a muscle and a joint all become more capable in response to demand, and no amount of time off supplies that demand." },
@@ -41,8 +41,8 @@
         ] },
         { "k": "h", "id": "timeline", "t": "What the first month looks like" },
         { "k": "p", "t": "Weeks one and two usually feel like very little is happening, which is the hardest part to sit with. Weeks three and four are typically when the first clear change shows up, often in function before pain. Expect the symptom graph to be jagged rather than a clean descent; a bad day inside an improving month is normal." },
-        { "k": "p", "t": "If there is genuinely no change by week four or five, that is a reason to reassess rather than to persist harder. Either the diagnosis, the dose or something outside the programme needs revisiting." },
-        { "k": "uncertain", "t": "Exercise-based rehabilitation has good evidence across most common musculoskeletal problems, and which exercise, at what dose, is far less settled. For several conditions, including shoulder and knee pain, different programmes produce broadly similar results, which suggests that doing something progressive and sticking with it matters more than the specific selection." }
+        { "k": "p", "t": "If there is genuinely no change by week four or five, that is a reason to reassess rather than to persist harder. Either the diagnosis, the dose or something outside the program needs revisiting." },
+        { "k": "uncertain", "t": "Exercise-based rehabilitation has good evidence across most common musculoskeletal problems, and which exercise, at what dose, is far less settled. For several conditions, including shoulder and knee pain, different programs produce broadly similar results, which suggests that doing something progressive and sticking with it matters more than the specific selection." }
       ],
       "related": ["how-long-does-rehab-take", "low-back-pain", "neck-and-shoulder-pain"]
     },
@@ -63,8 +63,8 @@
         { "k": "p", "t": "The majority of neck pain is classified as non-specific, meaning no single structure can be confidently identified as the source. That label frustrates people and it is more honest than inventing a cause. It also carries a reassuring implication: non-specific neck pain generally has a good prognosis and responds to exercise and activity." },
         { "k": "p", "t": "Where symptoms travel down the arm with numbness, pins and needles or weakness in a defined pattern, that is a different presentation, needs examining properly, and may involve a nerve root. It is much less common than the headline fear suggests." },
         { "k": "h", "id": "shoulder", "t": "The shoulder, and the surgery question" },
-        { "k": "p", "t": "Rotator cuff related shoulder pain, which used to be called impingement, is the most common shoulder presentation. The important finding of the last decade is that progressive exercise produces outcomes comparable to subacromial decompression surgery in randomised trials, and that the surgery performed little better than placebo surgery." },
-        { "k": "p", "t": "That does not make surgery never appropriate. It does mean a proper loading programme, run for long enough, is a reasonable first choice for most people, and that a scan finding of a degenerative tear is not on its own an argument for an operation." },
+        { "k": "p", "t": "Rotator cuff related shoulder pain, which used to be called impingement, is the most common shoulder presentation. The important finding of the last decade is that progressive exercise produces outcomes comparable to subacromial decompression surgery in randomized trials, and that the surgery performed little better than placebo surgery." },
+        { "k": "p", "t": "That does not make surgery never appropriate. It does mean a proper loading program, run for long enough, is a reasonable first choice for most people, and that a scan finding of a degenerative tear is not on its own an argument for an operation." },
         { "k": "h", "id": "scans", "t": "What scans show in people who are fine" },
         { "k": "ul", "items": [
           "Degenerative changes in the neck are present in a large share of people with no neck pain, and the proportion rises steadily with age.",
@@ -78,9 +78,9 @@
           "Build strength in the shoulder girdle and neck, loaded properly, for at least twelve weeks.",
           "Include end-range and overhead work if your life or sport needs those positions.",
           "Manage the dose: sustained positions, sudden increases in overhead volume, and new training on top of a full week are the usual triggers.",
-          "Continue the programme after the pain goes. This is the step everybody skips and the step that prevents recurrence."
+          "Continue the program after the pain goes. This is the step everybody skips and the step that prevents recurrence."
         ] },
-        { "k": "uncertain", "t": "Which exercises work best for either region is not established; several quite different programmes produce similar results. The role of the shoulder blade and of specific muscle timing has been heavily emphasised historically on weak evidence. Manual therapy helps some people in the short term and does not change long-term outcomes on its own." }
+        { "k": "uncertain", "t": "Which exercises work best for either region is not established; several quite different programs produce similar results. The role of the shoulder blade and of specific muscle timing has been heavily emphasized historically on weak evidence. Manual therapy helps some people in the short term and does not change long-term outcomes on its own." }
       ],
       "related": ["when-rest-has-not-worked", "low-back-pain", "how-long-does-rehab-take"]
     },
@@ -92,7 +92,7 @@
       "stand": "A report full of alarming words describes a spine that looks much like everybody else's. That is the single most useful thing to know about back imaging.",
       "key": [
         "Disc degeneration and bulges are present in a **majority of pain-free adults** by middle age.",
-        "Around 90 per cent of low back pain is non-specific, meaning no single structure can be blamed.",
+        "Around 90 percent of low back pain is non-specific, meaning no single structure can be blamed.",
         "Imaging early, without a clinical reason, is associated with worse outcomes rather than better ones.",
         "A small list of red-flag symptoms genuinely does need prompt medical assessment."
       ],
@@ -138,7 +138,7 @@
         { "k": "h", "id": "common-presentations", "t": "What usually hurts, and why" },
         { "k": "ul", "items": [
           "**Pain around or under the kneecap,** often with squatting, stairs and sitting. Commonly follows an increase in training volume or a long period of relatively little.",
-          "**Pain at the tendon below the kneecap,** typical in jumping sports, with a characteristic pattern of warming up and then hurting afterwards.",
+          "**Pain at the tendon below the kneecap,** typical in jumping sports, with a characteristic pattern of warming up and then hurting afterward.",
           "**Pain on the outside of the knee in runners,** usually related to volume and running mechanics rather than a structure that needs releasing.",
           "**Osteoarthritic knee pain,** usually with stiffness after rest, better with movement, worse with sudden increases."
         ] },
@@ -173,7 +173,7 @@
       "blocks": [
         { "k": "h", "id": "why-hard", "t": "Why this region is difficult" },
         { "k": "p", "t": "The hip joint, the adductors, the hip flexors, the abdominal wall, the pubic bone and the lower back all refer pain into a small area, and more than one is frequently involved at the same time. Clinical tests for the region overlap considerably, and imaging finds variations in nearly everybody." },
-        { "k": "p", "t": "Clinical groupings used in practice are deliberately descriptive rather than structural: adductor-related, iliopsoas-related, inguinal-related, pubic-related, and hip-joint-related. They are useful because they point towards what to load, which is what the plan needs." },
+        { "k": "p", "t": "Clinical groupings used in practice are deliberately descriptive rather than structural: adductor-related, iliopsoas-related, inguinal-related, pubic-related, and hip-joint-related. They are useful because they point toward what to load, which is what the plan needs." },
         { "k": "h", "id": "common", "t": "What usually causes it" },
         { "k": "ul", "items": [
           "**Adductor-related groin pain,** the most common in football and sports with kicking and cutting. Tender adductors, pain with squeezing the legs together.",
@@ -183,7 +183,7 @@
         ] },
         { "k": "h", "id": "hip-shape", "t": "Hip shape findings, and what they mean" },
         { "k": "p", "t": "Cam and pincer morphology, the bony shapes associated with femoroacetabular impingement, are found commonly in people with no hip symptoms at all, and at high rates in athletes in several sports. Having the shape is not the same as having the syndrome, which requires symptoms, clinical signs and imaging findings together." },
-        { "k": "p", "t": "Where the full syndrome is present, both exercise-based management and surgery are used, and trials comparing them show benefit from both with no decisive advantage for surgery. A properly run loading programme first is reasonable for most people." },
+        { "k": "p", "t": "Where the full syndrome is present, both exercise-based management and surgery are used, and trials comparing them show benefit from both with no decisive advantage for surgery. A properly run loading program first is reasonable for most people." },
         { "k": "h", "id": "rehab", "t": "What rehabilitation involves" },
         { "k": "ol", "items": [
           "**Adductor strength** is the priority in most athletic groin pain, and the Copenhagen adduction exercise has the best supporting evidence of any single exercise here, for both treatment and prevention.",
@@ -214,7 +214,7 @@
         { "k": "p", "t": "Healing is necessary and not sufficient. Rebuilding the capacity that was lost while the tissue healed, which is a separate process, usually takes longer than the healing did." },
         { "k": "h", "id": "pain-first", "t": "Pain improves first, and that is a trap" },
         { "k": "p", "t": "The usual sequence is pain, then function, then capacity. People typically feel substantially better around weeks three to six and conclude they are better. Strength and tolerance at that point are frequently still well below where they started, which is why resuming full activity then produces the familiar recurrence." },
-        { "k": "p", "t": "This is the single most common reason rehabilitation fails: not a bad programme, but a programme stopped at the point it felt unnecessary." },
+        { "k": "p", "t": "This is the single most common reason rehabilitation fails: not a bad program, but a program stopped at the point it felt unnecessary." },
         { "k": "h", "id": "ranges", "t": "Realistic ranges" },
         { "k": "ul", "items": [
           "**Acute, straightforward problem, caught early:** often two to six weeks.",

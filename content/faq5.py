@@ -9,7 +9,7 @@ The service pages build their FAQ from here (build_services.py). The two
 hand-written FAQs, on the scoliosis rehabilitation page and the contact
 page, were rebuilt through the same functions, so all six read alike.
 
-The accordion behaviour is ui.js's, unchanged: it finds the questions inside
+The accordion behavior is ui.js's, unchanged: it finds the questions inside
 .faq-card wherever they sit, opens the first and closes the rest.
 """
 

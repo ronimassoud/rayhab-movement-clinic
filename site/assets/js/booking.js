@@ -34,7 +34,7 @@
       desc: 'Persistent or recurring pain: a full assessment, a clear explanation and a graded plan.' },
     { id: 'pain-follow', name: 'Pain management follow-up', dur: '45 min', mins: 45,
       tag: '',
-      desc: 'Coached graded activity, progression and updates to your home programme. For existing patients.' }
+      desc: 'Coached graded activity, progression and updates to your home program. For existing patients.' }
   ];
 
   /* ---------- Clinic calendar ----------
@@ -86,7 +86,7 @@
   /* Which times are already taken needs the practice calendar behind it.
      There is no backend yet, so nothing is shown as taken: the flow makes
      a request and the clinic confirms it. Point this at the real source
-     and the slot grid will grey out accordingly, no other change needed. */
+     and the slot grid will gray out accordingly, no other change needed. */
   function busyTimes(/* isoDateString */) { return []; }
 
   function slotsFor(date, mins) {

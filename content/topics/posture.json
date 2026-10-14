@@ -82,7 +82,7 @@
           "If a curve is suspected, get it assessed properly rather than managed through bag rules."
         ] },
         { "k": "h", "id": "the-cost", "t": "Why the blame itself matters" },
-        { "k": "p", "t": "Parents arrive believing they caused their child's condition by letting them carry a bag or sit badly. That belief is both wrong and costly: it adds guilt to a diagnosis, it directs effort towards irrelevant changes, and it can delay the assessment that would actually help. Correcting it is part of the clinical work, not a side conversation." },
+        { "k": "p", "t": "Parents arrive believing they caused their child's condition by letting them carry a bag or sit badly. That belief is both wrong and costly: it adds guilt to a diagnosis, it directs effort toward irrelevant changes, and it can delay the assessment that would actually help. Correcting it is part of the clinical work, not a side conversation." },
         { "k": "uncertain", "t": "Schoolbag load does have some measurable short-term effects on gait and trunk position, and whether very heavy loads over years contribute to back pain in adolescents is not fully resolved. What is clear is that bags do not cause scoliosis, and that the confidence of the usual advice far exceeds the evidence for it." }
       ],
       "related": ["does-posture-cause-pain", "sitting-and-desk-work", "posture-you-can-change"]
@@ -115,7 +115,7 @@
           "Build strength. Tolerance for sustained positions is a capacity question as much as a positioning one."
         ] },
         { "k": "h", "id": "slouching", "t": "On slouching" },
-        { "k": "p", "t": "Slouching is not dangerous. Spines flex comfortably and are built to. Studies comparing upright and slouched sitting have not shown the upright group to be protected from pain, and intensive postural correction programmes have not outperformed general activity advice." },
+        { "k": "p", "t": "Slouching is not dangerous. Spines flex comfortably and are built to. Studies comparing upright and slouched sitting have not shown the upright group to be protected from pain, and intensive postural correction programs have not outperformed general activity advice." },
         { "k": "p", "t": "Where slouching becomes relevant is when it is the only position used for hours, or when it reliably reproduces a specific person's symptoms. Then it is worth addressing, as a dose problem rather than a moral one." },
         { "k": "uncertain", "t": "How much sitting matters for back pain specifically remains debated, and the evidence is mostly observational and confounded by overall activity levels. Prolonged sitting does have well-supported effects on general health that are separate from back pain, and those are a good enough reason to move regularly on their own." }
       ],
@@ -151,10 +151,10 @@
           "**Endurance of the trunk and shoulder girdle,** which is usually what fails during a long day.",
           "**Available range,** when limited range was genuinely the constraint rather than an assumed one.",
           "**Awareness,** meaning the ability to find and hold a different position when the current one has become uncomfortable.",
-          "**Confidence,** which sounds soft and changes behaviour more than any of the above."
+          "**Confidence,** which sounds soft and changes behavior more than any of the above."
           ] },
         { "k": "h", "id": "expectations", "t": "Setting the expectation honestly" },
-        { "k": "p", "t": "Programmes sold on photographs set up a disappointment that is entirely avoidable. A before-and-after image can be produced in an afternoon by standing differently, and it tells you nothing about structure or symptoms." },
+        { "k": "p", "t": "Programs sold on photographs set up a disappointment that is entirely avoidable. A before-and-after image can be produced in an afternoon by standing differently, and it tells you nothing about structure or symptoms." },
         { "k": "p", "t": "A better target: in eight to twelve weeks of consistent work, most people can expect more tolerance for sustained positions, more strength in the ranges they use, and less discomfort. That is a real outcome. It is simply not a photographic one." },
         { "k": "uncertain", "t": "How much postural habit can be changed durably, and whether changing it affects symptoms independently of the strength gained alongside it, is not well established. Most trials of postural exercise improve symptoms modestly and do not isolate whether posture or general strengthening did the work." }
       ],

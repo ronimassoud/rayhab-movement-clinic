@@ -20,7 +20,7 @@ pillars = {p["id"]: p for p in data["pillars"]}
 ROUTES = [
  {"id":"r1","slug":"for-parents","name":"For parents of adolescents","short":"Route \u00b7 Parents of adolescents","claim":7,
   "desc":"The scoliosis articles that matter most to parents: what a diagnosis means, what predicts progression, how bracing works, and how to support a teenager doing daily exercises.",
-  "stand":"Seven articles, in the order most parents need them, from the week of diagnosis onwards.",
+  "stand":"Seven articles, in the order most parents need them, from the week of diagnosis onward.",
   "items":["just-diagnosed","what-scoliosis-actually-is","cobb-angle","will-it-get-worse",
            "growth-and-skeletal-maturity","working-alongside-a-brace","teenager-exercises"]},
  {"id":"r2","slug":"for-adults","name":"For adults with a curve","short":"Route \u00b7 Adults with a curve","claim":6,

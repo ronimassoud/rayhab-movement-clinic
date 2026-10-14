@@ -27,7 +27,7 @@ ORDER = ["exercise", "sport", "posture", "mobility", "injury"]
 CROSS = {
     "exercise": [
         ("../services/joint-training-mobility.html", "Service", "Joint training &amp; mobility",
-         "Where the loading principles on this page turn into a programme."),
+         "Where the loading principles on this page turn into a program."),
         ("../scoliosis/lifting-with-scoliosis.html", "Scoliosis", "Lifting with scoliosis",
          "The same loading logic, applied to a spine with a known curve."),
         ("../mobility/", "Hub", "Mobility &amp; joint health",
@@ -35,7 +35,7 @@ CROSS = {
     ],
     "sport": [
         ("../services/sports-rehabilitation.html", "Service", "Sports rehabilitation",
-         "Assessment, criteria and a graded return, run as a programme."),
+         "Assessment, criteria and a graded return, run as a program."),
         ("../scoliosis/return-to-sport.html", "Scoliosis", "Returning to sport with a curve",
          "What changes, and what does not, when the athlete has scoliosis."),
         ("../injury/how-long-does-rehab-take.html", "Injury rehabilitation", "How long does rehabilitation take?",
