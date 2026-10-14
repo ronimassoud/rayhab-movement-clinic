@@ -403,25 +403,34 @@
   /* The markup groups accordions under .faq-card (page FAQs) and .qa
      (sidecard quick answers); .acc is kept for any future group. Matching
      only .acc bound nothing at all, which left every panel frozen. */
+  /* FAQ sections (.faq-card) keep one answer open at a time: opening a
+     question closes whichever was open, so the section never grows into a
+     wall of text. The compact quick answers (.qa) still open independently. */
   document.querySelectorAll('.acc, .faq-card, .qa').forEach(function (acc) {
-    var buttons = acc.querySelectorAll('.acc-btn');
+    var buttons = Array.prototype.slice.call(acc.querySelectorAll('.acc-btn'));
+    var single = acc.classList.contains('faq-card');
 
-    buttons.forEach(function (btn, i) {
+    var set = function (btn, open) {
       var panel = document.getElementById(btn.getAttribute('aria-controls'));
       if (!panel) return;
-
-      // First item open, rest closed.
-      var open = i === 0;
       btn.setAttribute('aria-expanded', String(open));
       panel.hidden = !open;
       var mark = btn.querySelector('.acc-mark');
       if (mark) mark.textContent = open ? '−' : '+';
+    };
+
+    buttons.forEach(function (btn, i) {
+      if (!document.getElementById(btn.getAttribute('aria-controls'))) return;
+
+      // First item open, rest closed.
+      set(btn, i === 0);
 
       btn.addEventListener('click', function () {
         var isOpen = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!isOpen));
-        panel.hidden = isOpen;
-        if (mark) mark.textContent = isOpen ? '+' : '−';
+        if (single && !isOpen) {
+          buttons.forEach(function (other) { if (other !== btn) set(other, false); });
+        }
+        set(btn, !isOpen);
       });
     });
   });
