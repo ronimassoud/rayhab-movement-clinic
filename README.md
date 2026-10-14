@@ -269,6 +269,13 @@ on hover and on keyboard focus. Text cards flatten below 700px; the photo fan on
 the results page keeps its lean. Under reduced motion the lean stays, as a pose,
 and stops animating.
 
+**Navigation.** On desktop (1181px and up) the floating pill shows the link
+row, with the jelly motion on the labels (`ui.js`). Below that, the menu button
+opens the card panel, after React Bits' CardNav: the pill grows downward and three
+cards of grouped links drop in (Care, Learn, Clinic). The panel's markup comes from
+`content/navcards.py` on every page, `ui.js` owns its state, focus and closing
+rules, and `motion.js` animates it. With motion off it opens instantly.
+
 **Empty photo wells.** Photography for the services and the articles has not
 been shot. A small well inside a card collapses until it has an image, and a
 large one becomes a forest panel with the clinic's Cobb-angle line drawing. The

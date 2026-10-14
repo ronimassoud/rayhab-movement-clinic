@@ -37,6 +37,10 @@ for base, _dirs, files in os.walk(ROOT):
         # content/motion_tags.py and 8 hand-written ones through the same
         # function. Asserting it here is what actually stops the two halves
         # drifting apart; a note in the README would not.
+        # The card panel the nav opens into below 1181px is injected by
+        # content/navcards.py into every page with the nav.
+        if 'class="site-nav"' in html and 'id="navcards"' not in html:
+            missing_motion.append("%s -> nav without its card panel" % page)
         if name not in NO_MOTION:
             if "js-motion" not in html:
                 missing_motion.append("%s -> no motion gate" % page)

@@ -4,9 +4,13 @@
 (function () {
   'use strict';
 
-  /* ---- Mobile navigation ---- */
+  /* ---- Mobile navigation ----
+     Below 1181px the menu button opens the card panel (#navcards): the pill
+     grows downward and three cards of grouped links drop in. This block owns
+     the state, focus and closing rules. The motion is motion.js's, through
+     window.rhNav; without it the .is-open class opens the pill instantly. */
   var toggle = document.querySelector('.nav-toggle');
-  var links = document.getElementById('navgroup');
+  var links = toggle ? document.getElementById(toggle.getAttribute('aria-controls') || 'navgroup') : null;
 
   if (toggle && links) {
     var nav = toggle.closest ? toggle.closest('.site-nav') : null;
@@ -15,7 +19,8 @@
 
     function setOpen(open, moveFocus) {
       toggle.setAttribute('aria-expanded', String(open));
-      links.classList.toggle('open', open);
+      if (window.rhNav) window.rhNav.set(open);
+      else if (nav) nav.classList.toggle('is-open', open);
       if (!open) { if (moveFocus) toggle.focus(); return; }
       // Opening left focus on the body, so a keyboard or screen-reader user
       // had to tab through the whole bar to reach the links they just asked
@@ -23,7 +28,9 @@
       // is not trapped.
       if (moveFocus) {
         var first = links.querySelector('a[href], button:not([disabled])');
-        if (first) first.focus();
+        // preventScroll: the link is still clipped while the pill grows, and
+        // letting the browser scroll it into view shoved the bar out of sight.
+        if (first) first.focus({ preventScroll: true });
       }
     }
 
@@ -55,7 +62,19 @@
     document.addEventListener('click', function (e) {
       if (!isOpen()) return;
       if (e.target.closest && e.target.closest('.nav-toggle')) return;
+      // A click on the cards' own surface is not a click away from them. A
+      // click on one of their links still closes, which matters for "Book an
+      // assessment": it opens the booking dialog over this page.
+      if (e.target.closest && e.target.closest('.navcards') && !e.target.closest('a')) return;
       setOpen(false, false);
+    });
+
+    // The current page, marked the way the desktop row marks it. Done here
+    // rather than in the markup so the panel is identical on every page.
+    var norm = function (p) { return p.replace(/index\.html$/, '').replace(/\/+$/, '/'); };
+    var here = norm(location.pathname);
+    Array.prototype.forEach.call(links.querySelectorAll('.navcard a[href]'), function (a) {
+      if (norm(new URL(a.href, location.href).pathname) === here) a.setAttribute('aria-current', 'page');
     });
 
     // Reset state when the menu stops being a drawer.

@@ -175,30 +175,60 @@
   .navgroup a{transform-origin:50% 50%;backface-visibility:hidden}
 }
 
-@keyframes nav-drop{ from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
+/* The card panel only exists below the desktop width. */
+.navcards{display:none}
 
+/* ---- Below 1181: the pill opens into cards ----
+   After React Bits' CardNav. The pill itself grows downward and three
+   cards of grouped links drop in under the bar, rather than a separate
+   drawer hanging below it. The pill is a wrapping flex row: the top-bar
+   items keep a fixed-height first line, and the panel wraps onto its own
+   line beneath them. Closed, the pill is clipped to the bar's height and
+   the panel is hidden, so nothing in it can be reached. motion.js animates
+   the height when motion is allowed; without it, the class opens the pill
+   instantly. --nav-h is the closed height and does not change. */
 @media (max-width:1180px){
-  .site-nav{padding:0 10px 0 20px;gap:12px}
-  .nav-toggle{display:flex;order:3}
+  .site-nav{padding:0 10px 0 20px;gap:0 12px;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;
+    overflow:hidden;transition:background-color var(--t-move),box-shadow var(--t-move)}
+  .site-nav>a,.nav-right{height:calc(var(--nav-pill) - 2px);display:flex;align-items:center}
+  .nav-toggle{display:flex;order:3;margin-top:calc((var(--nav-pill) - 2px - 44px) / 2)}
   .nav-right{margin-left:auto;order:2}
   .nav-meta{display:none}
-  /* The links become a panel that hangs under the pill. It overlays the
-     page rather than growing the bar, so --nav-h stays true while it is
-     open, and it scrolls on its own if the screen is short. */
-  .navgroup{
-    display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:99;
-    flex-direction:column;align-items:stretch;gap:2px;padding:10px;
-    background:color-mix(in oklab,var(--color-ink-950) 97%,transparent);
-    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-    border:1px solid var(--color-veil-08);border-radius:var(--radius-lg);
-    box-shadow:var(--shadow-float);
-    max-height:calc(100dvh - var(--nav-h) - 24px);overflow-y:auto}
-  .navgroup.open{display:flex;animation:nav-drop var(--t-move) var(--ease-out) both}
-  .navgroup a,.navgroup span{padding:15px 16px;font-size:1rem;border-radius:var(--radius-sm)}
-  .navgroup [aria-current="page"]{padding-left:32px}
-  .navgroup [aria-current="page"]::before{left:15px}
-  .navgroup .nav-sub{padding-left:36px}
-  .navgroup .nav-sub::after{left:20px;width:5px;height:5px}
+  .navgroup{display:none}
+
+  .site-nav.is-open{height:auto;background:color-mix(in oklab,var(--color-ink-950) 97%,transparent);
+    border-radius:var(--radius-lg)}
+  /* On a short screen only the cards scroll. The bar, with the button that
+     closes the panel, never leaves the top of the pill. */
+  .site-nav.is-open .navcards{max-height:calc(100dvh - 2 * var(--nav-top) - var(--nav-pill));
+    overflow-y:auto;overscroll-behavior:contain}
+
+  /* The pill pads 20px left and 10px right for the bar; the panel takes back
+     the difference so the cards sit evenly inside it. */
+  .navcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;order:4;flex:1 0 100%;
+    margin-left:-10px;padding:4px 0 10px;visibility:hidden}
+  .site-nav.is-open .navcards{visibility:visible}
+
+  .navcard{display:flex;flex-direction:column;gap:16px;min-width:0;padding:16px 18px 18px;
+    border-radius:var(--radius-md);color:var(--color-bone)}
+  .navcard-care{background:var(--color-forest-850)}
+  .navcard-learn{background:var(--color-brand-800)}
+  .navcard-clinic{background:var(--color-forest-700)}
+  .navcard-label{margin:0;font:600 var(--text-heading-sm)/1.1 var(--font-display);letter-spacing:-.02em}
+  .navcard-links{display:flex;flex-direction:column;gap:2px;margin:auto 0 0;padding:0;list-style:none}
+  .navcard-links a{display:flex;align-items:center;gap:8px;min-height:40px;padding:6px 0;
+    font:500 .9375rem/1.3 var(--font-sans);color:var(--color-on-dark);transition:color var(--t-tint)}
+  .navcard-arw{flex:none;opacity:.6;transition:transform var(--t-move) var(--ease-out),opacity var(--t-tint)}
+  @media (hover:hover) and (pointer:fine){
+    .navcard-links a:hover{color:var(--color-bone)}
+    .navcard-links a:hover .navcard-arw{opacity:1;transform:translate(2px,-2px)}
+  }
+  .navcard-links a:focus-visible{color:var(--color-bone)}
+  /* The page you are on keeps the spring dot from the desktop row. */
+  .navcard-links a[aria-current="page"]{color:var(--color-bone);font-weight:600}
+  .navcard-links a[aria-current="page"] .navcard-arw{opacity:0;width:0;margin-right:-8px}
+  .navcard-links a[aria-current="page"]::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;
+    background:var(--color-spring-500)}
 }
 @media (max-width:700px){
   /* The booking button lives in the bar at the foot of the screen here. */
@@ -206,12 +236,15 @@
   .site-nav .wordmark{width:88px;height:29px}
   .nav-right{display:none}
   .nav-toggle{margin-left:auto}
+  /* Stacked on a phone. Care has the most links, so they run in two columns. */
+  .navcards{grid-template-columns:1fr;margin-left:-12px;padding:2px 0 8px}
+  .navcard{gap:10px;padding:14px 16px 14px}
+  .navcard-care .navcard-links{display:grid;grid-template-columns:1fr 1fr;column-gap:12px}
+  .navcard-links a{min-height:44px}
 }
 @media (prefers-reduced-motion:reduce){
-  .navgroup.open{animation:none}
   .nav-toggle:active{transform:none}
 }
-
 
 /* ---------- 4. Buttons and links ----------
    Two shapes with two jobs. A pill is an action that moves the visitor

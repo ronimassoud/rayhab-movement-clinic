@@ -162,7 +162,7 @@
 
     /* ---------- Navigation ----------
        Out of the way while reading down, back the moment the reader turns
-       round. It never hides while the drawer is open or while focus is
+       round. It never hides while the card panel is open or while focus is
        inside it, so a keyboard user cannot lose the thing they are in. */
     var nav = $('.site-nav');
     if (nav) {
@@ -170,13 +170,13 @@
       var show = function () {
         if (!hidden) return;
         hidden = false;
-        gsap.to(nav, { yPercent: 0, duration: 0.45, ease: EASE, overwrite: true });
+        gsap.to(nav, { yPercent: 0, duration: 0.45, ease: EASE, overwrite: 'auto' });
       };
       var hide = function () {
         if (hidden) return;
-        if (nav.contains(document.activeElement) || $('.navgroup.open', nav)) return;
+        if (nav.contains(document.activeElement) || nav.classList.contains('is-open')) return;
         hidden = true;
-        gsap.to(nav, { yPercent: -140, duration: 0.35, ease: 'power2.in', overwrite: true });
+        gsap.to(nav, { yPercent: -140, duration: 0.35, ease: 'power2.in', overwrite: 'auto' });
       };
       ScrollTrigger.create({
         start: 0, end: 'max',
@@ -301,6 +301,58 @@
       if (band) { band.classList.remove('has-art'); var a = $('.cta-art', band); if (a) band.removeChild(a); }
       if (cleanupNav) cleanupNav();
       if (h1) gsap.set(h1, { visibility: 'visible' });
+    };
+  });
+
+  /* ---------- The card panel (below 1181px) ----------
+     After React Bits' CardNav. ui.js owns the open state, focus and closing
+     rules and calls window.rhNav.set(); this supplies the motion. The pill
+     grows from its bar height to its content, the cards rise in after it,
+     and closing runs the other way before the panel is hidden. Its own
+     matchMedia, so crossing 1181px or changing the motion setting only
+     rebuilds this, not every scene on the page. Without it (GSAP missing,
+     reduced motion, desktop), ui.js toggles .is-open and the pill opens
+     instantly. */
+  mm.add('(prefers-reduced-motion: no-preference) and (max-width: 1180px)', function () {
+    var nav = $('.site-nav'), panel = $('#navcards');
+    if (!nav || !panel) return;
+    var cards = $$('.navcard', panel);
+    var barH = function () {
+      return parseFloat(getComputedStyle(root).getPropertyValue('--nav-pill')) || 64;
+    };
+
+    window.rhNav = {
+      set: function (open) {
+        var from = nav.getBoundingClientRect().height;
+        if (open) {
+          nav.classList.add('is-open');
+          gsap.set(nav, { height: 'auto' });
+          var to = nav.getBoundingClientRect().height;   // the screen-height cap applies
+          gsap.fromTo(nav, { height: from }, {
+            height: to, duration: 0.45, ease: EASE, overwrite: 'auto',
+            onComplete: function () { gsap.set(nav, { height: 'auto' }); }
+          });
+          gsap.fromTo(cards, { opacity: 0, y: 24 }, {
+            opacity: 1, y: 0, duration: 0.45, ease: EASE, stagger: 0.08, delay: 0.1, overwrite: 'auto'
+          });
+        } else {
+          gsap.to(cards, { opacity: 0, y: 10, duration: 0.18, ease: 'power2.in', overwrite: 'auto' });
+          gsap.fromTo(nav, { height: from }, {
+            height: barH(), duration: 0.36, ease: 'power3.inOut', overwrite: 'auto',
+            onComplete: function () {
+              nav.classList.remove('is-open');
+              gsap.set(nav, { clearProps: 'height' });
+              gsap.set(cards, { clearProps: 'opacity,transform' });
+            }
+          });
+        }
+      }
+    };
+
+    return function () {
+      window.rhNav = null;
+      gsap.set(nav, { clearProps: 'height' });
+      gsap.set(cards, { clearProps: 'opacity,transform' });
     };
   });
 
