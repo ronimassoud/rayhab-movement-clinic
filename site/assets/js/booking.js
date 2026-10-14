@@ -31,7 +31,10 @@
       desc: 'Injury rehabilitation, return to sport, mobility and joint training.' },
     { id: 'pain', name: 'Pain management assessment', dur: '60 min', mins: 60,
       tag: '',
-      desc: 'Persistent or recurring pain: a full assessment, a clear explanation and a graded plan.' }
+      desc: 'Persistent or recurring pain: a full assessment, a clear explanation and a graded plan.' },
+    { id: 'pain-follow', name: 'Pain management follow-up', dur: '45 min', mins: 45,
+      tag: '',
+      desc: 'Coached graded activity, progression and updates to your home programme. For existing patients.' }
   ];
 
   /* ---------- Clinic calendar ----------
