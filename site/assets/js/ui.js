@@ -65,6 +65,143 @@
     else if (mq.addListener) mq.addListener(reset);
   }
 
+  /* ---- Nav labels: jelly ----
+     A port of React Bits' JellyRadio motion to the nav row, without React
+     or the motion library: the site has no build step for its scripts, and
+     the effect is three springs per label, which a few lines can run.
+
+     The label under the pointer (or keyboard focus) swells, widening a
+     beat before it grows tall, and shoves its neighbours aside, nearest
+     first. Everything else gives up a little size. When the pointer leaves
+     the row, the current page's label takes the swell back, so at rest the
+     page you are on is the one standing proud.
+
+     The numbers are the component's defaults, and the springs use its
+     maths: damping = 2 * sqrt(k * m) * (1 - bounce), with the horizontal
+     scale stiffer and bouncier than the vertical one (that split is the
+     "jelly"), and stiffness softening with distance from the chosen label.
+
+     Only on the horizontal desktop row. The drawer is a column, and a
+     sideways shove has no meaning there. Off entirely under reduced motion. */
+  var row = document.getElementById('navgroup');
+  if (row && window.requestAnimationFrame && window.matchMedia) {
+    var J = { swell: 0.2, barge: 6, shrink: 0.05, jelly: 1, bounce: 0.25, stagger: 22, stiffness: 580 };
+    var wideMq = window.matchMedia('(min-width:1181px)');
+    var stillMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var chips = Array.prototype.slice.call(row.querySelectorAll('a'));
+    var home = -1;
+    chips.forEach(function (a, i) { if (a.getAttribute('aria-current') === 'page') home = i; });
+
+    var spring = function (p) { return { p: p, v: 0, to: p, k: 1, c: 0, m: 1, at: 0, live: false }; };
+    var state = chips.map(function () { return { x: spring(0), sx: spring(1), sy: spring(1) }; });
+    var widths = [];
+    var on = false, frame = 0, last = 0;
+
+    var aim = function (s, to, k, m, bounce, delay, now) {
+      s.to = to; s.k = k; s.m = m; s.c = 2 * Math.sqrt(k * m) * (1 - bounce);
+      s.at = now + delay; s.live = true;
+    };
+    var jump = function (s, to) { s.p = s.to = to; s.v = 0; s.live = false; };
+
+    // Semi-implicit Euler in four substeps a frame: stable at these
+    // stiffnesses, and close enough to the analytic spring to be the same
+    // motion to the eye.
+    var step = function (s, now, dt) {
+      if (!s.live || now < s.at) return s.live;
+      for (var n = 0; n < 4; n++) {
+        var a = (-s.k * (s.p - s.to) - s.c * s.v) / s.m;
+        s.v += a * dt / 4;
+        s.p += s.v * dt / 4;
+      }
+      if (Math.abs(s.v) < 0.002 && Math.abs(s.p - s.to) < 0.0005) { s.p = s.to; s.v = 0; s.live = false; }
+      return true;
+    };
+
+    var paint = function () {
+      for (var i = 0; i < chips.length; i++) {
+        var m = state[i];
+        chips[i].style.transform = 'translateX(' + m.x.p.toFixed(2) + 'px) scale(' +
+          m.sx.p.toFixed(4) + ',' + m.sy.p.toFixed(4) + ')';
+      }
+    };
+
+    var tick = function (now) {
+      var dt = Math.min(0.032, (now - last) / 1000 || 0.016);
+      last = now;
+      var any = false;
+      state.forEach(function (m) {
+        if (step(m.x, now, dt)) any = true;
+        if (step(m.sx, now, dt)) any = true;
+        if (step(m.sy, now, dt)) any = true;
+      });
+      paint();
+      frame = any ? window.requestAnimationFrame(tick) : 0;
+    };
+
+    var chosen = -2;
+    var apply = function (sel, instant) {
+      if (!on || sel === chosen) return;
+      chosen = sel;
+      var now = window.performance.now();
+      var push = sel < 0 ? 0 : (widths[sel] || 0) * J.swell / 2 + J.barge;
+      var flying = state.some(function (m) { return m.x.live || m.sx.live || m.sy.live; });
+      for (var i = 0; i < chips.length; i++) {
+        var m = state[i];
+        var far = sel < 0 ? 0 : Math.abs(i - sel);
+        var x = sel < 0 ? 0 : (i > sel ? 1 : i < sel ? -1 : 0) * push;
+        var s = sel < 0 ? 1 : (i === sel ? 1 + J.swell : 1 - J.shrink);
+        if (instant) { jump(m.x, x); jump(m.sx, s); jump(m.sy, s); continue; }
+        var k = J.stiffness * (1 - 0.12 * Math.min(far, 3));
+        var delay = flying ? 0 : far * J.stagger;
+        var j = J.jelly;
+        aim(m.x, x, k, 0.9, J.bounce, delay, now);
+        aim(m.sx, s, k * (1 + 0.24 * j), 0.9 - 0.1 * j, Math.min(0.85, J.bounce + 0.3 * j), delay, now);
+        aim(m.sy, s, k * (1 - 0.14 * j), 0.9 + 0.05 * j, J.bounce, delay + 50 * j, now);
+      }
+      if (instant) { paint(); return; }
+      if (!frame) { last = now; frame = window.requestAnimationFrame(tick); }
+    };
+
+    // offsetWidth ignores transforms, so this reads the resting width.
+    var measure = function () { widths = chips.map(function (a) { return a.offsetWidth; }); };
+
+    var sync = function () {
+      var want = wideMq.matches && !stillMq.matches;
+      if (want === on) { if (on) { measure(); var c = chosen; chosen = -2; apply(c, true); } return; }
+      on = want;
+      if (on) { measure(); chosen = -2; apply(home, true); }
+      else {
+        if (frame) window.cancelAnimationFrame(frame);
+        frame = 0; chosen = -2;
+        chips.forEach(function (a) { a.style.transform = ''; });
+      }
+    };
+
+    var indexOf = function (el) {
+      var a = el && el.closest ? el.closest('a') : null;
+      return a ? chips.indexOf(a) : -1;
+    };
+    row.addEventListener('pointerover', function (e) {
+      if (e.pointerType && e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+      var i = indexOf(e.target);
+      if (i > -1) apply(i, false);
+    });
+    row.addEventListener('pointerleave', function () { apply(home, false); });
+    row.addEventListener('focusin', function (e) { var i = indexOf(e.target); if (i > -1) apply(i, false); });
+    row.addEventListener('focusout', function (e) {
+      if (e.relatedTarget && row.contains(e.relatedTarget)) return;
+      apply(home, false);
+    });
+
+    [wideMq, stillMq].forEach(function (q) {
+      if (q.addEventListener) q.addEventListener('change', sync);
+      else if (q.addListener) q.addListener(sync);
+    });
+    window.addEventListener('resize', sync);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
+    sync();
+  }
+
   /* ---- Accordions ----
      Markup: <button class="acc-btn" aria-expanded aria-controls="id">
              <div class="acc-panel" id="id" hidden>

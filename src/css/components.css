@@ -168,6 +168,13 @@
 }
 .nav-toggle:active{transform:scale(.94);transition-duration:.06s}
 
+/* The labels are scaled and shoved by the jelly motion in ui.js, which
+   writes their transform. It scales about the centre, and the hover pill
+   is part of the link, so the pill swells with the label. */
+@media (min-width:1181px){
+  .navgroup a{transform-origin:50% 50%;backface-visibility:hidden}
+}
+
 @keyframes nav-drop{ from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
 
 @media (max-width:1180px){
