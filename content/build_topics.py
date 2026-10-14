@@ -80,7 +80,7 @@ NAV = '''<nav class="site-nav" aria-label="Primary">
     <a href="../contact.html">Contact</a>
   </div>
   <div class="nav-right">
-    <span class="nav-meta">Beirut · Online</span>
+    <span class="nav-meta">Beirut · Aley · Online</span>
     <a class="btn btn-spring btn-sm" href="../book.html">Book an assessment</a>
   </div>
 </nav>'''
