@@ -91,7 +91,7 @@
 /* ==========================================================
    HOME (§05), grid ratios and sizes taken from the mockup
    ========================================================== */
-.home-hero{padding-inline:var(--pad-x);padding-bottom:clamp(48px,6vw,88px);position:relative;overflow:hidden;isolation:isolate}
+.home-hero{padding-inline:var(--pad-x);padding-bottom:var(--hero-pad);position:relative;overflow:hidden;isolation:isolate}
 .hero-device{position:absolute;z-index:-1;right:-140px;top:-20px;width:680px;height:680px;pointer-events:none;opacity:.42}
 .hero-device svg{width:100%;height:100%}
 .hero-inner{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(32px,5vw,72px);align-items:center}
@@ -102,7 +102,7 @@
 .hero-lede{margin-top:32px;max-width:34rem;color:var(--color-on-dark)}
 .hero-btns{display:flex;gap:12px;margin-top:40px;flex-wrap:wrap}
 .hero-media{position:relative}
-.hero-slot{height:clamp(420px,46vw,600px);border-radius:var(--radius-2xl)}
+.hero-slot{height:clamp(360px,min(46vw,var(--hero-fit)),600px);border-radius:var(--radius-2xl)}
 .hero-card{position:absolute;left:-32px;bottom:44px;width:min(280px,78%);background:var(--color-bone);border-radius:var(--radius-md);padding:20px 20px;
   display:flex;flex-direction:column;align-items:flex-start;gap:12px;--tilt:-4deg}
 .hero-card p{margin:0;font:500 .9375rem/1.4 var(--font-sans);color:var(--color-fg)}
@@ -200,7 +200,7 @@
 /* ==========================================================
    SERVICES INDEX (§06)
    ========================================================== */
-.svcidx-hero{padding-inline:var(--pad-x);padding-bottom:var(--section-y);position:relative;isolation:isolate;overflow:hidden;text-align:center}
+.svcidx-hero{padding-inline:var(--pad-x);padding-bottom:var(--hero-pad);position:relative;isolation:isolate;overflow:hidden;text-align:center}
 .svcidx-hero::before{content:"";position:absolute;z-index:-1;left:50%;top:46%;width:min(720px,130%);aspect-ratio:1;
   translate:-50% -50%;background:var(--device-art) center/contain no-repeat;opacity:.2;pointer-events:none}
 .svcidx-crumbs{margin-bottom:32px;justify-content:center}
@@ -212,14 +212,15 @@
    The equivalent of a stack of product screenshots, built from the only
    imagery the clinic has. The whole fan is one link to the case studies
    and the images are decorative here, because each appears again below
-   with its full description. */
+   with its full description. The sheets are sized to the height left
+   under the heading, so the hero stays one screen tall. */
 .tilt-fan{display:flex;justify-content:center;align-items:flex-end;
-  margin:clamp(40px,6vw,72px) auto 0;padding:0 0 32px;width:fit-content;max-width:100%}
-.tilt-fan img{display:block;width:clamp(120px,19vw,236px);height:auto;border-radius:var(--radius-md);
+  margin:clamp(28px,min(6vw,5svh),72px) auto 0;padding:0 0 24px;width:fit-content;max-width:100%}
+.tilt-fan img{display:block;width:clamp(104px,min(19vw,(var(--hero-fit) - 380px) * .72),236px);height:auto;border-radius:var(--radius-md);
   background:var(--color-brand-800)}
 .tilt-fan img{translate:0 calc(var(--drop,0px) + var(--lift,0px))}
 .tilt-fan img:nth-child(1){--tilt:-7deg;--drop:20px;margin-right:clamp(-44px,-3vw,-20px)}
-.tilt-fan img:nth-child(2){--tilt:0deg;z-index:2;width:clamp(136px,21vw,264px)}
+.tilt-fan img:nth-child(2){--tilt:0deg;z-index:2;width:clamp(116px,min(21vw,(var(--hero-fit) - 380px) * .8),264px)}
 .tilt-fan img:nth-child(3){--tilt:7deg;--drop:20px;margin-left:clamp(-44px,-3vw,-20px)}
 
 .svcidx-primary-band{padding:var(--section-y) var(--pad-x) 0}
@@ -263,11 +264,11 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 /* ==========================================================
    SERVICE DETAIL (§03)
    ========================================================== */
-.svc-hero{padding-inline:var(--pad-x);padding-bottom:var(--section-y);display:grid;grid-template-columns:1.08fr .92fr;gap:clamp(32px,5vw,64px);align-items:center;position:relative}
+.svc-hero{padding-inline:var(--pad-x);padding-bottom:var(--hero-pad);display:grid;grid-template-columns:1.08fr .92fr;gap:clamp(32px,5vw,64px);align-items:center;position:relative}
 .svc-hero-copy{padding-top:0}
 .svc-hero-media{position:relative}
-.svc-hero-slot{height:clamp(360px,40vw,520px);border-radius:var(--radius-2xl)}
-.svc-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:48px;border-top:1px solid var(--color-veil-12);padding-top:24px}
+.svc-hero-slot{height:clamp(320px,min(40vw,var(--hero-fit)),520px);border-radius:var(--radius-2xl)}
+.svc-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:min(48px,5svh);border-top:1px solid var(--color-veil-12);padding-top:24px}
 .svc-stats>div{padding-right:20px}
 .svc-stats>div+div{padding:0 20px;border-left:1px solid var(--color-veil-12)}
 .svc-stats>div:last-child{padding-right:0}
@@ -277,6 +278,20 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 .measure-card svg{width:58px;height:58px;flex:none}
 .measure-k{margin:0 0 3px;font:600 13px/1 var(--font-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--color-body)}
 .measure-v{margin:0;font:400 15px/1.45 var(--font-sans);color:var(--color-fg);max-width:236px}
+/* On a short screen (a 768px laptop) the copy column is the tallest thing
+   in the hero, so its spacing tightens to keep the hero one screen tall.
+   The markup sets these with utilities, which sit in a later layer, hence
+   !important. */
+@media (min-width:1041px) and (max-height:820px){
+  .svc-hero-copy .crumbs{margin-bottom:16px !important}
+  .svc-hero-copy .hero-pill{margin-bottom:16px !important}
+  .svc-hero-copy .body-l{margin-top:16px !important;font-size:17px !important;line-height:1.55 !important}
+  .svc-hero-copy .hero-btns{margin-top:24px !important}
+  .svc-stats{margin-top:24px;padding-top:16px}
+}
+@media (min-width:1041px) and (max-height:740px){
+  .svc-hero-copy .h1{font-size:min(var(--text-display-xl),7svh)}
+}
 @media (max-width:1040px){
   .svc-hero{grid-template-columns:1fr;gap:32px}
   .svc-hero-slot{height:340px}
@@ -382,7 +397,7 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 /* ==========================================================
    SCOLIOSIS HUB (§07)
    ========================================================== */
-.hub-hero{padding-inline:var(--pad-x);padding-bottom:var(--section-y);position:relative;overflow:hidden;isolation:isolate}
+.hub-hero{padding-inline:var(--pad-x);padding-bottom:var(--hero-pad);position:relative;overflow:hidden;isolation:isolate}
 .hub-device{position:absolute;left:44%;top:-60px;width:700px;height:700px;opacity:.4;pointer-events:none}
 .hub-device svg{width:100%;height:100%}
 .hub-hero-inner{position:relative}
@@ -734,7 +749,7 @@ a:focus-visible > .wordmark{background:var(--color-spring-500)}
 /* ==========================================================
    Article pages and pillar indexes
    ========================================================== */
-.art-hero{padding-inline:var(--pad-x);padding-bottom:var(--section-y-sm);color:var(--color-bone)}
+.art-hero{padding-inline:var(--pad-x);padding-bottom:var(--hero-pad);color:var(--color-bone)}
 .art-eyebrow{font:600 12px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;
   color:var(--color-spring-500);margin:0 0 20px}
 .art-h1{margin:0;font:700 var(--text-display-xl)/var(--text-display-xl--line-height) var(--font-display);letter-spacing:-.036em;

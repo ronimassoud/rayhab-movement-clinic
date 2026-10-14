@@ -47,7 +47,7 @@
   .m-bookbar .btn{flex:none;min-height:48px;padding:12px 24px}
 
   /* ---- HOME (05 mobile) ---- */
-  .home-hero{padding-inline:var(--pad-x);padding-bottom:var(--section-y)}
+  .home-hero{padding-inline:var(--pad-x);padding-bottom:var(--hero-pad)}
   .hero-device{display:none}
   .hero-inner{display:flex;flex-direction:column;gap:0;align-items:stretch}
   .hero-pill{align-self:flex-start}
@@ -89,7 +89,7 @@
   .founder-slot{height:260px}
 
   /* ---- SERVICE DETAIL (03 mobile) ---- */
-  .svc-hero{display:flex;flex-direction:column;padding-inline:var(--pad-x);padding-bottom:var(--section-y);gap:0;align-items:stretch}
+  .svc-hero{display:flex;flex-direction:column;justify-content:center;padding-inline:var(--pad-x);padding-bottom:var(--hero-pad);gap:0;align-items:stretch}
   .svc-hero .hero-pill{align-self:flex-start}
   .svc-hero-copy{padding-top:0;display:contents}
   .svc-hero .crumbs{order:0;font-size:12px;margin-bottom:16px}
@@ -130,7 +130,7 @@
   .svc-who{padding:var(--section-y) var(--pad-x);gap:24px}
 
   /* ---- SERVICES INDEX (06 mobile) ---- */
-  .svcidx-hero{padding-inline:var(--pad-x);padding-bottom:var(--section-y)}
+  .svcidx-hero{padding-inline:var(--pad-x);padding-bottom:var(--hero-pad)}
   .svcidx-hero .crumbs{font-size:12px;margin-bottom:16px}
   .svcidx-head{gap:12px}
 
@@ -159,7 +159,7 @@
   .router-grid{gap:12px}
 
   /* ---- SCOLIOSIS HUB (07 mobile) ---- */
-  .hub-hero{padding-inline:var(--pad-x);padding-bottom:var(--section-y)}
+  .hub-hero{padding-inline:var(--pad-x);padding-bottom:var(--hero-pad)}
   .hub-device{display:none}
   .hub-hero .crumbs{font-size:12px;margin-bottom:16px}
   .hub-hero-grid{display:block}

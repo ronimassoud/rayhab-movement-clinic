@@ -44,9 +44,16 @@
 
 /* Every page opens on a dark hero, and the nav floats over it. The hero
    therefore starts at the very top of the page and clears the nav with
-   its own padding. */
+   its own padding. On every page it is exactly one screen tall, whatever
+   the screen: at least the viewport (svh, so a phone's collapsing toolbar
+   does not make it jump), with its content centred in it. Heroes with
+   pictures size them to the screen's height in site.css so the content
+   fits; where it still cannot, as on a very short screen, it grows. */
 .home-hero,.svc-hero,.svcidx-hero,.hub-hero,.art-hero{
-  padding-top:calc(var(--nav-h) + clamp(28px,5vw,64px))}
+  --hero-pad:clamp(24px,min(5vw,6svh),64px);
+  --hero-fit:calc(100svh - var(--nav-h) - 2 * var(--hero-pad));   /* room for the content */
+  padding-top:calc(var(--nav-h) + var(--hero-pad));
+  min-height:100vh;min-height:100svh;align-content:center}
 
 /* Section header: heading left, link or note right. */
 .sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;
