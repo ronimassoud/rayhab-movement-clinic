@@ -439,6 +439,9 @@ a.svc-primary,.svcidx-primary.is-linked{transition:background-color var(--t-move
   text-transform:uppercase;color:var(--color-on-dark-2)}
 .footcol a,.footcol span{font:400 .9375rem/1.4 var(--font-sans);color:var(--color-on-dark)}
 .footcol a:hover{color:var(--color-bone)}
+/* The email address is the longest item in the footer; on a phone it breaks
+   after the @ (a <wbr> in the markup) rather than running into the next column. */
+.footcol a[href^="mailto:"]{max-width:100%}
 .footcol .soon{color:var(--color-on-dark-3)}
 @media (max-width:900px){
   .site-footer{grid-template-columns:1fr}

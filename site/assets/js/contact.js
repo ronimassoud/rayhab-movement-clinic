@@ -40,8 +40,8 @@
     }
 
     // --- replace with the real POST once a mail endpoint exists ---
-    say('Message sending is not connected yet. In the meantime, please use ' +
-        '“Book an assessment”; it reaches the clinic and needs no account.', 'info');
+    say('Message sending is not connected yet. In the meantime, WhatsApp the clinic on ' +
+        '+961 71 383 315 or email rayan.halimeh@gmail.com.', 'info');
     out.focus && out.setAttribute('tabindex', '-1');
     out.focus();
   });

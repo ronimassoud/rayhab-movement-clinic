@@ -302,7 +302,12 @@ Known gaps, all deliberate rather than overlooked:
       five case studies, in particular the Instagram comment used for Case 04.
 - [ ] **Photography.** Every page carries art-directed photo slots with
       direction text, waiting on real images.
-- [ ] **Contact details.** Phone, address and email are placeholders.
+- [x] **Contact details.** Phone and WhatsApp +961 71 383 315, Instagram and
+      TikTok @dr.rayhab, no Facebook. The street address is still only "Beirut".
+- [ ] **Email.** `rayan.halimeh@gmail.com` is temporary; `info@rayhab.clinic`
+      replaces it. Swap it everywhere (footers, contact page, contact form
+      message, the about page's structured data, the generators), then restamp:
+      `grep -rl rayan.halimeh site content` lists every file.
 - [ ] **Contact form.** Validates, but has no mail endpoint. The branch to
       replace is marked in `assets/js/contact.js`.
 - [ ] **Booking.** The four-step flow works end to end in the browser but has no
