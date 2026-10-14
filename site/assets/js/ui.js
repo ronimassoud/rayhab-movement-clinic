@@ -691,34 +691,71 @@
   /* The markup groups accordions under .faq-card (page FAQs) and .qa
      (sidecard quick answers); .acc is kept for any future group. Matching
      only .acc bound nothing at all, which left every panel frozen. */
-  /* FAQ sections (.faq-card) keep one answer open at a time: opening a
-     question closes whichever was open, so the section never grows into a
-     wall of text. The compact quick answers (.qa) still open independently. */
+  /* FAQ sections (.faq-card) and the sidecard quick answers (.qa) keep one
+     answer open at a time: opening a question closes whichever was open, so
+     the group never grows into a wall of text.
+     Panels slide by height rather than appearing at once. The one closing
+     and the one opening run together on the same curve, so the group
+     changes height in a single smooth move instead of jumping and then
+     settling. A click mid-slide picks up from wherever the panel is. With
+     reduced motion they simply show and hide. */
+  var accReduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var ACC_MS = 480, ACC_EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';
+  var slide = function (panel, open) {
+    if (!open && panel.hidden && !panel._slide) return;
+    var cs = window.getComputedStyle(panel);
+    var from = panel.hidden ? { h: 0, pt: 0, pb: 0, o: 0 }
+      : { h: panel.getBoundingClientRect().height, pt: parseFloat(cs.paddingTop), pb: parseFloat(cs.paddingBottom), o: parseFloat(cs.opacity) };
+    if (panel._slide) { panel._slide.cancel(); panel._slide = null; }
+    panel.hidden = false;
+    if (!panel.animate || (accReduce && accReduce.matches)) { panel.hidden = !open; return; }
+    var rest = window.getComputedStyle(panel);
+    var to = open ? { h: panel.scrollHeight, pt: parseFloat(rest.paddingTop), pb: parseFloat(rest.paddingBottom), o: 1 }
+      : { h: 0, pt: 0, pb: 0, o: 0 };
+    panel.style.overflow = 'hidden';
+    var a = panel.animate([
+      { height: from.h + 'px', paddingTop: from.pt + 'px', paddingBottom: from.pb + 'px', opacity: from.o },
+      { height: to.h + 'px', paddingTop: to.pt + 'px', paddingBottom: to.pb + 'px', opacity: to.o }
+    ], { duration: ACC_MS, easing: ACC_EASE });
+    panel._slide = a;
+    a.onfinish = function () {
+      panel._slide = null;
+      panel.style.overflow = '';
+      if (!open) panel.hidden = true;
+    };
+  };
+
   document.querySelectorAll('.acc, .faq-card, .qa').forEach(function (acc) {
     var buttons = Array.prototype.slice.call(acc.querySelectorAll('.acc-btn'));
-    var single = acc.classList.contains('faq-card');
+    var single = acc.classList.contains('faq-card') || acc.classList.contains('qa');
 
-    var set = function (btn, open) {
+    var set = function (btn, open, animate) {
       var panel = document.getElementById(btn.getAttribute('aria-controls'));
       if (!panel) return;
       btn.setAttribute('aria-expanded', String(open));
-      panel.hidden = !open;
+      if (animate) slide(panel, open); else panel.hidden = !open;
       var mark = btn.querySelector('.acc-mark');
       if (mark) mark.textContent = open ? '−' : '+';
     };
 
     buttons.forEach(function (btn, i) {
-      if (!document.getElementById(btn.getAttribute('aria-controls'))) return;
+      var panel = document.getElementById(btn.getAttribute('aria-controls'));
+      if (!panel) return;
+      // The slide replaces the stylesheet's fade-in, which stays for pages
+      // without this script.
+      panel.style.animation = 'none';
 
       // First item open, rest closed.
-      set(btn, i === 0);
+      set(btn, i === 0, false);
 
       btn.addEventListener('click', function () {
         var isOpen = btn.getAttribute('aria-expanded') === 'true';
         if (single && !isOpen) {
-          buttons.forEach(function (other) { if (other !== btn) set(other, false); });
+          buttons.forEach(function (other) {
+            if (other !== btn && other.getAttribute('aria-expanded') === 'true') set(other, false, true);
+          });
         }
-        set(btn, !isOpen);
+        set(btn, !isOpen, true);
       });
     });
   });
