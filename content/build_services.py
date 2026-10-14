@@ -161,12 +161,12 @@ def build(s, n):
 
   <section class="svc-hero on-dark">
     <div class="svc-hero-copy">
-      <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="./">Services</a> <span aria-hidden="true">/</span> %(name)s</p>
-      <p class="hero-pill"><span class="dot" aria-hidden="true"></span>Supporting service</p>
+      <p class="crumbs crumbs-dark mb-7"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="./">Services</a> <span aria-hidden="true">/</span> %(name)s</p>
+      <p class="hero-pill mb-6"><span class="dot" aria-hidden="true"></span>Supporting service</p>
       <h1 class="h1">%(h1)s</h1>
-      <p class="body-l d-only max-w-[560px] text-on-dark">%(lede)s</p>
+      <p class="body-l d-only mt-6 max-w-[560px] text-on-dark text-[19px] leading-[1.65]">%(lede)s</p>
       <p class="body-l m-only text-on-dark">%(lede_m)s</p>
-      <div class="hero-btns">
+      <div class="hero-btns mt-8">
         <a class="btn btn-spring py-4 px-7" href="../book.html">Book an assessment</a>
         <a class="btn btn-ghost-dark py-4 px-7" href="./">See all services</a>
       </div>

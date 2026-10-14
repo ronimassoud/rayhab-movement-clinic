@@ -56,7 +56,7 @@
   .hero-pill .dot{width:5px;height:5px}
   .home-hero .d1{order:1;margin-bottom:16px}
   .hero-lede{order:2;margin:0 0 24px;font:400 16px/1.6 var(--font-sans)}
-  .hero-media{order:3}
+  .hero-media{order:3;margin-bottom:20px}
   .hero-slot{height:250px;border-radius:var(--radius-lg)}
   .hero-card,.hero-shot{display:none}
   .photo.hero-slot{height:340px}
@@ -65,6 +65,7 @@
   .hero-btns .btn{display:flex;width:100%;margin-bottom:12px;text-align:center}
   .hero-btns .btn:last-child{margin-bottom:0}
 
+  .credstrip{padding:16px 0}
   .cred-set{gap:16px;padding-right:16px}
   .cred-set li{font:500 13px/1 var(--font-sans);gap:16px}
 
