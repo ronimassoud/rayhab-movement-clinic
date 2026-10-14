@@ -409,263 +409,306 @@
     window.addEventListener('scroll', function () { if (pointer.active) wake(); }, { capture: true, passive: true });
   })();
 
-  /* ---- Case showcase (results.html) ----
-     After React Bits Pro's Showcase 2. The cards drift slowly to the right
-     on their own, and copies of them run either side of the originals so the
-     row never ends. The drift eases to a stop while the pointer is over the
-     row, while a card has focus and for a moment after any drag, swipe or
-     arrow press, and it does not run at all with reduced motion. The track
-     drags with the mouse and carries on with momentum when let go; touch
-     uses the browser's own scrolling. A card leans towards the cursor in 3D.
-     Choosing a card shows its written case in the panel below and puts its
-     id in the address, so the link can be shared; arriving on #case-0N opens
-     that case. Arrow keys move between cards. Without this, every case is
-     simply listed. */
-  var showcase = document.querySelector('.showcase');
-  if (showcase) (function () {
-    var track = showcase.querySelector('.sc-track');
-    var cards = Array.prototype.slice.call(showcase.querySelectorAll('.sc-card'));
-    var details = Array.prototype.slice.call(showcase.querySelectorAll('.case-detail'));
-    var panel = showcase.querySelector('.sc-details');
-    var arrows = Array.prototype.slice.call(showcase.querySelectorAll('.sc-arrow'));
+  /* ---- Case coverflow (results.html) ----
+     After React Bits Pro's Prism Carousel, without WebGL. A pool of eight
+     slots is laid out every frame around a continuous position p, counted
+     in cases; the case under p is large and in colour, and each slot shows
+     the case at its index, wrapping, so the row has no ends. When a case
+     settles in the centre its colour sweeps in from the left. It moves on
+     every 4.5 seconds while it is on screen and nobody is pointing at it,
+     focused on it or reading the case below. It stops for good, with the
+     play button to restart it, once someone takes over: a drag, a click, a
+     key, an arrow or a #case-0N link. Reduced motion gets no autoplay, no
+     sweep and no fringe, and moves without easing. The written case below
+     follows the centre. */
+  var prism = document.querySelector('.prism .pc');
+  if (prism) (function () {
+    var stage = prism.querySelector('.pc-stage');
+    var srcs = Array.prototype.slice.call(prism.querySelectorAll('.pc-card'));
+    var panel = document.querySelector('.pc-details');
+    var details = panel ? Array.prototype.slice.call(panel.querySelectorAll('.case-detail')) : [];
+    var caption = prism.querySelector('.pc-caption');
+    var ct = prism.querySelector('.pc-ct'), cs = prism.querySelector('.pc-cs'), countI = prism.querySelector('.pc-i');
+    var playBtn = prism.querySelector('.pc-play');
+    var n = srcs.length;
+    if (!stage || !n) return;
     var reduceQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     var reduce = function () { return !!(reduceQ && reduceQ.matches); };
-    var fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-    if (!track || !cards.length) return;
 
-    /* -- The loop: one set of copies before the originals, two or more
-       after. The view is kept within the originals' stretch (between one and
-       two set-widths in); crossing either edge jumps back a set-width, onto
-       identical cards, so nothing visibly moves. -- */
-    var all = cards.slice();
-    var copy = function () {
-      return cards.map(function (c) {
-        var k = c.cloneNode(true);
-        k.classList.add('sc-copy');
-        k.setAttribute('aria-hidden', 'true');
-        k.setAttribute('tabindex', '-1');
-        k.removeAttribute('aria-controls');
-        k.removeAttribute('aria-pressed');
-        return k;
-      });
+    var SIZE = 0.86;            // centre height, as a share of the stage
+    var NEIGHBOUR = 0.66;       // neighbours' height against the centre
+    var WIDTH = [0, 0.72, 0.24, 0.12];   // neighbours' width against their height, by distance
+    var SPAN = 3;               // slots drawn either side of the centre
+    var GAP = 14, RADIUS = 18, DIM = 0.2;
+    var SWEEP_MS = 1100, INTERVAL = 4500;
+    var K = 120, C = 2 * Math.sqrt(K);   // a critically damped spring, in cases
+
+    var data = srcs.map(function (a) {
+      var q = function (s) { var e = a.querySelector(s); return e ? e.textContent : ''; };
+      return { id: a.getAttribute('data-case'), aspect: parseFloat(a.getAttribute('data-aspect')) || 0.8,
+               media: a.querySelector('.pc-media'), n: q('.pc-n'), t: q('.pc-t'), c: q('.pc-c') };
+    });
+    var mod = function (k, m) { return ((k % m) + m) % m; };
+
+    var POOL = 2 * SPAN + 2;
+    var pool = [];
+    for (var s = 0; s < POOL; s++) {
+      var el = document.createElement('div');
+      el.className = 'pc-item';
+      el.innerHTML = '<div class="pc-layer pc-grey"></div><div class="pc-layer pc-colour"></div><div class="pc-band"></div>';
+      stage.appendChild(el);
+      pool.push({ el: el, grey: el.children[0], colour: el.children[1], k: null, item: -1, sweepAt: 0, sweeping: false, done: false });
+    }
+    var fill = function (slot, i) {
+      if (slot.item === i) return;
+      slot.item = i;
+      slot.grey.textContent = ''; slot.colour.textContent = '';
+      slot.grey.appendChild(data[i].media.cloneNode(true));
+      slot.colour.appendChild(data[i].media.cloneNode(true));
+      slot.sweeping = false; slot.done = false;
     };
-    var before = copy();
-    before.forEach(function (k) { track.insertBefore(k, cards[0]); });
-    all = before.concat(all);
-    var setW = 0;
-    var measure = function () {
-      setW = cards[0].offsetLeft - all[0].offsetLeft;
-      for (var n = 0; n < 6 && setW > 0 && track.scrollWidth - track.clientWidth < 3 * setW; n++) {
-        var more = copy();
-        more.forEach(function (k) { track.appendChild(k); });
-        all = all.concat(more);
+    prism.classList.add('is-live');
+    prism.tabIndex = 0;
+
+    var H = 0;
+    var measure = function () { H = stage.clientHeight * SIZE; };
+    var widthAt = function (j, i) { return j === 0 ? H * data[i].aspect : j <= SPAN ? H * NEIGHBOUR * WIDTH[j] : 0; };
+    var lerp = function (a, b, f) { return a + (b - a) * f; };
+
+    var p = 0, v = 0, target = 0, dragging = null, onScreen = false, raf = 0, last = 0;
+
+    var layout = function (now) {
+      var k0 = Math.floor(p), f = p - k0, k, slot;
+      var disp = reduce() ? 0 : Math.min(7, Math.abs(v) * 3.2);
+      var w = {}, h = {}, x = {}, slots = {};
+      for (k = k0 - SPAN; k <= k0 + SPAN + 1; k++) {
+        slot = pool[mod(k, POOL)]; slots[k] = slot;
+        var i = mod(k, n), a = Math.abs(k - p);
+        if (slot.k !== k) { slot.k = k; slot.sweeping = false; slot.done = false; }
+        fill(slot, i);
+        var j = Math.floor(a);
+        w[k] = lerp(widthAt(j, i), widthAt(j + 1, i), a - j);
+        h[k] = lerp(H, H * NEIGHBOUR, Math.min(1, a));
+        slot.a = a;
       }
-    };
-    measure();
-    track.classList.add('is-loop');
+      var gap = function (k1, k2) { return GAP * Math.min(1, Math.min(w[k1], w[k2]) / 12); };
+      x[k0] = -f * (w[k0] / 2 + gap(k0, k0 + 1) + w[k0 + 1] / 2);
+      for (k = k0 + 1; k <= k0 + SPAN + 1; k++) x[k] = x[k - 1] + w[k - 1] / 2 + gap(k - 1, k) + w[k] / 2;
+      for (k = k0 - 1; k >= k0 - SPAN; k--) x[k] = x[k + 1] - w[k + 1] / 2 - gap(k, k + 1) - w[k] / 2;
 
-    var pos = 0;
-    var put = function () { track.scrollLeft = pos; };
-    var wrap = function () {
-      if (setW <= 0) return;
-      var s = pos < setW ? setW : pos >= 2 * setW ? -setW : 0;
-      if (!s) return;
-      pos += s;
-      if (drag) drag.left += s;
-      put();
+      var busy = false;
+      for (k = k0 - SPAN; k <= k0 + SPAN + 1; k++) {
+        slot = slots[k];
+        var st = slot.el.style, a2 = slot.a;
+        if (w[k] < 1) { st.visibility = 'hidden'; continue; }
+        st.visibility = '';
+        st.width = w[k].toFixed(2) + 'px';
+        st.height = h[k].toFixed(2) + 'px';
+        st.transform = 'translate3d(' + (x[k] - w[k] / 2).toFixed(2) + 'px,' + (-h[k] / 2).toFixed(2) + 'px,0)';
+        st.borderRadius = (RADIUS * h[k] / H).toFixed(1) + 'px';
+        st.zIndex = String(10 - Math.round(a2));
+        slot.el.classList.toggle('is-active', a2 < 0.5);
+
+        // The sweep: once, as the case comes to rest in the centre.
+        var sw = 0, bo = 0;
+        if (a2 < 0.5 && Math.abs(target - k) < 0.5 && onScreen && !slot.done && !slot.sweeping) {
+          slot.sweeping = true; slot.sweepAt = now;
+        }
+        if (a2 >= 0.9) { slot.sweeping = false; slot.done = false; }
+        if (reduce() && slot.sweeping) { slot.sweeping = false; slot.done = true; }
+        if (slot.sweeping) {
+          var t = Math.min(1, (now - slot.sweepAt) / SWEEP_MS);
+          sw = 1 - Math.pow(1 - t, 2.2);
+          bo = Math.sin(Math.PI * Math.min(1, t * 1.05));
+          if (t >= 1) { slot.sweeping = false; slot.done = true; sw = 1; bo = 0; } else busy = true;
+        } else if (slot.done) sw = 1;
+        st.setProperty('--sw', sw.toFixed(3));
+        st.setProperty('--bo', bo.toFixed(3));
+        st.setProperty('--co', Math.max(0, Math.min(1, 1 - a2 * 1.6)).toFixed(3));
+        st.setProperty('--b', Math.max(0.35, 1 - DIM * a2 * 1.4).toFixed(3));
+        st.filter = disp > 0.3
+          ? 'drop-shadow(' + disp.toFixed(1) + 'px 0 0 rgba(98,227,107,.38)) drop-shadow(' + (-disp).toFixed(1) + 'px 0 0 rgba(168,240,172,.3))'
+          : '';
+      }
+      return busy || disp > 0.3;
     };
 
-    var select = function (id, how) {
-      how = how || {};
-      var found = false;
-      all.forEach(function (c) {
-        var on = c.getAttribute('data-case') === id;
-        if (on) found = true;
-        c.classList.toggle('is-on', on);
-        if (!c.classList.contains('sc-copy')) c.setAttribute('aria-pressed', String(on));
-      });
-      if (!found) return false;
-      details.forEach(function (d) {
-        var on = d.id === id;
-        var was = !d.hidden;
-        d.hidden = !on;
-        if (on && !was && how.animate && d.animate && !reduce()) {
-          d.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }],
-                    { duration: 380, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
+    var frame = function (now) {
+      var dt = Math.min(0.05, (now - last) / 1000); last = now;
+      if (!dragging) {
+        if (reduce()) { p = target; v = 0; }
+        else {
+          v += (K * (target - p) - C * v) * dt;
+          p += v * dt;
+          if (Math.abs(target - p) < 0.0005 && Math.abs(v) < 0.002) { p = target; v = 0; }
+        }
+      }
+      var busy = layout(now);
+      raf = (dragging || p !== target || v !== 0 || busy) ? window.requestAnimationFrame(frame) : 0;
+    };
+    var wake = function () {
+      if (raf) return;
+      last = window.performance.now();
+      raf = window.requestAnimationFrame(frame);
+    };
+
+    /* -- The case on show: caption, counter, the panel below, the address -- */
+    var shown = -1;
+    var show = function (user) {
+      var i = mod(target, n);
+      if (i === shown) return;
+      var first = shown < 0;
+      shown = i;
+      var d = data[i];
+      ct.textContent = d.t;
+      cs.textContent = d.n + ' · ' + d.c;
+      countI.textContent = (i < 9 ? '0' : '') + (i + 1);
+      if (user) caption.setAttribute('aria-live', 'polite');
+      details.forEach(function (art) {
+        var on = art.id === d.id, was = !art.hidden;
+        art.hidden = !on;
+        if (on && !was && !first && art.animate && !reduce()) {
+          art.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }],
+                      { duration: 380, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
         }
       });
-      if (how.history && window.history && history.replaceState) history.replaceState(null, '', '#' + id);
-      if (how.showCard) {
-        var card = cards.filter(function (c) { return c.getAttribute('data-case') === id; })[0];
-        if (card) { pos = card.offsetLeft - all[0].offsetLeft; put(); }
-      }
-      if (how.showPanel) {
-        var r = panel.getBoundingClientRect();
-        if (r.top > window.innerHeight - 120 || r.bottom < 80) panel.scrollIntoView({ block: 'nearest', behavior: reduce() ? 'auto' : 'smooth' });
-      }
-      return true;
+      if (user && window.history && history.replaceState) history.replaceState(null, '', '#' + d.id);
+    };
+    var go = function (to, user) {
+      target = to;
+      if (user) stopAuto();
+      show(user);
+      wake();
+    };
+    var openCase = function () {
+      if (!panel) return;
+      var r = panel.getBoundingClientRect();
+      if (r.top > window.innerHeight - 120 || r.bottom < 80) panel.scrollIntoView({ block: 'start', behavior: reduce() ? 'auto' : 'smooth' });
     };
 
-    // The case in the address wins; otherwise the first, at the start of the originals.
-    var fromHash = function () {
-      var id = (location.hash || '').slice(1);
-      if (/^case-\d+$/.test(id) && select(id, { showCard: true })) {
-        showcase.scrollIntoView({ block: 'start' });
-        return true;
+    /* -- Autoplay -- */
+    var playing = true, hover = 0, focusIn = false, elapsed = 0;
+    var setPlaying = function (on) {
+      playing = on; elapsed = 0;
+      if (playBtn) {
+        playBtn.setAttribute('aria-pressed', String(!on));
+        playBtn.setAttribute('aria-label', on ? 'Pause the carousel' : 'Play the carousel');
       }
-      return false;
     };
-    pos = setW; put();
-    if (!fromHash()) select(cards[0].getAttribute('data-case'));
-    window.addEventListener('hashchange', fromHash);
+    var stopAuto = function () { if (playing) setPlaying(false); };
+    if (playBtn) playBtn.addEventListener('click', function () {
+      setPlaying(!playing);
+      if (playing) caption.setAttribute('aria-live', 'off');
+    });
+    window.setInterval(function () {
+      if (!playing || reduce() || !onScreen || hover || focusIn || dragging || document.hidden) return;
+      elapsed += 250;
+      if (elapsed >= INTERVAL) { elapsed = 0; go(target + 1, false); }
+    }, 250);
+    [prism, panel].forEach(function (zone) {
+      if (!zone) return;
+      zone.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hover++; });
+      zone.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') hover = Math.max(0, hover - 1); });
+    });
+    prism.addEventListener('focusin', function (e) { if (e.target !== playBtn) focusIn = true; });
+    prism.addEventListener('focusout', function () { focusIn = false; });
 
-    /* -- The drift: a slow pace to the right, eased in and out -- */
-    var SPEED = 28;           // px per second
-    var TAU = 0.35;           // easing time constant, seconds
-    var vel = 0, last = 0, raf = 0, onScreen = false;
-    var hovering = false, focused = false, touching = false, holdUntil = 0;
-    // A pause for something done by hand stops the drift at once, so it
-    // never pulls against a smooth scroll; the hover pause eases out instead.
-    var hold = function (ms) { vel = 0; holdUntil = Math.max(holdUntil, window.performance.now() + ms); };
-    var drag = null, moved = false, vx = 0, coast = 0;
-    var running = function () { return onScreen && !document.hidden && !reduce(); };
-    var tick = function (now) {
-      var dt = Math.min(64, now - last) / 1000; last = now;
-      var paused = hovering || focused || touching || drag || coast || now < holdUntil;
-      vel += ((paused ? 0 : SPEED) - vel) * (1 - Math.exp(-dt / TAU));
-      if (drag || coast || touching) vel = 0;
-      if (vel > 0.3) { pos -= vel * dt; put(); wrap(); }
-      raf = running() ? window.requestAnimationFrame(tick) : 0;
-    };
-    var start = function () {
-      if (raf || !running()) return;
-      last = window.performance.now();
-      raf = window.requestAnimationFrame(tick);
-    };
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (entries) {
-        onScreen = entries[0].isIntersecting;
-        start();
-      }).observe(track);
-    } else { onScreen = true; start(); }
-    document.addEventListener('visibilitychange', start);
-    if (reduceQ && reduceQ.addEventListener) reduceQ.addEventListener('change', start);
+        onScreen = entries[0].intersectionRatio >= 0.5;
+        if (onScreen) wake();
+      }, { threshold: [0, 0.5, 1] }).observe(stage);
+    } else onScreen = true;
 
-    track.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hovering = true; });
-    track.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') hovering = false; });
-    track.addEventListener('focusin', function () { focused = true; vel = 0; pos = track.scrollLeft; });
-    track.addEventListener('focusout', function () { focused = false; hold(1500); });
-
-    /* -- Scrolling by hand (touch, trackpad, wheel): follow it, pause, and
-       once it settles, step back into the originals' stretch -- */
-    var idle = 0;
-    track.addEventListener('scroll', function () {
-      if (Math.abs(track.scrollLeft - pos) > 1.5) { pos = track.scrollLeft; hold(1800); }
-      window.clearTimeout(idle);
-      idle = window.setTimeout(function () { if (!drag && !coast) { pos = track.scrollLeft; wrap(); } }, 140);
-    }, { passive: true });
-    track.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch') touching = true; });
-    var untouch = function (e) { if (e.pointerType === 'touch' && touching) { touching = false; hold(2500); } };
-    window.addEventListener('pointerup', untouch);
-    window.addEventListener('pointercancel', untouch);
-    track.addEventListener('touchend', function () { if (touching) { touching = false; hold(2500); } }, { passive: true });
-
-    /* -- Drag with momentum (mouse and pen) -- */
-    var stopCoast = function () { if (coast) { window.cancelAnimationFrame(coast); coast = 0; } };
-    track.addEventListener('pointerdown', function (e) {
-      if (e.pointerType === 'touch' || e.button !== 0) return;
-      stopCoast();
-      pos = track.scrollLeft;
-      drag = { x: e.clientX, left: pos, lastX: e.clientX, t: window.performance.now(), id: e.pointerId };
-      moved = false; vx = 0;
+    /* -- Drag and swipe, with inertia and snapping; a click picks a case -- */
+    var slotWidth = function () {
+      var i = mod(Math.round(p), n);
+      return widthAt(0, i) / 2 + GAP + widthAt(1, i) / 2;
+    };
+    stage.addEventListener('pointerdown', function (e) {
+      if (e.button !== 0) return;
+      dragging = { x: e.clientX, p: p, lastX: e.clientX, t: window.performance.now(), id: e.pointerId, moved: false, vel: 0,
+                   hit: e.target.closest ? e.target.closest('.pc-item') : null };
+      v = 0;
+      wake();
     });
     window.addEventListener('pointermove', function (e) {
-      if (!drag) return;
-      var dx = e.clientX - drag.x;
-      if (!moved && Math.abs(dx) > 6) {
-        moved = true;
-        track.classList.add('is-dragging');
-        if (track.setPointerCapture) { try { track.setPointerCapture(drag.id); } catch (x) {} }
+      if (!dragging || e.pointerId !== dragging.id) return;
+      var dx = e.clientX - dragging.x;
+      if (!dragging.moved) {
+        if (Math.abs(dx) < 6) return;
+        dragging.moved = true;
+        stage.classList.add('is-dragging');
+        if (stage.setPointerCapture) { try { stage.setPointerCapture(dragging.id); } catch (x) {} }
       }
-      if (!moved) return;
-      pos = drag.left - dx; put(); wrap();
+      var now = window.performance.now(), sw = slotWidth();
+      p = dragging.p - dx / sw;
+      var inst = -((e.clientX - dragging.lastX) / sw) / Math.max(0.001, (now - dragging.t) / 1000);
+      dragging.vel = dragging.vel * 0.6 + inst * 0.4;
+      dragging.lastX = e.clientX; dragging.t = now;
+    });
+    var release = function (e, cancelled) {
+      if (!dragging || (e && e.pointerId !== dragging.id)) return;
+      var d = dragging;
+      dragging = null;
+      stage.classList.remove('is-dragging');
+      if (d.moved) {
+        var aim = Math.round(p + Math.max(-2.5, Math.min(2.5, d.vel * 0.22)));
+        aim = Math.max(Math.round(d.p) - 2, Math.min(Math.round(d.p) + 2, aim));
+        v = reduce() ? 0 : d.vel;
+        go(aim, true);
+        return;
+      }
+      if (cancelled || !d.hit) { wake(); return; }
+      var slot = pool.filter(function (q) { return q.el === d.hit; })[0];
+      if (!slot) return;
+      if (Math.round(slot.k) === target) { stopAuto(); openCase(); }
+      else go(slot.k, true);
+    };
+    window.addEventListener('pointerup', function (e) { release(e, false); });
+    window.addEventListener('pointercancel', function (e) { release(e, true); });
+
+    // Sideways scrolling moves one case per gesture; up and down stays with the page.
+    var wheelLock = 0;
+    stage.addEventListener('wheel', function (e) {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || Math.abs(e.deltaX) < 4) return;
+      e.preventDefault();
       var now = window.performance.now();
-      vx = (e.clientX - drag.lastX) / Math.max(1, now - drag.t);   // px per ms
-      drag.lastX = e.clientX; drag.t = now;
+      if (now < wheelLock) { wheelLock = now + 220; return; }
+      wheelLock = now + 220;
+      go(target + (e.deltaX > 0 ? 1 : -1), true);
+    }, { passive: false });
+
+    /* -- Keys and buttons -- */
+    prism.addEventListener('keydown', function (e) {
+      if (e.target !== prism) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(target + 1, true); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(target - 1, true); }
+      else if (e.key === 'Enter') { e.preventDefault(); stopAuto(); openCase(); }
     });
-    var endDrag = function () {
-      if (!drag) return;
-      drag = null;
-      hold(1500);
-      if (!moved) return;
-      if (reduce() || Math.abs(vx) < 0.05) { track.classList.remove('is-dragging'); return; }
-      var then = window.performance.now();
-      var step = function (now) {
-        var dt = Math.min(32, now - then); then = now;
-        pos -= vx * dt; put(); wrap();
-        vx *= Math.pow(0.94, dt / 16);
-        if (Math.abs(vx) > 0.02) coast = window.requestAnimationFrame(step);
-        else { coast = 0; track.classList.remove('is-dragging'); hold(1500); }
-      };
-      coast = window.requestAnimationFrame(step);
+    Array.prototype.forEach.call(prism.querySelectorAll('.pc-btn[data-dir]'), function (b) {
+      b.addEventListener('click', function () { go(target + (parseInt(b.getAttribute('data-dir'), 10) || 1), true); });
+    });
+
+    /* -- Start: the case in the address, or the featured one -- */
+    var fromHash = function () {
+      var id = (location.hash || '').slice(1);
+      var i = data.map(function (d) { return d.id; }).indexOf(id);
+      if (i < 0) return false;
+      stopAuto();
+      var k = target + ((i - mod(target, n)) % n);
+      target = p = k; v = 0;
+      show(false);
+      wake();
+      prism.closest('section').scrollIntoView({ block: 'start' });
+      return true;
     };
-    window.addEventListener('pointerup', endDrag);
-    window.addEventListener('pointercancel', endDrag);
-    // A drag is not a click on the card it started on.
-    track.addEventListener('click', function (e) {
-      if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
-    }, true);
-
-    /* -- Choosing a case: any card, copies included -- */
-    all.forEach(function (c) {
-      var i = cards.indexOf(c);
-      c.addEventListener('click', function () {
-        select(c.getAttribute('data-case'), { animate: true, history: true, showPanel: true });
-      });
-      if (i >= 0) c.addEventListener('keydown', function (e) {
-        var to = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? cards.length - 1 : -1;
-        if (to < 0 || to >= cards.length || to === i) return;
-        e.preventDefault();
-        cards[to].focus({ preventScroll: true });
-        cards[to].scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: reduce() ? 'auto' : 'smooth' });
-      });
-
-      /* -- The 3D lean: towards the cursor, settling back on leave -- */
-      if (!fine) return;
-      c.addEventListener('pointermove', function (e) {
-        if (moved || reduce()) return;
-        var r = c.getBoundingClientRect();
-        var nx = (e.clientX - r.left) / r.width - 0.5, ny = (e.clientY - r.top) / r.height - 0.5;
-        c.classList.add('is-tracking');
-        c.style.setProperty('--ry', (nx * 12).toFixed(2) + 'deg');
-        c.style.setProperty('--rx', (-ny * 10).toFixed(2) + 'deg');
-        c.style.setProperty('--lift', '-8px');
-      });
-      c.addEventListener('pointerleave', function () {
-        c.classList.remove('is-tracking');
-        c.style.removeProperty('--ry'); c.style.removeProperty('--rx'); c.style.removeProperty('--lift');
-      });
-    });
-
-    /* -- Arrows: a card's width at a time; the row has no ends now -- */
-    var stepW = function () {
-      var gap = parseFloat(getComputedStyle(track).columnGap) || 20;
-      return cards[0].getBoundingClientRect().width + gap;
-    };
-    arrows.forEach(function (a) {
-      a.disabled = false;
-      a.addEventListener('click', function () {
-        stopCoast();
-        hold(2500);
-        pos = track.scrollLeft; wrap();
-        track.scrollBy({ left: (parseInt(a.getAttribute('data-dir'), 10) || 1) * stepW(), behavior: reduce() ? 'auto' : 'smooth' });
-      });
-    });
-    window.addEventListener('resize', function () {
-      var off = setW ? track.scrollLeft - setW : 0;
-      measure();
-      pos = setW + off; put(); wrap();
-    });
+    measure();
+    if (!fromHash()) show(false);
+    layout(window.performance.now());
+    window.addEventListener('hashchange', fromHash);
+    window.addEventListener('resize', function () { measure(); layout(window.performance.now()); wake(); });
+    if (reduceQ && reduceQ.addEventListener) reduceQ.addEventListener('change', wake);
   })();
 
   /* ---- Accordions ----

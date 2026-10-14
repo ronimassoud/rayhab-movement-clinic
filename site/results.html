@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/rayhab.css?v=2864df1d">
+<link rel="stylesheet" href="assets/css/rayhab.css?v=067dd83b">
 <link rel="icon" href="assets/img/favicon.png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 </head>
@@ -128,48 +128,56 @@
     </div>
   </section>
 
-  <!-- Case studies -->
-  <!-- Case studies, after React Bits Pro's Showcase 2: a draggable carousel
-       of the clinic's progress sheets with a 3D lean under the cursor. The
-       written case sits in the panel below; choosing a card shows it. Every
-       case is visible without JavaScript, and #case-0N links still land. -->
-  <section class="showcase s-tint" id="cases" aria-labelledby="cases-h">
-    <div class="sc-head" data-reveal>
-      <div>
-        <p class="eyebrow mb-4">Case studies</p>
-        <h2 class="h2-sm text-forest-900" id="cases-h">Published only with permission</h2>
-        <p class="body-s max-w-[440px] mt-4">Each one carries its own timeline, what was measured and what was not, including the journeys that are still only a few weeks old.</p>
-      </div>
-      <div class="sc-nav">
-        <button class="sc-arrow" type="button" data-dir="-1" aria-label="Previous cases" aria-controls="sc-track"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
-        <button class="sc-arrow" type="button" data-dir="1" aria-label="More cases" aria-controls="sc-track"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+  <!-- Case studies, after React Bits Pro's Prism Carousel: a coverflow of
+       the clinic's progress sheets. The case in the centre is in colour, swept
+       in from the left as it arrives; the others wait in grey. Case 01, the
+       featured case and the only one measured on X-ray, opens first. The
+       written case sits in the panel below and follows the centre. Without
+       JavaScript the sheets are a plain row of links to every case, all
+       listed below, and #case-0N links still land. -->
+  <section class="prism s-tint" id="cases" aria-labelledby="cases-h">
+    <div class="pc-head" data-reveal>
+      <p class="eyebrow mb-4">Case studies</p>
+      <h2 class="h2-sm text-forest-900" id="cases-h">Published only with permission</h2>
+      <p class="body-s max-w-[440px] mt-4">Each one carries its own timeline, what was measured and what was not, including the journeys that are still only a few weeks old.</p>
+    </div>
+
+    <div class="pc" id="pc" role="region" aria-roledescription="carousel" aria-label="Case studies, one at a time. Use the left and right arrow keys to move between them." data-reveal>
+      <div class="pc-stage" aria-hidden="true"></div>
+      <ol class="pc-src">
+        <li><a class="pc-card" href="#case-01" data-case="case-01" data-aspect="0.8">
+          <span class="pc-media"><img src="assets/img/cases/case-01-vanessa.jpg" width="1000" height="1250" loading="lazy" decoding="async" alt=""></span>
+          <span class="pc-cap"><span class="pc-n">Case 01</span><span class="pc-t">Nine months, and two curves that moved</span><span class="pc-c">Nine months · Measured on X-ray</span></span>
+        </a></li>
+        <li><a class="pc-card" href="#case-02" data-case="case-02" data-aspect="0.8">
+          <span class="pc-media"><img src="assets/img/cases/case-02-karam.jpg" width="960" height="1192" loading="lazy" decoding="async" alt=""></span>
+          <span class="pc-cap"><span class="pc-n">Case 02</span><span class="pc-t">Four weeks, and a change he could feel</span><span class="pc-c">About four weeks · Photographic</span></span>
+        </a></li>
+        <li><a class="pc-card" href="#case-03" data-case="case-03" data-aspect="1.3">
+          <span class="pc-media pc-pair"><img src="assets/img/cases/case-03-before.jpg" width="958" height="1160" loading="lazy" decoding="async" alt=""><img src="assets/img/cases/case-03-after.jpg" width="960" height="1162" loading="lazy" decoding="async" alt=""></span>
+          <span class="pc-cap"><span class="pc-n">Case 03</span><span class="pc-t">When the exercises stop being homework</span><span class="pc-c">Over several months · Photographic</span></span>
+        </a></li>
+        <li><a class="pc-card" href="#case-04" data-case="case-04" data-aspect="0.8">
+          <span class="pc-media"><img src="assets/img/cases/case-04-lara.jpg" width="960" height="1223" loading="lazy" decoding="async" alt=""></span>
+          <span class="pc-cap"><span class="pc-n">Case 04</span><span class="pc-t">Early change, and what it does not mean yet</span><span class="pc-c">About one month · Ongoing</span></span>
+        </a></li>
+        <li><a class="pc-card" href="#case-05" data-case="case-05" data-aspect="0.8">
+          <span class="pc-media"><img src="assets/img/cases/case-05.jpg" width="960" height="1167" loading="lazy" decoding="async" alt=""></span>
+          <span class="pc-cap"><span class="pc-n">Case 05</span><span class="pc-t">Working with the curve, not around it</span><span class="pc-c">About five months · Photographic</span></span>
+        </a></li>
+      </ol>
+      <div class="pc-foot">
+        <p class="pc-caption" aria-live="off"><span class="pc-ct"></span><span class="pc-cs"></span></p>
+        <div class="pc-ctrl">
+          <button class="pc-btn" type="button" data-dir="-1" aria-label="Previous case"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+          <span class="pc-count" aria-hidden="true"><span class="pc-i">01</span> / <span class="pc-of">05</span></span>
+          <button class="pc-btn" type="button" data-dir="1" aria-label="Next case"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+          <button class="pc-btn pc-play" type="button" aria-label="Pause the carousel" aria-pressed="false"><svg class="pc-ico-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg><svg class="pc-ico-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"></path></svg></button>
+        </div>
       </div>
     </div>
 
-    <div class="sc-track" id="sc-track" data-reveal>
-      <button class="sc-card is-on" type="button" data-case="case-01" aria-controls="case-01" aria-pressed="true">
-        <span class="sc-media"><img src="assets/img/cases/case-01-vanessa.jpg" width="1000" height="1250" loading="lazy" decoding="async" alt=""></span>
-        <span class="sc-cap"><span class="sc-n">Case 01</span><span class="sc-t">Nine months, and two curves that moved</span><span class="sc-c">Nine months · Measured on X-ray</span></span>
-      </button>
-      <button class="sc-card" type="button" data-case="case-02" aria-controls="case-02" aria-pressed="false">
-        <span class="sc-media"><img src="assets/img/cases/case-02-karam.jpg" width="960" height="1192" loading="lazy" decoding="async" alt=""></span>
-        <span class="sc-cap"><span class="sc-n">Case 02</span><span class="sc-t">Four weeks, and a change he could feel</span><span class="sc-c">About four weeks · Photographic</span></span>
-      </button>
-      <button class="sc-card" type="button" data-case="case-03" aria-controls="case-03" aria-pressed="false">
-        <span class="sc-media sc-pair"><img src="assets/img/cases/case-03-before.jpg" width="958" height="1160" loading="lazy" decoding="async" alt=""><img src="assets/img/cases/case-03-after.jpg" width="960" height="1162" loading="lazy" decoding="async" alt=""></span>
-        <span class="sc-cap"><span class="sc-n">Case 03</span><span class="sc-t">When the exercises stop being homework</span><span class="sc-c">Over several months · Photographic</span></span>
-      </button>
-      <button class="sc-card" type="button" data-case="case-04" aria-controls="case-04" aria-pressed="false">
-        <span class="sc-media"><img src="assets/img/cases/case-04-lara.jpg" width="960" height="1223" loading="lazy" decoding="async" alt=""></span>
-        <span class="sc-cap"><span class="sc-n">Case 04</span><span class="sc-t">Early change, and what it does not mean yet</span><span class="sc-c">About one month · Ongoing</span></span>
-      </button>
-      <button class="sc-card" type="button" data-case="case-05" aria-controls="case-05" aria-pressed="false">
-        <span class="sc-media"><img src="assets/img/cases/case-05.jpg" width="960" height="1167" loading="lazy" decoding="async" alt=""></span>
-        <span class="sc-cap"><span class="sc-n">Case 05</span><span class="sc-t">Working with the curve, not around it</span><span class="sc-c">About five months · Photographic</span></span>
-      </button>
-    </div>
-
-    <div class="sc-details" aria-live="polite">
+    <div class="pc-details" id="pc-details">
       <article class="case-detail" id="case-01">
         <p class="vh">Photographs: Standing posture photographs of Vanessa taken in January 2026 and August 2026, showing a more level shoulder line and more even waist creases in the later image.</p>
         <div class="case-head">
@@ -352,7 +360,7 @@
 </div>
 
 </div>
-<script src="assets/js/ui.js?v=8bbf36bd"></script>
+<script src="assets/js/ui.js?v=1606615e"></script>
 <script src="assets/js/booking.js?v=f46cb4bb"></script>
 <script src="assets/js/modal.js?v=2db7fb17"></script>
 <script src="assets/js/vendor/gsap.min.js?v=5e6e6cba" defer></script>

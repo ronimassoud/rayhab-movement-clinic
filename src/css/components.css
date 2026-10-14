@@ -529,64 +529,87 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
 @media (max-width:900px){ .faq-card.faq5-cols{grid-template-columns:1fr} }
 
 
-/* ---------- 12. Case showcase (results.html) ----------
-   After React Bits Pro's Showcase 2: a draggable carousel with a 3D lean.
-   The track runs to the right edge of the screen so the next card always
-   peeks in, which is what says "drag me". Each card is a button that shows
-   its written case in the panel below. ui.js drives the drag, the momentum,
-   the lean (--rx, --ry, --lift), the drift to the right and the selection;
-   without it the track still scrolls natively and every case is listed in
-   full. */
-.showcase{padding:var(--section-y) 0}
-.sc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;
-  padding:0 var(--pad-x);margin-bottom:clamp(20px,3vw,32px)}
-.sc-nav{display:flex;gap:8px;flex:none}
-.sc-arrow{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;cursor:pointer;
-  border:1px solid var(--color-hairline);background:var(--color-paper);color:var(--color-fg);
-  transition:border-color var(--t-tint),opacity var(--t-tint),transform var(--t-move) var(--ease-out)}
-.sc-arrow:disabled{opacity:.35;cursor:default}
-@media (hover:hover) and (pointer:fine){ .sc-arrow:not(:disabled):hover{border-color:var(--color-forest-600)} }
-.sc-arrow:not(:disabled):active{transform:scale(.94)}
+/* ---------- 12. Case coverflow (results.html) ----------
+   After React Bits Pro's Prism Carousel. The progress sheets sit on a
+   forest stage: the one in the centre is large and in colour, the others
+   are shorter, narrower crops in grey that dim with distance. As a sheet
+   arrives in the centre its colour sweeps in from the left behind a band of
+   spring light, and while the row is moving the sheets split into a faint
+   green fringe. ui.js lays the sheets out every frame (size, position,
+   --b brightness, --co colour, --sw sweep, --bo band) and drives the
+   autoplay, the drag and the caption. Without it, .pc-src is a plain
+   scrolling row of links to each case, and the stage and controls stay
+   hidden. */
+.prism{padding:var(--section-y) 0}
+.pc-head{padding:0 var(--pad-x);margin-bottom:clamp(20px,3vw,32px)}
+.pc{margin:0 var(--pad-x);background:var(--color-forest-900);color:var(--color-bone);
+  border-radius:var(--radius-xl);overflow:hidden;padding-top:clamp(20px,3vw,36px)}
+.pc:focus-visible{outline:2px solid var(--color-forest-600);outline-offset:4px}
 
-.sc-track{display:flex;gap:20px;overflow-x:auto;overscroll-behavior-x:contain;
-  padding:20px var(--pad-x) 32px;scroll-padding-inline:var(--pad-x);scroll-snap-type:x proximity;
-  scrollbar-width:none;cursor:grab}
-.sc-track::-webkit-scrollbar{display:none}
-.sc-track.is-loop{scroll-snap-type:none}
-.sc-track.is-dragging{cursor:grabbing;scroll-snap-type:none;user-select:none}
-.sc-track.is-dragging .sc-card{pointer-events:none}
+/* Without JavaScript: the row of links. */
+.pc-src{list-style:none;margin:0;padding:0 clamp(20px,3vw,36px) clamp(20px,3vw,36px);display:flex;gap:16px;
+  overflow-x:auto;scrollbar-width:none}
+.pc-src::-webkit-scrollbar{display:none}
+.pc-src li{flex:0 0 min(260px,72%)}
+.pc-card{display:flex;flex-direction:column;gap:12px;color:inherit;text-decoration:none}
+.pc-src .pc-media{aspect-ratio:4/5;border-radius:var(--radius-lg)}
+.pc-cap{display:flex;flex-direction:column;gap:4px}
+.pc-n{font:600 var(--text-caption)/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--color-spring-500)}
+.pc-t{font:600 var(--text-heading-sm)/1.25 var(--font-display);letter-spacing:-.02em;color:var(--color-bone)}
+.pc-c{font:400 var(--text-body-sm)/1.4 var(--font-sans);color:var(--color-on-dark-2)}
+.pc.is-live .pc-src{display:none}
+.pc:not(.is-live) .pc-stage,.pc:not(.is-live) .pc-foot{display:none}
 
-.sc-card{flex:0 0 clamp(240px,26vw,320px);scroll-snap-align:start;display:flex;flex-direction:column;gap:14px;
-  padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:inherit;
-  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--lift,0px));
-  transition:transform .55s var(--ease-out)}
-.sc-card.is-tracking{transition:transform .12s linear}
-.sc-media{display:block;aspect-ratio:4/5;overflow:hidden;border-radius:var(--radius-lg);background:var(--color-brand-800);
-  box-shadow:0 18px 40px -24px rgba(8,25,14,.5);transition:box-shadow .4s var(--ease-out),outline-color var(--t-tint);
-  outline:2px solid transparent;outline-offset:4px}
-.sc-media img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none;user-select:none}
-.sc-pair{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--color-line)}
-.sc-card.is-tracking .sc-media{box-shadow:var(--shadow-float)}
-.sc-card.is-on .sc-media{outline-color:var(--color-forest-600)}
-.sc-card:focus-visible{outline:none}
-.sc-card:focus-visible .sc-media{outline-color:var(--color-ink-950)}
-.sc-cap{display:flex;flex-direction:column;gap:4px;padding:0 4px}
-.sc-n{font:600 var(--text-caption)/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--color-forest-600)}
-.sc-t{font:600 var(--text-heading-sm)/1.25 var(--font-display);letter-spacing:-.02em;color:var(--color-forest-900);text-wrap:balance}
-.sc-c{font:400 var(--text-body-sm)/1.4 var(--font-sans);color:var(--color-body)}
+/* The sheets themselves, in or out of the stage. */
+.pc-media{display:block;width:100%;height:100%;overflow:hidden;background:var(--color-forest-850)}
+.pc-media img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none;user-select:none}
+.pc-pair{display:grid;grid-template-columns:1fr 1fr;gap:2px}
 
-.sc-details{padding:0 var(--pad-x)}
+.pc-stage{position:relative;height:clamp(340px,44vw,560px);overflow:hidden;touch-action:pan-y;cursor:grab;
+  user-select:none;-webkit-user-select:none}
+.pc-stage.is-dragging{cursor:grabbing}
+.pc-item{position:absolute;left:50%;top:50%;overflow:hidden;cursor:pointer;will-change:transform}
+.pc-layer{position:absolute;inset:0}
+.pc-grey{filter:grayscale(1) brightness(var(--b,1));transition:filter .45s var(--ease-out)}
+.pc-colour{opacity:var(--co,0);filter:brightness(var(--b,1));
+  clip-path:inset(0 calc((1 - var(--sw,0)) * 100%) 0 0)}
+.pc-band{position:absolute;top:0;bottom:0;left:calc(var(--sw,0) * 100%);width:42%;transform:translateX(-50%);
+  pointer-events:none;mix-blend-mode:screen;opacity:calc(var(--bo,0) * .75);
+  background:linear-gradient(90deg,transparent,var(--color-forest-600) 22%,var(--color-spring-500) 46%,
+    var(--color-spring-200) 58%,var(--color-bone) 66%,transparent)}
+.pc:focus-visible .pc-item.is-active{outline:2px solid var(--color-spring-500);outline-offset:4px}
+@media (hover:hover) and (pointer:fine){
+  .pc-item:not(.is-active):hover .pc-grey{filter:grayscale(.5) brightness(var(--b,1))}
+}
+
+/* Caption and controls. */
+.pc-foot{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
+  padding:clamp(14px,2vw,22px) 24px clamp(22px,3vw,32px)}
+.pc-caption{margin:0;display:flex;flex-direction:column;gap:6px;max-width:520px}
+.pc-ct{font:600 var(--text-heading-sm)/1.25 var(--font-display);letter-spacing:-.02em;color:var(--color-bone);text-wrap:balance}
+.pc-cs{font:400 var(--text-body-sm)/1.4 var(--font-sans);color:var(--color-on-dark-2)}
+.pc-ctrl{display:flex;align-items:center;gap:10px}
+.pc-btn{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;cursor:pointer;
+  border:1px solid var(--color-veil-12);background:var(--color-veil-06);color:var(--color-bone);
+  transition:background-color var(--t-tint),border-color var(--t-tint),transform var(--t-move) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){ .pc-btn:hover{background:var(--color-veil-12);border-color:var(--color-veil-15)} }
+.pc-btn:active{transform:scale(.94)}
+.pc-play{margin-left:6px}
+.pc-play .pc-ico-play,.pc-play[aria-pressed="true"] .pc-ico-pause{display:none}
+.pc-play[aria-pressed="true"] .pc-ico-play{display:block}
+.pc-count{min-width:64px;font:500 13px/1 var(--font-sans);letter-spacing:.06em;font-variant-numeric:tabular-nums;color:var(--color-on-dark)}
+
+/* The written case. */
+.pc-details{padding:0 var(--pad-x);margin-top:clamp(20px,3vw,32px)}
 .case-detail{max-width:860px;background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius-lg);
   padding:clamp(24px,4vw,40px)}
 .case-detail+.case-detail{margin-top:16px}
 .case-detail .case-t{font-size:var(--text-heading-lg)}
 
 @media (max-width:700px){
-  .sc-head{flex-direction:column;align-items:flex-start}
-  .sc-nav{display:none}
-  .sc-card{flex-basis:76%}
-  .sc-track{gap:14px}
+  .pc{border-radius:var(--radius-lg)}
+  .pc-stage{height:clamp(300px,92vw,420px)}
 }
 @media (prefers-reduced-motion:reduce){
-  .sc-card,.sc-card.is-tracking{transform:none;transition:none}
+  .pc-grey,.pc-btn{transition:none}
 }
