@@ -12,6 +12,7 @@ import io, json, math, os, re
 
 from motion_tags import inject
 from navcards import inject_navcards
+from stamp import stamp
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.normpath(os.path.join(HERE, "..", "site"))
@@ -395,12 +396,12 @@ def main():
             os.makedirs(out)
 
         io.open(os.path.join(out, "index.html"), "w", encoding="utf-8",
-                newline="\n").write(inject_navcards(inject(wrap_arrows(render_hub(topic, arts)))))
+                newline="\n").write(stamp(inject_navcards(inject(wrap_arrows(render_hub(topic, arts)))), out))
         for i, a in enumerate(arts):
             a["_i"] = i                      # position, for the CTA rotation
             html = render_article(a, topic, lookup)
             io.open(os.path.join(out, a["slug"] + ".html"), "w", encoding="utf-8",
-                    newline="\n").write(inject_navcards(inject(wrap_arrows(html))))
+                    newline="\n").write(stamp(inject_navcards(inject(wrap_arrows(html))), out))
 
         total += len(arts)
         print("  %-10s %d articles -> site/%s/" % (topic["dir"], len(arts), topic["dir"]))

@@ -5,6 +5,7 @@ import io, re, json, os
 
 from motion_tags import inject
 from navcards import inject_navcards
+from stamp import stamp
 
 # Relative to this file, so the generator writes into whichever checkout
 # it is run from. It used to be an absolute path to one folder.
@@ -315,5 +316,5 @@ def build(s, n):
 data = json.load(io.open(os.path.join(here, "services.json"), encoding="utf-8"))
 for n, s in enumerate(data["services"]):
     io.open(os.path.join(OUT, s["slug"] + ".html"), "w",
-            encoding="utf-8", newline="\n").write(inject_navcards(inject(own_booking(wrap_arrows(build(s, n)), s["slug"]))))
+            encoding="utf-8", newline="\n").write(stamp(inject_navcards(inject(own_booking(wrap_arrows(build(s, n)), s["slug"]))), OUT))
     print("wrote services/%s.html" % s["slug"])

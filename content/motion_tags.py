@@ -16,7 +16,9 @@ anchor the script tag is inserted after. It is the no-JS booking fallback
 and should stay the plainest page on the site.
 """
 
-VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1">'
+import re
+
+VIEWPORT ='<meta name="viewport" content="width=device-width, initial-scale=1">'
 
 # Runs before the stylesheets so the class is set before first paint, and
 # touches no computed style so it forces no recalculation. The failsafe is
@@ -28,15 +30,16 @@ GATE = ('<script>!function(d,w){var e=d.documentElement,m=0;'
         'e.className=e.className.replace(/ ?js-motion/,"")},2600)}}(document,window);</script>')
 
 
+# The modal.js tag, with or without the ?v= version content/stamp.py adds.
+MODAL = re.compile(r'<script src="((?:\.\./)?)assets/js/modal\.js(?:\?v=[0-9a-f]+)?"></script>')
+
+
 def _prefix(html):
     """Generated pages all sit one directory deep; hand-written ones are
     split between the root and one level down. The existing modal.js tag
     already encodes which, so nothing has to be passed in."""
-    if '<script src="../assets/js/modal.js"></script>' in html:
-        return '../'
-    if '<script src="assets/js/modal.js"></script>' in html:
-        return ''
-    return None
+    m = MODAL.search(html)
+    return m.group(1) if m else None
 
 
 def inject(html):
@@ -59,8 +62,8 @@ def inject(html):
     names.append('motion.js')
 
     if 'assets/js/motion.js' not in html:
-        modal = '<script src="%sassets/js/modal.js"></script>' % pre
         tags = '\n'.join('<script src="%sassets/js/%s" defer></script>' % (pre, n) for n in names)
-        html = html.replace(modal, modal + '\n' + tags, 1)
+        at = MODAL.search(html).end()
+        html = html[:at] + '\n' + tags + html[at:]
 
     return html

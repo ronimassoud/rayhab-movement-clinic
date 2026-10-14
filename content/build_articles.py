@@ -8,6 +8,7 @@ import io, json, os, re
 
 from motion_tags import inject
 from navcards import inject_navcards
+from stamp import stamp
 
 # Relative to this file, so the generator writes into whichever checkout
 # it is run from. It used to be an absolute path to one folder.
@@ -379,7 +380,7 @@ def main():
     for a in arts:
         html = render_article(a, lookup, pillars)
         io.open(os.path.join(OUT, a["slug"] + ".html"), "w",
-                encoding="utf-8", newline="\n").write(inject_navcards(inject(wrap_arrows(html))))
+                encoding="utf-8", newline="\n").write(stamp(inject_navcards(inject(wrap_arrows(html))), OUT))
         n += 1
 
     # Every index is a view of one library. The order here is the order of
@@ -408,7 +409,7 @@ def main():
         group = arts if view["slug"] == "library" else members[view["slug"]]
         html = render_index(view, group, views)
         io.open(os.path.join(OUT, view["slug"] + ".html"), "w",
-                encoding="utf-8", newline="\n").write(inject_navcards(inject(wrap_arrows(html))))
+                encoding="utf-8", newline="\n").write(stamp(inject_navcards(inject(wrap_arrows(html))), OUT))
 
     print("wrote %d articles and %d index views" % (n, len(views) + 1))
     for slug in order:
