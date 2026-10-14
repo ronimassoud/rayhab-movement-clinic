@@ -54,8 +54,16 @@ npm run dev
 does one minified build. The deploy workflow runs the build again before it
 publishes, so the live stylesheet cannot lag the source.
 
-`python -m http.server` sends no cache headers, so browsers hold on to stale CSS
-and JS between edits. Hard-refresh when something looks unchanged.
+Every stylesheet and script URL carries a content hash (`rayhab.css?v=80d295bc`),
+so a browser can never pair a new page with a cached old file. The generators add it
+as they write; after a stylesheet build, or an edit to a hand-written page or a
+script, restamp everything:
+
+```bash
+python content/stamp.py
+```
+
+The deploy workflow runs the same step after `npm run build`.
 
 ## Layout
 
