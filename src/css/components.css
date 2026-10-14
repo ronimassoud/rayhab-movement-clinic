@@ -535,7 +535,8 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
    are shorter, narrower crops in grey that dim with distance. A sheet
    comes into colour as it reaches the centre. ui.js lays the sheets out
    every frame (size, position, --b brightness, --co colour) and drives the
-   autoplay, the drag and the caption. Without it, .pc-src is a plain
+   autoplay and the drag. Under the controls, the caption is the written
+   case for the sheet in the centre, set light on the stage. Without it, .pc-src is a plain
    scrolling row of links to each case, and the stage and controls stay
    hidden. */
 .prism{padding:var(--section-y) 0}
@@ -575,12 +576,8 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
   .pc-item:not(.is-active):hover .pc-grey{filter:grayscale(.5) brightness(var(--b,1))}
 }
 
-/* Caption and controls. */
-.pc-foot{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
-  padding:clamp(14px,2vw,22px) 24px clamp(22px,3vw,32px)}
-.pc-caption{margin:0;display:flex;flex-direction:column;gap:6px;max-width:520px}
-.pc-ct{font:600 var(--text-heading-sm)/1.25 var(--font-display);letter-spacing:-.02em;color:var(--color-bone);text-wrap:balance}
-.pc-cs{font:400 var(--text-body-sm)/1.4 var(--font-sans);color:var(--color-on-dark-2)}
+/* Controls. */
+.pc-foot{display:flex;justify-content:center;padding:clamp(14px,2vw,22px) 24px 0}
 .pc-ctrl{display:flex;align-items:center;gap:10px}
 .pc-btn{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;cursor:pointer;
   border:1px solid var(--color-veil-12);background:var(--color-veil-06);color:var(--color-bone);
@@ -592,12 +589,23 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
 .pc-play[aria-pressed="true"] .pc-ico-play{display:block}
 .pc-count{min-width:64px;font:500 13px/1 var(--font-sans);letter-spacing:.06em;font-variant-numeric:tabular-nums;color:var(--color-on-dark)}
 
-/* The written case. */
-.pc-details{padding:0 var(--pad-x);margin-top:clamp(20px,3vw,32px)}
-.case-detail{max-width:860px;background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius-lg);
-  padding:clamp(24px,4vw,40px)}
-.case-detail+.case-detail{margin-top:16px}
-.case-detail .case-t{font-size:var(--text-heading-lg)}
+/* The caption: the written case, on the stage. */
+.pc-details{padding:clamp(24px,3.5vw,40px) clamp(24px,5vw,56px) clamp(32px,4.5vw,52px)}
+.pc .case-detail{max-width:760px;margin:0 auto;background:none;border:0;padding:0}
+.pc:not(.is-live) .case-detail+.case-detail{margin-top:32px;padding-top:32px;border-top:1px solid var(--color-veil-12)}
+.pc .case-t{font-size:var(--text-heading-lg);color:var(--color-bone)}
+.pc .case-n{color:var(--color-spring-500)}
+.pc .case-c{color:var(--color-on-dark-2);line-height:1.35}
+.pc .case-d{color:var(--color-on-dark)}
+.pc .case-q{color:var(--color-bone)}
+.pc .case-by{border-top-color:var(--color-veil-12)}
+.pc .case-name{color:var(--color-bone)}
+.pc .case-meta{color:var(--color-on-dark-2)}
+.pc .metric{background:var(--color-veil-06);border:1px solid var(--color-veil-12)}
+.pc .metric-k{color:var(--color-spring-500)}
+.pc .metric-v{color:var(--color-bone)}
+.pc .metric-was{color:var(--color-on-dark-2)}
+.pc .metric-arw{color:var(--color-spring-500)}
 
 @media (max-width:700px){
   .pc{border-radius:var(--radius-lg)}

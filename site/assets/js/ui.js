@@ -416,19 +416,18 @@
      the case at its index, wrapping, so the row has no ends. A case comes
      into colour as it reaches the centre and greys as it leaves. It moves on
      every 4.5 seconds while it is on screen and nobody is pointing at it,
-     focused on it or reading the case below. It stops for good, with the
+     focused on it or reading its caption. It stops for good, with the
      play button to restart it, once someone takes over: a drag, a click, a
      key, an arrow or a #case-0N link. Reduced motion gets no autoplay and
-     moves without easing. The written case below
-     follows the centre. */
+     moves without easing. The caption under the
+     controls is the written case for the centre. */
   var prism = document.querySelector('.prism .pc');
   if (prism) (function () {
     var stage = prism.querySelector('.pc-stage');
     var srcs = Array.prototype.slice.call(prism.querySelectorAll('.pc-card'));
-    var panel = document.querySelector('.pc-details');
+    var panel = prism.querySelector('.pc-details');
     var details = panel ? Array.prototype.slice.call(panel.querySelectorAll('.case-detail')) : [];
-    var caption = prism.querySelector('.pc-caption');
-    var ct = prism.querySelector('.pc-ct'), cs = prism.querySelector('.pc-cs'), countI = prism.querySelector('.pc-i');
+    var countI = prism.querySelector('.pc-i');
     var playBtn = prism.querySelector('.pc-play');
     var n = srcs.length;
     if (!stage || !n) return;
@@ -530,7 +529,7 @@
       raf = window.requestAnimationFrame(frame);
     };
 
-    /* -- The case on show: caption, counter, the panel below, the address -- */
+    /* -- The case on show: counter, caption, the address -- */
     var shown = -1;
     var show = function (user) {
       var i = mod(target, n);
@@ -538,10 +537,8 @@
       var first = shown < 0;
       shown = i;
       var d = data[i];
-      ct.textContent = d.t;
-      cs.textContent = d.n + ' · ' + d.c;
       countI.textContent = (i < 9 ? '0' : '') + (i + 1);
-      if (user) caption.setAttribute('aria-live', 'polite');
+      if (user && panel) panel.setAttribute('aria-live', 'polite');
       details.forEach(function (art) {
         var on = art.id === d.id, was = !art.hidden;
         art.hidden = !on;
@@ -576,18 +573,15 @@
     var stopAuto = function () { if (playing) setPlaying(false); };
     if (playBtn) playBtn.addEventListener('click', function () {
       setPlaying(!playing);
-      if (playing) caption.setAttribute('aria-live', 'off');
+      if (playing && panel) panel.setAttribute('aria-live', 'off');
     });
     window.setInterval(function () {
       if (!playing || reduce() || !onScreen || hover || focusIn || dragging || document.hidden) return;
       elapsed += 250;
       if (elapsed >= INTERVAL) { elapsed = 0; go(target + 1, false); }
     }, 250);
-    [prism, panel].forEach(function (zone) {
-      if (!zone) return;
-      zone.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hover++; });
-      zone.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') hover = Math.max(0, hover - 1); });
-    });
+    prism.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hover = 1; });
+    prism.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') hover = 0; });
     prism.addEventListener('focusin', function (e) { if (e.target !== playBtn) focusIn = true; });
     prism.addEventListener('focusout', function () { focusIn = false; });
 
