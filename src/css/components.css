@@ -532,11 +532,10 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
 /* ---------- 12. Case coverflow (results.html) ----------
    After React Bits Pro's Prism Carousel. The progress sheets sit on a
    forest stage: the one in the centre is large and in colour, the others
-   are shorter, narrower crops in grey that dim with distance. As a sheet
-   arrives in the centre its colour sweeps in from the left behind a band of
-   full-spectrum light, and while the row is moving the sheets split into a faint
-   green fringe. ui.js lays the sheets out every frame (size, position,
-   --b brightness, --co colour, --sw sweep, --bo band) and drives the
+   are shorter, narrower crops in grey that dim with distance. A sheet
+   comes into colour as it reaches the centre, and while the row is moving
+   the sheets split into a faint green fringe. ui.js lays the sheets out
+   every frame (size, position, --b brightness, --co colour) and drives the
    autoplay, the drag and the caption. Without it, .pc-src is a plain
    scrolling row of links to each case, and the stage and controls stay
    hidden. */
@@ -571,12 +570,7 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
 .pc-item{position:absolute;left:50%;top:50%;overflow:hidden;cursor:pointer;will-change:transform}
 .pc-layer{position:absolute;inset:0}
 .pc-grey{filter:grayscale(1) brightness(var(--b,1));transition:filter .45s var(--ease-out)}
-.pc-colour{opacity:var(--co,0);filter:brightness(var(--b,1));
-  clip-path:inset(0 calc((1 - var(--sw,0)) * 100%) 0 0)}
-.pc-band{position:absolute;top:0;bottom:0;left:calc(var(--sw,0) * 100%);width:48%;transform:translateX(-50%);
-  pointer-events:none;mix-blend-mode:screen;opacity:calc(var(--bo,0) * .8);
-  background:linear-gradient(90deg,transparent,#ff2d55 14%,#ff9500 27%,#ffd60a 40%,#34c759 53%,
-    #00c7be 64%,#0a84ff 76%,#bf5af2 88%,transparent)}
+.pc-colour{opacity:var(--co,0);filter:brightness(var(--b,1))}
 .pc:focus-visible .pc-item.is-active{outline:2px solid var(--color-spring-500);outline-offset:4px}
 @media (hover:hover) and (pointer:fine){
   .pc-item:not(.is-active):hover .pc-grey{filter:grayscale(.5) brightness(var(--b,1))}

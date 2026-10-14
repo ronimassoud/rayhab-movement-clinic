@@ -413,13 +413,13 @@
      After React Bits Pro's Prism Carousel, without WebGL. A pool of eight
      slots is laid out every frame around a continuous position p, counted
      in cases; the case under p is large and in colour, and each slot shows
-     the case at its index, wrapping, so the row has no ends. When a case
-     settles in the centre its colour sweeps in from the left. It moves on
+     the case at its index, wrapping, so the row has no ends. A case comes
+     into colour as it reaches the centre and greys as it leaves. It moves on
      every 4.5 seconds while it is on screen and nobody is pointing at it,
      focused on it or reading the case below. It stops for good, with the
      play button to restart it, once someone takes over: a drag, a click, a
-     key, an arrow or a #case-0N link. Reduced motion gets no autoplay, no
-     sweep and no fringe, and moves without easing. The written case below
+     key, an arrow or a #case-0N link. Reduced motion gets no autoplay and
+     no fringe, and moves without easing. The written case below
      follows the centre. */
   var prism = document.querySelector('.prism .pc');
   if (prism) (function () {
@@ -440,7 +440,7 @@
     var WIDTH = [0, 0.72, 0.24, 0.12];   // neighbours' width against their height, by distance
     var SPAN = 3;               // slots drawn either side of the centre
     var GAP = 14, RADIUS = 18, DIM = 0.2;
-    var SWEEP_MS = 1100, INTERVAL = 4500;
+    var INTERVAL = 4500;
     var K = 120, C = 2 * Math.sqrt(K);   // a critically damped spring, in cases
 
     var data = srcs.map(function (a) {
@@ -455,9 +455,9 @@
     for (var s = 0; s < POOL; s++) {
       var el = document.createElement('div');
       el.className = 'pc-item';
-      el.innerHTML = '<div class="pc-layer pc-grey"></div><div class="pc-layer pc-colour"></div><div class="pc-band"></div>';
+      el.innerHTML = '<div class="pc-layer pc-grey"></div><div class="pc-layer pc-colour"></div>';
       stage.appendChild(el);
-      pool.push({ el: el, grey: el.children[0], colour: el.children[1], k: null, item: -1, sweepAt: 0, sweeping: false, done: false });
+      pool.push({ el: el, grey: el.children[0], colour: el.children[1], k: null, item: -1 });
     }
     var fill = function (slot, i) {
       if (slot.item === i) return;
@@ -465,7 +465,6 @@
       slot.grey.textContent = ''; slot.colour.textContent = '';
       slot.grey.appendChild(data[i].media.cloneNode(true));
       slot.colour.appendChild(data[i].media.cloneNode(true));
-      slot.sweeping = false; slot.done = false;
     };
     prism.classList.add('is-live');
     prism.tabIndex = 0;
@@ -484,7 +483,7 @@
       for (k = k0 - SPAN; k <= k0 + SPAN + 1; k++) {
         slot = pool[mod(k, POOL)]; slots[k] = slot;
         var i = mod(k, n), a = Math.abs(k - p);
-        if (slot.k !== k) { slot.k = k; slot.sweeping = false; slot.done = false; }
+        slot.k = k;
         fill(slot, i);
         var j = Math.floor(a);
         w[k] = lerp(widthAt(j, i), widthAt(j + 1, i), a - j);
@@ -496,7 +495,6 @@
       for (k = k0 + 1; k <= k0 + SPAN + 1; k++) x[k] = x[k - 1] + w[k - 1] / 2 + gap(k - 1, k) + w[k] / 2;
       for (k = k0 - 1; k >= k0 - SPAN; k--) x[k] = x[k + 1] - w[k + 1] / 2 - gap(k, k + 1) - w[k] / 2;
 
-      var busy = false;
       for (k = k0 - SPAN; k <= k0 + SPAN + 1; k++) {
         slot = slots[k];
         var st = slot.el.style, a2 = slot.a;
@@ -509,28 +507,13 @@
         st.zIndex = String(10 - Math.round(a2));
         slot.el.classList.toggle('is-active', a2 < 0.5);
 
-        // The sweep: once, as the case comes to rest in the centre.
-        var sw = 0, bo = 0;
-        if (a2 < 0.5 && Math.abs(target - k) < 0.5 && onScreen && !slot.done && !slot.sweeping) {
-          slot.sweeping = true; slot.sweepAt = now;
-        }
-        if (a2 >= 0.9) { slot.sweeping = false; slot.done = false; }
-        if (reduce() && slot.sweeping) { slot.sweeping = false; slot.done = true; }
-        if (slot.sweeping) {
-          var t = Math.min(1, (now - slot.sweepAt) / SWEEP_MS);
-          sw = 1 - Math.pow(1 - t, 2.2);
-          bo = Math.sin(Math.PI * Math.min(1, t * 1.05));
-          if (t >= 1) { slot.sweeping = false; slot.done = true; sw = 1; bo = 0; } else busy = true;
-        } else if (slot.done) sw = 1;
-        st.setProperty('--sw', sw.toFixed(3));
-        st.setProperty('--bo', bo.toFixed(3));
         st.setProperty('--co', Math.max(0, Math.min(1, 1 - a2 * 1.6)).toFixed(3));
         st.setProperty('--b', Math.max(0.35, 1 - DIM * a2 * 1.4).toFixed(3));
         st.filter = disp > 0.3
           ? 'drop-shadow(' + disp.toFixed(1) + 'px 0 0 rgba(98,227,107,.38)) drop-shadow(' + (-disp).toFixed(1) + 'px 0 0 rgba(168,240,172,.3))'
           : '';
       }
-      return busy || disp > 0.3;
+      return disp > 0.3;
     };
 
     var frame = function (now) {
