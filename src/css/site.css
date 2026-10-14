@@ -205,6 +205,11 @@
 .edu-kicker{display:block;font:600 12px/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--color-forest-600)}
 .edu-title{display:block;margin:12px 0 8px;color:var(--color-forest-900)}
 @media (max-width:900px){ .edu-grid{grid-template-columns:1fr} }
+/* The same arrow on the home page's article cards, top right of the copy. */
+a.edu-card .edu-body{position:relative}
+a.edu-card .edu-kicker{padding-right:28px}
+a.edu-card .edu-body::after{content:"→";content:"→" / "";position:absolute;top:30px;right:32px;
+  font:400 18px/1 var(--font-sans);color:var(--color-forest-600);transition:transform var(--t-move) var(--ease-out)}
 
 /* ==========================================================
    SERVICES INDEX (§06)
@@ -454,6 +459,13 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 .pillar-wide .pillar-d{margin-bottom:24px}
 .pillar-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
 .tag-mint{font:500 13px/1 var(--font-sans);color:var(--color-brand-800);background:var(--color-spring-50);border-radius:var(--radius-pill);padding:8px 16px}
+/* Each pillar is one link to its index. Above phone width its arrow sits
+   in the bottom corner; on a phone mobile.css puts it in the row. */
+@media (min-width:701px){
+  a.pillar{position:relative;padding-bottom:64px}
+  a.pillar .m-arrow{display:block;position:absolute;right:32px;bottom:28px;
+    font:400 20px/1 var(--font-sans);color:var(--color-forest-600)}
+}
 @media (max-width:1100px){ .pillars-row1{grid-template-columns:1fr 1fr} .pillar-wide{grid-column:1/-1} }
 @media (max-width:700px){ .pillars-row1,.pillars-row2{grid-template-columns:1fr} }
 
@@ -854,6 +866,13 @@ a:focus-visible > .wordmark{background:var(--color-spring-500)}
 @media (hover:hover) and (pointer:fine){
   a.morecard:hover{border-color:var(--color-forest-600)}
 }
+/* Every related-reading card is a link; the arrow in its top corner says
+   so. Drawn here rather than in the 159 cards' markup, with empty
+   alternative text so it is not read out as part of the link. */
+.morecard{position:relative}
+.morecard .art-kicker{padding-right:28px}
+a.morecard::after{content:"→";content:"→" / "";position:absolute;top:22px;right:24px;
+  font:400 18px/1 var(--font-sans);color:var(--color-forest-600);transition:transform var(--t-move) var(--ease-out)}
 
 /* ---- Pillar index ---- */
 .pidx-list{display:flex;flex-direction:column;gap:12px}
@@ -908,7 +927,8 @@ a:focus-visible > .wordmark{background:var(--color-spring-500)}
   a:hover .m-arrow,
   .case:hover .m-arrow,.pillar:hover .m-arrow,
   .supcard:hover .m-arrow,.artcard:hover .m-arrow,
-  .routecard:hover .m-arrow,.svc-card:hover .m-arrow{transform:translateX(4px)}
+  .routecard:hover .m-arrow,.svc-card:hover .m-arrow,
+  a.morecard:hover::after,a.edu-card:hover .edu-body::after{transform:translateX(4px)}
 }
 a:focus-visible .arw,button:focus-visible .arw{transform:translateX(4px)}
 
@@ -921,7 +941,8 @@ a:focus-visible .arw,button:focus-visible .arw{transform:translateX(4px)}
      so the only arrows still jumping were the ones a:hover never matched. */
   .case:hover .m-arrow,.pillar:hover .m-arrow,
   .supcard:hover .m-arrow,.artcard:hover .m-arrow,
-  .routecard:hover .m-arrow,.svc-card:hover .m-arrow{transform:none !important}
+  .routecard:hover .m-arrow,.svc-card:hover .m-arrow,
+  a.morecard:hover::after,a.edu-card:hover .edu-body::after{transform:none !important}
 }
 
 
