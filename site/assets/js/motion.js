@@ -194,7 +194,13 @@
     /* ---------- Line art in the closing band ----------
        The stylesheet paints the drawing as a background, which cannot be
        drawn stroke by stroke. With motion on, an inline copy replaces it
-       and each stroke follows the scroll. */
+       and the drawing traces itself as the band passes: the top line, then
+       the bottom one, then the spine, then the dashed arc, each easing in
+       and out and overlapping the last. It is tied to the scroll over the
+       whole time the band is on screen, with a generous scrub so the pen
+       glides behind the reader's hand rather than jumping with each wheel
+       notch. A dashed stroke cannot be traced with its own dash offset, so
+       the arc is revealed through a mask that traces instead. */
     var band = $('.cta-band');
     if (band) {
       var NS = 'http://www.w3.org/2000/svg';
@@ -207,14 +213,21 @@
         '<path pathLength="1" d="M30 80L250 66" stroke="#62E36B" stroke-width="1.2"/>' +
         '<path pathLength="1" d="M34 212L254 226" stroke="#62E36B" stroke-width="1.2"/>' +
         '<path pathLength="1" d="M140 30C100 92 186 148 132 254" stroke="#F5F3EC" stroke-width="2" stroke-linecap="round" opacity=".55"/>' +
-        '<path class="cta-arc" d="M240 74A140 140 0 0 1 246 220" stroke="#62E36B" stroke-dasharray="3 6"/>';
+        '<mask id="cta-arc-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="280" height="280">' +
+          '<path pathLength="1" d="M240 74A140 140 0 0 1 246 220" stroke="#fff" stroke-width="6" stroke-linecap="round"/>' +
+        '</mask>' +
+        '<path class="cta-arc" d="M240 74A140 140 0 0 1 246 220" stroke="#62E36B" stroke-dasharray="3 6" mask="url(#cta-arc-mask)"/>';
       band.insertBefore(svg, band.firstChild);
       band.classList.add('has-art');
-      var strokes = $$('path[pathLength]', svg);
-      gsap.set(strokes, { strokeDasharray: 1, strokeDashoffset: 1 });
-      gsap.timeline({ scrollTrigger: { trigger: band, start: 'top 85%', end: 'center 55%', scrub: 0.6 } })
-        .to(strokes, { strokeDashoffset: 0, ease: 'none', stagger: 0.25 })
-        .fromTo($('.cta-arc', svg), { opacity: 0 }, { opacity: 1, ease: 'none' }, '>-0.3');
+      var strokes = $$('path[pathLength]', svg);   // top line, bottom line, spine, arc mask
+      // As attributes: GSAP rounds px values in style, which would snap 0..1.
+      gsap.set(strokes, { attr: { 'stroke-dasharray': 1, 'stroke-dashoffset': 1 } });
+      var PEN = 'sine.inOut';
+      gsap.timeline({ scrollTrigger: { trigger: band, start: 'top bottom', end: 'clamp(bottom 80%)', scrub: 1.6 } })
+        .to(strokes[0], { attr: { 'stroke-dashoffset': 0 }, ease: PEN, duration: 1 }, 0)
+        .to(strokes[1], { attr: { 'stroke-dashoffset': 0 }, ease: PEN, duration: 1 }, 0.4)
+        .to(strokes[2], { attr: { 'stroke-dashoffset': 0 }, ease: PEN, duration: 1.4 }, 0.75)
+        .to(strokes[3], { attr: { 'stroke-dashoffset': 0 }, ease: PEN, duration: 1.1 }, 1.35);
     }
 
     /* ---------- The six stages ----------
