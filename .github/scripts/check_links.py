@@ -22,7 +22,7 @@ checked = 0
 # Pages that deliberately carry no motion gate. book.html is the no-JS
 # booking fallback and has no modal.js, which is the anchor the injector
 # keys off, so it is excluded by construction rather than by this list.
-NO_MOTION = {"book.html", "frc-joint-training.html"}   # the second is a redirect stub
+NO_MOTION = {"book.html", "frc-joint-training.html", "404.html"}   # a redirect stub; the self-contained 404
 missing_motion = []
 
 for base, _dirs, files in os.walk(ROOT):

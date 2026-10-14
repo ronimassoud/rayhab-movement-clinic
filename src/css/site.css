@@ -1166,3 +1166,55 @@ html{scrollbar-color:var(--sb-thumb) transparent}
    from any view rather than a trip through the breadcrumb. */
 .libchip-all{margin-right:4px}
 
+
+/* ==========================================================
+   404 (404.html)
+   After React Bits Pro's 404 - 2: one full screen on the forest
+   ground, the number huge and faint behind the message, and a
+   single way home. The line drawing traces in with the heroes'
+   pen (top line, bottom line, spine, then the dashed arc through
+   a mask), then the words rise in. CSS only: the page loads
+   nothing else, so it works wherever it is served from.
+   ========================================================== */
+.nf{position:relative;isolation:isolate;overflow:hidden;min-height:100vh;min-height:100svh;
+  display:grid;place-items:center;padding:96px var(--pad-x) 64px;
+  background:radial-gradient(60% 50% at 50% 50%,var(--color-forest-850),var(--color-forest-900) 70%);
+  color:var(--color-bone);text-align:center}
+.nf-home{position:absolute;top:28px;left:var(--pad-x)}
+.nf-num{position:absolute;z-index:-1;left:50%;top:50%;translate:-50% -52%;margin:0;pointer-events:none;user-select:none;
+  font:700 clamp(10rem,38vw,34rem)/.8 var(--font-display);letter-spacing:-.07em;white-space:nowrap;
+  color:transparent;-webkit-text-stroke:1px var(--color-veil-08);background:linear-gradient(var(--color-veil-06),transparent 85%);
+  -webkit-background-clip:text;background-clip:text}
+.nf-inner{display:flex;flex-direction:column;align-items:center;max-width:560px}
+.nf-art{width:clamp(64px,8vw,88px);height:auto;margin-bottom:28px}
+.nf-h{margin:0;font:700 var(--text-display-xl)/var(--text-display-xl--line-height) var(--font-display);letter-spacing:-.04em;text-wrap:balance}
+.nf-p{margin:20px 0 0;max-width:40ch;font:400 clamp(1rem,1.3vw,1.125rem)/1.6 var(--font-sans);color:var(--color-on-dark)}
+.nf-btn{margin-top:36px}
+.nf-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 28px;margin-top:40px}
+.nf-links a{font:500 .9375rem/1 var(--font-sans);color:var(--color-on-dark-2);transition:color var(--t-tint)}
+.nf-links a:hover,.nf-links a:focus-visible{color:var(--color-spring-500)}
+
+.nf-pen{stroke-dasharray:1;stroke-dashoffset:1;animation:nf-trace 1.6s cubic-bezier(.37,0,.63,1) forwards}
+.nf-pen-1{animation-delay:.2s}
+.nf-pen-2{animation-delay:.6s}
+.nf-pen-3{animation-delay:1s;animation-duration:2s}
+.nf-pen-4{animation-delay:1.7s;animation-duration:1.4s}
+@keyframes nf-trace{to{stroke-dashoffset:0}}
+.nf-h,.nf-p,.nf-btn,.nf-links{opacity:0;translate:0 14px;animation:nf-rise .8s var(--ease-out) forwards}
+.nf-h{animation-delay:.45s}
+.nf-p{animation-delay:.6s}
+.nf-btn{animation-delay:.75s}
+.nf-links{animation-delay:.9s}
+.nf-num{opacity:0;animation:nf-fade 1.6s var(--ease-out) .1s forwards}
+@keyframes nf-rise{to{opacity:1;translate:0 0}}
+@keyframes nf-fade{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){
+  .nf-pen{stroke-dashoffset:0;animation:none}
+  .nf-h,.nf-p,.nf-btn,.nf-links,.nf-num{opacity:1;translate:0 0;animation:none}
+  .nf-num{translate:-50% -52%}
+}
+@media (max-width:700px){
+  .nf-home{top:22px}
+  .nf-home .wordmark{width:88px;height:29px}
+  .nf-btn{align-self:stretch}
+}
