@@ -28,7 +28,10 @@
       desc: 'Imaging review, exercise guidance and a remote plan. For patients outside Lebanon.' },
     { id: 'sports', name: 'Sports or general physiotherapy', dur: '45 min', mins: 45,
       tag: '',
-      desc: 'Injury rehabilitation, return to sport, mobility and joint training.' }
+      desc: 'Injury rehabilitation, return to sport, mobility and joint training.' },
+    { id: 'pain', name: 'Pain management assessment', dur: '60 min', mins: 60,
+      tag: '',
+      desc: 'Persistent or recurring pain: a full assessment, a clear explanation and a graded plan.' }
   ];
 
   /* ---------- Clinic calendar ----------
