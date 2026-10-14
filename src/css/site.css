@@ -38,6 +38,20 @@
   .cred-set li{font-size:13px;gap:16px}
 }
 
+/* After React Bits' LogoLoop. motion.js drives the track and adds .is-loop,
+   which retires the keyframe marquee above (the no-script fallback). The
+   strip fades out at both edges, and the credential under the cursor
+   lifts slightly. */
+.credstrip.is-loop .cred-track{animation:none}
+.credstrip::before,.credstrip::after{content:"";position:absolute;top:0;bottom:0;z-index:1;
+  width:clamp(24px,8%,120px);pointer-events:none}
+.credstrip::before{left:0;background:linear-gradient(to right,var(--color-ink-950),transparent)}
+.credstrip::after{right:0;background:linear-gradient(to left,var(--color-ink-950),transparent)}
+@media (hover:hover) and (pointer:fine){
+  .cred-set li{transition:color .2s ease,transform .3s cubic-bezier(.4,0,.2,1)}
+  .cred-set li:hover{color:var(--color-bone);transform:scale(1.08)}
+}
+
 /* Reduced motion: no movement at all. The duplicate set is dropped and
    the strip falls back to a static wrapping row. */
 @media (prefers-reduced-motion:reduce){
@@ -45,6 +59,8 @@
   .cred-set[aria-hidden="true"]{display:none}
   .cred-track{width:auto}
   .credstrip{padding-inline:var(--pad-x)}
+  .credstrip::before,.credstrip::after{content:none}
+  .cred-set li:hover{transform:none}
   .cred-set{flex-wrap:wrap}
 }
 

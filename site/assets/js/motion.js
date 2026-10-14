@@ -265,6 +265,68 @@
       });
     }
 
+    /* ---------- Credential strip ----------
+       After React Bits' LogoLoop. The stylesheet's marquee is the fallback;
+       with motion on, this takes over: the track moves at a set speed in
+       pixels a second, the speed eases (rather than snapping) towards zero
+       under the cursor or keyboard focus and back up when they leave, and
+       there are always enough copies of the list to fill the width, however
+       wide the screen. Only the first list is read by screen readers. */
+    var credUndo = null;
+    var strip = $('.credstrip'), credTrack = strip && $('.cred-track', strip);
+    var credSeq = credTrack && $('.cred-set', credTrack);
+    if (credSeq) {
+      var SPEED = 40, TAU = 0.25;                    // px per second; easing time constant
+      var offset = 0, velocity = SPEED, held = false, seqW = 0;
+      strip.classList.add('is-loop');
+
+      var fill = function () {
+        seqW = credSeq.getBoundingClientRect().width;
+        if (!seqW) return;
+        var need = Math.max(2, Math.ceil(strip.clientWidth / seqW) + 2);
+        var sets = $$('.cred-set', credTrack);
+        for (var k = sets.length; k < need; k++) {
+          var copy = credSeq.cloneNode(true);
+          copy.setAttribute('aria-hidden', 'true');
+          copy.setAttribute('data-copy', '');
+          credTrack.appendChild(copy);
+        }
+        sets = $$('.cred-set', credTrack);
+        for (var r = sets.length - 1; r >= need; r--) credTrack.removeChild(sets[r]);
+      };
+      fill();
+      var ro = window.ResizeObserver ? new ResizeObserver(fill) : null;
+      if (ro) ro.observe(strip);
+
+      var hold = function () { held = true; }, go = function () { held = false; };
+      var leave = function (e) { if (!strip.contains(e.relatedTarget)) held = false; };
+      strip.addEventListener('mouseenter', hold);
+      strip.addEventListener('mouseleave', go);
+      strip.addEventListener('focusin', hold);
+      strip.addEventListener('focusout', leave);
+
+      var step = function (time, dt) {
+        var s = dt / 1000;
+        velocity += ((held ? 0 : SPEED) - velocity) * (1 - Math.exp(-s / TAU));
+        if (!seqW) return;
+        offset = (((offset + velocity * s) % seqW) + seqW) % seqW;
+        credTrack.style.transform = 'translate3d(' + (-offset).toFixed(2) + 'px,0,0)';
+      };
+      gsap.ticker.add(step);
+
+      credUndo = function () {
+        gsap.ticker.remove(step);
+        if (ro) ro.disconnect();
+        strip.removeEventListener('mouseenter', hold);
+        strip.removeEventListener('mouseleave', go);
+        strip.removeEventListener('focusin', hold);
+        strip.removeEventListener('focusout', leave);
+        $$('.cred-set[data-copy]', credTrack).forEach(function (n) { credTrack.removeChild(n); });
+        credTrack.style.transform = '';
+        strip.classList.remove('is-loop');
+      };
+    }
+
     /* ---------- Case-study progress (results.html) ---------- */
     var scene = $('[data-scene="cases"]');
     var grid = $('.casegrid');
@@ -301,6 +363,7 @@
       if (band) { band.classList.remove('has-art'); var a = $('.cta-art', band); if (a) band.removeChild(a); }
       if (cleanupNav) cleanupNav();
       if (h1) gsap.set(h1, { visibility: 'visible' });
+      if (credUndo) credUndo();
     };
   });
 
