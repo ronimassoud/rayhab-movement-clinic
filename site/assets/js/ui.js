@@ -147,6 +147,20 @@
     measure();
   }
 
+  /* ---- The phone booking bar waits out the home hero ----
+     The home hero is one screen tall and carries its own booking button,
+     so a second one floating over its foot is a duplicate covering the
+     first. The bar arrives once the hero has scrolled away. Every other
+     hero leaves room for the bar instead. */
+  var homeHero = document.querySelector('.home-hero');
+  if (homeHero && 'IntersectionObserver' in window) {
+    var html = document.documentElement;
+    html.classList.add('bar-defer');
+    new IntersectionObserver(function (entries) {
+      html.classList.toggle('hero-onscreen', entries[0].intersectionRatio > 0.35);
+    }, { threshold: [0, 0.35, 1] }).observe(homeHero);
+  }
+
   /* ---- Motion failsafe, the fast path ----
      The head script hides reveal targets and gives motion.js 2.6s to take
      over. If the page has finished loading and GSAP is not there, it is

@@ -23,4 +23,5 @@
 @import "./components.css" layer(components);   /* shared parts */
 @import "./site.css" layer(components);         /* page composition, interaction */
 @import "./mobile.css" layer(components);       /* phone compositions */
+@import "./heroes.css" layer(components);       /* every hero is one screen tall */
 @import "./booking.css" layer(components);      /* booking flow and dialog */

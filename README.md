@@ -229,6 +229,7 @@ few things that float.
 | `components.css` | surfaces, type classes, navigation, buttons, cards, media, tilt, closing band, footer |
 | `site.css` | page composition and interaction |
 | `mobile.css` | the phone compositions, which are separate layouts rather than reflowed desktop |
+| `heroes.css` | every hero is exactly one screen tall (`100svh`); on the home page the hero and the credential strip share that screen |
 | `booking.css` | the booking flow and its dialog |
 
 Tailwind's default palette, fonts, radii and shadows are cleared in `theme.css`,
@@ -266,6 +267,14 @@ for the other way) and gives it the floating shadow. A leaning card straightens
 on hover and on keyboard focus. Text cards flatten below 700px; the photo fan on
 the results page keeps its lean. Under reduced motion the lean stays, as a pose,
 and stops animating.
+
+**Heroes are one screen.** Each page opens on a hero exactly the height of
+the viewport as it first appears (`svh`, so a phone's address bar does not push
+it off the bottom). The media panel absorbs the difference and steps aside on a
+short phone; headlines and the service-page rhythm also scale with the height.
+Below 560px of height (a phone on its side) the hero grows to fit instead of
+cutting text. On a phone the booking bar waits until the home hero has
+scrolled away, because that hero has its own booking button.
 
 **Empty photo wells.** Photography for the services and the articles has not
 been shot. A small well inside a card collapses until it has an image, and a

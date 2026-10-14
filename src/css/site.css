@@ -256,13 +256,12 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 .measure-card svg{width:58px;height:58px;flex:none}
 .measure-k{margin:0 0 3px;font:600 13px/1 var(--font-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--color-body)}
 .measure-v{margin:0;font:400 15px/1.45 var(--font-sans);color:var(--color-fg);max-width:236px}
-@media (max-width:1040px){
+/* Two columns hold down to 900, a tablet on its side, because the hero is
+   one screen tall and a stacked layout does not fit a landscape screen. */
+@media (max-width:900px){
   .svc-hero{grid-template-columns:1fr;gap:32px}
-  .svc-hero-slot{height:340px}
-  .svc-stats{grid-template-columns:1fr;gap:16px;border-top:0;padding-top:0}
-  .svc-stats>div,.svc-stats>div+div{padding:16px 0 0;border-left:0;border-top:1px solid var(--color-veil-12)}
 }
-@media (max-width:1040px){ .measure-card{left:16px} }
+@media (max-width:900px){ .measure-card{left:16px} }
 @media (max-width:560px){ .measure-card{position:static;margin-top:16px;box-shadow:none} }
 
 .svc-approach{padding:var(--section-y) var(--pad-x);display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(36px,6vw,80px);align-items:start}
@@ -347,7 +346,7 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 .startlist li{background:var(--color-forest-900);padding:16px 16px;display:flex;justify-content:space-between;align-items:center;gap:16px;
   font:500 15px/1.4 var(--font-sans);color:var(--color-bone)}
 .startlist .mins{font:400 13px/1 var(--font-sans);color:var(--color-on-dark-2);flex:none}
-@media (max-width:1040px){ .hub-hero-grid{grid-template-columns:1fr;gap:32px} .hub-device{left:auto;right:-240px;opacity:.25} }
+@media (max-width:900px){ .hub-hero-grid{grid-template-columns:1fr;gap:32px} .hub-device{left:auto;right:-240px;opacity:.25} }
 
 .hub-route{padding:var(--section-y) var(--pad-x)}
 .route-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}

@@ -1,0 +1,144 @@
+/* ==========================================================
+   Heroes fill the viewport
+   Every page opens on a hero that is exactly one screen tall:
+   the full width, and the full height of the viewport as it
+   is on arrival. On the home page the credential strip sits
+   inside that screen too, so the hero takes the viewport less
+   the strip.
+
+   svh, not vh or dvh. On a phone 100vh is the height with the
+   address bar hidden, so a 100vh hero runs off the bottom of
+   the screen it first appears on. dvh tracks the bar as it
+   collapses, which resizes the hero mid-scroll. svh is the
+   screen as the visitor first sees it, and holds still. vh is
+   the fallback for browsers without the small viewport units.
+
+   Fixed height means the content has to fit, so each hero
+   gives one element the job of absorbing the difference: the
+   portrait or media panel grows or shrinks to whatever space
+   the text leaves, and gives way entirely on a short phone.
+   Text is never the thing that is cut.
+
+   This file loads after site.css and mobile.css, so it has the
+   last word on the hero's box.
+   ========================================================== */
+
+:root{
+  --hero-pt:calc(var(--nav-h) + clamp(20px,3.5vw,48px));   /* clears the floating nav */
+  --hero-pb:clamp(28px,4vw,56px);
+  --cred-h:64px;
+}
+/* On a phone the booking bar floats over the foot of the screen, so a hero
+   leaves room for it. The home hero has its own booking button, and there
+   ui.js holds the bar back until the hero has gone (.bar-defer). */
+@media (max-width:700px){
+  :root{ --cred-h:48px; --hero-pb:100px; }
+  .bar-defer .home-hero{--hero-pb:24px}
+  .m-bookbar{transition:transform .35s var(--ease-out),opacity .25s}
+  .bar-defer.hero-onscreen .m-bookbar{transform:translateY(calc(100% + 16px));opacity:0;pointer-events:none}
+}
+
+.home-hero,.svc-hero,.svcidx-hero,.hub-hero,.art-hero{
+  height:100vh;height:100svh;
+  padding-top:var(--hero-pt);padding-bottom:var(--hero-pb);
+  overflow:hidden}
+
+/* The home hero and the credential strip share one screen. */
+.home-hero{height:calc(100vh - var(--cred-h));height:calc(100svh - var(--cred-h))}
+.credstrip{height:var(--cred-h);padding-block:0;display:flex;align-items:center}
+
+
+/* ---------- Home ----------
+   Two columns: the copy is centred in the height and the portrait
+   panel runs the full height beside it. */
+.home-hero{display:flex;flex-direction:column}
+.hero-inner{flex:1;min-height:0;grid-template-rows:minmax(0,1fr)}
+.hero-copy{align-self:center}
+.hero-media{align-self:stretch;min-height:0}
+.home-hero .hero-slot{height:100%}
+
+@media (max-width:1000px){
+  /* One column: the copy keeps its natural height and the portrait
+     takes the rest of the screen below it. */
+  .hero-inner{grid-template-rows:auto minmax(0,1fr);gap:32px}
+  .hero-copy{align-self:start}
+}
+@media (max-width:700px){
+  .hero-inner{display:flex;gap:0}
+  .hero-media{flex:1 1 0;min-height:0;margin-bottom:20px}
+  .home-hero .hero-slot,.home-hero .photo.hero-slot{height:100%}
+}
+
+
+/* ---------- Service pages and About ---------- */
+.svc-hero{grid-template-rows:minmax(0,1fr)}
+.svc-hero-copy{align-self:center}
+.svc-hero-media{align-self:stretch;min-height:0}
+.svc-hero .svc-hero-slot{height:100%}
+@media (max-width:900px){
+  .svc-hero{grid-template-rows:auto minmax(0,1fr)}
+  .svc-hero-copy{align-self:start}
+}
+@media (max-width:700px){
+  .svc-hero-media{flex:1 1 0;min-height:0}
+  .svc-hero .svc-hero-slot,.svc-hero .photo.svc-hero-slot{height:100%}
+}
+
+
+/* ---------- Index heroes, hubs and articles ----------
+   No media panel to flex, so the content is centred in the screen. */
+.svcidx-hero,.hub-hero,.art-hero{display:flex;flex-direction:column;justify-content:center}
+/* The crumbs stay at the top, where every other page has them. */
+.svcidx-hero>.crumbs,.art-hero>.crumbs{position:absolute;top:var(--hero-pt);left:var(--pad-x);right:var(--pad-x)}
+.svcidx-hero>.crumbs{justify-content:center}
+.hub-hero-inner{width:100%}
+
+/* The fan scales with the height as well as the width, so it fits a short
+   landscape screen as well as a tall one. */
+.tilt-fan img{width:min(19vw,22svh,236px)}
+.tilt-fan img:nth-child(2){width:min(21vw,24svh,264px)}
+
+
+/* ---------- Headlines answer to the height too ----------
+   The display sizes are fluid with the width. A hero that is one screen
+   tall also needs them to step down on a short screen, or a wide laptop
+   with a shallow window spends the whole height on the headline. */
+.home-hero .d1{font-size:min(var(--text-display-2xl),10svh)}
+.svc-hero .h1,.svcidx-hero .h1,.hub-hero .h1,.art-h1{font-size:min(var(--text-display-xl),7.4svh)}
+
+/* The service hero carries the most: crumbs, label, headline, copy,
+   actions and three stats. Its vertical rhythm is set in svh, so it closes
+   up on a shallow screen instead of running out of the bottom of it. */
+.svc-hero .crumbs{margin-bottom:min(28px,3.2svh)}
+.svc-hero .hero-pill{margin-bottom:min(24px,2.8svh)}
+.svc-hero .body-l{margin-top:min(24px,2.8svh)}
+.svc-hero .hero-btns{margin-top:min(32px,3.6svh)}
+.svc-stats{margin-top:min(48px,4.6svh);padding-top:min(24px,2.6svh)}
+/* On a laptop-height screen the copy column widens, so the headline holds
+   to one line and the stats wrap less. The media panel gives up the width. */
+@media (min-width:901px) and (max-height:820px){
+  .svc-hero{grid-template-columns:1.3fr .7fr}
+}
+
+/* ---------- Short screens ----------
+   On a short phone the portrait and the service media panel step aside,
+   so the headline, the copy and the actions still fit one screen. */
+@media (max-width:700px) and (max-height:700px){
+  .home-hero .hero-media,.svc-hero .svc-hero-media{display:none}
+  /* Articles have no panel to give up, so the meta row closes up instead. */
+  .art-h1{font-size:34px}
+  .art-hero .art-eyebrow{margin-bottom:12px}
+  .art-hero .art-stand{margin-top:12px}
+  .art-hero .art-metarow{margin-top:16px;padding-top:12px;gap:8px 24px}
+}
+
+/* Below this height (a phone on its side, a small laptop window) one
+   screen cannot hold a headline, its copy and its actions. The hero is
+   still at least the full screen, and grows to fit rather than cutting
+   the text. */
+@media (max-height:560px){
+  .home-hero,.svc-hero,.svcidx-hero,.hub-hero,.art-hero{height:auto;min-height:100vh;min-height:100svh;overflow:visible}
+  .home-hero{min-height:calc(100vh - var(--cred-h));min-height:calc(100svh - var(--cred-h))}
+  .home-hero .hero-slot,.svc-hero .svc-hero-slot{height:min(420px,80svh)}
+  .svcidx-hero>.crumbs,.art-hero>.crumbs{position:static}
+}
