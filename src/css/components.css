@@ -533,8 +533,7 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard{
    After React Bits Pro's Prism Carousel. The progress sheets sit on a
    forest stage: the one in the centre is large and in colour, the others
    are shorter, narrower crops in grey that dim with distance. A sheet
-   comes into colour as it reaches the centre, and while the row is moving
-   the sheets split into a faint green fringe. ui.js lays the sheets out
+   comes into colour as it reaches the centre. ui.js lays the sheets out
    every frame (size, position, --b brightness, --co colour) and drives the
    autoplay, the drag and the caption. Without it, .pc-src is a plain
    scrolling row of links to each case, and the stage and controls stay

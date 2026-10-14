@@ -419,7 +419,7 @@
      focused on it or reading the case below. It stops for good, with the
      play button to restart it, once someone takes over: a drag, a click, a
      key, an arrow or a #case-0N link. Reduced motion gets no autoplay and
-     no fringe, and moves without easing. The written case below
+     moves without easing. The written case below
      follows the centre. */
   var prism = document.querySelector('.prism .pc');
   if (prism) (function () {
@@ -478,7 +478,6 @@
 
     var layout = function (now) {
       var k0 = Math.floor(p), f = p - k0, k, slot;
-      var disp = reduce() ? 0 : Math.min(7, Math.abs(v) * 3.2);
       var w = {}, h = {}, x = {}, slots = {};
       for (k = k0 - SPAN; k <= k0 + SPAN + 1; k++) {
         slot = pool[mod(k, POOL)]; slots[k] = slot;
@@ -509,11 +508,7 @@
 
         st.setProperty('--co', Math.max(0, Math.min(1, 1 - a2 * 1.6)).toFixed(3));
         st.setProperty('--b', Math.max(0.35, 1 - DIM * a2 * 1.4).toFixed(3));
-        st.filter = disp > 0.3
-          ? 'drop-shadow(' + disp.toFixed(1) + 'px 0 0 rgba(98,227,107,.38)) drop-shadow(' + (-disp).toFixed(1) + 'px 0 0 rgba(168,240,172,.3))'
-          : '';
       }
-      return disp > 0.3;
     };
 
     var frame = function (now) {
@@ -526,8 +521,8 @@
           if (Math.abs(target - p) < 0.0005 && Math.abs(v) < 0.002) { p = target; v = 0; }
         }
       }
-      var busy = layout(now);
-      raf = (dragging || p !== target || v !== 0 || busy) ? window.requestAnimationFrame(frame) : 0;
+      layout(now);
+      raf = (dragging || p !== target || v !== 0) ? window.requestAnimationFrame(frame) : 0;
     };
     var wake = function () {
       if (raf) return;
