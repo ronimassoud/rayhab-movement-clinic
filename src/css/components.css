@@ -244,9 +244,9 @@
 
   .navcard{display:flex;flex-direction:column;gap:16px;min-width:0;padding:16px 18px 18px;
     border-radius:var(--radius-md);color:var(--color-bone)}
-  .navcard-care{background:var(--color-forest-850)}
-  .navcard-learn{background:var(--color-brand-800)}
-  .navcard-clinic{background:var(--color-forest-700)}
+  .navcard-clinic{background:var(--color-forest-850)}
+  .navcard-care{background:var(--color-brand-800)}
+  .navcard-learn{background:var(--color-forest-700)}
   .navcard-label{margin:0;font:600 var(--text-heading-sm)/1.1 var(--font-display);letter-spacing:-.02em}
   .navcard-links{display:flex;flex-direction:column;gap:2px;margin:auto 0 0;padding:0;list-style:none}
   .navcard-links a{display:flex;align-items:center;gap:8px;min-height:40px;padding:6px 0;
