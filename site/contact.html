@@ -48,59 +48,62 @@
     </div>
   </section>
 
-  <!-- Clinic + how to book -->
-  <section class="svc-who">
+  <!-- Ask a question, with the answers people usually need beside it -->
+  <section class="svc-proof" id="ask">
     <div>
-      <p class="eyebrow mb-4">The clinic</p>
-      <div class="wholist" data-reveal="children" data-reveal-stagger="55">
-        <div class="whocard">
-          <span class="whoicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#174924" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.3 7-11a7 7 0 10-14 0c0 5.7 7 11 7 11z"></path><circle cx="12" cy="10" r="2.6"></circle></svg></span>
-          <div>
-            <p class="who-k">Beirut, Lebanon</p>
-            <p class="who-v">In-clinic assessment, coached rehabilitation sessions and review points. The full address and directions are sent with your booking confirmation.</p>
-          </div>
-        </div>
-        <div class="whocard">
-          <span class="whoicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#174924" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"></rect><path d="M8 19v1.5M16 19v1.5"></path></svg></span>
-          <div>
-            <p class="who-k">Online, from anywhere</p>
-            <p class="who-v">Forty-minute video consultations for patients outside Lebanon: imaging review, exercise guidance and a remote programme with follow-ups.</p>
-          </div>
-        </div>
-        <div class="whocard">
-          <span class="whoicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#174924" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg></span>
-          <div>
-            <p class="who-k">Confirmed by WhatsApp</p>
-            <p class="who-v">Booking is a request, not a locked slot. The clinic confirms within one working day, and payment happens in clinic.</p>
-          </div>
-        </div>
-      </div>
+      <h2 class="eyebrow mb-4">Ask a question</h2>
+      <form class="bk-fields" id="contact-form" novalidate>
+        <p>
+          <label class="field-label" for="c-first">First name</label>
+          <input class="input" id="c-first" name="first" type="text" autocomplete="given-name" required>
+        </p>
+        <p>
+          <label class="field-label" for="c-last">Last name</label>
+          <input class="input" id="c-last" name="last" type="text" autocomplete="family-name" required>
+        </p>
+        <p>
+          <label class="field-label" for="c-email">Email</label>
+          <input class="input" id="c-email" name="email" type="email" autocomplete="email" required>
+        </p>
+        <p>
+          <label class="field-label" for="c-phone">Phone / WhatsApp</label>
+          <input class="input" id="c-phone" name="phone" type="tel" autocomplete="tel" placeholder="+961 3">
+        </p>
+        <p class="span2">
+          <label class="field-label" for="c-msg">Your question</label>
+          <textarea class="textarea" id="c-msg" name="message" required></textarea>
+          <span class="field-hint">Please don't attach imaging or reports here; the clinic will tell you how to share those securely once you are in touch.</span>
+        </p>
+        <p class="span2 mt-1">
+          <button class="btn btn-spring" type="submit">Send question</button>
+        </p>
+      </form>
+      <p class="notice notice-error mt-5" id="contact-msg" hidden role="status" aria-live="polite"></p>
     </div>
 
     <div>
-      <p class="eyebrow mb-4">Reach the clinic</p>
-      <dl class="contact-rows">
-        <div>
-          <dt>Phone</dt>
-          <dd><span class="pending">Confirmed before launch</span></dd>
+      <h2 class="eyebrow mb-4">Before you get in touch</h2>
+      <div class="faq-card" data-reveal="children" data-reveal-stagger="50">
+        <div class="acc-item faq-item">
+          <h3><button class="acc-btn faq-btn" type="button" aria-expanded="true" aria-controls="c1">How do I book?<span class="acc-mark faq-mark" aria-hidden="true">−</span></button></h3>
+          <div class="acc-panel faq-panel" id="c1">Use “Book an assessment”. It takes about two minutes, needs no account, and nothing is charged online. The clinic confirms by WhatsApp within one working day.</div>
         </div>
-        <div>
-          <dt>WhatsApp</dt>
-          <dd><span class="pending">Confirmed before launch</span></dd>
+        <div class="acc-item faq-item">
+          <h3><button class="acc-btn faq-btn" type="button" aria-expanded="false" aria-controls="c2">How soon will I hear back?<span class="acc-mark faq-mark" aria-hidden="true">+</span></button></h3>
+          <div class="acc-panel faq-panel" id="c2" hidden>Within one working day. Your requested time is held while the clinic confirms it; if that slot has gone, you will be offered the nearest alternative.</div>
         </div>
-        <div>
-          <dt>Email</dt>
-          <dd><span class="pending">Confirmed before launch</span></dd>
+        <div class="acc-item faq-item">
+          <h3><button class="acc-btn faq-btn" type="button" aria-expanded="false" aria-controls="c3">Do I need an X-ray before my first visit?<span class="acc-mark faq-mark" aria-hidden="true">+</span></button></h3>
+          <div class="acc-panel faq-panel" id="c3" hidden>Bring one if you already have it; it helps. If you don't, the assessment still goes ahead, and Rayan will tell you honestly whether imaging would change the plan.</div>
         </div>
-        <div>
-          <dt>Address</dt>
-          <dd>Beirut, Lebanon</dd>
+        <div class="acc-item faq-item">
+          <h3><button class="acc-btn faq-btn" type="button" aria-expanded="false" aria-controls="c4">What should I bring, and what should I wear?<span class="acc-mark faq-mark" aria-hidden="true">+</span></button></h3>
+          <div class="acc-panel faq-panel" id="c4" hidden>Any imaging or reports you already have, and clothing you can move and be assessed in. Allow the full hour; the assessment is not rushed.</div>
         </div>
-      </dl>
-      <div class="card card-forest mt-3">
-        <p class="h6 mb-2">Ready to start?</p>
-        <p class="body-s text-on-dark">The booking request takes about two minutes and needs no account.</p>
-        <p class="mt-5"><a class="btn btn-spring btn-sm block text-center" href="book.html">Book an assessment</a></p>
+        <div class="acc-item faq-item">
+          <h3><button class="acc-btn faq-btn" type="button" aria-expanded="false" aria-controls="c5">Can I be seen if I am not in Lebanon?<span class="acc-mark faq-mark" aria-hidden="true">+</span></button></h3>
+          <div class="acc-panel faq-panel" id="c5" hidden>Yes. The online consultation is a 40-minute video call covering imaging review, exercise guidance and a remote programme, with follow-ups to progress it.</div>
+        </div>
       </div>
     </div>
   </section>
@@ -147,62 +150,59 @@
     </div>
   </section>
 
-  <!-- Ask a question + booking FAQ -->
-  <section class="svc-proof">
+  <!-- Where and how: the practical details, after the decision -->
+  <section class="svc-who s-tint">
     <div>
-      <p class="eyebrow mb-4">Ask a question</p>
-      <form class="bk-fields" id="contact-form" novalidate>
-        <p>
-          <label class="field-label" for="c-first">First name</label>
-          <input class="input" id="c-first" name="first" type="text" autocomplete="given-name" required>
-        </p>
-        <p>
-          <label class="field-label" for="c-last">Last name</label>
-          <input class="input" id="c-last" name="last" type="text" autocomplete="family-name" required>
-        </p>
-        <p>
-          <label class="field-label" for="c-email">Email</label>
-          <input class="input" id="c-email" name="email" type="email" autocomplete="email" required>
-        </p>
-        <p>
-          <label class="field-label" for="c-phone">Phone / WhatsApp</label>
-          <input class="input" id="c-phone" name="phone" type="tel" autocomplete="tel" placeholder="+961 3">
-        </p>
-        <p class="span2">
-          <label class="field-label" for="c-msg">Your question</label>
-          <textarea class="textarea" id="c-msg" name="message" required></textarea>
-          <span class="field-hint">Please don't attach imaging or reports here; the clinic will tell you how to share those securely once you are in touch.</span>
-        </p>
-        <p class="span2 mt-1">
-          <button class="btn btn-spring" type="submit">Send question</button>
-        </p>
-      </form>
-      <p class="notice notice-error mt-5" id="contact-msg" hidden role="status" aria-live="polite"></p>
+      <h2 class="eyebrow mb-4">The clinic</h2>
+      <div class="wholist" data-reveal="children" data-reveal-stagger="55">
+        <div class="whocard">
+          <span class="whoicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#174924" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.3 7-11a7 7 0 10-14 0c0 5.7 7 11 7 11z"></path><circle cx="12" cy="10" r="2.6"></circle></svg></span>
+          <div>
+            <p class="who-k">Beirut, Lebanon</p>
+            <p class="who-v">In-clinic assessment, coached rehabilitation sessions and review points. The full address and directions are sent with your booking confirmation.</p>
+          </div>
+        </div>
+        <div class="whocard">
+          <span class="whoicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#174924" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"></rect><path d="M8 19v1.5M16 19v1.5"></path></svg></span>
+          <div>
+            <p class="who-k">Online, from anywhere</p>
+            <p class="who-v">Forty-minute video consultations for patients outside Lebanon: imaging review, exercise guidance and a remote programme with follow-ups.</p>
+          </div>
+        </div>
+        <div class="whocard">
+          <span class="whoicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#174924" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg></span>
+          <div>
+            <p class="who-k">Confirmed by WhatsApp</p>
+            <p class="who-v">Booking is a request, not a locked slot. The clinic confirms within one working day, and payment happens in clinic.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div>
-      <p class="eyebrow mb-4">Before you get in touch</p>
-      <div class="faq-card" data-reveal="children" data-reveal-stagger="50">
-        <div class="acc-item faq-item">
-          <h3><button class="acc-btn faq-btn" type="button" aria-expanded="true" aria-controls="c1">How do I book?<span class="acc-mark faq-mark" aria-hidden="true">−</span></button></h3>
-          <div class="acc-panel faq-panel" id="c1">Use “Book an assessment”. It takes about two minutes, needs no account, and nothing is charged online. The clinic confirms by WhatsApp within one working day.</div>
+      <h2 class="eyebrow mb-4">Reach the clinic</h2>
+      <dl class="contact-rows">
+        <div>
+          <dt>Phone</dt>
+          <dd><span class="pending">Confirmed before launch</span></dd>
         </div>
-        <div class="acc-item faq-item">
-          <h3><button class="acc-btn faq-btn" type="button" aria-expanded="false" aria-controls="c2">How soon will I hear back?<span class="acc-mark faq-mark" aria-hidden="true">+</span></button></h3>
-          <div class="acc-panel faq-panel" id="c2" hidden>Within one working day. Your requested time is held while the clinic confirms it; if that slot has gone, you will be offered the nearest alternative.</div>
+        <div>
+          <dt>WhatsApp</dt>
+          <dd><span class="pending">Confirmed before launch</span></dd>
         </div>
-        <div class="acc-item faq-item">
-          <h3><button class="acc-btn faq-btn" type="button" aria-expanded="false" aria-controls="c3">Do I need an X-ray before my first visit?<span class="acc-mark faq-mark" aria-hidden="true">+</span></button></h3>
-          <div class="acc-panel faq-panel" id="c3" hidden>Bring one if you already have it; it helps. If you don't, the assessment still goes ahead, and Rayan will tell you honestly whether imaging would change the plan.</div>
+        <div>
+          <dt>Email</dt>
+          <dd><span class="pending">Confirmed before launch</span></dd>
         </div>
-        <div class="acc-item faq-item">
-          <h3><button class="acc-btn faq-btn" type="button" aria-expanded="false" aria-controls="c4">What should I bring, and what should I wear?<span class="acc-mark faq-mark" aria-hidden="true">+</span></button></h3>
-          <div class="acc-panel faq-panel" id="c4" hidden>Any imaging or reports you already have, and clothing you can move and be assessed in. Allow the full hour; the assessment is not rushed.</div>
+        <div>
+          <dt>Address</dt>
+          <dd>Beirut, Lebanon</dd>
         </div>
-        <div class="acc-item faq-item">
-          <h3><button class="acc-btn faq-btn" type="button" aria-expanded="false" aria-controls="c5">Can I be seen if I am not in Lebanon?<span class="acc-mark faq-mark" aria-hidden="true">+</span></button></h3>
-          <div class="acc-panel faq-panel" id="c5" hidden>Yes. The online consultation is a 40-minute video call covering imaging review, exercise guidance and a remote programme, with follow-ups to progress it.</div>
-        </div>
+      </dl>
+      <div class="card card-forest mt-3">
+        <p class="h6 mb-2">Ready to start?</p>
+        <p class="body-s text-on-dark">The booking request takes about two minutes and needs no account.</p>
+        <p class="mt-5"><a class="btn btn-spring btn-sm block text-center" href="book.html">Book an assessment</a></p>
       </div>
     </div>
   </section>
