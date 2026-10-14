@@ -479,6 +479,166 @@
       ],
       "cta_h": "Start with an assessment",
       "cta_p": "Sixty minutes in Beirut or online. You leave understanding the problem and holding the plan."
+    },
+    {
+      "slug": "pain-management",
+      "name": "Pain Management",
+      "h1": "Pain Management",
+      "title": "Pain Management, Rayhab Movement Clinic, Beirut",
+      "desc": "Physiotherapy-led pain management in Beirut or online for persistent and recurring pain: a clear explanation, graded activity and a plan you can run yourself.",
+      "lede": "For pain that has lasted, keeps coming back, or has stopped responding to rest. An assessment that looks at the whole picture, an explanation you can use, and a graded plan that rebuilds what the pain has taken away.",
+      "lede_m": "For persistent or recurring pain: a clear explanation and a graded plan back to what you want to do.",
+      "stats": [
+        [
+          "60 min",
+          "First assessment: your history, what provokes and eases the pain, and what it has stopped you doing"
+        ],
+        [
+          "Exercise-led",
+          "Graded activity and loading, with hands-on techniques where they help you move"
+        ],
+        [
+          "In-clinic<br>&amp; online",
+          "Beirut clinic, or remote assessment and programme review"
+        ]
+      ],
+      "mspec": [
+        [
+          "First assessment",
+          "60 min"
+        ],
+        [
+          "Approach",
+          "Graded, exercise-led"
+        ],
+        [
+          "Delivered",
+          "Beirut &amp; online"
+        ]
+      ],
+      "measure_k": "Progress you can see",
+      "measure_v": "What you can do, and how often pain gets in the way, is tracked over time, so change is recorded rather than recalled.",
+      "slot": "Clinic photo, the treatment rooms",
+      "approach_h": "Pain is real. It is rarely the whole story",
+      "approach_p": "Pain that lasts is shaped by more than the tissue: sleep, stress, how much you have been able to move, and what you have been told it means. Rest and passive treatment can ease it for a while. What tends to help over time is understanding it, and gradually doing more of what it has taken away. That is where the time goes here.",
+      "minis": [
+        [
+          "Explained, not dismissed",
+          "What your pain is likely to mean, and what it does not, so moving stops feeling like a risk."
+        ],
+        [
+          "Graded, not forced",
+          "Activity builds from a level you can manage on a bad day, so progress does not depend on a good one."
+        ],
+        [
+          "Built to hand over",
+          "A programme you can run yourself, and a plan for flare-ups, which are expected rather than a failure."
+        ]
+      ],
+      "process_h": "Six stages, one direction",
+      "process_p": "Not everyone needs all six, and pain rarely improves in a straight line. Setbacks are planned for, not treated as starting again.",
+      "stages": [
+        [
+          "Assessment",
+          "Your history, what provokes and eases the pain, and what it has stopped you doing."
+        ],
+        [
+          "Explanation",
+          "What is likely driving it, in terms you can repeat to someone else."
+        ],
+        [
+          "Settling",
+          "Calming a flare enough that useful activity becomes possible."
+        ],
+        [
+          "Graded activity",
+          "Doing a little more of what matters, at a pace the pain allows."
+        ],
+        [
+          "Capacity",
+          "Building strength and tolerance so ordinary days stop provoking it."
+        ],
+        [
+          "Self-management",
+          "A programme, a flare-up plan, and a review point."
+        ]
+      ],
+      "who": [
+        [
+          "adult",
+          "Persistent or recurring pain",
+          "Back, neck, shoulder, hip or knee pain that has lasted for months, or keeps returning."
+        ],
+        [
+          "athlete",
+          "Pain that limits training",
+          "When rest settles it and going back to training brings it straight back."
+        ],
+        [
+          "parent",
+          "People who want a plan",
+          "Where the goal is understanding the pain and managing it, not open-ended appointments."
+        ]
+      ],
+      "includes": [
+        "Full assessment of the pain and how it affects your day",
+        "Plain explanation of what is likely driving it",
+        "Hands-on and symptom-control techniques where useful",
+        "Graded activity and exercise programme",
+        "Strength and tolerance building",
+        "A flare-up plan you can follow",
+        "Home programme and review point"
+      ],
+      "consults": [
+        [
+          "Initial assessment",
+          "Full assessment, explanation, and the first version of your plan.",
+          "60 min",
+          "Beirut clinic",
+          "Start here",
+          "sports"
+        ],
+        [
+          "Follow-up session",
+          "Coached graded activity, progression, and updates to your home programme.",
+          "45 min",
+          "Beirut clinic",
+          "",
+          "sports"
+        ],
+        [
+          "Online consultation",
+          "For patients outside Lebanon: assessment by video, programme design and review.",
+          "40 min",
+          "Video call",
+          "",
+          ""
+        ]
+      ],
+      "faq": [
+        [
+          "Do I need a referral?",
+          "No. You can book directly. If anything in your history needs a medical opinion or imaging, you will be told at the first appointment."
+        ],
+        [
+          "Will you prescribe medication or injections?",
+          "No. Rayhab is a physiotherapy clinic. Medication and injections are a matter for your doctor, and the plan here can run alongside them."
+        ],
+        [
+          "Will the exercises hurt?",
+          "Some activity may be uncomfortable, and how much is discussed and agreed with you in advance. The aim is to build what you can do without setting off a flare."
+        ],
+        [
+          "How many sessions will I need?",
+          "It depends on how long the pain has been there and how much it affects you. You will get an honest estimate at the first appointment, and the aim is a plan you can run yourself."
+        ],
+        [
+          "What if the pain is not musculoskeletal?",
+          "Then you will be told, and pointed towards the right person. Recognising what is not ours to treat is part of the assessment."
+        ]
+      ],
+      "cta_h": "Start with an assessment",
+      "cta_p": "Sixty minutes in Beirut or online. You leave understanding the pain and holding a plan."
     }
   ]
 }

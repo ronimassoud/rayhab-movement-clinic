@@ -58,7 +58,7 @@ FOOTER = '''<footer class="site-footer">
       <a href="sports-rehabilitation.html">Sports rehabilitation</a>
       <a href="frc-joint-training.html">FRC &amp; joint training</a>
       <a href="physiotherapy.html">Physiotherapy</a>
-      <a href="physiotherapy.html">Pain management</a>
+      <a href="pain-management.html">Pain management</a>
     </div>
     <div class="footcol">
       <h2>Clinic</h2>
@@ -85,7 +85,7 @@ def wrap_arrows(html):
 # Every service page shows the one clinic photograph, cropped to the part of
 # the room the service happens in: the treatment rooms for physiotherapy, the
 # training floor for sports rehabilitation and joint training.
-CLINIC_POS = {'sports-rehabilitation': '88% 50%', 'frc-joint-training': '72% 50%', 'physiotherapy': '14% 50%'}
+CLINIC_POS = {'sports-rehabilitation': '88% 50%', 'frc-joint-training': '72% 50%', 'physiotherapy': '14% 50%', 'pain-management': '30% 50%'}
 CLINIC_ALT = 'Inside Rayhab Movement Clinic: treatment rooms on the left, the reception desk ahead and a training floor with free weights on the right.'
 
 

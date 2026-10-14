@@ -217,7 +217,7 @@
 }
 
 .svcidx-support{padding:16px var(--pad-x) var(--section-y)}
-.svcidx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.svcidx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .supcard{background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s}
 .supcard-media{display:grid;height:180px}
 .supcard-body{padding:24px 32px 32px;display:flex;flex-direction:column;flex:1}
@@ -229,14 +229,14 @@
 @media (max-width:960px){ .svcidx-grid{grid-template-columns:1fr} }
 
 .router-band{padding:var(--section-y) var(--pad-x)}
-.router-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.router-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 .router-card{display:block;background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius-md);padding:24px 24px;transition:border-color .15s}
 a.router-card:hover{border-color:var(--color-forest-600)}
 .router-q{margin:0 0 8px;font:600 17px/1.35 var(--font-sans);color:var(--color-fg)}
 .router-a{margin:0;font:400 14px/1.55 var(--font-sans);color:var(--color-body)}
 .router-foot{display:flex;align-items:center;gap:16px;margin-top:20px;background:var(--color-paper);border:1px dashed var(--color-hairline);border-radius:var(--radius-md);padding:20px 24px;flex-wrap:wrap}
 .router-foot p{margin:0;flex:1;min-width:260px;font:400 16px/1.6 var(--font-sans);color:var(--color-fg-2)}
-@media (max-width:1100px){ .router-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:1100px){ .router-grid{grid-template-columns:repeat(2,1fr)} .router-grid>:last-child:nth-child(odd){grid-column:1/-1} }
 @media (max-width:620px){ .router-grid{grid-template-columns:1fr} }
 
 /* ==========================================================
@@ -454,7 +454,7 @@ body{overflow-wrap:break-word}
   .philo-cards{grid-template-columns:1fr 1fr}
   .edu-grid,.proof-grid,.svcidx-grid,.consult-grid,.approach-grid{grid-template-columns:repeat(2,1fr)}
   .edu-grid>:last-child,.proof-grid>:last-child,
-  .svcidx-grid>:last-child,.consult-grid>:last-child,
+  .consult-grid>:last-child,
   .approach-grid>:last-child{grid-column:1/-1}
 }
 
