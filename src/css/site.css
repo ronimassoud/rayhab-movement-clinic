@@ -258,7 +258,9 @@ a.edu-card .edu-body::after{content:"→";content:"→" / "";position:absolute;t
 }
 
 .svcidx-support{padding:16px var(--pad-x) var(--section-y)}
-.svcidx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+/* One equal column per card, however many there are, so the row always
+   spans the full width of the band above it. */
+.svcidx-grid{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:16px}
 .supcard{background:var(--card-bg);border:1px solid var(--card-line);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s}
 .supcard-media{display:grid;height:180px}
 .supcard-body{padding:24px 32px 32px;display:flex;flex-direction:column;flex:1}
@@ -267,7 +269,7 @@ a.edu-card .edu-body::after{content:"→";content:"→" / "";position:absolute;t
 .dotlist li{display:flex;gap:8px;align-items:center;font:400 14px/1.5 var(--font-sans);color:var(--color-fg-2)}
 .dotlist li::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--color-spring-500);flex:none}
 .supcard-link{font:600 15px/1 var(--font-sans);color:var(--color-brand-800);margin-top:auto}
-@media (max-width:960px){ .svcidx-grid{grid-template-columns:1fr} }
+@media (max-width:960px){ .svcidx-grid{grid-auto-flow:row;grid-template-columns:1fr} }
 
 .router-band{padding:var(--section-y) var(--pad-x)}
 .router-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
@@ -548,6 +550,8 @@ body{overflow-wrap:break-word}
 @media (max-width:1180px) and (min-width:901px){
   .philo-cards{grid-template-columns:1fr 1fr}
   .edu-grid,.proof-grid,.svcidx-grid,.consult-grid,.approach-grid{grid-template-columns:repeat(2,1fr)}
+  .svcidx-grid{grid-auto-flow:row}
+  .svcidx-grid>:last-child:nth-child(odd){grid-column:1/-1}
   .edu-grid>:last-child,.proof-grid>:last-child,
   .consult-grid>:last-child,
   .approach-grid>:last-child{grid-column:1/-1}
