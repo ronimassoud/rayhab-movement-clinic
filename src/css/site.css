@@ -459,13 +459,14 @@ a.router-card:hover{border-color:var(--color-forest-600)}
 /* The scoliosis cards (home and services) keep their hover darkening
    alongside the lean, and cast the floating shadow while lifted. */
 a.svc-primary.float-card,.svcidx-primary.float-card{transition:background-color var(--t-move),transform .6s var(--ease-out),box-shadow .6s var(--ease-out)}
-/* The journey cards on the scoliosis hub keep their edge hover too. */
-a.case-link.float-card{transition:border-color var(--t-tint),background-color var(--t-tint),transform .6s var(--ease-out),box-shadow .6s var(--ease-out)}
-a.case-link.float-card.is-tracking{transition:border-color var(--t-tint),background-color var(--t-tint),transform .14s linear,box-shadow .3s var(--ease-out);
+/* The journey cards on the scoliosis hub and the service cards (home and
+   services) keep their edge hover too. */
+a.case-link.float-card,a.svc-card.float-card,.supcard.float-card{transition:border-color var(--t-tint),background-color var(--t-tint),transform .6s var(--ease-out),box-shadow .6s var(--ease-out)}
+a.case-link.float-card.is-tracking,a.svc-card.float-card.is-tracking,.supcard.float-card.is-tracking{transition:border-color var(--t-tint),background-color var(--t-tint),transform .14s linear,box-shadow .3s var(--ease-out);
   box-shadow:var(--shadow-float)}
 a.svc-primary.float-card.is-tracking,.svcidx-primary.float-card.is-tracking{transition:background-color var(--t-move),transform .14s linear,box-shadow .3s var(--ease-out);
   box-shadow:var(--shadow-float)}
-@media (prefers-reduced-motion:reduce){ .float-card,a.svc-primary.float-card,.svcidx-primary.float-card,a.case-link.float-card{transform:none;transition:none} }
+@media (prefers-reduced-motion:reduce){ .float-card,a.svc-primary.float-card,.svcidx-primary.float-card,a.case-link.float-card,a.svc-card.float-card,.supcard.float-card{transform:none;transition:none} }
 @media (max-width:1040px){ .hub-hero-grid{grid-template-columns:1fr;gap:32px} .hub-device{left:auto;right:-240px;opacity:.25} }
 
 .hub-route{padding:var(--section-y) var(--pad-x)}
