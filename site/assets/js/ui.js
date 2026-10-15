@@ -462,16 +462,18 @@
      The card leans toward the cursor, up to 6 degrees, and lifts 6px, then
      settles back when the cursor leaves. The same lean the case cards had,
      on one listener per card. Fine pointers only, never with reduced
-     motion; elsewhere the card simply stays put. */
+     motion; elsewhere the card simply stays put. bindFloat() is also used
+     by the case coverflow for the cards it builds, with a test that pauses
+     the lean while the row is being dragged. */
+  var bindFloat = function () {};
   (function () {
-    var floats = document.querySelectorAll('.float-card');
-    if (!floats.length || !window.matchMedia || !window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    if (!window.matchMedia || !window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
     var still = window.matchMedia('(prefers-reduced-motion: reduce)');
-    Array.prototype.forEach.call(floats, function (card) {
+    bindFloat = function (card, paused) {
       var raf = 0, ev = null;
       var apply = function () {
         raf = 0;
-        if (!ev || still.matches) return;
+        if (!ev || still.matches || (paused && paused())) return;
         var r = card.getBoundingClientRect();
         var nx = (ev.clientX - r.left) / r.width - 0.5, ny = (ev.clientY - r.top) / r.height - 0.5;
         card.style.setProperty('--ry', (nx * 6).toFixed(2) + 'deg');
@@ -489,7 +491,8 @@
         card.classList.remove('is-tracking');
         card.style.removeProperty('--rx'); card.style.removeProperty('--ry'); card.style.removeProperty('--lift');
       });
-    });
+    };
+    Array.prototype.forEach.call(document.querySelectorAll('.float-card'), function (card) { bindFloat(card); });
   })();
 
   /* ---- Case coverflow (results.html) ----
@@ -537,9 +540,13 @@
     for (var s = 0; s < POOL; s++) {
       var el = document.createElement('div');
       el.className = 'pc-item';
-      el.innerHTML = '<div class="pc-layer pc-grey"></div><div class="pc-layer pc-colour"></div>';
+      // The sheet itself sits in .pc-float, which floats like the other
+      // cards; the slot around it only carries the layout.
+      el.innerHTML = '<div class="pc-float float-card"><div class="pc-layer pc-grey"></div><div class="pc-layer pc-colour"></div></div>';
       stage.appendChild(el);
-      pool.push({ el: el, grey: el.children[0], colour: el.children[1], k: null, item: -1 });
+      var face = el.firstChild;
+      bindFloat(face, function () { return !!dragging; });
+      pool.push({ el: el, grey: face.children[0], colour: face.children[1], k: null, item: -1 });
     }
     var fill = function (slot, i) {
       if (slot.item === i) return;
