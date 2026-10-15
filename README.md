@@ -278,8 +278,9 @@ the results page keeps its lean. Under reduced motion the lean stays, as a pose,
 and stops animating.
 
 **Navigation.** On desktop (1181px and up) the floating pill shows the link
-row, with the jelly motion on the labels (`ui.js`). Scoliosis sits in a small dropdown
-under Education that opens on hover or keyboard focus. Below that, the menu button
+row, with the jelly motion on the labels (`ui.js`). Scoliosis, Movement Training
+(the mobility articles) and Pain Management (the injury articles) sit in a
+small dropdown under Education that opens on hover or keyboard focus. Below that, the menu button
 opens the card panel, after React Bits' CardNav: the pill grows downward and three
 cards of grouped links drop in (Care, Learn, Clinic). The panel's markup comes from
 `content/navcards.py` on every page, `ui.js` owns its state, focus and closing

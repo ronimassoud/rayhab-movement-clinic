@@ -25,7 +25,7 @@ NAV = '''<nav class="site-nav" aria-label="Primary">
   <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navgroup"><i></i><span class="vh">Menu</span></button>
   <div class="navgroup" id="navgroup">
     <a href="../">Home</a>
-    <span class="nav-drop"><a href="../education.html">Education</a><span class="nav-menu"><a class="nav-sub" href="../scoliosis/">Scoliosis</a></span></span>
+    <span class="nav-drop"><a href="../education.html">Education</a><span class="nav-menu"><span class="nav-menu-in"><a class="nav-sub" href="../scoliosis/"><span class="nav-sub-t">Scoliosis</span><span class="nav-sub-d">Curves, Schroth and the assessment</span></a><a class="nav-sub" href="../mobility/"><span class="nav-sub-t">Movement Training</span><span class="nav-sub-d">Functional Range Conditioning</span></a><a class="nav-sub" href="../injury/"><span class="nav-sub-t">Pain Management</span><span class="nav-sub-d">Persistent and recurring pain</span></a></span></span></span>
     <a href="./" aria-current="page">Services</a>
     <a href="../about.html">About</a>
     <a href="../results.html">Results</a>

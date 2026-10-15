@@ -72,7 +72,7 @@ NAV = '''<nav class="site-nav" aria-label="Primary">
   <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navgroup"><i></i><span class="vh">Menu</span></button>
   <div class="navgroup" id="navgroup">
     <a href="../">Home</a>
-    <span class="nav-drop"><a href="../education.html" aria-current="page">Education</a><span class="nav-menu"><a class="nav-sub" href="../scoliosis/">Scoliosis</a></span></span>
+    <span class="nav-drop"><a href="../education.html" aria-current="page">Education</a><span class="nav-menu"><span class="nav-menu-in"><a class="nav-sub" href="../scoliosis/"><span class="nav-sub-t">Scoliosis</span><span class="nav-sub-d">Curves, Schroth and the assessment</span></a><a class="nav-sub" href="../mobility/"><span class="nav-sub-t">Movement Training</span><span class="nav-sub-d">Functional Range Conditioning</span></a><a class="nav-sub" href="../injury/"><span class="nav-sub-t">Pain Management</span><span class="nav-sub-d">Persistent and recurring pain</span></a></span></span></span>
     <a href="../services/">Services</a>
     <a href="../about.html">About</a>
     <a href="../results.html">Results</a>
@@ -245,6 +245,19 @@ def reading_time(a):
     return "%d min read" % max(2, math.ceil(len(words) / 200.0))
 
 
+def nav_for(topic):
+    """The shared nav, with the topic's own Education item marked current
+    where it has one (mobility is Movement Training, injury Pain
+    Management); elsewhere Education itself is the current section."""
+    href = {"mobility": "../mobility/", "injury": "../injury/"}.get(topic["dir"])
+    if not href:
+        return NAV
+    return (NAV.replace('<a href="../education.html" aria-current="page">Education</a>',
+                        '<a href="../education.html">Education</a>')
+               .replace('<a class="nav-sub" href="%s">' % href,
+                        '<a class="nav-sub" href="%s" aria-current="page">' % href))
+
+
 def render_article(a, topic, lookup):
     heads = [b for b in a["blocks"] if b["k"] == "h"]
     toc = "".join('<li><a href="#%s">%s</a></li>' % (h["id"], esc(h["t"])) for h in heads)
@@ -262,7 +275,7 @@ def render_article(a, topic, lookup):
     body = HEAD.format(title=esc(a["title"]) + ", Rayhab Movement Clinic",
                        desc=esc(a["desc"]),
                        canon="%s/%s/%s.html" % (BASE, topic["dir"], a["slug"]))
-    body += NAV + "\n\n<main id=\"main\">\n\n"
+    body += nav_for(topic) + "\n\n<main id=\"main\">\n\n"
     body += '''  <article>
   <header class="art-hero">
     <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="../education.html">Education</a> <span aria-hidden="true">/</span> <a href="./">%s</a></p>
@@ -346,7 +359,7 @@ def render_hub(topic, arts):
     body = HEAD.format(title=esc(topic["name"]) + ", Rayhab Movement Clinic",
                        desc=esc(topic["desc"]),
                        canon="%s/%s/" % (BASE, topic["dir"]))
-    body += NAV + "\n\n<main id=\"main\">\n\n"
+    body += nav_for(topic) + "\n\n<main id=\"main\">\n\n"
     body += '''  <section class="art-hero">
     <p class="crumbs crumbs-dark"><a href="../">Home</a> <span aria-hidden="true">/</span> <a href="../education.html">Education</a></p>
     <p class="art-eyebrow mt-5">Education hub</p>

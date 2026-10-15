@@ -247,8 +247,10 @@ a.edu-card .edu-body::after{content:"→";content:"→" / "";position:absolute;t
 .svcidx-primary-body{padding:clamp(28px,4vw,56px);display:flex;flex-direction:column}
 .svcidx-media{min-height:440px}
 .ticks2{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin-bottom:32px}
-.ticks2 li{display:flex;gap:12px;align-items:center;font:400 15px/1.5 var(--font-sans);color:var(--color-nav-link)}
-.ticks2 li::before{content:"✓";color:var(--color-spring-500);font-size:14px;flex:none}
+/* Marks sit on the first line of their item, beside the start of the
+   sentence, rather than centered on items that wrap. */
+.ticks2 li{display:flex;gap:12px;align-items:flex-start;font:400 15px/1.5 var(--font-sans);color:var(--color-nav-link)}
+.ticks2 li::before{content:"✓";color:var(--color-spring-500);font-size:14px;line-height:22.5px;flex:none}
 .svcidx-btns{display:flex;gap:12px;margin-top:auto;flex-wrap:wrap}
 @media (max-width:1000px){
   .svcidx-primary{grid-template-columns:1fr}
@@ -266,8 +268,8 @@ a.edu-card .edu-body::after{content:"→";content:"→" / "";position:absolute;t
 .supcard-body{padding:24px 32px 32px;display:flex;flex-direction:column;flex:1}
 .supcard-title{margin:0 0 12px;font:600 var(--text-heading)/var(--text-heading--line-height) var(--font-display);letter-spacing:-.025em;color:var(--color-forest-900)}
 .dotlist{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-.dotlist li{display:flex;gap:8px;align-items:center;font:400 14px/1.5 var(--font-sans);color:var(--color-fg-2)}
-.dotlist li::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--color-spring-500);flex:none}
+.dotlist li{display:flex;gap:8px;align-items:flex-start;font:400 14px/1.5 var(--font-sans);color:var(--color-fg-2)}
+.dotlist li::before{content:"";width:4px;height:4px;margin-top:8.5px;border-radius:50%;background:var(--color-spring-500);flex:none}
 .supcard-link{font:600 15px/1 var(--font-sans);color:var(--color-brand-800);margin-top:auto}
 @media (max-width:960px){ .svcidx-grid{grid-auto-flow:row;grid-template-columns:1fr} }
 

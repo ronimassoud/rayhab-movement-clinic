@@ -155,17 +155,19 @@
 /* ---- Education's dropdown ----
    Scoliosis is a child of Education, so on the desktop row it lives in a
    small panel under Education that opens on hover or keyboard focus, with a
-   caret on Education to say it is there. The panel's top padding is a
-   transparent bridge across the gap, so the pointer can travel down into it
-   without it closing. Below 1181px the row is replaced by the card panel,
-   which lists Scoliosis. */
+   caret on Education to say it is there. It lists Scoliosis, Movement
+   Training (the Functional Range Conditioning articles) and Pain Management
+   (the injury and pain articles), each with a line saying what it covers.
+   The panel's top padding is a transparent bridge across the gap, so the
+   pointer can travel down into it without it closing. Below 1181px the row
+   is replaced by the card panel. */
 .nav-drop{position:relative;display:flex}
 .nav-drop>a{padding-right:28px}
 .nav-drop>a::after{content:"";position:absolute;right:12px;top:50%;width:5px;height:5px;margin-top:-4px;
   border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);opacity:.75;
   transition:transform var(--t-move) var(--ease-out),margin-top var(--t-move) var(--ease-out)}
 .nav-drop:hover>a::after,.nav-drop:focus-within>a::after{transform:rotate(225deg);margin-top:-1px}
-/* On its own pages Scoliosis is the current page, so Education carries the
+/* On a section's own pages that item is current, so Education carries the
    current-section dot while the dropdown is closed. */
 .nav-drop:has(.nav-sub[aria-current="page"])>a{color:var(--color-bone);background:var(--color-veil-08);padding-left:25px}
 .nav-drop:has(.nav-sub[aria-current="page"])>a::before{content:"";position:absolute;left:11px;top:50%;width:6px;height:6px;
@@ -175,17 +177,20 @@
   transition:opacity .18s ease,transform var(--t-move) var(--ease-out),visibility 0s linear .18s}
 .nav-drop:hover .nav-menu,.nav-drop:focus-within .nav-menu{
   opacity:1;visibility:visible;transform:none;pointer-events:auto;transition-delay:0s}
-.navgroup .nav-menu .nav-sub{display:flex;align-items:center;white-space:nowrap;padding:12px 16px;
+.navgroup .nav-menu .nav-menu-in{display:flex;flex-direction:column;gap:2px;padding:6px;min-width:260px;
   background:color-mix(in oklab,var(--color-ink-950) 94%,transparent);
   -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-  border:1px solid var(--color-veil-08);border-radius:var(--radius-sm);box-shadow:var(--shadow-nav);
-  font:500 .875rem/1 var(--font-sans);color:var(--color-nav-link)}
+  border:1px solid var(--color-veil-08);border-radius:var(--radius-md);box-shadow:var(--shadow-nav)}
+.navgroup .nav-menu .nav-sub{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  white-space:nowrap;height:auto;padding:10px 14px;border-radius:var(--radius-sm);
+  color:var(--color-nav-link);transition:background-color var(--t-tint),color var(--t-tint)}
 .navgroup .nav-menu .nav-sub::after{content:none}
-.navgroup .nav-menu .nav-sub:hover,.navgroup .nav-menu .nav-sub:focus-visible{color:var(--color-bone);
-  background:color-mix(in oklab,var(--color-ink-950) 94%,transparent)}
+.navgroup .nav-menu .nav-sub-t{font:500 .875rem/1.2 var(--font-sans)}
+.navgroup .nav-menu .nav-sub-d{font:400 .75rem/1.3 var(--font-sans);color:var(--color-on-dark-2)}
+.navgroup .nav-menu .nav-sub:hover,.navgroup .nav-menu .nav-sub:focus-visible{color:var(--color-bone);background:var(--color-veil-08)}
 .navgroup .nav-menu .nav-sub[aria-current="page"]{color:var(--color-bone);padding-left:28px}
-.navgroup .nav-menu .nav-sub[aria-current="page"]::before{content:"";position:absolute;left:14px;top:50%;width:6px;height:6px;
-  margin-top:-3px;border-radius:50%;background:var(--color-spring-500)}
+.navgroup .nav-menu .nav-sub[aria-current="page"]::before{content:"";position:absolute;left:13px;top:15px;width:6px;height:6px;
+  border-radius:50%;background:var(--color-spring-500)}
 @media (prefers-reduced-motion:reduce){ .nav-menu,.nav-drop>a::after{transition:none} }
 
 .nav-right{display:flex;align-items:center;gap:16px;flex:none}
