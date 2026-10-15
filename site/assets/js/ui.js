@@ -412,6 +412,52 @@
     window.addEventListener('scroll', function () { if (pointer.active) wake(); }, { capture: true, passive: true });
   })();
 
+  /* ---- Tap feedback on touch screens ----
+     Phones and tablets get no hover, so the cursor glow never shows there.
+     Every button answers a tap instead: a ripple spreads from where the
+     finger landed, in the button's own text color, and the button presses
+     in and springs back. Touch and pen only, so a mouse keeps the glow;
+     nothing with reduced motion, and nothing on a disabled button. The
+     ripple sits in its own clipped layer, so the button's layout and
+     outline are untouched. */
+  (function () {
+    var TAP = '.btn, button, [role="button"], .pc-btn, .bk-type, .slot-btn';
+    var still = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    // iOS only shows :active on elements with a touch listener in their path.
+    document.addEventListener('touchstart', function () {}, { passive: true });
+    document.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
+      if (still && still.matches) return;
+      var el = e.target.closest && e.target.closest(TAP);
+      if (!el || el.disabled || el.getAttribute('aria-disabled') === 'true' || !el.animate) return;
+      var r = el.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      var layer = document.createElement('span');
+      layer.className = 'tap-layer';
+      layer.setAttribute('aria-hidden', 'true');
+      var dot = document.createElement('span');
+      dot.className = 'tap-ripple';
+      var x = e.clientX - r.left, y = e.clientY - r.top;
+      var reach = Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y));
+      dot.style.left = x + 'px'; dot.style.top = y + 'px';
+      dot.style.width = dot.style.height = (reach * 2) + 'px';
+      layer.appendChild(dot);
+      el.appendChild(layer);
+      // The spread eases out; the fade holds, then lets go, so the ripple is
+      // seen at full size before it goes.
+      dot.animate([{ transform: 'translate(-50%, -50%) scale(0)' }, { transform: 'translate(-50%, -50%) scale(1)' }],
+                  { duration: 520, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'forwards' });
+      var fade = dot.animate([{ opacity: 0.24 }, { opacity: 0.24, offset: 0.45 }, { opacity: 0 }],
+                             { duration: 680, easing: 'linear', fill: 'forwards' });
+      fade.onfinish = fade.oncancel = function () { if (layer.parentNode) layer.parentNode.removeChild(layer); };
+      // The press uses the individual scale property, so it never fights a
+      // button's own transform.
+      el.animate([{ scale: '1' }, { scale: '0.96', offset: 0.35 }, { scale: '1' }],
+                 { duration: 320, easing: 'cubic-bezier(0.3, 0.7, 0.4, 1.4)' });
+    }, { passive: true });
+  })();
+
   /* ---- Floating cards (.float-card) ----
      The card leans toward the cursor, up to 6 degrees, and lifts 6px, then
      settles back when the cursor leaves. The same lean the case cards had,

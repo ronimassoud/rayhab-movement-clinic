@@ -538,6 +538,13 @@ a.svc-primary,.svcidx-primary.is-linked,.routecard-lead,.consult-alt,.navcard,.s
   --spot-edge-color:var(--color-forest-600);--spot-rim:.5}
 
 
+/* Tap feedback on touch screens (ui.js). The layer clips the ripple to the
+   button's shape; the ripple takes the button's text color, so it reads on
+   every fill. */
+.tap-layer{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none;z-index:2}
+.tap-ripple{position:absolute;border-radius:50%;background:currentColor;opacity:0;pointer-events:none}
+
+
 /* ---------- 11. FAQ section ----------
    After React Bits Pro's FAQ 5: a centred heading with an inline link to
    ask the clinic, then the question tiles in two columns, one below 900px.
