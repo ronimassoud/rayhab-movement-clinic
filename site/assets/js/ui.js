@@ -40,8 +40,20 @@
     // focus goes to the page chrome or out of the document, which should
     // also close it.
     if (nav) {
+      // A press inside the bar is settled by its click, not by focus. On
+      // iOS, iPadOS and Safari a button does not take focus when tapped, so
+      // tapping the toggle to close blurred the focused menu link with no
+      // relatedTarget: focusout closed the menu, then the click toggled it
+      // straight back open, and the menu could not be closed. While a
+      // pointer is down inside the bar, focusout stands aside.
+      var pressing = false;
+      nav.addEventListener('pointerdown', function () { pressing = true; }, true);
+      var release = function () { window.setTimeout(function () { pressing = false; }, 0); };
+      document.addEventListener('pointerup', release, true);
+      document.addEventListener('pointercancel', release, true);
+
       nav.addEventListener('focusout', function (e) {
-        if (!isOpen()) return;
+        if (!isOpen() || pressing) return;
         if (e.relatedTarget && nav.contains(e.relatedTarget)) return;
         setOpen(false, false);
       });
