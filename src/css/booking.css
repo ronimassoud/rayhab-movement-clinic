@@ -662,3 +662,52 @@ dialog.modal.is-open::backdrop{
   .bk-badge,.bk-segtitle,.bk-seg,.bk-backbtn{transition:none}
   .bk-backbtn:active{transform:none}
 }
+
+
+/* ==========================================================
+   Booking, connected to the API
+   Catalog, practitioner, live availability, international
+   phone numbers and the second consent line.
+   ========================================================== */
+
+/* A day with nothing to choose, closed or fully requested, is disabled
+   but stays in the row so the week still reads as a week. */
+.bk-day[disabled]{cursor:not-allowed}
+.bk-day.is-full .bk-num{color:#B6BEB8;text-decoration:line-through;text-decoration-thickness:1.5px}
+.bk-day.is-full .bk-availdot{background:#D6D2C4}
+@media (hover:hover) and (pointer:fine){ .bk-day[disabled]:hover{transform:none;border-color:var(--color-line)} }
+
+/* Waiting for the practice calendar: placeholders the size of a time. */
+.slot-skel{display:block;min-height:44px;border-radius:var(--radius-xs);
+  background:linear-gradient(90deg,var(--color-sand) 0%,#F7F5EE 50%,var(--color-sand) 100%) 0 0/200% 100%;
+  animation:slot-shimmer 1.4s ease-in-out infinite}
+@keyframes slot-shimmer{ to{background-position:-200% 0} }
+@media (prefers-reduced-motion:reduce){ .slot-skel{animation:none} }
+
+.bk-availnote{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.bk-availnote[hidden]{display:none}
+.bk-availnote-t{flex:1 1 220px}
+.bk-refresh{flex:none;min-height:36px;padding:6px 14px;border-radius:var(--radius-pill);cursor:pointer;
+  background:#fff;border:1px solid currentColor;color:inherit;font:600 13px/1 var(--font-sans)}
+.bk-refresh:hover{background:#ffffffcc}
+@media (pointer:coarse){ .bk-refresh{min-height:44px} }
+.bk-yourtime{margin:12px 0 0;font:500 13px/1.5 var(--font-sans);color:var(--color-brand-800)}
+
+.segment button[disabled]{color:#9AA79E;cursor:not-allowed;background:transparent}
+
+.bk-pracwrap{margin:18px 0 0;max-width:360px}
+select.input{appearance:none;cursor:pointer;padding-right:38px;
+  background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23174924' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center}
+
+/* WhatsApp number: country code beside the local number. */
+.bk-phone{display:flex;gap:8px}
+.bk-phone .bk-cc{flex:0 0 auto;width:auto;min-width:104px}
+.bk-phone input{flex:1;min-width:0}
+.field-opt{font-weight:400;color:var(--color-body)}
+
+.bk-consentwrap{display:flex;flex-direction:column;gap:14px}
+
+.bk-ref{margin:14px 0 0;font:400 14px/1.5 var(--font-sans);color:var(--color-body)}
+.bk-ref strong{font-weight:600;color:var(--color-fg);letter-spacing:.02em}
+@media (max-width:700px){ .bk-ref{margin:0 0 16px} }
+@media (max-width:700px){ .modal-body .bk-consentwrap{gap:10px} }

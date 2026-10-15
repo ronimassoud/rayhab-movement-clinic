@@ -1,0 +1,112 @@
+/* ==========================================================
+   PAYMENT CHOICE (payment/index.html)
+   The booking flow's shape and parts: a forest rail with the
+   appointment, a bone panel with the one decision to make.
+   ========================================================== */
+.pay{
+  display:grid;grid-template-columns:420px 1fr;min-height:100vh;min-height:100dvh;
+  background:var(--color-bone);
+}
+.pay-rail{background:var(--color-forest-900);padding:34px 36px;display:flex;flex-direction:column}
+.pay-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:44px}
+.pay-exit{font:500 15px/1 var(--font-sans);color:var(--color-on-dark-2);min-height:44px;display:inline-flex;align-items:center}
+.pay-exit:hover{color:var(--color-bone)}
+.pay-h1{margin:0 0 8px;font:600 var(--text-heading-lg)/var(--text-heading-lg--line-height) var(--font-display);letter-spacing:-.03em;color:var(--color-bone)}
+.pay-lede{margin:0 0 30px;font:400 15px/1.6 var(--font-sans);color:var(--color-on-dark-2)}
+.pay-summary{margin-top:0}
+/* booking.css hides .bk-summary on phones (its rail becomes a progress bar);
+   here the summary is the point, so it stays. */
+.pay-rail .bk-summary:not([hidden]){display:block}
+.pay-summary dd{overflow-wrap:anywhere}
+.pay-rail .bk-note{margin-top:auto;padding-top:24px}
+.pay-rail .bk-note a{color:var(--color-spring-500)}
+
+.pay-panel{padding:56px 56px 48px;max-width:760px}
+.pay-sub{margin:10px 0 0;font:400 16px/1.6 var(--font-sans);color:var(--color-fg-2)}
+.pay-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:28px}
+
+/* The two methods: the booking flow's service radios, larger. */
+.pay-methods{display:flex;flex-direction:column;gap:12px;margin-top:26px}
+.pay-method{
+  display:flex;gap:16px;align-items:flex-start;cursor:pointer;
+  background:#fff;border:1px solid var(--color-line);border-radius:var(--radius-md);padding:21px 23px;
+  transition:border-color var(--t-tint),box-shadow var(--t-move) var(--ease-out),transform var(--t-move) var(--ease-out)}
+.pay-method[hidden]{display:none}
+.pay-method:hover{border-color:var(--color-forest-600)}
+.pay-method.is-on{border:1.5px solid var(--color-brand-800);padding:20.5px 22.5px}
+.pay-method.is-on .bk-radio{border:6px solid var(--color-brand-800);background:var(--color-spring-500)}
+.pay-method:focus-visible{outline:2px solid var(--color-ink-950);outline-offset:3px}
+.pay-method-body{flex:1;display:block}
+.pay-method-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pay-method-name{font:600 17px/1.35 var(--font-sans);color:var(--color-fg)}
+.pay-method-amt{font:600 17px/1.35 var(--font-display);color:var(--color-brand-800)}
+.pay-method-desc{display:block;margin-top:6px;font:400 14px/1.55 var(--font-sans);color:var(--color-body)}
+@media (hover:hover) and (pointer:fine){
+  .pay-method:hover{transform:translateY(-2px);box-shadow:var(--lift-sm)}
+}
+@media (prefers-reduced-motion:reduce){ .pay-method:hover{transform:none} }
+.pay-deadline{margin:16px 0 0;font:400 14px/1.55 var(--font-sans);color:var(--color-fg-2)}
+
+/* State mark: tick, info, warning, or a spinner while verifying. */
+.pay-mark{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;margin-bottom:24px;
+  font:600 26px/1 var(--font-sans)}
+.pay-mark.is-success{background:var(--color-spring-500);color:var(--color-ink-950)}
+.pay-mark.is-info,.pay-mark.is-neutral{background:var(--color-sand);color:var(--color-brand-800);font-family:var(--font-display)}
+.pay-mark.is-warn{background:#F6E7C8;color:#6B4A07}
+.pay-mark.is-danger{background:#F7E4E0;color:#8A2617}
+.pay-mark.is-pending{background:var(--color-spring-50)}
+.pay-spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--color-spring-200);border-top-color:var(--color-brand-800);
+  animation:pay-spin .9s linear infinite}
+@keyframes pay-spin{ to{transform:rotate(360deg)} }
+@media (prefers-reduced-motion:reduce){ .pay-spin{animation-duration:2.4s} }
+
+.pay-facts{margin:20px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:1px;
+  background:var(--color-line);border-radius:var(--radius-md);overflow:hidden}
+.pay-facts[hidden]{display:none}
+.pay-facts li{background:var(--color-paper);padding:14px 18px;font:400 15px/1.55 var(--font-sans);color:var(--color-fg-2)}
+
+@media (max-width:1000px){
+  .pay{grid-template-columns:1fr;min-height:0}
+  .pay-rail{padding:22px var(--pad-x) 26px}
+  .pay-top{margin-bottom:22px}
+  .pay-rail .bk-note{display:none}
+  .pay-panel{padding:32px var(--pad-x) 40px;max-width:none}
+}
+@media (max-width:560px){
+  .pay-top .wordmark{width:80px;height:27px}
+  .pay-lede{margin-bottom:20px}
+  .pay-actions .btn{width:100%}
+  .pay-actions .bk-linkbtn{width:100%;text-align:center}
+}
+
+
+/* ==========================================================
+   DEMO MODE (api/mock.js, ?demo=1 on staging and localhost)
+   Unmissable on purpose: a reviewer must never mistake a mock
+   success for a real one.
+   ========================================================== */
+.demo-bar{position:relative;z-index:300;display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;
+  padding:9px var(--pad-x,16px);background:repeating-linear-gradient(135deg,#F6E7C8 0 14px,#F2DFB6 14px 28px);
+  border-bottom:1px solid #D9BE82;font:400 13px/1.4 var(--font-sans);color:#4A3505}
+.demo-bar-t{flex:1 1 260px}
+.demo-bar-t strong{font-weight:700}
+.demo-bar-s{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.demo-bar-s select{min-height:34px;max-width:260px;padding:4px 10px;border:1px solid #B8964A;border-radius:var(--radius-xs);
+  background:#fffdf6;font:500 13px/1.2 var(--font-sans);color:#2E2203}
+.demo-bar-x{font-weight:600;color:#4A3505;text-decoration:underline;text-underline-offset:2px}
+@media (pointer:coarse){ .demo-bar-s select{min-height:44px} .demo-bar-x{padding:10px 0} }
+
+.demo-checkout{margin:auto;max-width:min(440px,calc(100vw - 32px));border:0;border-radius:var(--radius-lg);padding:28px;
+  background:#fff;box-shadow:var(--shadow-float);color:var(--color-fg)}
+.demo-checkout::backdrop{background:rgba(8,25,14,.6)}
+.demo-checkout-k{margin:0;font:600 12px/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase;color:#6B4A07}
+.demo-checkout-amt{margin:14px 0 6px;font:600 40px/1 var(--font-display);color:var(--color-forest-900)}
+.demo-checkout-d{margin:0;font:400 15px/1.55 var(--font-sans);color:var(--color-fg-2)}
+.demo-checkout-acts{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+@media (max-width:560px){
+  .demo-bar{gap:6px 12px;padding:8px var(--pad-x,16px);font-size:12.5px}
+  .demo-bar-t{flex-basis:100%}
+  .demo-bar-s{flex:1;min-width:0}
+  .demo-bar-s span{display:none}
+  .demo-bar-s select{flex:1;min-width:0;max-width:none}
+}

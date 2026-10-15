@@ -1,10 +1,11 @@
 {
   "name": "rayhab-movement-clinic",
   "private": true,
-  "description": "Build tooling for the Rayhab site. The site itself is static; this only compiles the stylesheet.",
+  "description": "Build tooling for the Rayhab site. The site itself is static; this compiles the stylesheet and runs the browser-script tests.",
   "scripts": {
     "build": "tailwindcss -i src/css/app.css -o site/assets/css/rayhab.css --minify",
-    "dev": "tailwindcss -i src/css/app.css -o site/assets/css/rayhab.css --watch"
+    "dev": "tailwindcss -i src/css/app.css -o site/assets/css/rayhab.css --watch",
+    "test": "node --test \"tests/*.test.js\""
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="rayhab-api" content="/api">
+<title>Choose how to pay, Rayhab Movement Clinic</title>
+<meta name="description" content="Choose how to pay for an approved appointment at Rayhab Movement Clinic: online with Whish, or in cash at the clinic.">
+<meta name="robots" content="noindex, nofollow">
+<!-- The page is opened from a private link; nothing about it is passed on
+     to the next site, Whish included. -->
+<meta name="referrer" content="no-referrer">
+<link rel="preload" href="../assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/public-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/rayhab.css?v=5be591df">
+<link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+</head>
+<body data-app="payment">
+<a class="skip" href="#main">Skip to content</a>
+<div class="frame p-0">
+<main id="main">
+<div class="pay">
+
+  <aside class="pay-rail">
+    <div class="pay-top">
+      <a href="../" aria-label="Rayhab Movement Clinic, home"><span class="wordmark"></span></a>
+      <a class="pay-exit" href="../">Exit</a>
+    </div>
+    <p class="eyebrow text-spring-500 mb-3">Your appointment</p>
+    <h1 class="pay-h1">Choose how to pay</h1>
+    <p class="pay-lede">This page is private to you. It opens from the link the clinic sent you on WhatsApp.</p>
+    <div class="bk-summary pay-summary" id="pay-summary" hidden>
+      <dl>
+        <div><dt>Service</dt><dd id="ps-service">…</dd></div>
+        <div><dt>With</dt><dd id="ps-with">…</dd></div>
+        <div><dt>When</dt><dd id="ps-when">…</dd></div>
+        <div><dt>Where</dt><dd id="ps-where">…</dd></div>
+        <div><dt>Amount</dt><dd id="ps-amount">…</dd></div>
+        <div><dt>Reference</dt><dd id="ps-ref">…</dd></div>
+      </dl>
+    </div>
+    <p class="bk-note">Questions? Call or WhatsApp the clinic on <a href="tel:+96171383315">+961 71 383 315</a>.</p>
+  </aside>
+
+  <section class="pay-panel" aria-live="polite">
+
+    <!-- Loading -->
+    <div id="ps-loading">
+      <p class="bk-eyebrow">Opening your appointment…</p>
+      <div class="bk-loadwrap">
+        <span class="vh">Loading your appointment</span>
+        <span class="bk-skel" aria-hidden="true"></span>
+        <span class="bk-skel" aria-hidden="true"></span>
+        <span class="bk-skel" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <!-- Choose a method -->
+    <div id="ps-choose" hidden>
+      <p class="bk-eyebrow" id="ps-choose-eyebrow">Appointment approved</p>
+      <h2 class="bk-h" tabindex="-1">How would you like to pay?</h2>
+      <p class="pay-sub" id="ps-choose-sub">Choose one. You can pay online now, or pay in cash when you come in.</p>
+      <div class="pay-methods" role="radiogroup" aria-labelledby="ps-choose-sub">
+        <div class="pay-method" role="radio" aria-checked="false" tabindex="0" data-method="whish" id="pm-whish">
+          <span class="bk-radio" aria-hidden="true"></span>
+          <span class="pay-method-body">
+            <span class="pay-method-top"><span class="pay-method-name">Pay online with Whish</span><span class="pay-method-amt" data-amount></span></span>
+            <span class="pay-method-desc" id="pm-whish-desc">Pay now through Whish. Your booking is secured once Whish confirms the payment.</span>
+          </span>
+        </div>
+        <div class="pay-method" role="radio" aria-checked="false" tabindex="-1" data-method="cash" id="pm-cash">
+          <span class="bk-radio" aria-hidden="true"></span>
+          <span class="pay-method-body">
+            <span class="pay-method-top"><span class="pay-method-name">Pay cash at the clinic</span><span class="pay-method-amt" data-amount></span></span>
+            <span class="pay-method-desc" id="pm-cash-desc">Pay at reception when you come in.</span>
+          </span>
+        </div>
+      </div>
+      <p class="pay-deadline" id="ps-deadline" hidden></p>
+      <div class="notice notice-error mt-5" id="ps-choose-err" role="alert" tabindex="-1" hidden></div>
+      <div class="pay-actions">
+        <button class="btn btn-spring" type="button" id="ps-confirm" disabled>Choose a payment method</button>
+        <button class="bk-linkbtn" type="button" id="ps-cancelchange" hidden>Keep my current choice</button>
+      </div>
+    </div>
+
+    <!-- Every other state: verifying, paid, cash selected, failed, expired… -->
+    <div id="ps-message" hidden>
+      <div class="pay-mark" id="ps-mark" aria-hidden="true"></div>
+      <p class="bk-eyebrow" id="ps-msg-eyebrow"></p>
+      <h2 class="bk-h" id="ps-msg-title" tabindex="-1"></h2>
+      <p class="pay-sub" id="ps-msg-text"></p>
+      <ul class="pay-facts" id="ps-msg-facts" hidden></ul>
+      <div class="pay-actions" id="ps-msg-actions"></div>
+    </div>
+
+  </section>
+</div>
+</main>
+</div>
+<script src="../assets/js/ui.js?v=3642581c"></script>
+<script src="../assets/js/api/time.js?v=549c5148"></script>
+<script src="../assets/js/api/labels.js?v=f345e037"></script>
+<script src="../assets/js/api/client.js?v=e732d077"></script>
+<script src="../assets/js/api/payments.js?v=b8d29d89"></script>
+<script src="../assets/js/payment.js?v=e4146149"></script>
+</body>
+</html>

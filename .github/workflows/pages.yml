@@ -38,6 +38,12 @@ jobs:
       - name: Build the stylesheet
         run: npm ci && npm run build
 
+      # Beirut time and daylight saving, status wording, and the rules the
+      # demo backend shares with the real one (cash recorded once, Whish
+      # paid only when verified).
+      - name: Test the browser scripts
+        run: npm test
+
       # Versions every stylesheet and script URL by its content (?v=<hash>),
       # so a browser can never pair a new page with a cached old file.
       - name: Version asset URLs

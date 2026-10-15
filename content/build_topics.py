@@ -151,6 +151,11 @@ HEAD = '''<!DOCTYPE html>
 TAIL = '''
 </div>
 <script src="../assets/js/ui.js"></script>
+<script src="../assets/js/api/time.js"></script>
+<script src="../assets/js/api/labels.js"></script>
+<script src="../assets/js/api/client.js"></script>
+<script src="../assets/js/api/availability.js"></script>
+<script src="../assets/js/api/appointments.js"></script>
 <script src="../assets/js/booking.js"></script>
 <script src="../assets/js/modal.js"></script>
 </body>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="rayhab-api" content="/api">
+<title>Clinic admin, Rayhab Movement Clinic</title>
+<meta name="description" content="Appointment requests, schedule and payments for Rayhab Movement Clinic staff. Sign-in required.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="preload" href="../assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/public-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/rayhab.css?v=5be591df">
+<link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
+</head>
+<body data-app="admin" class="adm-body">
+<a class="skip" href="#adm-main">Skip to content</a>
+
+<!-- Before the session is known, and when there is none. -->
+<div class="adm-gate" id="adm-gate">
+  <div class="adm-gate-card">
+    <span class="wordmark adm-gate-mark"></span>
+    <p class="eyebrow text-forest-600 mt-8">Clinic admin</p>
+    <h1 class="adm-gate-h" id="adm-gate-h" tabindex="-1">Checking your session…</h1>
+    <p class="adm-gate-p" id="adm-gate-p">One moment.</p>
+    <div class="adm-gate-acts" id="adm-gate-acts"></div>
+  </div>
+</div>
+
+<div class="adm" id="adm" hidden>
+  <aside class="adm-side">
+    <div class="adm-brand">
+      <a href="../" aria-label="Rayhab Movement Clinic, public site"><span class="wordmark"></span></a>
+      <span class="adm-brand-t">Admin</span>
+    </div>
+    <nav class="adm-nav" aria-label="Admin sections">
+      <a href="#/overview" data-view="overview">Overview</a>
+      <a href="#/requests" data-view="requests">Requests <span class="adm-count" id="cnt-requests" hidden></span></a>
+      <a href="#/appointments" data-view="appointments">Appointments</a>
+      <a href="#/calendar" data-view="calendar">Calendar</a>
+      <a href="#/payments" data-view="payments">Payments <span class="adm-count adm-count-quiet" id="cnt-payments" hidden></span></a>
+      <a href="#/activity" data-view="activity">Activity</a>
+    </nav>
+    <div class="adm-user">
+      <p class="adm-user-n" id="adm-user">…</p>
+      <a class="adm-signout" id="adm-signout" href="#">Sign out</a>
+    </div>
+  </aside>
+
+  <main class="adm-main" id="adm-main" tabindex="-1">
+    <header class="adm-head">
+      <div>
+        <p class="adm-today" id="adm-today"></p>
+        <h1 class="adm-h1" id="adm-title">Overview</h1>
+      </div>
+      <div class="adm-head-acts">
+        <span class="adm-updated" id="adm-updated" aria-live="polite"></span>
+        <button class="btn btn-ghost-light btn-sm" type="button" id="adm-refresh">Refresh</button>
+      </div>
+    </header>
+
+    <!-- Overview -->
+    <section class="adm-view" id="v-overview" hidden>
+      <div class="adm-stats" id="ov-stats"></div>
+      <div class="adm-cols">
+        <div class="adm-panel">
+          <h2 class="adm-h2">Today</h2>
+          <div id="ov-today"></div>
+        </div>
+        <div class="adm-panel">
+          <h2 class="adm-h2">Needs attention</h2>
+          <div id="ov-alerts"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Requests -->
+    <section class="adm-view" id="v-requests" hidden>
+      <p class="adm-intro">New requests, oldest first. Approving sends the patient a WhatsApp message with a secure link to choose how to pay.</p>
+      <div id="rq-list"></div>
+    </section>
+
+    <!-- Appointments -->
+    <section class="adm-view" id="v-appointments" hidden>
+      <form class="adm-filters" id="ap-filters" role="search">
+        <p class="adm-f adm-f-q"><label class="field-label" for="ap-q">Search</label><input class="input" id="ap-q" type="search" placeholder="Name, phone or reference" autocomplete="off"></p>
+        <p class="adm-f"><label class="field-label" for="ap-status">Status</label><select class="input" id="ap-status"></select></p>
+        <p class="adm-f"><label class="field-label" for="ap-method">Payment</label><select class="input" id="ap-method">
+          <option value="">Any</option><option value="none">Not selected</option><option value="whish">Whish</option><option value="cash">Cash</option></select></p>
+        <p class="adm-f" id="ap-prac-wrap" hidden><label class="field-label" for="ap-prac">Practitioner</label><select class="input" id="ap-prac"></select></p>
+        <p class="adm-f"><label class="field-label" for="ap-from">From</label><input class="input" id="ap-from" type="date"></p>
+        <p class="adm-f"><label class="field-label" for="ap-to">To</label><input class="input" id="ap-to" type="date"></p>
+        <p class="adm-f adm-f-btn"><button class="bk-linkbtn" type="button" id="ap-clear">Clear filters</button></p>
+      </form>
+      <div id="ap-list"></div>
+      <div class="adm-pager" id="ap-pager"></div>
+    </section>
+
+    <!-- Calendar -->
+    <section class="adm-view" id="v-calendar" hidden>
+      <div class="adm-caltools">
+        <div class="segment" role="group" aria-label="Calendar range">
+          <button type="button" id="cal-day" aria-pressed="false">Day</button>
+          <button type="button" id="cal-week" aria-pressed="true">Week</button>
+        </div>
+        <div class="adm-calnav">
+          <button class="btn btn-ghost-light btn-compact" type="button" id="cal-prev" aria-label="Previous">‹</button>
+          <button class="btn btn-ghost-light btn-compact" type="button" id="cal-today">Today</button>
+          <button class="btn btn-ghost-light btn-compact" type="button" id="cal-next" aria-label="Next">›</button>
+        </div>
+        <p class="adm-calrange" id="cal-range" aria-live="polite"></p>
+        <button class="btn btn-brand btn-sm" type="button" id="cal-block">Block time</button>
+      </div>
+      <div class="adm-legend" aria-hidden="true">
+        <span><i class="tone-pending"></i>Requested</span><span><i class="tone-info"></i>Approved</span>
+        <span><i class="tone-success"></i>Confirmed</span><span><i class="tone-neutral"></i>Completed</span>
+        <span><i class="adm-hatch"></i>Blocked</span>
+      </div>
+      <div class="adm-cal" id="cal-grid"></div>
+    </section>
+
+    <!-- Payments -->
+    <section class="adm-view" id="v-payments" hidden>
+      <form class="adm-filters" id="py-filters">
+        <p class="adm-f"><label class="field-label" for="py-status">Status</label><select class="input" id="py-status">
+          <option value="">Any</option><option value="awaiting_payment">Awaiting payment</option><option value="paid">Paid</option>
+          <option value="not_selected">Not selected</option><option value="refunded">Refunded</option></select></p>
+        <p class="adm-f"><label class="field-label" for="py-method">Method</label><select class="input" id="py-method">
+          <option value="">Any</option><option value="whish">Whish</option><option value="cash">Cash</option><option value="none">Not selected</option></select></p>
+      </form>
+      <p class="adm-intro">Whish payments are marked paid only once Whish verifies them. Cash is marked paid only when you record it here.</p>
+      <div id="py-list"></div>
+      <div class="adm-pager" id="py-pager"></div>
+    </section>
+
+    <!-- Activity -->
+    <section class="adm-view" id="v-activity" hidden>
+      <form class="adm-filters" id="ac-filters">
+        <p class="adm-f"><label class="field-label" for="ac-type">Show</label><select class="input" id="ac-type"></select></p>
+      </form>
+      <div id="ac-list"></div>
+      <div class="adm-pager" id="ac-pager"></div>
+    </section>
+  </main>
+</div>
+
+<!-- Appointment detail -->
+<dialog class="adm-drawer" id="adm-drawer" aria-labelledby="dr-title">
+  <div class="adm-drawer-in">
+    <button class="modal-close adm-drawer-x" type="button" id="dr-close" aria-label="Close"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13"/></svg></button>
+    <div id="dr-body"></div>
+  </div>
+</dialog>
+
+<!-- Confirmations and forms -->
+<dialog class="adm-dialog" id="adm-dialog" aria-labelledby="dl-title">
+  <form method="dialog" class="adm-dialog-in" id="dl-form" novalidate>
+    <h2 class="adm-h2" id="dl-title"></h2>
+    <div id="dl-body"></div>
+    <div class="notice notice-error mt-4" id="dl-err" role="alert" tabindex="-1" hidden></div>
+    <div class="adm-dialog-acts">
+      <button class="bk-linkbtn" type="button" id="dl-cancel">Cancel</button>
+      <button class="btn btn-brand btn-sm" type="submit" id="dl-ok">Confirm</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="adm-toast" id="adm-toast" role="status" aria-live="polite" hidden></div>
+
+<script src="../assets/js/api/time.js?v=549c5148"></script>
+<script src="../assets/js/api/labels.js?v=f345e037"></script>
+<script src="../assets/js/api/client.js?v=e732d077"></script>
+<script src="../assets/js/api/availability.js?v=23b2281d"></script>
+<script src="../assets/js/api/appointments.js?v=4d7d2d94"></script>
+<script src="../assets/js/api/payments.js?v=b8d29d89"></script>
+<script src="../assets/js/admin.js?v=680517c0"></script>
+</body>
+</html>

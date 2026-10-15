@@ -15,6 +15,7 @@
 
 @source "../../site/**/*.html";
 @source "../../site/assets/js/*.js";
+@source "../../site/assets/js/api/*.js";
 @source "../../content/*.py";
 @source not "../../site/_old";
 
@@ -24,3 +25,5 @@
 @import "./site.css" layer(components);         /* page composition, interaction */
 @import "./mobile.css" layer(components);       /* phone compositions */
 @import "./booking.css" layer(components);      /* booking flow and dialog */
+@import "./payment.css" layer(components);      /* payment choice, demo mode */
+@import "./admin.css" layer(components);        /* practitioner dashboard */

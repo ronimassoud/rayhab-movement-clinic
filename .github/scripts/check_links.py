@@ -19,10 +19,12 @@ SKIP = ("http://", "https://", "mailto:", "tel:", "//", "data:")
 broken = []
 checked = 0
 
-# Pages that deliberately carry no motion gate. book.html is the no-JS
-# booking fallback and has no modal.js, which is the anchor the injector
-# keys off, so it is excluded by construction rather than by this list.
-NO_MOTION = {"book.html", "frc-joint-training.html", "404.html"}   # a redirect stub; the self-contained 404
+# Pages that deliberately carry no motion gate, by path under the site
+# root. book.html is the no-JS booking fallback; the redirect stub and the
+# self-contained 404 need none; the payment page and the admin are working
+# tools, not editorial pages.
+NO_MOTION = {"book.html", "services/frc-joint-training.html", "404.html",
+             "payment/index.html", "admin/index.html"}
 missing_motion = []
 
 for base, _dirs, files in os.walk(ROOT):
@@ -41,7 +43,7 @@ for base, _dirs, files in os.walk(ROOT):
         # content/navcards.py into every page with the nav.
         if 'class="site-nav"' in html and 'id="navcards"' not in html:
             missing_motion.append("%s -> nav without its card panel" % page)
-        if name not in NO_MOTION:
+        if os.path.relpath(page, ROOT).replace(os.sep, "/") not in NO_MOTION:
             if "js-motion" not in html:
                 missing_motion.append("%s -> no motion gate" % page)
             for need in ("assets/js/vendor/gsap.min.js",
@@ -138,7 +140,9 @@ for base, _dirs, files in os.walk(ROOT):
             ids[path] = set(re.findall(r'\sid="([^"]+)"', pages[path]))
 bad_anchors = []
 for path, html in pages.items():
-    for target_path, frag in re.findall(r'href="([^"#:]*)#([^"]+)"', html):
+    # A fragment starting with "/" is a route inside a page's own script
+    # (the admin's #/requests), not a section, so it is not checked here.
+    for target_path, frag in re.findall(r'href="([^"#:]*)#([^"/][^"]*)"', html):
         target = path
         if target_path:
             target = os.path.normpath(os.path.join(os.path.dirname(path), target_path.split("?")[0]))
@@ -152,3 +156,31 @@ if bad_anchors:
         print("  " + item)
     sys.exit(1)
 print("every in-page anchor lands on an existing section")
+
+# ---- No secrets in the browser ----
+# Everything under assets/js is public. Payment-provider keys, WhatsApp
+# tokens and privileged database keys live only on the server; this fails
+# the build if anything shaped like one reaches a script.
+SECRET = re.compile(
+    r"(sk_live_[0-9A-Za-z]{8,}|sk_test_[0-9A-Za-z]{8,}"
+    r"|service_role|SUPABASE_SERVICE"
+    r"|EAA[A-Za-z0-9]{30,}"                       # Meta / WhatsApp access token
+    r"|-----BEGIN [A-Z ]*PRIVATE KEY-----"
+    r"|whish[_-]?(secret|api[_-]?key|merchant[_-]?key)\s*[:=]"
+    r"|(api[_-]?key|secret|password)\s*[:=]\s*['\"][^'\"]{12,}['\"])", re.I)
+leaks = []
+for base, _dirs, files in os.walk(os.path.join(ROOT, "assets", "js")):
+    for name in files:
+        if not name.endswith(".js") or base.endswith("vendor"):
+            continue
+        path = os.path.join(base, name)
+        with open(path, encoding="utf-8") as fh:
+            for no, line in enumerate(fh, 1):
+                if SECRET.search(line):
+                    leaks.append("%s:%d" % (path, no))
+if leaks:
+    print("\n%d possible secrets in browser scripts:" % len(leaks))
+    for item in leaks:
+        print("  " + item)
+    sys.exit(1)
+print("no secrets in browser scripts")

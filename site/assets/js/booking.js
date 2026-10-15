@@ -1,58 +1,61 @@
 /* Rayhab, four-step booking request.
-   Logic transcribed from the canvas component in "Rayhab UI.dc.html" §04:
-   same service types, same availability fixture, same validation rules.
+   Logic transcribed from the canvas component in "Rayhab UI.dc.html" §04,
+   then connected to the booking API.
 
    No account, no payment. The form produces a *request*; the clinic
-   confirms out of band.
+   reviews it, and once it is approved the patient gets a WhatsApp message
+   with a secure link to choose how to pay (payment/index.html).
 
-   It talks to the booking API named by <meta name="rayhab-api"> (contracts
-   in README.md, "Launch and backend handoff"):
-     GET  {api}/availability?service_id=&date=   the times the server offers
-     POST {api}/appointments                      the request itself
+   It talks to the booking API through api/client.js (contracts in
+   README.md, "Launch and backend handoff"):
+     GET  {api}/services                       the catalog: names, durations, prices
+     GET  {api}/availability?service_id=&practitioner_id=&mode=&date=
+     POST {api}/appointments                   the request itself
    Success is shown only when the server answers 2xx with status
    "requested". Anything else, including no endpoint at all, is an honest
-   failure with a retry and a WhatsApp fallback; nothing is ever faked. */
+   failure with a retry and a WhatsApp fallback; nothing is ever faked.
+
+   Dates are Beirut calendar days ('yyyy-mm-dd') and times are Beirut wall
+   times, through api/time.js, so a visitor abroad sees the clinic's days
+   and its real GMT offset, summer or winter. */
 (function () {
   'use strict';
+
+  var T = window.RayhabTime;
+  var API = window.RayhabAPI;
+  var L = window.RayhabLabels;
 
   /* Mounts the flow onto a given #booking root. Exposed so the modal can
      mount a freshly fetched copy; the standalone page mounts on load. */
   function mountBooking(root, opts) {
-    if (!root || root.dataset.mounted) return;
+    if (!root || root.dataset.mounted || !T) return;
     root.dataset.mounted = '1';
     opts = opts || {};
 
-  /* ---------- Fixture data ---------- */
+  /* ---------- Catalog ----------
+     The built-in list is what the page offers when the catalog cannot be
+     loaded; the server's list replaces it when it can, and only the
+     server's list carries prices. */
   var TYPES = [
-    { id: 'assessment', name: 'Scoliosis assessment', dur: '60 min', mins: 60,
-      tag: 'Start here',
-      desc: 'First visit. Three-dimensional assessment, movement screen, and the first version of your plan.' },
-    { id: 'follow', name: 'Scoliosis rehabilitation session', dur: '45 min', mins: 45,
-      tag: '',
-      desc: 'Coached corrective exercise and progression. For existing patients.' },
-    { id: 'online', name: 'Online scoliosis consultation', dur: '40 min', mins: 40,
-      tag: '',
-      desc: 'Imaging review, exercise guidance and a remote plan. For patients outside Lebanon.' },
-    { id: 'sports', name: 'Sports or general physiotherapy', dur: '45 min', mins: 45,
-      tag: '',
-      desc: 'Injury rehabilitation, return to sport, mobility and joint training.' },
-    { id: 'pain', name: 'Pain management assessment', dur: '60 min', mins: 60,
-      tag: '',
-      desc: 'Persistent or recurring pain: a full assessment, a clear explanation and a graded plan.' },
-    { id: 'pain-follow', name: 'Pain management follow-up', dur: '45 min', mins: 45,
-      tag: '',
-      desc: 'Coached graded activity, progression and updates to your home program. For existing patients.' }
+    { id: 'assessment', name: 'Scoliosis assessment', duration_min: 60, tag: 'Start here',
+      description: 'First visit. Three-dimensional assessment, movement screen, and the first version of your plan.' },
+    { id: 'follow', name: 'Scoliosis rehabilitation session', duration_min: 45, tag: '',
+      description: 'Coached corrective exercise and progression. For existing patients.' },
+    { id: 'online', name: 'Online scoliosis consultation', duration_min: 40, tag: '', modes: ['online'],
+      description: 'Imaging review, exercise guidance and a remote plan. For patients outside Lebanon.' },
+    { id: 'sports', name: 'Sports or general physiotherapy', duration_min: 45, tag: '',
+      description: 'Injury rehabilitation, return to sport, mobility and joint training.' },
+    { id: 'pain', name: 'Pain management assessment', duration_min: 60, tag: '',
+      description: 'Persistent or recurring pain: a full assessment, a clear explanation and a graded plan.' },
+    { id: 'pain-follow', name: 'Pain management follow-up', duration_min: 45, tag: '',
+      description: 'Coached graded activity, progression and updates to your home program. For existing patients.' }
   ];
+  var catalog = { services: TYPES, practitioners: [], live: false };
 
   /* ---------- Clinic calendar ----------
-     Real dates, generated from the day the page is opened. The previous
-     version listed a fixed "1-6 September" week with a hardcoded set of
-     taken times: it went stale the moment the month turned, and it showed
-     bookings that never existed.
-
-     Opening pattern: closed Sunday and Wednesday; mornings and afternoons
-     Monday, Tuesday, Thursday and Friday; Saturday mornings only. Times
-     are Beirut local, which is what the panel tells the patient. */
+     The clinic's usual opening pattern, used when live availability cannot
+     be loaded: closed Sunday and Wednesday; mornings and afternoons Monday,
+     Tuesday, Thursday and Friday; Saturday mornings only. */
   var CLOSED_DOW = [0, 3];
   var HOURS = {
     1: [['09:00', '12:00'], ['15:00', '18:00']],
@@ -64,150 +67,91 @@
   var LEAD_DAYS = 1;   // the clinic confirms within one working day
   var HORIZON = 90;    // how far ahead a request can be made
   var WINDOW = 6;      // days visible at once
-
-  var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  var DOW_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
-                  'Thursday', 'Friday', 'Saturday'];
-  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  var MON_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-                  'August', 'September', 'October', 'November', 'December'];
-
-  function pad2(n) { return (n < 10 ? '0' : '') + n; }
-  function startOfDay(d) { var x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
-  function addDays(d, n) { var x = startOfDay(d); x.setDate(x.getDate() + n); return x; }
-  function sameDay(a, b) { return a && b && a.getTime() === b.getTime(); }
-  function isoDate(d) {
-    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
-  }
-  function toMin(hhmm) {
-    var q = hhmm.split(':');
-    return parseInt(q[0], 10) * 60 + parseInt(q[1], 10);
-  }
-  function fromMin(m) { return pad2(Math.floor(m / 60)) + ':' + pad2(m % 60); }
-
-  function firstBookable() { return addDays(new Date(), LEAD_DAYS); }
-  function lastBookable() { return addDays(new Date(), HORIZON); }
-  function isOpen(d) { return CLOSED_DOW.indexOf(d.getDay()) < 0; }
-
-  /* ---------- Talking to the booking API ---------- */
-  var apiMeta = document.querySelector('meta[name="rayhab-api"]');
-  var API = apiMeta ? (apiMeta.getAttribute('content') || '').replace(/\/$/, '') : '';
   var CLINIC_WA = '96171383315';
+  // Changes whenever the wording of either consent line changes, so the
+  // server can store which wording each patient agreed to.
+  var CONSENT_VERSION = '2026-10-15';
+
+  var DOW = T.DOW, DOW_FULL = T.DOW_FULL, MON = T.MON, MON_FULL = T.MON_FULL;
+
+  function firstBookable() { return T.addDays(T.today(), LEAD_DAYS); }
+  function lastBookable() { return T.addDays(T.today(), HORIZON); }
+  function isOpen(d) { return CLOSED_DOW.indexOf(T.dow(d)) < 0; }
+
   var openedAt = Date.now();
 
-  // fetch with a timeout. Resolves with { ok, status, body } whatever the
-  // status; rejects only on a network failure or the timeout (AbortError).
-  function request(method, url, data, ms) {
-    var ctl = window.AbortController ? new AbortController() : null;
-    var timer = ctl ? window.setTimeout(function () { ctl.abort(); }, ms) : 0;
-    var init = { method: method, credentials: 'same-origin', headers: { 'Accept': 'application/json' } };
-    if (data) { init.headers['Content-Type'] = 'application/json'; init.body = JSON.stringify(data); }
-    if (ctl) init.signal = ctl.signal;
-    return fetch(url, init).then(function (r) {
-      window.clearTimeout(timer);
-      return r.text().then(function (t) {
-        var body = null;
-        try { body = t ? JSON.parse(t) : null; } catch (x) { body = null; }
-        return { ok: r.ok, status: r.status, body: body };
-      });
-    }, function (err) { window.clearTimeout(timer); throw err; });
-  }
-
-  /* Which times are free comes from the practice calendar, through
-     GET {api}/availability. Until it answers, or if it cannot be reached,
-     the clinic's opening pattern above is shown and every time is a
-     request the clinic confirms; a note under the days says which. */
-  var avail = {};   // 'type|yyyy-mm-dd' -> 'loading' | 'failed' | [{ time, available }]
-  function availKey(date) { return st.type + '|' + isoDate(date); }
-  function loadAvailability(date) {
-    if (!date || !isOpen(date)) return;
-    var key = availKey(date);
-    if (avail[key]) return;
-    if (!API) { avail[key] = 'failed'; return; }
-    avail[key] = 'loading';
-    request('GET', API + '/availability?service_id=' + encodeURIComponent(st.type) +
-            '&date=' + isoDate(date), null, 8000).then(function (res) {
-      var slots = res.ok && res.body && res.body.slots;
-      avail[key] = Array.isArray(slots) ? slots : 'failed';
-      if (st.date && availKey(st.date) === key) render();
-    }, function () {
-      avail[key] = 'failed';
-      if (st.date && availKey(st.date) === key) render();
-    });
-  }
-
-  function slotsFor(date, mins) {
-    if (!date || !isOpen(date)) return [];
-    var live = avail[availKey(date)];
-    if (Array.isArray(live)) {
-      return live.map(function (s) { return { label: s.time, taken: !s.available }; });
-    }
-    var blocks = HOURS[date.getDay()] || [];
-    var busy = [];
-    var out = [];
-    blocks.forEach(function (b) {
-      var t = toMin(b[0]), end = toMin(b[1]);
-      while (t + mins <= end) {
-        var label = fromMin(t);
-        out.push({ label: label, taken: busy.indexOf(label) >= 0 });
-        t += mins;
-      }
-    });
-    return out;
-  }
-
-  function nextOpenFrom(date) {
-    var d = startOfDay(date), limit = lastBookable();
-    for (var i = 0; i < 14 && d <= limit; i++) {
-      if (isOpen(d)) return d;
-      d = addDays(d, 1);
-    }
-    return null;
-  }
-
   /* ---------- State ---------- */
-  var st = {
-    step: 1, forWhom: 'me', type: 'assessment', mode: 'clinic',
-    winStart: 0, date: null, slot: null, blurred: {},
-    first: '', last: '', email: '', phone: '', note: '', consent: false,
-    touched: false, loading: false, done: false,
-    sendError: '',      // '' | 'network' | 'timeout' | 'server' | 'busy' | 'unavailable'
-    serverErr: {},      // field selector -> message, from a 422
-    slotMsg: ''         // shown in step 2 when a chosen time was taken meanwhile
-  };
+  var st = freshState();
+  function freshState() {
+    return {
+      step: 1, forWhom: 'me', type: 'assessment', practitioner: '', mode: 'clinic',
+      winStart: 0, date: null, slot: null, blurred: {},
+      first: '', last: '', email: '', cc: '+961', phone: '', note: '',
+      consent: false, consentWa: false,
+      touched: false, loading: false, done: false, reference: '',
+      sendError: '',      // '' | 'network' | 'timeout' | 'server' | 'busy' | 'unavailable'
+      serverErr: {},      // field selector -> message, from a 422
+      slotMsg: ''         // shown in step 2 when the chosen time went meanwhile
+    };
+  }
 
   var $ = function (sel) { return root.querySelector(sel); };
   var $$ = function (sel) { return Array.prototype.slice.call(root.querySelectorAll(sel)); };
 
   /* ---------- Derived ---------- */
   function currentType() {
-    return TYPES.filter(function (t) { return t.id === st.type; })[0] || TYPES[0];
+    var list = catalog.services;
+    return list.filter(function (t) { return t.id === st.type; })[0] || list[0];
   }
-  function isOnline() { return st.type === 'online' || st.mode === 'online'; }
+  function modesFor(t) { return t.modes && t.modes.length ? t.modes : ['clinic', 'online']; }
+  function isOnline() { return st.mode === 'online'; }
+  function durLabel(t) { return t.duration_min + ' min'; }
+  function priceLabel(t) { return t.price && L ? L.money(t.price.amount, t.price.currency) : ''; }
+  function practitionerName(id) {
+    var p = catalog.practitioners.filter(function (x) { return x.id === id; })[0];
+    return p ? p.name : '';
+  }
+  function choosesPractitioner() { return catalog.practitioners.length > 1; }
+
   /* Field rules. Each returns an error string, or '' when the value is
      acceptable, so the message and the validity come from one place. */
   function nameErr(v, what) {
     v = v.trim();
     if (!v) return 'Enter your ' + what + '.';
     if (v.length < 2) return 'That looks too short.';
-    if (!/[A-Za-z\u00C0-\u024F\u0600-\u06FF]/.test(v)) return 'Use letters for your ' + what + '.';
+    if (!/[A-Za-zÀ-ɏ؀-ۿ]/.test(v)) return 'Use letters for your ' + what + '.';
     return '';
   }
   function emailErr() {
     var v = st.email.trim();
-    if (!v) return 'Enter an email so the clinic can reply.';
+    if (!v) return '';   // optional: the clinic answers on WhatsApp
     // One @, something either side, a dot in the domain, no spaces.
     if (!/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(v)) return 'Check the email address.';
     return '';
   }
+  /* The number in international form, +96171383315, or '' when it cannot
+     be one. With a country chosen, a leading 0 of the local form is
+     dropped (03 123 456 in Lebanon is +961 3 123 456). With "Other", the
+     patient types the whole number, starting with + or 00. */
+  function e164() {
+    var v = st.phone.trim();
+    if (!v || /[^0-9+()\-\s.]/.test(v)) return '';
+    if (st.cc === 'other' || /^(\+|00)/.test(v)) {
+      var all = v.replace(/^00/, '+').replace(/[^\d+]/g, '');
+      return /^\+\d{8,15}$/.test(all) ? all : '';
+    }
+    var nat = v.replace(/\D/g, '').replace(/^0+/, '');
+    var full = st.cc + nat;
+    return nat.length >= 6 && full.replace(/\D/g, '').length <= 15 ? full : '';
+  }
   function phoneErr() {
     var v = st.phone.trim();
-    if (!v) return 'Enter a number the clinic can reach you on.';
-    if (/[^0-9+()\-\s]/.test(v)) return 'Use digits, spaces, + or ( ) only.';
+    if (!v) return 'Enter a WhatsApp number the clinic can reach you on.';
+    if (/[^0-9+()\-\s.]/.test(v)) return 'Use digits, spaces, + or ( ) only.';
+    if (st.cc === 'other' && !/^(\+|00)/.test(v)) return 'Start with + and the country code.';
     var digits = v.replace(/\D/g, '');
-    if (digits.length < 8) return 'That number looks too short.';
-    if (digits.length > 15) return 'That number looks too long.';
+    if (digits.length < 6) return 'That number looks too short.';
+    if (!e164()) return 'That number looks too long.';
     return '';
   }
   function fieldErrors() {
@@ -217,16 +161,14 @@
     return {
       '#f-first': nameErr(st.first, 'first name') || se['#f-first'] || '',
       '#f-last': nameErr(st.last, 'last name') || se['#f-last'] || '',
-      '#f-email': emailErr() || se['#f-email'] || '',
-      '#f-phone': phoneErr() || se['#f-phone'] || ''
+      '#f-phone': phoneErr() || se['#f-phone'] || '',
+      '#f-email': emailErr() || se['#f-email'] || ''
     };
   }
-  function emailOk() { return !emailErr(); }
-  function phoneOk() { return !phoneErr(); }
   function detailsOk() {
     var e = fieldErrors();
     for (var k in e) { if (e[k]) return false; }
-    return st.consent;
+    return st.consent && st.consentWa;
   }
   function canNext() {
     if (st.step === 1) return !!st.type;
@@ -235,18 +177,99 @@
     return true;
   }
   function visibleDays() {
-    var out = [], from = addDays(firstBookable(), st.winStart);
-    for (var i = 0; i < WINDOW; i++) out.push(addDays(from, i));
+    var out = [], from = T.addDays(firstBookable(), st.winStart);
+    for (var i = 0; i < WINDOW; i++) out.push(T.addDays(from, i));
     return out;
   }
   function whenLabel() {
     if (!st.slot || !st.date) return 'Not chosen yet';
-    var d = st.date;
-    return DOW[d.getDay()] + ' ' + d.getDate() + ' ' + MON[d.getMonth()] +
-           ' · ' + st.slot;
+    return T.dayLabel(st.date) + ' · ' + st.slot;
   }
   function whereLabel() {
     return isOnline() ? 'Online, video call' : 'Rayhab Movement Clinic, Beirut';
+  }
+  function yourTime() {
+    return st.slot && st.date ? T.localHint(st.date, st.slot) : '';
+  }
+
+  /* ---------- Talking to the booking API ---------- */
+  var live = !!(API && API.available());
+
+  function loadCatalog() {
+    if (!live || !API.availability) return;
+    API.availability.services().then(function (res) {
+      var b = res.ok && res.body;
+      if (!b || !Array.isArray(b.services) || !b.services.length) return;
+      catalog.services = b.services;
+      catalog.practitioners = Array.isArray(b.practitioners) ? b.practitioners : [];
+      catalog.live = true;
+      if (!catalog.services.some(function (t) { return t.id === st.type; })) st.type = catalog.services[0].id;
+      fitMode();
+      renderTypes();
+      render();
+    }, function () { /* the built-in list stays */ });
+  }
+
+  /* Which times are free comes from the practice calendar. Until it
+     answers the day shows placeholders that cannot be picked; if it cannot
+     be reached, the clinic's opening pattern is shown and every time is a
+     request the clinic confirms, and a note under the days says which. */
+  var avail = {};   // key -> 'loading' | 'failed' | [{ time, available }]
+  function availKey(date) { return [st.type, st.practitioner, st.mode, date].join('|'); }
+  function loadAvailability(date) {
+    if (!date || !isOpen(date)) return;
+    var key = availKey(date);
+    if (avail[key]) return;
+    if (!live || !API.availability) { avail[key] = 'failed'; return; }
+    avail[key] = 'loading';
+    API.availability.slots({ service_id: st.type, practitioner_id: st.practitioner, mode: st.mode, date: date })
+      .then(function (res) {
+        var slots = res.ok && res.body && res.body.slots;
+        avail[key] = Array.isArray(slots) ? slots : 'failed';
+        if (st.step === 2 || st.date === date) render();
+      }, function () {
+        avail[key] = 'failed';
+        if (st.step === 2 || st.date === date) render();
+      });
+  }
+  function dayState(d) {
+    if (!isOpen(d)) return 'closed';
+    var a = avail[availKey(d)];
+    if (Array.isArray(a) && !a.some(function (s) { return s.available; })) return 'full';
+    return 'open';
+  }
+
+  function slotsFor(date, mins) {
+    if (!date || !isOpen(date)) return [];
+    var got = avail[availKey(date)];
+    if (got === 'loading') return 'loading';
+    if (Array.isArray(got)) {
+      return got.map(function (s) { return { label: s.time, taken: !s.available }; });
+    }
+    var out = [];
+    (HOURS[T.dow(date)] || []).forEach(function (b) {
+      var t = T.toMin(b[0]), end = T.toMin(b[1]);
+      while (t + mins <= end) {
+        out.push({ label: T.fromMin(t), taken: false });
+        t += mins;
+      }
+    });
+    return out;
+  }
+
+  // The next day after `date` that is open and not known to be full.
+  function nextFreeFrom(date) {
+    var d = date, limit = lastBookable();
+    for (var i = 0; i < 21 && d <= limit; i++) {
+      if (dayState(d) === 'open') return d;
+      d = T.addDays(d, 1);
+    }
+    return null;
+  }
+
+  function fitMode() {
+    var modes = modesFor(currentType());
+    if (modes.indexOf(st.mode) < 0) st.mode = modes[0];
   }
 
   /* ---------- Renderers ---------- */
@@ -369,39 +392,78 @@
     if (track0) new ResizeObserver(function () { fitTitles(); placeGlider(false); }).observe(track0);
   }
 
+  /* ---- Service list ----
+     Written from the catalog, so a renamed service, a new price or a new
+     service on the server reaches the page without an edit here. */
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function renderTypes() {
+    var list = $('.bk-typelist');
+    if (!list) return;
+    list.innerHTML = catalog.services.map(function (t) {
+      var on = t.id === st.type;
+      var meta = durLabel(t) + (priceLabel(t) ? ' · ' + priceLabel(t) : '');
+      return '<div class="bk-type' + (on ? ' is-on' : '') + '" data-type="' + esc(t.id) + '" role="radio" aria-checked="' + on + '" tabindex="' + (on ? 0 : -1) + '">' +
+        '<span class="bk-radio" aria-hidden="true"></span><span>' +
+        '<span class="bk-typetop"><span class="bk-typename">' + esc(t.name) + '</span>' +
+        (t.tag ? '<span class="tag-start">' + esc(t.tag) + '</span>' : '') + '</span>' +
+        '<span class="bk-typedesc">' + esc(t.description) + '</span>' +
+        '<span class="bk-typemeta">' + esc(meta) + '</span></span></div>';
+    }).join('');
+
+    var wrap = $('#bk-pracwrap'), sel = $('#bk-prac');
+    if (wrap && sel) {
+      wrap.hidden = !choosesPractitioner();
+      if (choosesPractitioner()) {
+        sel.innerHTML = '<option value="">Any practitioner</option>' + catalog.practitioners.map(function (p) {
+          return '<option value="' + esc(p.id) + '"' + (p.id === st.practitioner ? ' selected' : '') + '>' + esc(p.name) + '</option>';
+        }).join('');
+      }
+    }
+  }
+
   function renderDays() {
     var wrapEl = $('#bk-days');
     wrapEl.innerHTML = '';
     var days = visibleDays();
+    // Ask about the whole visible week once the patient is choosing a day,
+    // so a day with nothing left can be shown as such before it is tapped.
+    if (st.step >= 2) days.forEach(loadAvailability);
 
     // Month heading spans the visible window, which can straddle a month.
-    var a = days[0], z = days[days.length - 1];
-    var label = a.getMonth() === z.getMonth()
-      ? MON_FULL[a.getMonth()] + ' ' + a.getFullYear()
-      : MON[a.getMonth()] + ' \u2013 ' + MON[z.getMonth()] + ' ' + z.getFullYear();
+    var a = T.dayParts(days[0]), z = T.dayParts(days[days.length - 1]);
+    var label = a.month === z.month
+      ? MON_FULL[a.month] + ' ' + a.year
+      : MON[a.month] + ' – ' + MON[z.month] + ' ' + z.year;
     var monthEl = $('#bk-month');
     if (monthEl) monthEl.textContent = label;
 
     var prev = $('#bk-prev'), fwd = $('#bk-fwd');
     if (prev) prev.disabled = st.winStart === 0;
-    if (fwd) fwd.disabled = addDays(firstBookable(), st.winStart + WINDOW) > lastBookable();
+    if (fwd) fwd.disabled = T.addDays(firstBookable(), st.winStart + WINDOW) > lastBookable();
 
     days.forEach(function (d) {
-      var open = isOpen(d);
-      var selected = st.date && sameDay(d, st.date);
+      var state = dayState(d);
+      var selected = st.date === d;
+      var p = T.dayParts(d);
       var b = document.createElement('button');
       b.type = 'button';
-      b.className = 'bk-day' + (selected ? ' is-active' : '') + (open ? '' : ' is-closed');
+      b.className = 'bk-day' + (selected ? ' is-active' : '') + (state === 'closed' ? ' is-closed' : '') + (state === 'full' ? ' is-full' : '');
       b.setAttribute('aria-pressed', String(!!selected));
+      // A day with nothing to choose cannot be chosen; it stays in the row
+      // so the week still reads as a week.
+      b.disabled = state !== 'open' && !selected;
       b.innerHTML =
-        '<span class="bk-dow">' + DOW[d.getDay()] + '</span>' +
-        '<span class="bk-num">' + d.getDate() + '</span>' +
+        '<span class="bk-dow">' + DOW[p.dow] + '</span>' +
+        '<span class="bk-num">' + p.date + '</span>' +
         '<span class="bk-availdot" aria-hidden="true"></span>';
-      b.setAttribute('aria-label',
-        DOW_FULL[d.getDay()] + ' ' + d.getDate() + ' ' + MON_FULL[d.getMonth()] +
-        (open ? '' : ', closed'));
+      b.setAttribute('aria-label', T.dayLabel(d, true) +
+        (state === 'closed' ? ', closed' : state === 'full' ? ', no times left' : ''));
       b.addEventListener('click', function () {
-        st.date = d; st.slot = null; render();
+        st.date = d; st.slot = null; st.slotMsg = ''; render();
       });
       wrapEl.appendChild(b);
     });
@@ -410,13 +472,15 @@
   function renderAvailNote() {
     var note = $('#bk-availnote');
     if (!note) return;
-    var live = st.date ? avail[availKey(st.date)] : null;
+    var got = st.date ? avail[availKey(st.date)] : null;
     var text = st.slotMsg ||
-      (live === 'loading' ? 'Checking the clinic calendar…' :
-       live === 'failed' ? 'Live availability could not be loaded, so these are the clinic’s usual hours. The time you pick is a request the clinic confirms.' : '');
-    note.textContent = text;
+      (got === 'failed' ? 'Live availability could not be loaded, so these are the clinic’s usual hours. The time you pick is a request the clinic confirms.' : '');
+    var t = note.querySelector('.bk-availnote-t');
+    (t || note).textContent = text;
     note.hidden = !text;
     note.classList.toggle('is-warn', !!st.slotMsg);
+    var refresh = $('#bk-refresh');
+    if (refresh) refresh.hidden = !(st.slotMsg || got === 'failed');
   }
 
   function renderSlots() {
@@ -425,30 +489,56 @@
     var day = st.date;
     if (day) loadAvailability(day);
     renderAvailNote();
-    var list = day ? slotsFor(day, currentType().mins) : [];
-    var hasSlots = list.length > 0;
+    var list = day ? slotsFor(day, currentType().duration_min) : [];
+    var loading = list === 'loading';
+    var free = !loading && list.some(function (s) { return !s.taken; });
+    var showGrid = loading || free;
 
-    $('#bk-slotwrap').hidden = !hasSlots;
-    none.hidden = hasSlots;
+    $('#bk-slotwrap').hidden = !showGrid;
+    none.hidden = showGrid;
+    grid.setAttribute('aria-busy', String(loading));
 
-    if (!hasSlots) {
+    var lbl = $('#bk-slotlabel');
+    if (lbl && day) {
+      lbl.textContent = (loading ? 'Checking the clinic calendar' : 'Available times') +
+        ' · Beirut time (' + T.offsetLabel(day, '12:00') + ')';
+    }
+    var hint = $('#bk-yourtime');
+    if (hint) {
+      var y = yourTime();
+      hint.textContent = y ? 'That is ' + y + ' where you are.' : '';
+      hint.hidden = !y;
+    }
+
+    if (loading) {
+      // Placeholders the size of the times, so the grid does not jump when
+      // they arrive, and nothing to pick before the calendar has answered.
       grid.innerHTML = '';
-      // Which day is closed depends on the date, so the panel is written
-      // here rather than hardcoded in the markup.
-      var nxt = day ? nextOpenFrom(addDays(day, 1)) : null;
+      for (var i = 0; i < 8; i++) {
+        var sk = document.createElement('span');
+        sk.className = 'slot-skel';
+        sk.setAttribute('aria-hidden', 'true');
+        grid.appendChild(sk);
+      }
+      return;
+    }
+
+    if (!free) {
+      grid.innerHTML = '';
+      var nxt = day ? nextFreeFrom(T.addDays(day, 1)) : nextFreeFrom(firstBookable());
       var t = $('#bk-noslots-t'), d2 = $('#bk-noslots-d'), jump = $('#bk-jump');
-      if (t) t.textContent = day
-        ? 'Closed on ' + DOW_FULL[day.getDay()]
-        : 'Pick a day to see times';
+      if (t) t.textContent = !day ? 'Pick a day to see times'
+        : isOpen(day) ? 'No times left on ' + DOW_FULL[T.dow(day)]
+        : 'Closed on ' + DOW_FULL[T.dow(day)];
       if (d2) d2.textContent = nxt
-        ? 'The clinic is closed that day. The next open day is ' +
-          DOW_FULL[nxt.getDay()] + ' ' + nxt.getDate() + ' ' + MON_FULL[nxt.getMonth()] + '.'
-        : 'Choose another day from the row above.';
+        ? (day && isOpen(day) ? 'Every time that day has been requested. ' : 'The clinic is closed that day. ') +
+          'The next day with times is ' + T.dayLabel(nxt, true) + '.'
+        : 'Choose another day from the row above, or move to later dates.';
       if (jump) {
         jump.hidden = !nxt;
-        if (nxt) jump.textContent = 'Jump to ' + DOW_FULL[nxt.getDay()];
+        if (nxt) jump.textContent = 'Jump to ' + DOW_FULL[T.dow(nxt)];
         jump.onclick = nxt ? function () {
-          var off = Math.round((nxt - firstBookable()) / 86400000);
+          var off = T.daysBetween(firstBookable(), nxt);
           st.winStart = Math.max(0, Math.min(off, off - WINDOW + 1));
           st.date = nxt; st.slot = null; render();
         } : null;
@@ -468,7 +558,7 @@
       b.setAttribute('aria-pressed', String(st.slot === s.label));
       if (s.taken) {
         b.disabled = true;
-        b.setAttribute('aria-label', s.label + ', already booked');
+        b.setAttribute('aria-label', s.label + ', already requested');
       } else {
         b.addEventListener('click', function () { st.slot = s.label; st.slotMsg = ''; render(); });
       }
@@ -478,23 +568,35 @@
 
   function renderSummary() {
     var t = currentType();
+    var price = priceLabel(t);
     $('#sumType').textContent = t.name;
-    $('#sumDur').textContent = t.dur;
+    $('#sumDur').textContent = durLabel(t);
     $('#sumWho').textContent = st.forWhom === 'me' ? 'For myself' : 'For my child';
     $('#sumWhen').textContent = whenLabel();
     $('#sumWhere').textContent = whereLabel();
+    var pr = $('#sumPriceRow');
+    if (pr) { pr.hidden = !price; $('#sumPrice').textContent = price; }
+    var wr = $('#sumWithRow');
+    if (wr) { wr.hidden = !(choosesPractitioner() && st.practitioner); $('#sumWith').textContent = practitionerName(st.practitioner); }
 
-    $('#rvType').textContent = t.name + ' · ' + t.dur;
-    $('#rvWhen').textContent = whenLabel();
+    $('#rvType').textContent = t.name + ' · ' + durLabel(t) + (price ? ' · ' + price : '') +
+      (choosesPractitioner() ? ' · ' + (practitionerName(st.practitioner) || 'Any practitioner') : '');
+    var y = yourTime();
+    $('#rvWhen').textContent = whenLabel() + (st.slot ? ' (Beirut time' + (y ? '; ' + y + ' your time' : '') + ')' : '');
     $('#rvWhere').textContent = whereLabel();
     $('#rvName').textContent =
       ((st.first + ' ' + st.last).trim() || 'Not entered yet') +
       ' · ' + (st.forWhom === 'me' ? 'For myself' : 'For my child');
-    $('#rvContact').textContent = st.email || 'Not entered yet';
+    var phone = e164();
+    var shown = phone && st.cc !== 'other' && phone.indexOf(st.cc) === 0 ? st.cc + ' ' + phone.slice(st.cc.length) : phone;
+    $('#rvContact').textContent = phone
+      ? 'WhatsApp ' + shown + (st.email.trim() ? ' · ' + st.email.trim() : '')
+      : 'Not entered yet';
     $('#doneWhen').textContent = whenLabel();
-    var dt = $('#doneType'), dwh = $('#doneWhere');
-    if (dt) dt.textContent = t.name + ' (' + t.dur + ')';
+    var dt = $('#doneType'), dwh = $('#doneWhere'), dr = $('#doneRef');
+    if (dt) dt.textContent = t.name + ' (' + durLabel(t) + ')';
     if (dwh) dwh.textContent = isOnline() ? 'as an online video call' : 'at the Beirut clinic';
+    if (dr) { dr.hidden = !st.reference; dr.querySelector('strong').textContent = st.reference; }
   }
 
   /* The step 4 failure panel: what went wrong, in plain words, with a retry
@@ -525,10 +627,17 @@
     var wa = $('#bk-wa');
     if (wa) {
       var t = currentType();
-      var msg = 'Hello, I would like to request a ' + t.name + ' (' + t.dur + ')' +
+      var msg = 'Hello, I would like to request a ' + t.name + ' (' + durLabel(t) + ')' +
                 (st.slot ? ' on ' + whenLabel() : '') + ', ' + (isOnline() ? 'online' : 'at the Beirut clinic') + '.';
       wa.href = 'https://wa.me/' + CLINIC_WA + '?text=' + encodeURIComponent(msg);
     }
+  }
+
+  function renderConsent(sel, on) {
+    var el = $(sel);
+    if (!el) return;
+    el.setAttribute('aria-checked', String(on));
+    el.classList.toggle('is-on', on);
   }
 
   function renderValidation() {
@@ -546,9 +655,11 @@
         msg.hidden = !show;
       }
     });
-    $('#bk-consent').setAttribute('aria-checked', String(st.consent));
-    $('#bk-consent').classList.toggle('is-on', st.consent);
+    renderConsent('#bk-consent', st.consent);
+    renderConsent('#bk-consent-wa', st.consentWa);
     $('#bk-detailerr').hidden = !(st.touched && !detailsOk());
+    var phone = $('#f-phone');
+    if (phone) phone.placeholder = st.cc === 'other' ? '+ country code and number' : st.cc === '+961' ? '3 123 456' : 'Number';
   }
 
   function render() {
@@ -571,11 +682,14 @@
       el.tabIndex = on ? 0 : -1;
     });
 
-    // Toggles
+    // Toggles. A service offered one way only switches the other off.
+    var modes = modesFor(currentType());
     $('#who-me').setAttribute('aria-pressed', String(st.forWhom === 'me'));
     $('#who-child').setAttribute('aria-pressed', String(st.forWhom === 'child'));
     $('#mode-clinic').setAttribute('aria-pressed', String(st.mode === 'clinic'));
     $('#mode-online').setAttribute('aria-pressed', String(st.mode === 'online'));
+    $('#mode-clinic').disabled = modes.indexOf('clinic') < 0;
+    $('#mode-online').disabled = modes.indexOf('online') < 0;
 
     renderProgress();
     animatePane();
@@ -591,13 +705,13 @@
     var next = $('#bk-next');
     var last = st.step === 4;
     var nextLabel = next.querySelector('.bk-nextlabel') || next;
-    nextLabel.textContent = last ? 'Confirm request' : st.step === 3 ? 'Review request' : 'Continue';
+    nextLabel.textContent = last ? 'Request appointment' : st.step === 3 ? 'Review request' : 'Continue';
     next.classList.toggle('is-last', last);
     var ok = canNext();
     next.classList.toggle('btn-primary', ok);
     next.classList.toggle('btn-disabled', !ok);
     // Step 3 stays clickable so pressing it can surface validation.
-    next.disabled = !ok && st.step !== 3;
+    next.disabled = (!ok && st.step !== 3) || st.loading;
 
     var hint = $('#bk-hint');
     // Once a time is chosen the action bar has nothing to add: the panel's
@@ -607,29 +721,35 @@
   }
 
   /* ---------- Wiring ---------- */
-  var typeEls = $$('.bk-type');
-  function pickType(el) {
-    st.type = el.dataset.type;
+  function pickType(id) {
+    st.type = id;
     st.slot = null;
-    if (st.type === 'online') st.mode = 'online';
-    else if (st.mode === 'online') st.mode = 'clinic';
+    fitMode();
     render();
   }
-  typeEls.forEach(function (el, i) {
-    el.addEventListener('click', function () { pickType(el); });
-    el.addEventListener('keydown', function (e) {
-      // Radiogroup keyboard contract: arrows move and select, Space/Enter select.
-      var next = null;
-      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = (i + 1) % typeEls.length;
-      else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = (i - 1 + typeEls.length) % typeEls.length;
-      else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); pickType(el); return; }
-      if (next !== null) {
-        e.preventDefault();
-        pickType(typeEls[next]);
-        typeEls[next].focus();
-      }
-    });
+  // Delegated, because the list is rewritten when the catalog arrives.
+  var typeList = $('.bk-typelist');
+  typeList.addEventListener('click', function (e) {
+    var el = e.target.closest('.bk-type');
+    if (el) pickType(el.dataset.type);
   });
+  typeList.addEventListener('keydown', function (e) {
+    var el = e.target.closest('.bk-type');
+    if (!el) return;
+    var all = $$('.bk-type'), i = all.indexOf(el), to = null;
+    // Radiogroup keyboard contract: arrows move and select, Space/Enter select.
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') to = (i + 1) % all.length;
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') to = (i - 1 + all.length) % all.length;
+    else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); pickType(el.dataset.type); return; }
+    if (to !== null) {
+      e.preventDefault();
+      pickType(all[to].dataset.type);
+      $$('.bk-type')[to].focus();
+    }
+  });
+
+  var prac = $('#bk-prac');
+  if (prac) prac.addEventListener('change', function () { st.practitioner = prac.value; st.slot = null; render(); });
 
   var prevBtn = $('#bk-prev'), fwdBtn = $('#bk-fwd');
   if (prevBtn) prevBtn.addEventListener('click', function () {
@@ -644,6 +764,13 @@
   $('#mode-clinic').addEventListener('click', function () { st.mode = 'clinic'; st.slot = null; render(); });
   $('#mode-online').addEventListener('click', function () { st.mode = 'online'; st.slot = null; render(); });
 
+  // "Refresh times": forget what was loaded for the visible days and ask again.
+  var refreshBtn = $('#bk-refresh');
+  if (refreshBtn) refreshBtn.addEventListener('click', function () {
+    visibleDays().forEach(function (d) { delete avail[availKey(d)]; });
+    st.slotMsg = '';
+    render();
+  });
 
   [['#f-first', 'first'], ['#f-last', 'last'], ['#f-email', 'email'],
    ['#f-phone', 'phone'], ['#f-note', 'note']].forEach(function (p) {
@@ -664,12 +791,20 @@
       renderValidation();
     });
   });
-
-  $('#bk-consent').addEventListener('click', function () {
-    st.consent = !st.consent; render();
+  var cc = $('#f-cc');
+  if (cc) cc.addEventListener('change', function () {
+    st.cc = cc.value;
+    if (st.serverErr['#f-phone']) delete st.serverErr['#f-phone'];
+    renderValidation();
   });
-  $('#bk-consent').addEventListener('keydown', function (e) {
-    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); st.consent = !st.consent; render(); }
+
+  [['#bk-consent', 'consent'], ['#bk-consent-wa', 'consentWa']].forEach(function (c) {
+    var el = $(c[0]);
+    if (!el) return;
+    el.addEventListener('click', function () { st[c[1]] = !st[c[1]]; render(); });
+    el.addEventListener('keydown', function (e) {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); st[c[1]] = !st[c[1]]; render(); }
+    });
   });
 
   $$('.bk-edit, .bk-seg').forEach(function (b) {
@@ -699,7 +834,8 @@
       // leaving the patient to hunt for it.
       var errs = fieldErrors();
       var firstBad = Object.keys(errs).filter(function (k) { return errs[k]; })[0];
-      var target = firstBad ? $(firstBad) : (!st.consent ? $('#bk-consent') : null);
+      var target = firstBad ? $(firstBad)
+        : !st.consent ? $('#bk-consent') : !st.consentWa ? $('#bk-consent-wa') : null;
       if (target) target.focus();
       return;
     }
@@ -713,45 +849,40 @@
   var icsBtn = root.querySelector('#bk-ics');
   if (icsBtn) icsBtn.addEventListener('click', function () {
     // The mockup offers this on the success screen. The request is not yet
-    // confirmed, so the event is written as tentative.
+    // confirmed, so the event is written as tentative. Times are written in
+    // UTC, so the event lands at the right hour in any calendar app,
+    // whatever its owner's time zone.
     if (!st.slot || !st.date) return;
-    var startAt = new Date(st.date);
-    startAt.setHours(parseInt(st.slot.split(':')[0], 10),
-                     parseInt(st.slot.split(':')[1], 10), 0, 0);
-    var endAt = new Date(startAt.getTime() + currentType().mins * 60000);
-    var stamp = function (dt) {
-      return '' + dt.getFullYear() + pad2(dt.getMonth() + 1) + pad2(dt.getDate()) +
-             'T' + pad2(dt.getHours()) + pad2(dt.getMinutes()) + '00';
-    };
-    var start = stamp(startAt), end = stamp(endAt);
+    var startAt = T.toUtc(st.date, st.slot);
+    var endAt = startAt + currentType().duration_min * 60000;
     var lines = [
       'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Rayhab Movement Clinic//Booking//EN',
-      'BEGIN:VEVENT', 'UID:' + Date.now() + '@dr-rayhab.com',
-      'DTSTART:' + start, 'DTEND:' + end,
-      'SUMMARY:' + currentType().name + ' - Rayhab',
+      'BEGIN:VEVENT', 'UID:' + (st.reference || Date.now()) + '@dr-rayhab.com',
+      'DTSTAMP:' + T.icsStamp(Date.now()),
+      'DTSTART:' + T.icsStamp(startAt), 'DTEND:' + T.icsStamp(endAt),
+      'SUMMARY:' + currentType().name + ' - Rayhab (requested)',
       'LOCATION:' + whereLabel(),
       'STATUS:TENTATIVE',
-      'DESCRIPTION:Requested appointment. The clinic confirms by WhatsApp within one working day.',
+      'DESCRIPTION:Requested appointment' + (st.reference ? ' ' + st.reference : '') +
+        '. The clinic confirms by WhatsApp within one working day.',
       'END:VEVENT', 'END:VCALENDAR'
     ];
     var blob = new Blob([lines.join('\r\n')], { type: 'text/calendar' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'rayhab-assessment.ics';
+    a.download = 'rayhab-request.ics';
     document.body.appendChild(a); a.click();
     document.body.removeChild(a);
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
   });
 
   $('#bk-restart').addEventListener('click', function () {
-    st = { step: 1, forWhom: 'me', type: 'assessment', mode: 'clinic',
-           winStart: 0, date: null, slot: null, blurred: {},
-           first: '', last: '', email: '', phone: '', note: '', consent: false,
-           touched: false, blurred: {}, loading: false, done: false,
-           sendError: '', serverErr: {}, slotMsg: '' };
+    st = freshState();
     openedAt = Date.now();
-    st.date = nextOpenFrom(firstBookable());
+    lastSent = '';
+    st.date = nextFreeFrom(firstBookable());
     ['#f-first', '#f-last', '#f-email', '#f-phone', '#f-note'].forEach(function (s) { $(s).value = ''; });
+    if (cc) cc.value = '+961';
     render();
     focusStep();
   });
@@ -768,22 +899,33 @@
     var hp = $('#f-website');
     return {
       service_id: st.type,
+      practitioner_id: st.practitioner || null,
       for_whom: st.forWhom,
       mode: isOnline() ? 'online' : 'clinic',
-      date: st.date ? isoDate(st.date) : null,
+      date: st.date,
       time: st.slot,
-      timezone: 'Asia/Beirut',
+      timezone: T.TZ,
       first_name: st.first.trim(),
       last_name: st.last.trim(),
-      email: st.email.trim(),
-      phone: st.phone.trim(),
+      phone: e164(),
+      email: st.email.trim() || null,
       note: st.note.trim(),
-      consent: !!st.consent,
+      consents: { storage: !!st.consent, whatsapp: !!st.consentWa, version: CONSENT_VERSION },
       // Abuse signals, checked by the server: a field people never see,
       // and how long the form was open.
       website: hp ? hp.value : '',
       elapsed_ms: Date.now() - openedAt
     };
+  }
+
+  /* The same request, sent again after a failure, carries the same
+     Idempotency-Key, so a retry after a lost answer cannot become a second
+     request. Any change to what is being asked for gets a new key. */
+  var lastSent = '', sendKey = '';
+  function keyFor(body) {
+    var sig = JSON.stringify(body, function (k, v) { return k === 'elapsed_ms' ? undefined : v; });
+    if (sig !== lastSent) { lastSent = sig; sendKey = API.newKey(); }
+    return sendKey;
   }
 
   function failSend(kind) {
@@ -795,46 +937,57 @@
     if (box) box.focus();
   }
 
+  function backToTimes(msg) {
+    visibleDays().forEach(function (d) { delete avail[availKey(d)]; });
+    if (st.date) delete avail[availKey(st.date)];
+    st.loading = false;
+    st.slot = null;
+    st.step = 2;
+    st.slotMsg = msg;
+    render(); focusStep();
+  }
+
   function submit() {
     if (st.loading) return;            // one request at a time
-    if (!API) return failSend('unavailable');
+    if (!live || !API.appointments) return failSend('unavailable');
     st.loading = true;
     st.sendError = '';
     render();
-    request('POST', API + '/appointments', payload(), 15000).then(function (res) {
-      var body = res.body || {};
-      if (res.ok && body.status === 'requested') {
+    var body = payload();
+    API.appointments.create(body, keyFor(body)).then(function (res) {
+      var b = res.body || {};
+      if (res.ok && b.status === 'requested') {
         st.loading = false;
         st.done = true;
+        st.reference = b.reference || '';
         render(); focusStep();
         return;
       }
-      if (res.status === 422 && body.errors) {
+      if (res.status === 422 && b.errors) {
         // The server's own field messages go next to the fields they name.
         st.serverErr = {};
-        Object.keys(body.errors).forEach(function (k) {
-          if (FIELD_FOR[k]) st.serverErr[FIELD_FOR[k]] = String(body.errors[k]);
+        Object.keys(b.errors).forEach(function (k) {
+          if (FIELD_FOR[k]) st.serverErr[FIELD_FOR[k]] = String(b.errors[k]);
         });
+        if (b.errors.consents) { st.consent = false; st.consentWa = false; }
         st.loading = false;
-        st.step = Object.keys(st.serverErr).length ? 3 : 4;
+        var onFields = Object.keys(st.serverErr).length || b.errors.consents;
+        st.step = onFields ? 3 : 4;
         st.touched = true;
         if (st.step === 4) st.sendError = 'server';
         render();
-        var first = Object.keys(st.serverErr)[0];
-        if (first) $(first).focus(); else focusStep();
+        var first = ['#f-first', '#f-last', '#f-phone', '#f-email'].filter(function (k) { return st.serverErr[k]; })[0];
+        if (first) $(first).focus(); else if (b.errors.consents) $('#bk-consent').focus(); else focusStep();
         return;
       }
       if (res.status === 409) {
         // The time went while the patient was filling in the form.
-        if (st.date) delete avail[availKey(st.date)];
-        st.loading = false;
-        st.slot = null;
-        st.step = 2;
-        st.slotMsg = 'That time was just taken by someone else. Pick another and your details will be kept.';
-        render(); focusStep();
-        return;
+        return backToTimes('That time was just taken by someone else. Pick another and your details will be kept.');
       }
-      if (res.status === 404 || res.status === 405 || res.status === 501) return failSend('unavailable');
+      if (res.status === 410 || res.status === 419) {
+        return backToTimes('This page was open for a while, so the times have been checked again. Pick a time; your details are kept.');
+      }
+      if (res.status === 0 || res.status === 404 || res.status === 405 || res.status === 501) return failSend('unavailable');
       if (res.status === 429) return failSend('busy');
       failSend('server');
     }, function (err) {
@@ -845,22 +998,20 @@
   var retryBtn = root.querySelector('#bk-retry');
   if (retryBtn) retryBtn.addEventListener('click', submit);
 
-    st.date = nextOpenFrom(firstBookable());
-
     /* A link can name the service and who it is for, so arriving from
        "Book this" on a service page, or from a router card that already
        says "my child", does not ask the same question twice. Anything
        unrecognised is ignored and the default stands. */
     var wanted = opts.type || param('type');
-    if (wanted) {
-      for (var t = 0; t < TYPES.length; t++) {
-        if (TYPES[t].id === wanted) { st.type = wanted; break; }
-      }
-    }
+    if (wanted && catalog.services.some(function (t) { return t.id === wanted; })) st.type = wanted;
     var who = opts.forWhom || param('for');
     if (who === 'child' || who === 'me') st.forWhom = who;
+    fitMode();
+    st.date = nextFreeFrom(firstBookable());
 
+    renderTypes();
     render();
+    loadCatalog();
   }
 
   /* Reads a query parameter from the current URL. The standalone page is
