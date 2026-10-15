@@ -43,8 +43,20 @@ jobs:
       - name: Version asset URLs
         run: python3 content/stamp.py
 
+      # Lists every indexable page by its own canonical, so a new or removed
+      # page is reflected without anyone editing the sitemap.
+      - name: Write the sitemap
+        run: python3 content/sitemap.py
+
       - name: Check every internal link resolves
         run: python3 .github/scripts/check_links.py site
+
+      # This workflow publishes the GitHub Pages *staging* copy. Production
+      # (https://dr-rayhab.com) is deployed separately and must not run this
+      # step: it marks every page noindex so the mirror never competes with
+      # production in search results.
+      - name: Keep the staging copy out of search engines
+        run: python3 content/staging_noindex.py site
 
       - uses: actions/configure-pages@v5
 

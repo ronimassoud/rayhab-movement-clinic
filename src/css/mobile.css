@@ -32,9 +32,13 @@
 
   /* The booking bar floats as a pill, the same object as the nav at the
      other end of the screen. */
-  body{padding-bottom:96px}
+  body{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+  /* Keyboard focus and in-page jumps stop short of the bar rather than
+     landing behind it. */
+  html{scroll-padding-bottom:calc(110px + env(safe-area-inset-bottom))}
   .m-bookbar{
-    display:flex;gap:12px;align-items:center;position:fixed;left:10px;right:10px;bottom:10px;z-index:95;
+    display:flex;gap:12px;align-items:center;position:fixed;left:10px;right:10px;
+    bottom:calc(10px + env(safe-area-inset-bottom));z-index:95;
     background:color-mix(in oklab,var(--color-paper) 94%,transparent);
     -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
     border:1px solid var(--color-line);border-radius:var(--radius-xl);
@@ -45,6 +49,12 @@
   .m-bookbar-d{margin:0;font:400 13px/1.3 var(--font-sans);color:var(--color-body)}
   .m-bookbar-1{margin:0;flex:1;min-width:0;font:400 14px/1.4 var(--font-sans);color:var(--color-fg-2)}
   .m-bookbar .btn{flex:none;min-height:48px;padding:12px 24px}
+  /* Out of the way while someone is typing (the on-screen keyboard is up
+     and the bar would sit over the field), and on the contact page, where
+     the form is the page's own action. */
+  body:has(input:focus,textarea:focus,select:focus) .m-bookbar,
+  body:has(#contact-form) .m-bookbar{display:none}
+  body:has(#contact-form){padding-bottom:0}
 
   /* ---- HOME (05 mobile) ---- */
   .home-hero{padding-inline:var(--pad-x);padding-bottom:var(--hero-pad)}

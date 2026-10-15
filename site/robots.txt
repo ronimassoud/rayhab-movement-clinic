@@ -1,5 +1,8 @@
+# Production robots.txt for https://dr-rayhab.com. Everything public may be
+# crawled. The booking page and the 404 page carry a noindex tag instead of
+# being blocked here, so crawlers can read that tag. The GitHub Pages staging
+# copy is kept out of search by a noindex tag on every page (added in CI).
 User-agent: *
 Allow: /
-Disallow: /book.html
 
-Sitemap: https://ronimassoud.github.io/rayhab-movement-clinic/sitemap.xml
+Sitemap: https://dr-rayhab.com/sitemap.xml

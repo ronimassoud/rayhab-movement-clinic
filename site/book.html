@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="rayhab-api" content="/api">
 <title>Book with Rayhab, Rayhab Movement Clinic</title>
 <meta name="description" content="Request a scoliosis assessment, rehabilitation session, online consultation or physiotherapy appointment. No account needed; the clinic confirms by WhatsApp.">
 <meta name="robots" content="noindex">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/rayhab.css?v=fb5ac686">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/public-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/rayhab.css?v=e4a13a67">
 <link rel="icon" href="assets/img/favicon.png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 </head>
@@ -36,8 +36,8 @@
         <div class="bk-donemark" aria-hidden="true">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#08190E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
         </div>
-        <h2>Request sent</h2>
-        <p id="m-doneWhen">We confirm by WhatsApp within one working day.</p>
+        <h2>Booking request successfully sent</h2>
+        <p id="m-doneWhen">The clinic replies by WhatsApp within one working day.</p>
       </div>
     </div>
     <a href="./" aria-label="Rayhab Movement Clinic, home"><span class="wordmark"></span></a>
@@ -160,6 +160,7 @@
         </div>
         <div class="bk-daybar" id="bk-days" role="group" aria-label="Choose a day"></div>
 
+        <p class="bk-availnote" id="bk-availnote" aria-live="polite" hidden></p>
         <div id="bk-slotwrap">
           <p class="bk-slotlabel">Available times · Beirut time (GMT+3)</p>
           <div class="bk-slotgrid" id="bk-slots" role="group" aria-label="Choose a time"></div>
@@ -194,6 +195,9 @@
           <textarea class="textarea" id="f-note"></textarea>
           <span class="field-hint">Optional, a diagnosis, a Cobb angle, or just how it feels.</span>
         </p>
+        <!-- Left empty by people; filled in by bots that fill every field. The
+             server rejects a request that carries it. -->
+        <p class="bk-hp" aria-hidden="true"><label for="f-website">Website</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></p>
       </div>
       <div class="bk-consentwrap">
         <button class="bk-consent" type="button" id="bk-consent" role="checkbox" aria-checked="false">
@@ -230,7 +234,15 @@
           <button class="bk-edit" type="button" data-step="3">Change</button>
         </div>
       </dl>
-      <p class="notice notice-info mt-6">This is a request, not a locked booking. The clinic confirms by WhatsApp within one working day, and payment happens in clinic.</p>
+      <p class="notice notice-info mt-6">This is a request, not a locked booking. The clinic confirms by WhatsApp within one working day, and nothing is charged online now.</p>
+      <div class="notice notice-error bk-senderr mt-5" id="bk-senderr" role="alert" tabindex="-1" hidden>
+        <p class="bk-senderr-t" id="bk-senderr-t">Your request didn't reach the clinic, so nothing has been booked yet.</p>
+        <p class="bk-senderr-d" id="bk-senderr-d">Your details are still here. Try again, or send the request on WhatsApp instead.</p>
+        <div class="bk-senderr-actions">
+          <button class="btn btn-brand btn-sm" type="button" id="bk-retry">Try again</button>
+          <a class="btn btn-ghost-light btn-sm" id="bk-wa" href="https://wa.me/96171383315" target="_blank" rel="noopener">Send on WhatsApp</a>
+        </div>
+      </div>
     </section>
 
     <!-- Loading -->
@@ -247,14 +259,15 @@
     <!-- Done -->
     <section id="bk-done" hidden aria-live="polite">
       <div class="bk-donemark" aria-hidden="true">✓</div>
-      <h2 class="bk-h">Request sent</h2>
-      <p class="body-m mt-4 text-fg-2">We've got your request for <strong id="doneWhen">…</strong>. The clinic confirms by WhatsApp within one working day. Nothing has been charged.</p>
-      <h3 class="h6 mt-8 text-forest-900">Before your first visit</h3>
-      <ul class="bk-checklist">
-        <li><span class="d-only">Bring any X-ray or report you already have; no need to get a new one.</span><span class="m-only">Bring any X-ray or report you already have.</span></li>
-        <li>Wear clothing you can move and be assessed in.</li>
-        <li><span class="d-only">Allow the full hour; the assessment is not rushed.</span><span class="m-only">Allow the full hour.</span></li>
-      </ul>
+      <h2 class="bk-h">Booking request successfully sent</h2>
+      <p class="body-m mt-4 text-fg-2">The clinic has your request for <strong id="doneType">…</strong> on <strong id="doneWhen">…</strong>, <span id="doneWhere">at the Beirut clinic</span>. Nothing has been charged.</p>
+      <h3 class="h6 mt-8 text-forest-900">What happens next</h3>
+      <ol class="bk-nextsteps">
+        <li><strong>The clinic reviews your request</strong> within one working day.</li>
+        <li><strong>You get a WhatsApp message</strong> confirming the time, or proposing another one if it no longer works.</li>
+        <li><strong>Once it is confirmed, you choose how to pay:</strong> at the clinic, or online where offered, through a secure link.</li>
+        <li><strong>Before your visit:</strong> bring any X-ray or report you already have, wear clothing you can move in, and allow the full time.</li>
+      </ol>
       <div class="bk-doneactions">
         <button class="btn btn-brand" type="button" id="bk-ics">Add to calendar</button>
         <a class="btn btn-ghost-light" href="scoliosis/">Read: what to expect</a>
@@ -274,6 +287,6 @@
 </main>
 </div>
 <script src="assets/js/ui.js?v=59a021d2"></script>
-<script src="assets/js/booking.js?v=0740bb60"></script>
+<script src="assets/js/booking.js?v=586be11f"></script>
 </body>
 </html>

@@ -12,12 +12,14 @@ import io, json, math, os, re
 
 from motion_tags import inject
 from navcards import inject_navcards
+from seo_tags import inject_seo
+from site_config import SITE_URL
 from stamp import stamp
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.normpath(os.path.join(HERE, "..", "site"))
 TOPICS = os.path.join(HERE, "topics")
-BASE = "https://ronimassoud.github.io/rayhab-movement-clinic"
+BASE = SITE_URL
 
 ORDER = ["exercise", "sport", "posture", "mobility", "injury"]
 
@@ -89,7 +91,7 @@ FOOTER = '''<footer class="site-footer">
     <span class="wordmark"></span>
     <p class="foot-tag">MOVEMENT CLINIC</p>
     <div class="socials">
-      <a href="https://instagram.com/dr.rayhab" aria-label="Instagram, @dr.rayhab"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B4C7B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="3.9"></circle><circle cx="17.1" cy="6.9" r="1" fill="#B4C7B8" stroke="none"></circle></svg></a>
+      <a href="https://www.instagram.com/dr.rayhab/" aria-label="Instagram, @dr.rayhab"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B4C7B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="3.9"></circle><circle cx="17.1" cy="6.9" r="1" fill="#B4C7B8" stroke="none"></circle></svg></a>
       <a href="https://www.tiktok.com/@dr.rayhab" aria-label="TikTok, @dr.rayhab"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B4C7B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.4 3.5v10.9a3.4 3.4 0 11-3.4-3.4"></path><path d="M13.4 3.5c.3 2.4 2 4.1 4.4 4.3"></path></svg></a>
       <a href="https://wa.me/96171383315" aria-label="WhatsApp, +961 71 383 315"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B4C7B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 19.4l1.1-3.4a7.9 7.9 0 1 1 2.8 2.6z"></path><path d="M9.3 8.4c.1 2.9 2.4 5.3 5.3 5.5l.9-1.3-1.7-.9-.7.6a3.9 3.9 0 0 1-2-2l.6-.7-.9-1.7z"></path></svg></a>
     </div>
@@ -410,12 +412,12 @@ def main():
             os.makedirs(out)
 
         io.open(os.path.join(out, "index.html"), "w", encoding="utf-8",
-                newline="\n").write(stamp(inject_navcards(inject(wrap_arrows(render_hub(topic, arts)))), out))
+                newline="\n").write(stamp(inject_seo(inject_navcards(inject(wrap_arrows(render_hub(topic, arts))))), out))
         for i, a in enumerate(arts):
             a["_i"] = i                      # position, for the CTA rotation
             html = render_article(a, topic, lookup)
             io.open(os.path.join(out, a["slug"] + ".html"), "w", encoding="utf-8",
-                    newline="\n").write(stamp(inject_navcards(inject(wrap_arrows(html))), out))
+                    newline="\n").write(stamp(inject_seo(inject_navcards(inject(wrap_arrows(html)))), out))
 
         total += len(arts)
         print("  %-10s %d articles -> site/%s/" % (topic["dir"], len(arts), topic["dir"]))

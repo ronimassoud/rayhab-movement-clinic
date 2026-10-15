@@ -120,6 +120,9 @@
 .notice{display:block;padding:16px 18px;border-radius:var(--radius-sm);font:400 15px/1.55 var(--font-sans)}
 .notice-error{background:#F7E4E0;color:#8A2617}
 .notice-info{background:var(--color-sand);color:var(--color-fg-2)}
+.notice-success{background:var(--color-spring-50);color:var(--color-brand-800)}
+.notice a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.notice:focus{outline:2px solid currentColor;outline-offset:2px}
 
 /* Review */
 .bk-review{border-top:1px solid var(--color-line)}
@@ -144,6 +147,27 @@
 .bk-checklist{display:flex;flex-direction:column;gap:12px;margin-top:24px}
 .bk-checklist li{display:flex;gap:10px;font:400 15px/1.6 var(--font-sans);color:var(--color-fg-2)}
 .bk-checklist li::before{content:"–";color:var(--color-forest-600);flex:none}
+
+/* What happens after a request is received: numbered, because it is a
+   sequence the patient can follow. */
+.bk-nextsteps{counter-reset:step;display:flex;flex-direction:column;gap:14px;margin:20px 0 0;padding:0;list-style:none}
+.bk-nextsteps li{counter-increment:step;position:relative;padding-left:40px;font:400 15px/1.6 var(--font-sans);color:var(--color-fg-2)}
+.bk-nextsteps li strong{font-weight:600;color:var(--color-fg)}
+.bk-nextsteps li::before{content:counter(step);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;
+  display:grid;place-items:center;background:var(--color-spring-50);color:var(--color-brand-800);font:600 13px/1 var(--font-sans)}
+
+/* Availability state under the day picker, and the step 4 failure panel. */
+.bk-availnote{margin:14px 0 0;padding:10px 14px;border-radius:var(--radius-sm);background:var(--color-sand);
+  font:400 13px/1.5 var(--font-sans);color:var(--color-fg-2)}
+.bk-availnote.is-warn{background:#F7E4E0;color:#8A2617}
+.bk-senderr-t{margin:0;font-weight:600}
+.bk-senderr-d{margin:6px 0 0}
+.bk-senderr-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.bk-senderr:focus{outline:2px solid #8A2617;outline-offset:2px}
+
+/* The honeypot: kept out of sight and out of the tab order, but not
+   display:none, which some bots skip. */
+.bk-hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
 
 /* ---- Responsive: day picker per the §04 mobile spec ---- */
 @media (max-width:560px){
@@ -234,6 +258,9 @@
   .bk-checklist{gap:1px;background:var(--color-line);border-radius:var(--radius-md);overflow:hidden;margin:0 0 20px}
   .bk-checklist li{background:var(--color-paper);padding:14px 16px;font:400 15px/1.5 var(--font-sans);color:var(--color-fg-2);display:block}
   .bk-checklist li::before{content:none}
+  .bk-nextsteps{gap:1px;background:var(--color-line);border-radius:var(--radius-md);overflow:hidden;margin:0 0 20px}
+  .bk-nextsteps li{background:var(--color-paper);padding:14px 16px 14px 52px;font:400 15px/1.5 var(--font-sans)}
+  .bk-nextsteps li::before{left:16px;top:13px}
   #bk-done .btn,#bk-done .bk-linkbtn{display:block;width:100%;text-align:center;padding:17px 0;margin-bottom:10px}
   #bk-done>div:last-child{display:block}
 }

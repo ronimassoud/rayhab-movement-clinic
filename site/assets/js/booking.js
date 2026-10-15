@@ -3,8 +3,15 @@
    same service types, same availability fixture, same validation rules.
 
    No account, no payment. The form produces a *request*; the clinic
-   confirms out of band. Nothing is sent anywhere until a real endpoint
-   is wired into submit() below. */
+   confirms out of band.
+
+   It talks to the booking API named by <meta name="rayhab-api"> (contracts
+   in README.md, "Launch and backend handoff"):
+     GET  {api}/availability?service_id=&date=   the times the server offers
+     POST {api}/appointments                      the request itself
+   Success is shown only when the server answers 2xx with status
+   "requested". Anything else, including no endpoint at all, is an honest
+   failure with a retry and a WhatsApp fallback; nothing is ever faked. */
 (function () {
   'use strict';
 
@@ -83,16 +90,61 @@
   function lastBookable() { return addDays(new Date(), HORIZON); }
   function isOpen(d) { return CLOSED_DOW.indexOf(d.getDay()) < 0; }
 
-  /* Which times are already taken needs the practice calendar behind it.
-     There is no backend yet, so nothing is shown as taken: the flow makes
-     a request and the clinic confirms it. Point this at the real source
-     and the slot grid will gray out accordingly, no other change needed. */
-  function busyTimes(/* isoDateString */) { return []; }
+  /* ---------- Talking to the booking API ---------- */
+  var apiMeta = document.querySelector('meta[name="rayhab-api"]');
+  var API = apiMeta ? (apiMeta.getAttribute('content') || '').replace(/\/$/, '') : '';
+  var CLINIC_WA = '96171383315';
+  var openedAt = Date.now();
+
+  // fetch with a timeout. Resolves with { ok, status, body } whatever the
+  // status; rejects only on a network failure or the timeout (AbortError).
+  function request(method, url, data, ms) {
+    var ctl = window.AbortController ? new AbortController() : null;
+    var timer = ctl ? window.setTimeout(function () { ctl.abort(); }, ms) : 0;
+    var init = { method: method, credentials: 'same-origin', headers: { 'Accept': 'application/json' } };
+    if (data) { init.headers['Content-Type'] = 'application/json'; init.body = JSON.stringify(data); }
+    if (ctl) init.signal = ctl.signal;
+    return fetch(url, init).then(function (r) {
+      window.clearTimeout(timer);
+      return r.text().then(function (t) {
+        var body = null;
+        try { body = t ? JSON.parse(t) : null; } catch (x) { body = null; }
+        return { ok: r.ok, status: r.status, body: body };
+      });
+    }, function (err) { window.clearTimeout(timer); throw err; });
+  }
+
+  /* Which times are free comes from the practice calendar, through
+     GET {api}/availability. Until it answers, or if it cannot be reached,
+     the clinic's opening pattern above is shown and every time is a
+     request the clinic confirms; a note under the days says which. */
+  var avail = {};   // 'type|yyyy-mm-dd' -> 'loading' | 'failed' | [{ time, available }]
+  function availKey(date) { return st.type + '|' + isoDate(date); }
+  function loadAvailability(date) {
+    if (!date || !isOpen(date)) return;
+    var key = availKey(date);
+    if (avail[key]) return;
+    if (!API) { avail[key] = 'failed'; return; }
+    avail[key] = 'loading';
+    request('GET', API + '/availability?service_id=' + encodeURIComponent(st.type) +
+            '&date=' + isoDate(date), null, 8000).then(function (res) {
+      var slots = res.ok && res.body && res.body.slots;
+      avail[key] = Array.isArray(slots) ? slots : 'failed';
+      if (st.date && availKey(st.date) === key) render();
+    }, function () {
+      avail[key] = 'failed';
+      if (st.date && availKey(st.date) === key) render();
+    });
+  }
 
   function slotsFor(date, mins) {
     if (!date || !isOpen(date)) return [];
+    var live = avail[availKey(date)];
+    if (Array.isArray(live)) {
+      return live.map(function (s) { return { label: s.time, taken: !s.available }; });
+    }
     var blocks = HOURS[date.getDay()] || [];
-    var busy = busyTimes(isoDate(date));
+    var busy = [];
     var out = [];
     blocks.forEach(function (b) {
       var t = toMin(b[0]), end = toMin(b[1]);
@@ -119,7 +171,10 @@
     step: 1, forWhom: 'me', type: 'assessment', mode: 'clinic',
     winStart: 0, date: null, slot: null, blurred: {},
     first: '', last: '', email: '', phone: '', note: '', consent: false,
-    touched: false, loading: false, done: false
+    touched: false, loading: false, done: false,
+    sendError: '',      // '' | 'network' | 'timeout' | 'server' | 'busy' | 'unavailable'
+    serverErr: {},      // field selector -> message, from a 422
+    slotMsg: ''         // shown in step 2 when a chosen time was taken meanwhile
   };
 
   var $ = function (sel) { return root.querySelector(sel); };
@@ -156,11 +211,14 @@
     return '';
   }
   function fieldErrors() {
+    // The browser's checks first; then anything the server rejected (422),
+    // until that field is edited again.
+    var se = st.serverErr || {};
     return {
-      '#f-first': nameErr(st.first, 'first name'),
-      '#f-last': nameErr(st.last, 'last name'),
-      '#f-email': emailErr(),
-      '#f-phone': phoneErr()
+      '#f-first': nameErr(st.first, 'first name') || se['#f-first'] || '',
+      '#f-last': nameErr(st.last, 'last name') || se['#f-last'] || '',
+      '#f-email': emailErr() || se['#f-email'] || '',
+      '#f-phone': phoneErr() || se['#f-phone'] || ''
     };
   }
   function emailOk() { return !emailErr(); }
@@ -208,7 +266,8 @@
     if (ti) ti.textContent = M_TITLES[st.step - 1] || '';
     if (bk) bk.hidden = st.step === 1 || st.done;
     var dw = $('#m-doneWhen');
-    if (dw) dw.textContent = whenLabel() + ' at the Beirut clinic. We confirm by WhatsApp within one working day.';
+    if (dw) dw.textContent = whenLabel() + (isOnline() ? ', online.' : ' at the Beirut clinic.') +
+      ' The clinic replies by WhatsApp within one working day.';
   }
 
   /* ---- Stepper ----
@@ -348,10 +407,24 @@
     });
   }
 
+  function renderAvailNote() {
+    var note = $('#bk-availnote');
+    if (!note) return;
+    var live = st.date ? avail[availKey(st.date)] : null;
+    var text = st.slotMsg ||
+      (live === 'loading' ? 'Checking the clinic calendar…' :
+       live === 'failed' ? 'Live availability could not be loaded, so these are the clinic’s usual hours. The time you pick is a request the clinic confirms.' : '');
+    note.textContent = text;
+    note.hidden = !text;
+    note.classList.toggle('is-warn', !!st.slotMsg);
+  }
+
   function renderSlots() {
     var grid = $('#bk-slots');
     var none = $('#bk-noslots');
     var day = st.date;
+    if (day) loadAvailability(day);
+    renderAvailNote();
     var list = day ? slotsFor(day, currentType().mins) : [];
     var hasSlots = list.length > 0;
 
@@ -383,6 +456,9 @@
       return;
     }
 
+    // A time the calendar now reports as taken cannot stay selected.
+    if (st.slot && !list.some(function (s) { return s.label === st.slot && !s.taken; })) st.slot = null;
+
     grid.innerHTML = '';
     list.forEach(function (s) {
       var b = document.createElement('button');
@@ -394,7 +470,7 @@
         b.disabled = true;
         b.setAttribute('aria-label', s.label + ', already booked');
       } else {
-        b.addEventListener('click', function () { st.slot = s.label; render(); });
+        b.addEventListener('click', function () { st.slot = s.label; st.slotMsg = ''; render(); });
       }
       grid.appendChild(b);
     });
@@ -416,6 +492,43 @@
       ' · ' + (st.forWhom === 'me' ? 'For myself' : 'For my child');
     $('#rvContact').textContent = st.email || 'Not entered yet';
     $('#doneWhen').textContent = whenLabel();
+    var dt = $('#doneType'), dwh = $('#doneWhere');
+    if (dt) dt.textContent = t.name + ' (' + t.dur + ')';
+    if (dwh) dwh.textContent = isOnline() ? 'as an online video call' : 'at the Beirut clinic';
+  }
+
+  /* The step 4 failure panel: what went wrong, in plain words, with a retry
+     and a WhatsApp fallback that carries the request but none of the
+     patient's personal details. */
+  var SEND_COPY = {
+    network: ['Your request didn’t reach the clinic, so nothing has been booked yet.',
+              'Check your connection and try again. Your details are still here.'],
+    timeout: ['The clinic didn’t answer in time, so the request may not have arrived.',
+              'Try again in a moment. If it keeps happening, send it on WhatsApp instead.'],
+    server: ['Something went wrong on the clinic’s side, so nothing has been booked yet.',
+             'Try again in a moment, or send the request on WhatsApp instead.'],
+    busy: ['Too many requests were sent from here in a short time.',
+           'Wait a minute and try again, or send the request on WhatsApp instead.'],
+    unavailable: ['Online booking requests aren’t available right now, so nothing has been booked yet.',
+                  'Send the request on WhatsApp instead and the clinic will confirm it there.']
+  };
+  function renderSendError() {
+    var box = $('#bk-senderr');
+    if (!box) return;
+    var copy = SEND_COPY[st.sendError];
+    box.hidden = !copy || st.step !== 4;
+    if (!copy) return;
+    $('#bk-senderr-t').textContent = copy[0];
+    $('#bk-senderr-d').textContent = copy[1];
+    var retry = $('#bk-retry');
+    if (retry) retry.hidden = st.sendError === 'unavailable';
+    var wa = $('#bk-wa');
+    if (wa) {
+      var t = currentType();
+      var msg = 'Hello, I would like to request a ' + t.name + ' (' + t.dur + ')' +
+                (st.slot ? ' on ' + whenLabel() : '') + ', ' + (isOnline() ? 'online' : 'at the Beirut clinic') + '.';
+      wa.href = 'https://wa.me/' + CLINIC_WA + '?text=' + encodeURIComponent(msg);
+    }
   }
 
   function renderValidation() {
@@ -439,6 +552,8 @@
   }
 
   function render() {
+    // A failed send belongs to step 4; leaving it clears the message.
+    if (st.step !== 4 && !st.loading) st.sendError = '';
     // Step panels
     [1, 2, 3, 4].forEach(function (n) {
       $('#step' + n).hidden = !(st.step === n && !st.done && !st.loading);
@@ -468,6 +583,7 @@
     renderSlots();
     renderSummary();
     renderValidation();
+    renderSendError();
 
     // Footer actions
     var back = $('#bk-back');
@@ -534,6 +650,7 @@
     var el = $(p[0]);
     el.addEventListener('input', function (e) {
       st[p[1]] = e.target.value;
+      if (st.serverErr && st.serverErr[p[0]]) delete st.serverErr[p[0]];
       renderValidation();
       var n = $('#bk-next');
       var ok = canNext();
@@ -630,7 +747,9 @@
     st = { step: 1, forWhom: 'me', type: 'assessment', mode: 'clinic',
            winStart: 0, date: null, slot: null, blurred: {},
            first: '', last: '', email: '', phone: '', note: '', consent: false,
-           touched: false, blurred: {}, loading: false, done: false };
+           touched: false, blurred: {}, loading: false, done: false,
+           sendError: '', serverErr: {}, slotMsg: '' };
+    openedAt = Date.now();
     st.date = nextOpenFrom(firstBookable());
     ['#f-first', '#f-last', '#f-email', '#f-phone', '#f-note'].forEach(function (s) { $(s).value = ''; });
     render();
@@ -642,15 +761,89 @@
     if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
   }
 
-  function submit() {
-    st.loading = true; render();
-    // Placeholder for the real request. Wire a POST here when the
-    // clinic's booking endpoint exists; the payload is `st`.
-    window.setTimeout(function () {
-      st.loading = false; st.done = true;
-      render(); focusStep();
-    }, 1400);
+  // The fields a 422 can name, mapped to the inputs they belong to.
+  var FIELD_FOR = { first_name: '#f-first', last_name: '#f-last', email: '#f-email', phone: '#f-phone' };
+
+  function payload() {
+    var hp = $('#f-website');
+    return {
+      service_id: st.type,
+      for_whom: st.forWhom,
+      mode: isOnline() ? 'online' : 'clinic',
+      date: st.date ? isoDate(st.date) : null,
+      time: st.slot,
+      timezone: 'Asia/Beirut',
+      first_name: st.first.trim(),
+      last_name: st.last.trim(),
+      email: st.email.trim(),
+      phone: st.phone.trim(),
+      note: st.note.trim(),
+      consent: !!st.consent,
+      // Abuse signals, checked by the server: a field people never see,
+      // and how long the form was open.
+      website: hp ? hp.value : '',
+      elapsed_ms: Date.now() - openedAt
+    };
   }
+
+  function failSend(kind) {
+    st.loading = false;
+    st.sendError = kind;
+    st.step = 4;
+    render();
+    var box = $('#bk-senderr');
+    if (box) box.focus();
+  }
+
+  function submit() {
+    if (st.loading) return;            // one request at a time
+    if (!API) return failSend('unavailable');
+    st.loading = true;
+    st.sendError = '';
+    render();
+    request('POST', API + '/appointments', payload(), 15000).then(function (res) {
+      var body = res.body || {};
+      if (res.ok && body.status === 'requested') {
+        st.loading = false;
+        st.done = true;
+        render(); focusStep();
+        return;
+      }
+      if (res.status === 422 && body.errors) {
+        // The server's own field messages go next to the fields they name.
+        st.serverErr = {};
+        Object.keys(body.errors).forEach(function (k) {
+          if (FIELD_FOR[k]) st.serverErr[FIELD_FOR[k]] = String(body.errors[k]);
+        });
+        st.loading = false;
+        st.step = Object.keys(st.serverErr).length ? 3 : 4;
+        st.touched = true;
+        if (st.step === 4) st.sendError = 'server';
+        render();
+        var first = Object.keys(st.serverErr)[0];
+        if (first) $(first).focus(); else focusStep();
+        return;
+      }
+      if (res.status === 409) {
+        // The time went while the patient was filling in the form.
+        if (st.date) delete avail[availKey(st.date)];
+        st.loading = false;
+        st.slot = null;
+        st.step = 2;
+        st.slotMsg = 'That time was just taken by someone else. Pick another and your details will be kept.';
+        render(); focusStep();
+        return;
+      }
+      if (res.status === 404 || res.status === 405 || res.status === 501) return failSend('unavailable');
+      if (res.status === 429) return failSend('busy');
+      failSend('server');
+    }, function (err) {
+      failSend(err && err.name === 'AbortError' ? 'timeout' : 'network');
+    });
+  }
+
+  var retryBtn = root.querySelector('#bk-retry');
+  if (retryBtn) retryBtn.addEventListener('click', submit);
 
     st.date = nextOpenFrom(firstBookable());
 

@@ -15,7 +15,7 @@
    "name": "The Schroth Method",
    "short": "Pillar 02 · The Schroth Method",
    "claim": 6,
-   "desc": "What Schroth-based scoliosis rehabilitation involves, what rotational breathing is, why the exercises are curve-specific, and what the evidence does and does not show.",
+   "desc": "What Schroth-based scoliosis rehabilitation involves, what rotational breathing is, why exercises are curve-specific, and what the evidence shows.",
    "stand": "Schroth is the method behind most of what happens in the clinic. These six articles explain what it asks of you, why it is built around your specific curve, and how strong the evidence actually is."
   },
   {
@@ -33,7 +33,7 @@
    "name": "The assessment",
    "short": "Pillar 04 · The assessment",
    "claim": 5,
-   "desc": "What happens in a 60-minute scoliosis assessment at Rayhab, whether you need an X-ray first, what gets measured, what to do straight after a diagnosis, and what monitoring leaves out.",
+   "desc": "Inside a 60-minute scoliosis assessment at Rayhab: whether you need an X-ray, what gets measured, what to do after a diagnosis, and what monitoring leaves out.",
    "stand": "Everything starts with one appointment. These five articles explain what is measured, what you need to bring, what you leave with, and what follow-up X-rays do not show."
   }
  ],
@@ -1095,7 +1095,7 @@
    "mins": "6 min read",
    "title": "What the evidence says about Schroth, honestly",
    "blurb": "Better than skeptics claim, weaker than enthusiasts claim. Here is the actual state of it.",
-   "desc": "An honest summary of the evidence for physiotherapeutic scoliosis-specific exercise, including Schroth: what is supported, how certain it is, and what remains unknown.",
+   "desc": "An honest summary of the evidence for scoliosis-specific exercise, including Schroth: what is supported, how certain it is, and what remains unknown.",
    "stand": "You deserve a straight answer about how well this is supported, including the parts that are not flattering.",
    "key": [
     "International guidance recommends scoliosis-specific exercise for growing adolescents with mild to moderate curves.",
@@ -1260,7 +1260,7 @@
    "name": "For parents of adolescents",
    "short": "Situation · Parents of adolescents",
    "claim": 7,
-   "desc": "The scoliosis articles that matter most to parents: what a diagnosis means, what predicts progression, how bracing works, and how to support a teenager doing daily exercises.",
+   "desc": "Scoliosis articles for parents: what a diagnosis means, what predicts progression, how bracing works, and how to support a teenager doing daily exercises.",
    "stand": "Seven of the twenty-five, in the order most parents need them, from the week of diagnosis onward.",
    "items": [
     "just-diagnosed",

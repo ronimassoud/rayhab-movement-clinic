@@ -8,6 +8,8 @@ import io, json, os, re
 
 from motion_tags import inject
 from navcards import inject_navcards
+from seo_tags import inject_seo
+from site_config import SITE_URL
 from stamp import stamp
 
 # Relative to this file, so the generator writes into whichever checkout
@@ -37,7 +39,7 @@ FOOTER = '''<footer class="site-footer">
     <span class="wordmark"></span>
     <p class="foot-tag">MOVEMENT CLINIC</p>
     <div class="socials">
-      <a href="https://instagram.com/dr.rayhab" aria-label="Instagram, @dr.rayhab"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B4C7B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="3.9"></circle><circle cx="17.1" cy="6.9" r="1" fill="#B4C7B8" stroke="none"></circle></svg></a>
+      <a href="https://www.instagram.com/dr.rayhab/" aria-label="Instagram, @dr.rayhab"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B4C7B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="3.9"></circle><circle cx="17.1" cy="6.9" r="1" fill="#B4C7B8" stroke="none"></circle></svg></a>
       <a href="https://www.tiktok.com/@dr.rayhab" aria-label="TikTok, @dr.rayhab"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B4C7B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.4 3.5v10.9a3.4 3.4 0 11-3.4-3.4"></path><path d="M13.4 3.5c.3 2.4 2 4.1 4.4 4.3"></path></svg></a>
       <a href="https://wa.me/96171383315" aria-label="WhatsApp, +961 71 383 315"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B4C7B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 19.4l1.1-3.4a7.9 7.9 0 1 1 2.8 2.6z"></path><path d="M9.3 8.4c.1 2.9 2.4 5.3 5.3 5.5l.9-1.3-1.7-.9-.7.6a3.9 3.9 0 0 1-2-2l.6-.7-.9-1.7z"></path></svg></a>
     </div>
@@ -80,7 +82,7 @@ HEAD = '''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<link rel="canonical" href="https://ronimassoud.github.io/rayhab-movement-clinic/scoliosis/{slug}.html">
+<link rel="canonical" href="https://dr-rayhab.com/scoliosis/{slug}.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -400,7 +402,7 @@ def main():
     for a in arts:
         html = render_article(a, lookup, pillars)
         io.open(os.path.join(OUT, a["slug"] + ".html"), "w",
-                encoding="utf-8", newline="\n").write(stamp(inject_navcards(inject(wrap_arrows(html))), OUT))
+                encoding="utf-8", newline="\n").write(stamp(inject_seo(inject_navcards(inject(wrap_arrows(html)))), OUT))
         n += 1
 
     # Every index is a view of one library. The order here is the order of
@@ -429,7 +431,7 @@ def main():
         group = arts if view["slug"] == "library" else members[view["slug"]]
         html = render_index(view, group, views).replace("@@TOTAL_W@@", TOTAL_W)
         io.open(os.path.join(OUT, view["slug"] + ".html"), "w",
-                encoding="utf-8", newline="\n").write(stamp(inject_navcards(inject(wrap_arrows(html))), OUT))
+                encoding="utf-8", newline="\n").write(stamp(inject_seo(inject_navcards(inject(wrap_arrows(html)))), OUT))
 
     print("wrote %d articles and %d index views" % (n, len(views) + 1))
     for slug in order:
