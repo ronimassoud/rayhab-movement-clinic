@@ -578,6 +578,12 @@ body{overflow-wrap:break-word}
   .btn-sm{min-height:44px}
   .startlist a{min-height:48px}
   .qa-btn,.faq-btn,.acc-btn{min-height:48px}
+  /* Footer links, breadcrumbs and standalone text links are small type, so
+     on a touch screen their tap area grows past the text without moving
+     anything: padding outward, cancelled by an equal negative margin. */
+  .footcol a{display:inline-flex;align-items:center;min-height:40px;margin:-8px 0}
+  .crumbs a{display:inline-block;padding:12px 4px;margin:-12px -4px}
+  a.textlink{padding:12px 0;margin:-12px 0}
 }
 
 /* 4. Tablet band: the 1440 grids need an intermediate step before

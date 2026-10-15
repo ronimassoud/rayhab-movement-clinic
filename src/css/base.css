@@ -88,8 +88,16 @@
   h3 { font-size: var(--text-sub); line-height: 1.35; }
 
   :focus-visible { outline: 2px solid var(--color-ink-950); outline-offset: 3px; border-radius: 2px; }
+  /* On the forest surfaces the ink outline would vanish, so it turns spring
+     green. Every dark surface is listed, including those that are dark by
+     their own class rather than through .on-dark or .s-dark. */
   .on-dark :focus-visible, .s-dark :focus-visible,
-  .site-nav :focus-visible, .site-footer :focus-visible { outline-color: var(--color-spring-500); }
+  .site-nav :focus-visible, .site-footer :focus-visible,
+  .home-hero :focus-visible, .svc-hero :focus-visible, .svcidx-hero :focus-visible,
+  .hub-hero :focus-visible, .art-hero :focus-visible, .svc-consult :focus-visible,
+  .hub-myths :focus-visible, .cta-band :focus-visible, .card-forest :focus-visible,
+  .pc :focus-visible, .nf :focus-visible, .bk-rail :focus-visible,
+  .m-bookbar-dark :focus-visible { outline-color: var(--color-spring-500); }
 
   .skip { position: absolute; left: -9999px; top: 0; z-index: 200; background: var(--color-spring-500);
     color: var(--color-ink-950); padding: 12px 20px; font-weight: 600; border-radius: 0 0 var(--radius-xs) 0; }
