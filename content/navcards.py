@@ -40,6 +40,8 @@ CARDS = [
     ('learn', 'Learn', [
         ('education.html', 'Education hub'),
         ('scoliosis/', 'Understanding scoliosis'),
+        ('mobility/', 'Movement training'),
+        ('injury/', 'Pain articles'),
         ('scoliosis/library.html', 'Scoliosis library'),
         ('results.html', 'Case studies'),
     ]),
