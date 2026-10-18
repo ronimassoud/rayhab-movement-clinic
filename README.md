@@ -398,6 +398,8 @@ Connecting Supabase and Resend takes one local file per environment,
 never committed), `infra/supabase/setup.sql` in the Supabase SQL Editor,
 `infra/scripts/push-settings.sh` to put the settings on the server, and
 `api/bin/doctor.php` on the server to check it all, including a test email.
+Before any server exists, `node api/dev/check.mjs production [--email you@x]`
+checks the same file against Supabase and Resend from your own computer.
 
 - **Server side:** an Ubuntu Server 26.04 VPS with Apache 2 and certbot.
   Port 80 redirects to HTTPS on 443. Apache serves the static site and sends

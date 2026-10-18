@@ -31,6 +31,7 @@ Patients / staff ──HTTP 80──> Apache: 301 to HTTPS
 
 1. Copy the template: `cp infra/connect.example.env infra/connect.production.env`.
 2. Create the Supabase project (step 5) and the Resend account (step 6.0), filling the file in as you go.
+   - **Check from your computer,** with no server needed: `node api/dev/check.mjs production` (add `--email you@example.com` to send a test). It tests the anon key and the sign-up setting, both database logins, the extension, Resend's DNS records and the API key, and says what to fix.
 3. Once the server is set up (step 4), push the file to it: `bash infra/scripts/push-settings.sh production you@dr-rayhab.com` (step 8).
 4. Deploy (step 10), then run the doctor on the server, which checks the database, sign-in and email in one go (step 8.4).
 
