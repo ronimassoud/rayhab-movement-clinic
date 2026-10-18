@@ -52,6 +52,7 @@ say "migrating the database"
 # The schema owner's connection, from migrate.env, for this one command only;
 # the running API connects as rayhab_app.
 if [ "$DRY" = 1 ]; then echo "would run: php $BASE/api/releases/$RELEASE/bin/migrate.php (with migrate.env)"; else
+  # shellcheck source=/dev/null
   ( set -a; . "$BASE/migrate.env"; set +a; php "$BASE/api/releases/$RELEASE/bin/migrate.php" )
 fi
 
