@@ -76,17 +76,23 @@
   function enroll() {
     step('lg-enroll');
     API.post('/admin/mfa/enroll', {}, { timeout: 15000 }).then(function (res) {
-      if (!res.ok || !res.body || !res.body.qr_code) {
+      if (!res.ok || !res.body || !(res.body.qr_code || res.body.secret)) {
         if (res.status === 401) return restart('The sign-in took too long. Start again.');
         return fail('lg-err2', generic(res));
       }
-      var img = document.createElement('img');
-      img.alt = 'QR code to add Rayhab admin to your authenticator app';
-      img.width = 200; img.height = 200;
-      img.src = /^data:image\//.test(res.body.qr_code) ? res.body.qr_code : 'data:image/svg+xml;utf8,' + encodeURIComponent(res.body.qr_code);
-      $('lg-qrwrap').innerHTML = '';
-      $('lg-qrwrap').appendChild(img);
       $('lg-secret').textContent = String(res.body.secret || '').replace(/(.{4})/g, '$1 ').trim();
+      if (res.body.qr_code) {
+        var img = document.createElement('img');
+        img.alt = 'QR code to add Rayhab admin to your authenticator app';
+        img.width = 200; img.height = 200;
+        img.src = /^data:image\//.test(res.body.qr_code) ? res.body.qr_code : 'data:image/svg+xml;utf8,' + encodeURIComponent(res.body.qr_code);
+        $('lg-qrwrap').innerHTML = '';
+        $('lg-qrwrap').appendChild(img);
+      } else {
+        // No QR code (the local development stand-in): the key is typed in instead.
+        $('lg-qrwrap').hidden = true;
+        $('lg-secret').closest('details').open = true;
+      }
       $('lg-code-e').focus();
     }, function (err) { fail('lg-err2', generic(null, err)); });
   }

@@ -1,0 +1,13 @@
+# The Rayhab worker: messages, holds, payment reconciliation, reminders.
+# Installed by provision.sh as /etc/cron.d/rayhab. Every minute, as www-data
+# (which can read app.env through its group). A lock keeps runs from overlapping.
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+* * * * * www-data [ -f /srv/rayhab/production/api/current/bin/worker.php ] && RAYHAB_ENV_FILE=/srv/rayhab/production/app.env php /srv/rayhab/production/api/current/bin/worker.php >> /var/log/rayhab/worker-production.log 2>&1
+* * * * * www-data [ -f /srv/rayhab/staging/api/current/bin/worker.php ] && RAYHAB_ENV_FILE=/srv/rayhab/staging/app.env php /srv/rayhab/staging/api/current/bin/worker.php >> /var/log/rayhab/worker-staging.log 2>&1
+
+# Nightly database backups while Supabase is on the Free plan (03:15 and 03:30
+# server time), as deploy, who alone can read migrate.env.
+15 3 * * * deploy [ -f /srv/rayhab/production/migrate.env ] && /srv/rayhab/bin/backup.sh production >> /var/log/rayhab/backup.log 2>&1
+30 3 * * * deploy [ -f /srv/rayhab/staging/migrate.env ] && /srv/rayhab/bin/backup.sh staging >> /var/log/rayhab/backup.log 2>&1

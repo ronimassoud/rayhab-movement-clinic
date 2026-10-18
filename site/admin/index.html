@@ -10,7 +10,7 @@
 <meta name="referrer" content="no-referrer">
 <link rel="preload" href="../assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/public-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/css/rayhab.css?v=2fcceee8">
+<link rel="stylesheet" href="../assets/css/rayhab.css?v=afb412ad">
 <link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
 </head>
 <body data-app="admin" class="adm-body">
@@ -36,6 +36,7 @@
     <nav class="adm-nav" aria-label="Admin sections">
       <a href="#/overview" data-view="overview">Overview</a>
       <a href="#/requests" data-view="requests">Requests <span class="adm-count" id="cnt-requests" hidden></span></a>
+      <a href="#/enquiries" data-view="enquiries">Enquiries <span class="adm-count" id="cnt-enquiries" hidden></span></a>
       <a href="#/appointments" data-view="appointments">Appointments</a>
       <a href="#/calendar" data-view="calendar">Calendar</a>
       <a href="#/payments" data-view="payments">Payments <span class="adm-count adm-count-quiet" id="cnt-payments" hidden></span></a>
@@ -119,6 +120,24 @@
       <div class="adm-cal" id="cal-grid"></div>
     </section>
 
+    <!-- Enquiries -->
+    <section class="adm-view" id="v-enquiries" hidden>
+      <form class="adm-filters" id="eq-filters" role="search">
+        <div class="adm-f adm-f-seg">
+          <span class="field-label" id="eq-show-l">Show</span>
+          <div class="segment" role="group" aria-labelledby="eq-show-l">
+            <button type="button" data-eq="open" aria-pressed="true">Waiting</button>
+            <button type="button" data-eq="answered" aria-pressed="false">Answered</button>
+            <button type="button" data-eq="all" aria-pressed="false">All</button>
+          </div>
+        </div>
+        <p class="adm-f adm-f-q"><label class="field-label" for="eq-q">Search</label><input class="input" id="eq-q" type="search" placeholder="Name, email, phone or words in the question" autocomplete="off"></p>
+      </form>
+      <p class="adm-intro">Questions sent from the website’s contact form. Reply by email or WhatsApp, then mark the question answered so it leaves this list.</p>
+      <div id="eq-list"></div>
+      <div class="adm-pager" id="eq-pager"></div>
+    </section>
+
     <!-- Payments -->
     <section class="adm-view" id="v-payments" hidden>
       <form class="adm-filters" id="py-filters">
@@ -168,11 +187,11 @@
 <div class="adm-toast" id="adm-toast" role="status" aria-live="polite" hidden></div>
 
 <script src="../assets/js/api/time.js?v=549c5148"></script>
-<script src="../assets/js/api/labels.js?v=f345e037"></script>
+<script src="../assets/js/api/labels.js?v=a88dba85"></script>
 <script src="../assets/js/api/client.js?v=e732d077"></script>
 <script src="../assets/js/api/availability.js?v=23b2281d"></script>
-<script src="../assets/js/api/appointments.js?v=4d7d2d94"></script>
+<script src="../assets/js/api/appointments.js?v=244b48c8"></script>
 <script src="../assets/js/api/payments.js?v=59623c97"></script>
-<script src="../assets/js/admin.js?v=680517c0"></script>
+<script src="../assets/js/admin.js?v=72819c48"></script>
 </body>
 </html>

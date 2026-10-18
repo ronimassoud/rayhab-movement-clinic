@@ -7,8 +7,8 @@ physiotherapy.
 Static site: plain HTML, CSS custom properties and vanilla JavaScript. No build
 step and no framework. Open `site/index.html` or serve the `site/` directory.
 
-- **Production (planned):** <https://dr-rayhab.com>, on a VPS behind Nginx, with
-  a booking API built by a separate backend developer. See
+- **Production (planned):** <https://dr-rayhab.com>, on an Ubuntu VPS with
+  Apache, PHP and certbot, and the booking API in `api/`. See
   [Launch and backend handoff](#launch-and-backend-handoff).
 - **Staging:** <https://ronimassoud.github.io/rayhab-movement-clinic/>
 - **Repository:** <https://github.com/ronimassoud/rayhab-movement-clinic>
@@ -116,14 +116,17 @@ content/                     generators and source content (see below)
 docs/                        production runbook, backend architecture, frontend booking spec,
                              privacy and terms drafts
 tests/                       node --test: Beirut time, status words, demo rules
-server/                      the booking API and worker (Node, TypeScript, Fastify)
-  src/modules/               the HTTP routes, one file per audience
-  src/services/              scheduling, records, links, payments, the outbox
-  src/integrations/          Supabase Auth, WhatsApp, email, Whish
-  src/worker/                message delivery, holds, reconciliation, reminders
-  migrations/                SQL, applied in order by npm run migrate
-  test/                      vitest, on PGlite or PostgreSQL (TEST_DATABASE_URL)
-infra/                       Nginx sites, Docker Compose, provision.sh, deploy.sh, env.example
+api/                         the booking API (plain PHP 8.3+, no Composer packages)
+  public/index.php           every /api/* request; Apache sends them here
+  src/Routes/                the HTTP routes, one file per audience
+  src/                       scheduling, records, links, payments, the outbox,
+                             Supabase Auth, WhatsApp, email (mail via msmtp), Whish
+  src/Worker.php             message delivery, holds, reconciliation, reminders
+  bin/worker.php             the cron worker; bin/migrate.php the migrations
+  migrations/                SQL, applied in order on every deploy
+  tests/                     plain PHP tests, on PostgreSQL (TEST_DATABASE_URL)
+  dev/                       local only: PGlite database, PHP dev server, test runner
+infra/                       Apache sites, PHP settings, cron, provision.sh, deploy.sh, env.example
 package.json                 Tailwind, the pinned GSAP version, npm test
 Rayhab UI.dc.html            the original Claude Design canvas, byte-exact
 brief.txt                    the original written brief
@@ -385,16 +388,23 @@ Known gaps, all deliberate rather than overlooked:
 ## Launch and backend handoff
 
 The booking flow, the patient payment page and the clinic admin talk to the
-booking API in [`server/`](server/), which implements every contract below.
+booking API in [`api/`](api/), which implements every contract below.
 Getting it running on `dr-rayhab.com` (VPS, DNS, Supabase, WhatsApp, Whish,
 GitHub secrets) is a step-by-step checklist in
 [`docs/production-runbook.md`](docs/production-runbook.md).
 
-- **Server side:** the API is Node 22, TypeScript and Fastify, with plain SQL
-  on PostgreSQL (Supabase) and a worker for messages, holds and payment
-  reconciliation. Its tests cover the contract tables and the acceptance
-  checks below. The original proposal is in
-  [`docs/backend-architecture.md`](docs/backend-architecture.md).
+- **Server side:** an Ubuntu Server 26.04 VPS with Apache 2 and certbot.
+  Port 80 redirects to HTTPS on 443. Apache serves the static site and sends
+  `/api/*` to the API, plain PHP run by PHP-FPM.
+  - **Database:** plain SQL on PostgreSQL (Supabase).
+  - **Background work:** a cron job every minute handles messages, holds and
+    payment reconciliation.
+  - **Tests:** they cover the contract tables and the acceptance checks
+    below.
+
+  The original proposal, with Fastify and Nginx, is in
+  [`docs/backend-architecture.md`](docs/backend-architecture.md); the stack
+  above replaced it.
 - **What the pages do:** the frontend specification is in
   [`docs/frontend-booking-spec.md`](docs/frontend-booking-spec.md).
 - **When they differ:** the field names and behaviors below are what the
@@ -408,23 +418,27 @@ not built yet.
 | Area | State |
 |---|---|
 | Static site, generators, CI | Existing. GitHub Pages serves the staging copy. |
-| Production hosting at `https://dr-rayhab.com` | Prepared: `infra/` (Nginx, Docker Compose, provisioning and deploy scripts) and `.github/workflows/deploy.yml`. Not yet set up: needs the steps in the runbook. |
+| Production hosting at `https://dr-rayhab.com` | Prepared: `infra/` (Apache sites, PHP settings, cron, provisioning and deploy scripts) and `.github/workflows/deploy.yml`. Not yet set up: needs the steps in the runbook. |
 | Booking flow (`book.html` and the booking dialog on every page) | Existing (frontend). Catalog, live availability with Beirut DST, international WhatsApp numbers, both consents, every request state. |
 | Payment choice (`payment/`) | Existing (frontend). Whish or cash, verifying, paid, failed, expired and closed states. |
 | Clinic admin (`admin/`) | Existing (frontend). Overview, requests, appointments, calendar, payments with cash confirmation, activity. |
 | Contact form UI and states | Existing (frontend). |
-| Every `/api/*` endpoint below | Existing (`server/`), tested on PGlite and PostgreSQL 16. |
+| Every `/api/*` endpoint below | Existing (`api/`, PHP), tested on PostgreSQL 16 in CI and locally on PGlite. |
+| Website questions in the admin (`#/enquiries`) | Existing: listed for staff, marked answered or reopened. |
 | Staff sign-in (`admin/login.html`) | Existing: Supabase Auth with a required authenticator code, handled server-side. |
-| WhatsApp, email | Existing drivers; sending starts once the Meta templates and an SMTP account exist (runbook steps 6 and 8). |
+| WhatsApp, email | Existing drivers. Email goes through Resend (Free plan) by SMTP, via msmtp; sending starts once the domain is verified in Resend and the Meta templates are approved (runbook step 6). |
+| Database plan | Supabase Free to start, upgraded to Pro later. Until then the server takes a nightly database dump (`infra/scripts/backup.sh`, runbook step 5.8). |
 | Whish | The flow is built and tested against a sandbox stand-in. The real driver waits for Whish's merchant documentation (runbook step 7); until then production offers cash only. |
 | Demo backend for review (`?demo=1`) | Existing, staging and localhost only. |
 
 To run the whole thing on your computer (site, API, database, sign-in), with
-nothing else to install:
+PHP 8.3+ (with pdo_pgsql) and Node installed:
 
 ```bash
-npm install --prefix server && npm run dev --prefix server
+npm install --prefix api/dev && npm run dev --prefix api/dev
 ```
+
+The API's tests run the same way: `npm test --prefix api/dev`.
 
 Then open <http://localhost:4700>. Staff sign-in is `dev@rayhab.test` /
 `rayhab-dev` with any authenticator app; messages are written to the terminal
@@ -474,8 +488,9 @@ Nothing is sent or stored. The only thing kept is the chosen scenario, in
 | API base | `content/site_config.py` `API_BASE`, written into every page as `<meta name="rayhab-api" content="/api">` | `/api` |
 | Share image | `content/site_config.py` `SHARE_IMAGE` | `/assets/img/og/rayhab-share.jpg` (1200x630) |
 
-**Same origin.** The API base is a same-origin path on purpose: Nginx proxies
-`/api/` to the backend, so no CORS is needed and no keys exist in the browser.
+**Same origin.** The API base is a same-origin path on purpose: Apache sends
+`/api/` to the PHP API on the same site, so no CORS is needed and no keys
+exist in the browser.
 
 **If the API moves to another origin:** set `API_BASE` to the full URL,
 rebuild, and add CORS for `https://dr-rayhab.com` only. The staff cookie then
@@ -660,6 +675,10 @@ Sent by `site/assets/js/contact.js`.
 `404`/`405`/`501` and other failures behave as for appointments, with
 WhatsApp and email offered.
 
+**Where it goes.** The question is stored and shown in the admin's
+**Enquiries** view. The clinic's inbox gets only a short notice with a link
+to it, so health details in a question stay behind the staff sign-in.
+
 ### API contracts: payment choice
 
 **The link.** Once the clinic approves a request, the WhatsApp message carries
@@ -778,7 +797,7 @@ now stands, and the admin repaints from that.
 | POST | `/api/admin/mfa/verify` | `{ code }` | `{ ok: true }` and the `rh_admin` session cookie; `422 invalid_code`; five wrong codes end the attempt (`401 login_expired`) |
 | POST | `/api/admin/logout` | `{}` | `{ ok: true }`, session ended |
 | GET | `/api/admin/session` | | `{ user:{id,name,role}, practitioners:[…], services:[…], permissions:{confirm_cash, manage_schedule}, csrf_token, login_url, logout_url, timezone }`; `401 { login_url }` when signed out |
-| GET | `/api/admin/overview` | | `{ date, counts:{today, requested, awaiting_payment}, outstanding:[{currency,amount}], received_7d:[…], today:[Appointment], alerts:[{level:"warn"\|"info", text, appointment_id}] }` |
+| GET | `/api/admin/overview` | | `{ date, counts:{today, requested, awaiting_payment, enquiries}, outstanding:[{currency,amount}], received_7d:[…], today:[Appointment], alerts:[{level:"warn"\|"info", text, appointment_id}] }` |
 | GET | `/api/admin/appointments?status=a,b&q=&practitioner_id=&payment_method=none\|whish\|cash&date_from=&date_to=&sort=start\|created&page=&page_size=` | | page of `Appointment` |
 | GET | `/api/admin/appointments/{id}` | | `{ appointment: Appointment, events:[Event] }` |
 | POST | `/api/admin/appointments/{id}/approve` | `{}` | `{ appointment }`; `409 slot_taken` / `invalid_transition` |
@@ -792,6 +811,8 @@ now stands, and the admin repaints from that.
 | GET | `/api/admin/payments?status=&payment_method=&page=&page_size=` | | page of `Payment` |
 | POST | `/api/admin/payments/{id}/confirm-cash` | `{ amount, currency, reference? }` | `{ payment }`; `409 already_recorded`; `422` with `errors.amount` |
 | GET | `/api/admin/audit?type=&appointment_id=&page=&page_size=` | | page of `Event` |
+| GET | `/api/admin/enquiries?status=open\|answered\|all&q=&page=&page_size=` | | page of `Enquiry`; open ones oldest first, others newest first |
+| POST | `/api/admin/enquiries/{id}/answered` | `{ answered: true \| false }` | `{ enquiry }`; marking answered can be undone |
 
 **`Appointment`:**
 
@@ -824,6 +845,13 @@ now stands, and the admin repaints from that.
 ```
 
 The `appointment` summary on a payment appears in the payments list only.
+
+**`Enquiry`:**
+
+```json
+{ "id": "uuid", "name": "…", "email": "…", "phone": null, "message": "…",
+  "created_at": "…", "status": "open" | "answered", "answered_at": null, "answered_by": { "name": "…" } | null }
+```
 
 **`Event`:**
 
@@ -903,13 +931,15 @@ The browser checks are for convenience only; the server must enforce:
   - Keep personal data out of URLs, logs and analytics.
   - Admin and payment-selection responses carry `Cache-Control: no-store`.
 
-### Production hosting (Nginx, proposed)
+### Production hosting (Apache, as configured in `infra/apache/`)
 
-The site is static: serve `site/` as built by CI, minus the staging step.
+The site is static: Apache serves `site/` as built by CI, minus the staging
+step. Everything below is already in `infra/apache/rayhab.conf`; it is listed
+here so it can be checked on the live server.
 
 - **Do not run `content/staging_noindex.py` for production.** It exists only
   for the GitHub Pages mirror and would remove the site from search.
-- **404:** `error_page 404 /404.html;` and make sure missing URLs return the
+- **404:** `ErrorDocument 404 /404.html`, and make sure missing URLs return the
   404 status, not 200. `404.html` works at any depth because it sets its own
   `<base>`. (Verified on GitHub Pages: a missing URL returns 404 with this page.)
 - **Redirects:** HTTP to HTTPS and `www` to the apex with a single 301 each.
@@ -1008,7 +1038,7 @@ the clinic" must be revised once the backend uses outside processors.
 | Blocker | Owner |
 |---|---|
 | Server, Supabase and secrets set up, following docs/production-runbook.md (steps 1 to 10) | Clinic / whoever runs the server |
-| Whish merchant contract and documentation; then the real driver in server/src/integrations/whish.ts (runbook step 7) | Clinic + a developer |
+| Whish merchant contract and documentation; then the real driver in api/src/Whish.php (runbook step 7) | Clinic + a developer |
 | WhatsApp Business sender and the seven approved templates (runbook step 6) | Clinic |
 | DNS for dr-rayhab.com pointed at the server (runbook step 3); the rest is in infra/ | Clinic |
 | Privacy policy and booking terms approved and published | Clinic + legal adviser |

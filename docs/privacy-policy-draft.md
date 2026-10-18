@@ -95,10 +95,10 @@ reviewed against Law 81/2018 before real patient data is stored:
 
 | Processor | What it holds or sees | Where |
 |---|---|---|
-| Supabase | The database (bookings, contact details, notes, payments) and staff sign-in | The region chosen for the project (recommended: Frankfurt, EU) |
-| The VPS provider | The server that runs the site and the API; no database | The server's region (recommended: Frankfurt, EU) |
+| Supabase | The database (bookings, contact details, notes, payments, website questions) and staff sign-in | The region chosen for the project (recommended: Frankfurt, EU) |
+| The VPS provider | The server that runs the site and the PHP API (Apache); requests pass through it, but the database is at Supabase | The server's region (recommended: Frankfurt, EU) |
 | Meta (WhatsApp Business Platform) | Patient phone numbers and the message text | Meta's infrastructure |
-| The email provider | Staff alerts (reference, service and time only) and website questions in full | The provider's region |
+| Resend (email) | Staff notices only: a booking reference, the service and time, or that a website question arrived. Questions themselves stay in the database, behind the admin sign-in | The provider's region |
 | Whish Money (when online payment is on) | The payment, its amount and reference | Whish |
 
 The booking consent line "They are not shared with anyone outside the clinic"

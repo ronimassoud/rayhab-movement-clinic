@@ -1,9 +1,10 @@
 name: Deploy to the server
 
-# Releases the site and the booking API to the VPS (docs/production-runbook.md).
-# Run by hand from the Actions tab: choose staging or production. Each is a
-# GitHub environment; "production" should require an approval (runbook step 9),
-# so nothing reaches dr-rayhab.com without someone saying so.
+# Releases the site and the PHP booking API to the VPS
+# (docs/production-runbook.md). Run by hand from the Actions tab: choose
+# staging or production. Each is a GitHub environment; "production" should
+# require an approval (runbook step 9), so nothing reaches dr-rayhab.com
+# without someone saying so.
 #
 # GitHub Pages (pages.yml) is separate and unchanged: it stays the demo preview.
 
@@ -18,7 +19,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 concurrency:
   group: deploy-${{ inputs.environment }}
@@ -30,6 +30,13 @@ jobs:
     environment:
       name: ${{ inputs.environment }}
       url: ${{ inputs.environment == 'production' && 'https://dr-rayhab.com' || 'https://staging.dr-rayhab.com' }}
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: ci, POSTGRES_DB: rayhab }
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
@@ -51,21 +58,17 @@ jobs:
         if: inputs.environment == 'staging'
         run: python3 content/staging_noindex.py site
 
-      - name: Test the server
-        working-directory: server
-        run: npm ci && npm run typecheck && npm test
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: '8.4', extensions: 'pdo_pgsql, curl, mbstring, openssl', tools: none }
 
-      - name: Build and push the image
-        id: image
+      - name: Test the API
+        run: php api/tests/run.php
+        env: { TEST_DATABASE_URL: 'postgres://postgres:ci@localhost:5432/rayhab?sslmode=disable' }
+
+      - name: Package the release
         run: |
-          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}-server:${GITHUB_SHA::12}"
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          docker build -t "$IMAGE" server
-          docker push "$IMAGE"
-          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
-
-      - name: Package the site
-        run: tar -czf "site-${GITHUB_SHA::12}.tgz" -C site .
+          tar -czf "site-${GITHUB_SHA::12}.tgz" -C site .
+          tar -czf "api-${GITHUB_SHA::12}.tgz" -C api --exclude=dev --exclude=tests .
 
       - name: Upload and release
         env:
@@ -76,17 +79,18 @@ jobs:
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
           printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
-          TGZ="site-${GITHUB_SHA::12}.tgz"
-          scp -i ~/.ssh/id_deploy "$TGZ" "deploy@$SSH_HOST:/tmp/$TGZ"
+          S="site-${GITHUB_SHA::12}.tgz"; A="api-${GITHUB_SHA::12}.tgz"
+          scp -i ~/.ssh/id_deploy "$S" "$A" "deploy@$SSH_HOST:/tmp/"
           ssh -i ~/.ssh/id_deploy "deploy@$SSH_HOST" \
-            "/srv/rayhab/bin/deploy.sh '${{ inputs.environment }}' '${{ steps.image.outputs.image }}' '/tmp/$TGZ'"
+            "/srv/rayhab/bin/deploy.sh '${{ inputs.environment }}' '/tmp/$S' '/tmp/$A'"
 
       - name: Smoke test
         run: |
           BASE="${{ inputs.environment == 'production' && 'https://dr-rayhab.com' || 'https://staging.dr-rayhab.com' }}"
           AUTH=""
           if [ "${{ inputs.environment }}" = staging ]; then AUTH="-u rayhab:${{ secrets.STAGING_BASIC_AUTH }}"; fi
-          curl -fsS $AUTH "$BASE/api/health"
+          curl -fsS "$BASE/api/health"
           curl -fsS $AUTH -o /dev/null "$BASE/"
           test "$(curl -s $AUTH -o /dev/null -w '%{http_code}' "$BASE/no-such-page")" = 404
           curl -fsS $AUTH "$BASE/api/services" | grep -q '"services"'
+          test "$(curl -s -o /dev/null -w '%{http_code}' "http://${BASE#https://}/")" = 301

@@ -1,0 +1,14 @@
+{
+  "name": "rayhab-api-dev",
+  "private": true,
+  "type": "module",
+  "description": "Local tooling for the PHP API only: an in-process PostgreSQL (PGlite) for development and tests. Not deployed.",
+  "scripts": {
+    "dev": "node start.mjs",
+    "test": "node test.mjs"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.10",
+    "@electric-sql/pglite-socket": "^0.2.13"
+  }
+}

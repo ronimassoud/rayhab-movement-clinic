@@ -11,6 +11,13 @@
       names listed there; align the server with those, or change both together.
   Everything in this document is a proposal, not a description of something
   that exists.
+
+  Superseded in part (2026-10-18): the production stack chosen is a basic
+  Ubuntu Server 26.04 VPS with Apache 2 and certbot (port 80 redirects to
+  HTTPS) and a plain PHP API under PHP-FPM, with a cron worker, instead of
+  Fastify, Nginx and Docker. Supabase stays for PostgreSQL and staff Auth.
+  The implementation is in api/ and infra/; the steps are in
+  docs/production-runbook.md.
 -->
 
 # Rayhab Movement Clinic — Backend Developer Handoff (README)

@@ -75,7 +75,13 @@
     refunded:           'Refunded',
     financial_closed:   'Financial case closed',
     time_blocked:       'Time blocked',
-    block_removed:      'Blocked time removed'
+    block_removed:      'Blocked time removed',
+    reschedule_accepted:'New time accepted',
+    reschedule_rejected:'New time declined by the patient',
+    expired:            'Expired',
+    enquiry_answered:   'Website question answered',
+    enquiry_reopened:   'Website question reopened',
+    signed_in:          'Signed in'
   };
 
   var STRINGS = {

@@ -311,3 +311,12 @@
 .lg-qr .bk-skel{width:180px;height:180px}
 .lg-secret{font:600 15px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em;color:var(--color-fg);word-break:break-all}
 .lg-code{max-width:200px;font-size:22px;letter-spacing:.3em;font-variant-numeric:tabular-nums}
+
+/* ---- Enquiries ---- */
+.adm-f-seg{flex:0 0 auto;min-width:0}
+.adm-f-seg .segment{width:auto}
+.adm-eq-msg{margin:14px 0 0;padding:14px 16px;border-radius:var(--radius-sm);background:var(--color-paper);border:1px solid var(--color-line);
+  font:400 15px/1.6 var(--font-sans);color:var(--color-fg);white-space:pre-wrap;overflow-wrap:anywhere}
+.adm-card.is-answered{background:var(--color-bone)}
+.adm-card.is-answered .adm-eq-msg{color:var(--color-fg-2)}
+@media (max-width:640px){ .adm-f-seg{flex-basis:100%} .adm-f-seg .segment{width:100%} }

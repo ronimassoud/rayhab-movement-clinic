@@ -32,7 +32,7 @@
         "run",
         "dev",
         "--prefix",
-        "server"
+        "api/dev"
       ],
       "port": 4700
     }

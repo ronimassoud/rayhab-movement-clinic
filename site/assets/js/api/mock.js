@@ -147,6 +147,17 @@
     var appts = [];
     var events = [];
     var exceptions = [];
+    var enquiries = scenario() === 'empty' ? [] : [
+      { id: '7f1c2a90-0000-4000-8000-000000000001', name: 'Rana Khalil', email: 'rana@example.com', phone: '+961 70 000 201',
+        message: 'Hello, my daughter is 13 and was told she has a 22 degree curve. Is an assessment the right first step, and do you see children on Saturdays?',
+        created_at: iso(now() - 30 * 3600000), status: 'open', answered_at: null, answered_by: null },
+      { id: '7f1c2a90-0000-4000-8000-000000000002', name: 'Georges Abi Nader', email: 'georges@example.com', phone: null,
+        message: 'Do you offer online follow-ups for patients in Dubai after a first visit in Beirut?',
+        created_at: iso(now() - 4 * 3600000), status: 'open', answered_at: null, answered_by: null },
+      { id: '7f1c2a90-0000-4000-8000-000000000003', name: 'Hiba Saleh', email: 'hiba@example.com', phone: '+961 3 000 203',
+        message: 'Is there parking near the clinic?',
+        created_at: iso(now() - 80 * 3600000), status: 'answered', answered_at: iso(now() - 70 * 3600000), answered_by: { name: 'Dr. Rayan Halimeh' } }
+    ];
     var eseq = 1;
 
     function payment(method, status, amount) {
@@ -371,7 +382,8 @@
       });
       return {
         date: today, timezone: T.TZ,
-        counts: { today: todays.length, requested: requested.length, awaiting_payment: owing.length },
+        counts: { today: todays.length, requested: requested.length, awaiting_payment: owing.length,
+                  enquiries: enquiries.filter(function (e) { return e.status === 'open'; }).length },
         outstanding: sum(owing, 'outstanding'), received_7d: sum(received, 'amount'),
         today: clone(todays), alerts: alerts
       };
@@ -573,6 +585,29 @@
                     logout_url: 'login.html?demo=1&signout=1', login_url: 'login.html?demo=1' });
       }
       if (method === 'GET' && p === '/admin/overview') return ok(overview());
+      if (method === 'GET' && p === '/admin/enquiries') {
+        var st = q.status || 'open';
+        var eqs = enquiries.filter(function (e) { return st === 'all' || e.status === st; });
+        if (q.q) {
+          var needle = q.q.toLowerCase();
+          eqs = eqs.filter(function (e) { return (e.name + ' ' + e.email + ' ' + (e.phone || '') + ' ' + e.message).toLowerCase().indexOf(needle) >= 0; });
+        }
+        eqs.sort(function (x, y) { return (x.created_at < y.created_at ? -1 : 1) * (st === 'open' ? 1 : -1); });
+        return ok(page(eqs, q));
+      }
+      if ((m = /^\/admin\/enquiries\/([^/]+)\/answered$/.exec(p)) && method === 'POST') {
+        if (sc === 'session_expired') return err(401, 'session_expired', 'Your session has expired.', { login_url: 'login.html?demo=1' });
+        if (sc === 'server_error') return err(500, 'internal', 'Something went wrong.');
+        var en = enquiries.filter(function (e) { return e.id === m[1]; })[0];
+        if (!en) return err(404, 'not_found', 'No such question.');
+        en.status = body.answered ? 'answered' : 'open';
+        en.answered_at = body.answered ? (en.answered_at || iso(now())) : null;
+        en.answered_by = body.answered ? (en.answered_by || { name: 'Dr. Rayan Halimeh' }) : null;
+        events.push({ id: 'ev_' + (eseq++), at: iso(now()), type: body.answered ? 'enquiry_answered' : 'enquiry_reopened',
+                      actor: { kind: 'staff', name: 'Dr. Rayan Halimeh' }, appointment_id: null, reference: null,
+                      summary: body.answered ? 'Marked a website question answered' : 'Reopened a website question' });
+        return ok({ enquiry: clone(en) });
+      }
       if (method === 'GET' && p === '/admin/appointments') return ok(listAppointments(q));
       if ((m = /^\/admin\/appointments\/([^/]+)$/.exec(p)) && method === 'GET') {
         var one = byId(m[1]);

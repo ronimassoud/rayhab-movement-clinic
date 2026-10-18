@@ -1,0 +1,71 @@
+name: API CI
+
+# The PHP booking API and the server files, checked on every push to any
+# branch. Nothing here deploys; that is deploy.yml, run by hand.
+
+on:
+  push:
+    paths: ['api/**', 'infra/**', '.github/workflows/api-ci.yml']
+  pull_request:
+    paths: ['api/**', 'infra/**', '.github/workflows/api-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      # The PostgreSQL major version Supabase runs, with btree_gist.
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: ci, POSTGRES_DB: rayhab }
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_pgsql, curl, mbstring, openssl
+          tools: none
+      - name: Lint every PHP file
+        run: find api -name '*.php' -not -path '*/node_modules/*' -print0 | xargs -0 -n1 php -l
+      - name: Tests on PostgreSQL 16
+        run: php api/tests/run.php
+        env: { TEST_DATABASE_URL: 'postgres://postgres:ci@localhost:5432/rayhab?sslmode=disable' }
+
+  infra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shell scripts (shellcheck)
+        run: shellcheck infra/scripts/*.sh
+      - name: Apache configuration (apache2ctl -t with throwaway certificates)
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y apache2 apache2-utils
+          sudo a2enmod -q proxy_fcgi setenvif rewrite headers ssl http2 macro deflate alias auth_basic authn_file
+          for d in dr-rayhab.com staging.dr-rayhab.com; do
+            sudo mkdir -p /etc/letsencrypt/live/$d
+            sudo openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=$d" \
+              -keyout /etc/letsencrypt/live/$d/privkey.pem -out /etc/letsencrypt/live/$d/fullchain.pem 2>/dev/null
+          done
+          sudo htpasswd -cb /etc/apache2/rayhab-staging.htpasswd rayhab ci
+          sudo cp infra/apache/rayhab.conf /etc/apache2/conf-available/rayhab.conf
+          sudo cp infra/apache/dr-rayhab.com.conf infra/apache/staging.dr-rayhab.com.conf /etc/apache2/sites-available/
+          sudo a2enconf -q rayhab && sudo a2ensite -q dr-rayhab.com staging.dr-rayhab.com
+          sudo apache2ctl -t
+      - name: Cron file
+        run: |
+          # Each job line: five time fields, the user, then the command.
+          grep -vE '^(#|$|SHELL=|PATH=)' infra/cron/rayhab | awk 'NF < 7 { print "bad line: " $0; bad = 1 } END { exit bad }'
+      - name: deploy.sh dry run
+        run: |
+          sudo mkdir -p /srv/rayhab/staging /srv/rayhab/bin && sudo chown -R "$USER" /srv/rayhab
+          install -m 640 /dev/null /srv/rayhab/staging/app.env
+          install -m 600 /dev/null /srv/rayhab/staging/migrate.env
+          tar -czf /tmp/site.tgz -C site .
+          tar -czf /tmp/api.tgz -C api --exclude=dev --exclude=tests .
+          DRY_RUN=1 bash infra/scripts/deploy.sh staging /tmp/site.tgz /tmp/api.tgz

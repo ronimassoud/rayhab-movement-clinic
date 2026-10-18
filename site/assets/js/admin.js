@@ -183,7 +183,7 @@
   }
 
   function clearData() {
-    ['ov-stats', 'ov-today', 'ov-alerts', 'rq-list', 'ap-list', 'ap-pager', 'cal-grid', 'py-list', 'py-pager', 'ac-list', 'ac-pager', 'dr-body']
+    ['ov-stats', 'ov-today', 'ov-alerts', 'rq-list', 'eq-list', 'eq-pager', 'ap-list', 'ap-pager', 'cal-grid', 'py-list', 'py-pager', 'ac-list', 'ac-pager', 'dr-body']
       .forEach(function (id) { var el = $(id); if (el) el.innerHTML = ''; });
   }
 
@@ -191,6 +191,7 @@
   var VIEWS = {
     overview: ['Overview', loadOverview],
     requests: ['Requests', loadRequests],
+    enquiries: ['Enquiries', loadEnquiries],
     appointments: ['Appointments', loadAppointments],
     calendar: ['Calendar', loadCalendar],
     payments: ['Payments', loadPayments],
@@ -264,6 +265,7 @@
       var c = res.body.counts || {};
       setCount('cnt-requests', c.requested);
       setCount('cnt-payments', c.awaiting_payment);
+      setCount('cnt-enquiries', c.enquiries);
       if (view === 'overview') paintOverview(res.body);
     }, function () {});
   }
@@ -271,7 +273,7 @@
     var el = $(id);
     el.hidden = !n;
     el.textContent = n || '';
-    el.setAttribute('aria-label', n + (id === 'cnt-requests' ? ' waiting' : ' awaiting payment'));
+    el.setAttribute('aria-label', n + ({ 'cnt-requests': ' waiting', 'cnt-enquiries': ' questions waiting' }[id] || ' awaiting payment'));
   }
 
   function loadOverview() {
@@ -289,13 +291,18 @@
     $('ov-today').innerHTML = today.length
       ? '<ul class="adm-rows">' + today.map(row).join('') + '</ul>'
       : empty('Nothing booked today', 'Approved and confirmed appointments for today appear here.');
-    var alerts = o.alerts || [];
+    var alerts = (o.alerts || []).slice();
+    if (c.enquiries) {
+      alerts.unshift({ level: 'info', href: '#/enquiries',
+        text: c.enquiries + (c.enquiries === 1 ? ' website question is' : ' website questions are') + ' waiting for a reply.' });
+    }
     $('ov-alerts').innerHTML = alerts.length
       ? '<ul class="adm-alerts">' + alerts.map(function (a) {
           return '<li class="adm-alert is-' + esc(a.level) + '">' +
-            (a.appointment_id ? '<button type="button" class="adm-alert-b" data-open="' + esc(a.appointment_id) + '">' + esc(a.text) + '</button>' : esc(a.text)) + '</li>';
+            (a.appointment_id ? '<button type="button" class="adm-alert-b" data-open="' + esc(a.appointment_id) + '">' + esc(a.text) + '</button>'
+              : a.href ? '<a class="adm-alert-b" href="' + esc(a.href) + '">' + esc(a.text) + '</a>' : esc(a.text)) + '</li>';
         }).join('') + '</ul>'
-      : empty('All clear', 'Late replies, failed payments and expiring holds appear here.');
+      : empty('All clear', 'Late replies, website questions, failed payments and expiring holds appear here.');
   }
   function stat(label, value, href, foot, cls) {
     return '<a class="adm-stat ' + (cls || '') + '" href="' + href + '"><span class="adm-stat-l">' + esc(label) + '</span>' +
@@ -642,6 +649,75 @@
       }
     });
   }
+
+  /* ---------- Enquiries ----------
+     Website questions. The reply goes by email or WhatsApp from the
+     clinic; marking a question answered only moves it off the waiting
+     list, and can be undone. */
+  var eq = { status: 'open', page: 1 };
+  var eqRows = {};
+  var eqKeys = {};
+  function loadEnquiries() {
+    var box = $('eq-list');
+    Array.prototype.forEach.call(document.querySelectorAll('[data-eq]'), function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-eq') === eq.status));
+    });
+    if (!box.innerHTML) box.innerHTML = skeleton(4);
+    var fresh = latest('enquiries');
+    A.enquiries({ status: eq.status, q: $('eq-q').value.trim(), page: eq.page, page_size: 20 }).then(function (res) {
+      if (!fresh() || !guard(res)) return;
+      if (!res.ok) { box.innerHTML = failed('Enquiries', 'enquiries'); return; }
+      var items = res.body.items || [];
+      items.forEach(function (e) { eqRows[e.id] = e; });
+      box.innerHTML = items.length ? '<ul class="adm-cards adm-eq">' + items.map(enquiryCard).join('') + '</ul>'
+        : eq.status === 'open' ? empty('No questions waiting', 'Questions from the website’s contact form appear here.')
+        : empty('Nothing here', 'Change the filter or the search to see more.');
+      pager('eq-pager', res.body, function (n) { eq.page = n; loadEnquiries(); });
+    }, function () { if (fresh()) box.innerHTML = failed('Enquiries', 'enquiries'); });
+  }
+  function enquiryCard(e) {
+    var reply = 'mailto:' + encodeURIComponent(e.email) + '?subject=' + encodeURIComponent('Re: your question to Rayhab Movement Clinic');
+    var answered = e.status === 'answered';
+    return '<li class="adm-card' + (answered ? ' is-answered' : '') + '">' +
+      '<div class="adm-card-top"><div><p class="adm-card-k">Received ' + esc(at(e.created_at)) + ' · ' + esc(ago(e.created_at)) + '</p>' +
+      '<h3 class="adm-card-h">' + esc(e.name) + '</h3></div>' +
+      badge(answered ? { label: 'Answered', tone: 'success' } : { label: 'Waiting', tone: 'pending' }) + '</div>' +
+      '<p class="adm-eq-msg">' + esc(e.message) + '</p>' +
+      '<dl class="adm-dl"><div><dt>Email</dt><dd><a href="' + esc(reply) + '">' + esc(e.email) + '</a></dd></div>' +
+      (e.phone ? '<div><dt>Phone</dt><dd><a href="' + waLink(e.phone) + '" target="_blank" rel="noopener">' + esc(e.phone) + '</a></dd></div>' : '') +
+      (answered && e.answered_at ? '<div><dt>Answered</dt><dd>' + esc(at(e.answered_at)) + (e.answered_by ? ' by ' + esc(e.answered_by.name) : '') + '</dd></div>' : '') +
+      '</dl>' +
+      '<div class="adm-card-acts">' +
+      (answered ? '' : '<a class="btn btn-brand btn-sm" href="' + esc(reply) + '">Reply by email</a>' +
+        (e.phone ? '<a class="btn btn-ghost-light btn-sm" href="' + waLink(e.phone) + '" target="_blank" rel="noopener">WhatsApp</a>' : '')) +
+      '<button class="btn ' + (answered ? 'btn-ghost-light' : 'btn-spring') + ' btn-sm" type="button" data-answer="' + esc(e.id) + '" data-to="' + (answered ? '0' : '1') + '">' +
+      (answered ? 'Reopen' : 'Mark answered') + '<span class="vh">, ' + esc(e.name) + '</span></button></div></li>';
+  }
+  // Marking answered can be undone, so it needs no confirmation; it is still
+  // sent once, with a key kept for a retry of the same change.
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-answer]');
+    if (!b || b.disabled) return;
+    var id = b.getAttribute('data-answer'), to = b.getAttribute('data-to') === '1', k = id + ':' + to;
+    eqKeys[k] = eqKeys[k] || API.newKey();
+    b.disabled = true; b.setAttribute('aria-busy', 'true');
+    A.answerEnquiry(id, to, eqKeys[k]).then(function (res) {
+      b.disabled = false; b.removeAttribute('aria-busy');
+      if (!guard(res)) return;
+      if (!res.ok) { toast('That could not be saved. Try again.'); return; }
+      delete eqKeys[k];
+      var who = eqRows[id] ? eqRows[id].name : 'The question';
+      toast(to ? who + ': marked answered.' : who + ': back on the waiting list.');
+      loadCounts();
+      loadEnquiries();
+    }, function () { b.disabled = false; b.removeAttribute('aria-busy'); toast('Could not reach the server. Try again.'); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-eq]'), function (b) {
+    b.addEventListener('click', function () { eq.status = b.getAttribute('data-eq'); eq.page = 1; loadEnquiries(); });
+  });
+  var eqTimer = 0;
+  $('eq-q').addEventListener('input', function () { eq.page = 1; clearTimeout(eqTimer); eqTimer = setTimeout(loadEnquiries, 300); });
+  $('eq-filters').addEventListener('submit', function (e) { e.preventDefault(); });
 
   /* ---------- Activity ---------- */
   var acPage = 1;

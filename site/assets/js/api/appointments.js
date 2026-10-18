@@ -39,6 +39,11 @@
     noShow: act('no-show'),
     schedule: function (q) { return api.get('/admin/availability' + api.qs(q), { timeout: 10000 }); },
     updateSchedule: function (body, key) { return api.patch('/admin/availability', body, { key: key }); },
-    audit: function (f) { return api.get('/admin/audit' + api.qs(f), { timeout: 10000 }); }
+    audit: function (f) { return api.get('/admin/audit' + api.qs(f), { timeout: 10000 }); },
+    // Website questions: list, and mark answered (or reopen).
+    enquiries: function (f) { return api.get('/admin/enquiries' + api.qs(f), { timeout: 10000 }); },
+    answerEnquiry: function (id, answered, key) {
+      return api.post('/admin/enquiries/' + encodeURIComponent(id) + '/answered', { answered: !!answered }, { key: key });
+    }
   };
 })();
