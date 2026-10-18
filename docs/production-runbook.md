@@ -27,6 +27,13 @@ Patients / staff ──HTTP 80──> Apache: 301 to HTTPS
                                                     cron, every minute: bin/worker.php ──> WhatsApp, email (msmtp), Whish
 ```
 
+**Connecting Supabase and Resend, in short.** Everything secret goes into one file on your computer per environment, `infra/connect.production.env` (and `.staging.env`). Git never commits it; never paste these values into chat or email.
+
+1. Copy the template: `cp infra/connect.example.env infra/connect.production.env`.
+2. Create the Supabase project (step 5) and the Resend account (step 6.0), filling the file in as you go.
+3. Once the server is set up (step 4), push the file to it: `bash infra/scripts/push-settings.sh production you@dr-rayhab.com` (step 8).
+4. Deploy (step 10), then run the doctor on the server, which checks the database, sign-in and email in one go (step 8.4).
+
 > Nothing here is legal advice. Before real patient data goes in, finish the open legal items in README.md ("Launch blockers"). In particular, review where the data is hosted under Lebanon's Law 81/2018.
 
 ---
@@ -106,22 +113,20 @@ Do this for the **production** project, then again for **staging**.
 
 ### 5.1 Create the project
 
-Region: Central EU (Frankfurt). Choose a strong database password and keep it in your password manager.
+Sign up at [supabase.com](https://supabase.com) (the Free plan), then **New project**:
 
-### 5.2 Enable the extension
+- **Name:** `rayhab-production` (later `rayhab-staging`).
+- **Region:** Central EU (Frankfurt).
+- **Database password:** a strong one, kept in your password manager. It goes into `DATABASE_MIGRATE_URL`.
 
-Go to **Database > Extensions** and enable **btree_gist**. It is what makes double booking impossible at the database level.
+### 5.2 and 5.3 Enable the extension and create the API's database role
 
-### 5.3 Create the API's database role
+Open **SQL Editor**, paste the contents of `infra/supabase/setup.sql`, replace `CHOOSE-A-LONG-RANDOM-PASSWORD` with a new password (letters and digits keep the URL simple), and **Run**. The last line should show one row, `rayhab_app`.
 
-In the SQL Editor, run this with a new strong password:
+It does two things:
 
-```sql
-create role rayhab_app login password 'REPLACE-WITH-A-LONG-RANDOM-PASSWORD';
-grant usage on schema extensions to rayhab_app;
-```
-
-The first deploy's migration grants this role access to the `rayhab` tables. The role can read and write data, but it cannot change the schema.
+- It turns on **btree_gist**, which makes double booking impossible at the database level.
+- It creates `rayhab_app`, the role the API signs in as. The first deploy's migration grants it access to the `rayhab` tables: it can read and write data, but not change the schema.
 
 ### 5.4 Keep the data private
 
@@ -129,10 +134,10 @@ Go to **Settings > API** and leave **Exposed schemas** as `public` only. Never a
 
 ### 5.5 Collect the connection strings
 
-Go to **Connect > Session pooler**:
+Click **Connect** at the top of the project, choose **Session pooler** (port 5432), and copy the URL. It looks like `postgresql://postgres.<project-ref>:[YOUR-PASSWORD]@aws-…-eu-central-1.pooler.supabase.com:5432/postgres`. In your `infra/connect.production.env`:
 
-- **For `app.env`:** take the **session pooler** URL (port 5432) and replace the user with `rayhab_app.<project-ref>` and its password.
-- **For `migrate.env`:** take the same URL with the `postgres` user and the database password.
+- **`DATABASE_MIGRATE_URL`:** that URL with the database password from 5.1.
+- **`DATABASE_URL`:** the same URL, but with the user `rayhab_app.<project-ref>` and the password from `setup.sql`.
 
 ### 5.6 Set up Auth
 
@@ -143,7 +148,12 @@ Go to **Connect > Session pooler**:
 
 ### 5.7 Find the API keys
 
-Under **Settings > API**, take the **Project URL** and the **anon** key, for `SUPABASE_URL` and `SUPABASE_ANON_KEY`. They are used only by the server.
+Under **Project Settings > API** (or **API Keys**), copy into your connect file:
+
+- **`SUPABASE_URL`:** the **Project URL**.
+- **`SUPABASE_ANON_KEY`:** the **anon** key, or the newer **publishable** key.
+
+Only the server uses them. Never copy the **service_role** or **secret** key anywhere: the API does not need it.
 
 ### 5.8 Backups and pausing (Free plan)
 
@@ -181,14 +191,14 @@ The API emails the clinic when a booking request or a website question arrives: 
 
 1. **Create the Resend account** (Free plan) and add the domain `dr-rayhab.com` under **Domains**.
 2. **Verify the domain.** Resend shows the DNS records to add at the registrar: SPF (TXT), DKIM (TXT) and a return-path (MX). Optionally add DMARC too. Wait until Resend marks the domain verified. Until then it only sends to your own address.
-3. **Create an API key** under **API Keys**, with **Sending access** only, for this domain. It is the SMTP password.
-4. **Fill in msmtp.** Edit `/etc/msmtprc` on the server (`sudo nano /etc/msmtprc`). The provisioning script already set host `smtp.resend.com`, port 587 with STARTTLS and user `resend`. Replace `REPLACE-WITH-RESEND-API-KEY` with the key. The file is readable only by root and the web server.
-5. **Turn sending on.** In `app.env`, set:
-   - `EMAIL_DRIVER=mail`;
+3. **Create an API key** under **API Keys**, with **Sending access** only, for this domain. It starts with `re_`. Put it in your connect file as `RESEND_API_KEY`; it becomes the SMTP password.
+4. **Fill in the senders.** In the connect file, set:
    - `EMAIL_FROM` to an address on the verified domain, for example `Rayhab bookings <bookings@dr-rayhab.com>`;
    - `STAFF_EMAILS` to who receives the notices, comma-separated.
 
-**Check:** `echo "test" | sudo -u www-data msmtp you@example.com` delivers, and `/var/log/rayhab/msmtp.log` shows it sent.
+   `push-settings.sh` (step 8) then writes `/etc/msmtprc` (host `smtp.resend.com`, port 587 with STARTTLS, user `resend`) and sets `EMAIL_DRIVER=mail`.
+
+**Check:** after step 8, the doctor's `--email you@example.com` test arrives, and `/var/log/rayhab/msmtp.log` shows it sent.
 
 ### 6.1 Get a sender number
 
@@ -243,33 +253,56 @@ Once all templates are approved, set `WHATSAPP_DRIVER=cloud`. Until then keep `o
 
 **Check:** on staging with the sandbox, paying shows "Verifying payment" and then "Payment received", and the admin shows "Paid · Whish".
 
-## 8. The settings files on the server
+## 8. The settings on the server
 
-For each environment, on the server:
+### 8.1 Push your connect file
+
+From the repository on your computer (Git Bash on Windows):
 
 ```bash
-sudo -u deploy nano /srv/rayhab/production/app.env      # fill in every value (see infra/env.example)
-sudo -u deploy sh -c 'umask 077; echo "DATABASE_MIGRATE_URL=postgres://postgres.<ref>:<db-password>@aws-0-eu-central-1.pooler.supabase.com:5432/postgres" > /srv/rayhab/production/migrate.env'
+bash infra/scripts/push-settings.sh production you@dr-rayhab.com
 ```
 
-Generate `APP_SECRET` with `openssl rand -base64 48`. Use a different value for staging and for production.
+`you@dr-rayhab.com` is your own admin login from step 2, and the script asks for your sudo password on the server. It:
 
-Staging differences:
+- checks the file is complete and the values look right;
+- generates `APP_SECRET` the first time, and saves it back into your file;
+- merges your values into `/srv/rayhab/production/app.env` (mode 640, `deploy:www-data`), keeping anything else already set there;
+- writes `migrate.env` (mode 600, deploy only) and `/etc/msmtprc` for Resend.
 
-- `DEPLOY_ENV=staging`
-- `PUBLIC_ORIGIN=https://staging.dr-rayhab.com`
-- `WHISH_DRIVER=sandbox`
-- its own Supabase project's values
+Nothing secret is printed or put on a command line.
 
-**Who can read what:**
+### 8.2 Staging
 
-- `app.env` is mode 640, owner `deploy`, group `www-data`, so Apache's PHP and the cron worker can read it and nobody else.
-- `migrate.env` is mode 600, `deploy` only. Just the deploy reads it, to run migrations as the schema owner.
+Do the same with `infra/connect.staging.env` and `staging`. It needs its own Supabase project, `PUBLIC_ORIGIN=https://staging.dr-rayhab.com` and `DEPLOY_ENV=staging`. The script turns on the Whish sandbox there.
 
-**Check:**
+### 8.3 What to fill in by hand later
 
-- `ls -l /srv/rayhab/*/app.env /srv/rayhab/*/migrate.env` shows `-rw-r-----` (deploy www-data) and `-rw-------` (deploy).
-- The API checks every value on each request, and answers 503 rather than run with anything missing or unsafe; the reason is in `/var/log/apache2/rayhab-production-error.log`.
+Edit `app.env` on the server with `sudo -u deploy nano /srv/rayhab/production/app.env`:
+
+- the WhatsApp values (step 6), once Meta approves the templates;
+- the payment policy text (step 11).
+
+The next `push-settings.sh` run keeps them.
+
+### 8.4 Run the doctor (after the first deploy, step 10)
+
+```bash
+sudo -u www-data RAYHAB_ENV_FILE=/srv/rayhab/production/app.env php /srv/rayhab/production/api/current/bin/doctor.php --email you@example.com
+```
+
+It checks:
+
+- the settings;
+- the Supabase connection, as `rayhab_app`;
+- the extension and migrations;
+- that the API can write;
+- prices and the linked staff account;
+- that Supabase sign-in answers, with public sign-up off.
+
+Then it sends one test email through Resend.
+
+**Check:** it ends with "Everything needed is in place.", and the test email arrives.
 
 ## 9. GitHub
 
@@ -297,7 +330,7 @@ Staging differences:
    - smoke-tests
 
    If the health check fails it switches the API back, and the site stays as it was.
-2. **Link the staff account.** Run the SQL at the end of step 5 on the staging project.
+2. **Link the staff account.** Run the SQL at the end of step 5 on the staging project, then the doctor (step 8.4) with `staging` in the paths.
 3. **Walk through it on `https://staging.dr-rayhab.com`:**
    1. Request an appointment with your own WhatsApp number.
    2. Sign in at `/admin/` and set up the authenticator.
@@ -306,7 +339,7 @@ Staging differences:
    5. Try the Whish sandbox.
    6. Propose a new time and answer it from the link.
    7. Send a question from the contact page; it appears in the admin's **Enquiries**, and the clinic's inbox gets a notice.
-4. **Then production.** Run the same workflow with **production** and approve it. Link the staff account on the production project.
+4. **Then production.** Run the same workflow with **production** and approve it. Link the staff account on the production project, then run the doctor (step 8.4).
 5. **Check production:**
    - `https://dr-rayhab.com/api/health` shows `{"ok":true}`.
    - `curl -I http://dr-rayhab.com` and `curl -I https://www.dr-rayhab.com` each answer one 301 to `https://dr-rayhab.com/`.

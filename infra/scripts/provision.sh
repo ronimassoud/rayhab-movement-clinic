@@ -92,7 +92,7 @@ for env in production staging; do
   for d in "" /site /site/releases /api /api/releases; do install -d -m 755 -o deploy -g deploy "/srv/rayhab/$env$d"; done
   if [ ! -f "/srv/rayhab/$env/app.env" ]; then
     install -m 640 -o deploy -g www-data "$REPO_DIR/infra/env.example" "/srv/rayhab/$env/app.env"
-    echo "Fill in /srv/rayhab/$env/app.env (runbook step 8)."
+    echo "Push the settings with infra/scripts/push-settings.sh (runbook step 8)."
   fi
 done
 install -m 755 -o deploy -g deploy "$REPO_DIR/infra/scripts/deploy.sh" /srv/rayhab/bin/deploy.sh
@@ -203,8 +203,8 @@ install -m 644 "$REPO_DIR/infra/cron/rayhab" /etc/cron.d/rayhab
 step "Done"
 cat <<EOF
 Next (docs/production-runbook.md):
-  - step 6: put the SMTP account into /etc/msmtprc
-  - step 8: fill in /srv/rayhab/production/app.env (and staging) and migrate.env
+  - step 6: create the Resend key (push-settings.sh puts it into /etc/msmtprc)
+  - step 8: from your computer, bash infra/scripts/push-settings.sh production you@host
   - step 9: add the CI deploy key to /home/deploy/.ssh/authorized_keys
   - step 10: run the "Deploy to the server" workflow in GitHub
 EOF

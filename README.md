@@ -393,6 +393,12 @@ Getting it running on `dr-rayhab.com` (VPS, DNS, Supabase, WhatsApp, Whish,
 GitHub secrets) is a step-by-step checklist in
 [`docs/production-runbook.md`](docs/production-runbook.md).
 
+Connecting Supabase and Resend takes one local file per environment,
+`infra/connect.production.env` (copied from `infra/connect.example.env`,
+never committed), `infra/supabase/setup.sql` in the Supabase SQL Editor,
+`infra/scripts/push-settings.sh` to put the settings on the server, and
+`api/bin/doctor.php` on the server to check it all, including a test email.
+
 - **Server side:** an Ubuntu Server 26.04 VPS with Apache 2 and certbot.
   Port 80 redirects to HTTPS on 443. Apache serves the static site and sends
   `/api/*` to the API, plain PHP run by PHP-FPM.

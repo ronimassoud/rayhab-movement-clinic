@@ -21,3 +21,8 @@ _check.*
 
 # Node (Tailwind build)
 node_modules/
+
+# Filled-in connection settings (Supabase, Resend): secrets, never committed.
+# The templates are infra/connect.example.env.
+infra/connect.*.env
+!infra/connect.example.env
