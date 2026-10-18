@@ -248,8 +248,8 @@
     var d3 = openDay(T.addDays(d2, 1)), past = lastOpen(T.addDays(today, -1)), past2 = lastOpen(T.addDays(today, -6));
     if (scenario() !== 'empty') {
       add({ status: 'requested', service: 'assessment', date: d2, time: '09:00', name: 'Maya Khoury', phone: '+96170000101', email: 'maya@example.com', note: 'Right thoracic curve, 24 degrees in June.', age: 26 });
-      add({ status: 'requested', service: 'sports', date: d2, time: '15:45', name: 'Karim Saad', phone: '+96171000102', age: 5 });
-      add({ status: 'requested', service: 'online', mode: 'online', date: d3, time: '10:20', name: 'Lina Haddad', phone: '+97150000103', email: 'lina@example.com', for_whom: 'child', age: 1 });
+      add({ status: 'requested', service: 'sports', date: d2, time: '15:45', name: 'Karim Saad', phone: '+96171000102', note: 'Hamstring strain from football two weeks ago. Can I still play the match next Saturday?', age: 5 });
+      add({ status: 'requested', service: 'online', mode: 'online', date: d3, time: '10:20', name: 'Lina Haddad', phone: '+97150000103', email: 'lina@example.com', for_whom: 'child', note: 'My son is 11. The school nurse noticed one shoulder higher than the other; we have no X-ray yet.', age: 1 });
       add({ status: 'approved', service: 'pain', date: d1, time: '11:00', name: 'Omar Tannous', phone: '+96103000104', age: 30 });
       add({ status: 'confirmed', service: 'follow', date: d0, time: '09:00', method: 'whish', pay: 'paid', name: 'Nour Aoun', phone: '+96170000105', age: 50 });
       add({ status: 'confirmed', service: 'assessment', date: d0, time: '10:00', method: 'cash', pay: 'awaiting_payment', name: 'Jad Mansour', phone: '+96176000106', email: 'jad@example.com', age: 40, token: 'demo-cash' });
@@ -396,6 +396,7 @@
       if (q.payment_method) items = items.filter(function (a) { return (a.payment.method || 'none') === q.payment_method; });
       if (q.date_from) items = items.filter(function (a) { return a.local_date >= q.date_from; });
       if (q.date_to) items = items.filter(function (a) { return a.local_date <= q.date_to; });
+      if (q.has_note) items = items.filter(function (a) { return !!a.note; });
       if (q.q) {
         var needle = q.q.toLowerCase();
         items = items.filter(function (a) {
@@ -404,6 +405,7 @@
       }
       items.sort(function (x, y) {
         if (q.sort === 'created') return x.created_at < y.created_at ? -1 : 1;
+        if (q.sort === 'created_desc') return x.created_at < y.created_at ? 1 : -1;
         return x.start < y.start ? -1 : 1;
       });
       return page(items, q);

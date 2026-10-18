@@ -663,6 +663,12 @@
       b.setAttribute('aria-pressed', String(b.getAttribute('data-eq') === eq.status));
     });
     if (!box.innerHTML) box.innerHTML = skeleton(4);
+    var notes = eq.status === 'notes';
+    $('eq-intro').textContent = notes
+      ? 'What patients wrote in “What brings you in?” when they requested an appointment, newest first. Open the appointment to reply or act on it.'
+      : 'Questions sent from the website’s contact form. Reply by email or WhatsApp, then mark the question answered so it leaves this list.';
+    $('eq-q').placeholder = notes ? 'Name, phone, reference' : 'Name, email, phone or words in the question';
+    if (notes) return loadNotes(box);
     var fresh = latest('enquiries');
     A.enquiries({ status: eq.status, q: $('eq-q').value.trim(), page: eq.page, page_size: 20 }).then(function (res) {
       if (!fresh() || !guard(res)) return;
@@ -693,6 +699,33 @@
       '<button class="btn ' + (answered ? 'btn-ghost-light' : 'btn-spring') + ' btn-sm" type="button" data-answer="' + esc(e.id) + '" data-to="' + (answered ? '0' : '1') + '">' +
       (answered ? 'Reopen' : 'Mark answered') + '<span class="vh">, ' + esc(e.name) + '</span></button></div></li>';
   }
+  /* Booking notes: the appointments that came with a note. Read here,
+     acted on from the appointment itself. */
+  function loadNotes(box) {
+    var fresh = latest('enquiries');
+    A.list({ has_note: 1, sort: 'created_desc', q: $('eq-q').value.trim(), page: eq.page, page_size: 20 }).then(function (res) {
+      if (!fresh() || !guard(res)) return;
+      if (!res.ok) { box.innerHTML = failed('Booking notes', 'enquiries'); return; }
+      var items = res.body.items || [];
+      box.innerHTML = items.length ? '<ul class="adm-cards adm-eq">' + items.map(noteCard).join('') + '</ul>'
+        : empty('No booking notes', 'Notes patients add to a booking request appear here.');
+      pager('eq-pager', res.body, function (n) { eq.page = n; loadEnquiries(); });
+    }, function () { if (fresh()) box.innerHTML = failed('Booking notes', 'enquiries'); });
+  }
+  function noteCard(a) {
+    return '<li class="adm-card">' +
+      '<div class="adm-card-top"><div><p class="adm-card-k">' + esc(a.reference) + ' · received ' + esc(ago(a.created_at)) + '</p>' +
+      '<h3 class="adm-card-h">' + esc(a.patient.name) + (a.for_whom === 'child' ? ' <span class="badge tone-neutral">For their child</span>' : '') + '</h3></div>' +
+      apptBadge(a.status) + '</div>' +
+      '<p class="adm-eq-msg">' + esc(a.note) + '</p>' +
+      '<dl class="adm-dl">' +
+      '<div><dt>Booking</dt><dd>' + esc(a.service.name) + ' · ' + esc(when(a)) + (a.mode === 'online' ? ' · Online' : '') + '</dd></div>' +
+      '<div><dt>WhatsApp</dt><dd><a href="' + waLink(a.patient.phone) + '" target="_blank" rel="noopener">' + esc(a.patient.phone) + '</a></dd></div>' +
+      (a.patient.email ? '<div><dt>Email</dt><dd><a href="mailto:' + esc(a.patient.email) + '">' + esc(a.patient.email) + '</a></dd></div>' : '') +
+      '</dl>' +
+      '<div class="adm-card-acts"><button class="btn btn-brand btn-sm" type="button" data-open="' + esc(a.id) + '">Open appointment<span class="vh">, ' + esc(a.patient.name) + '</span></button></div></li>';
+  }
+
   // Marking answered can be undone, so it needs no confirmation; it is still
   // sent once, with a key kept for a retry of the same change.
   document.addEventListener('click', function (e) {

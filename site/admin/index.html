@@ -10,7 +10,7 @@
 <meta name="referrer" content="no-referrer">
 <link rel="preload" href="../assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/public-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/css/rayhab.css?v=afb412ad">
+<link rel="stylesheet" href="../assets/css/rayhab.css?v=b44f4837">
 <link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
 </head>
 <body data-app="admin" class="adm-body">
@@ -129,11 +129,12 @@
             <button type="button" data-eq="open" aria-pressed="true">Waiting</button>
             <button type="button" data-eq="answered" aria-pressed="false">Answered</button>
             <button type="button" data-eq="all" aria-pressed="false">All</button>
+            <button type="button" data-eq="notes" aria-pressed="false" aria-label="Booking notes"><span class="eq-long">Booking notes</span><span class="eq-short" aria-hidden="true">Notes</span></button>
           </div>
         </div>
         <p class="adm-f adm-f-q"><label class="field-label" for="eq-q">Search</label><input class="input" id="eq-q" type="search" placeholder="Name, email, phone or words in the question" autocomplete="off"></p>
       </form>
-      <p class="adm-intro">Questions sent from the website’s contact form. Reply by email or WhatsApp, then mark the question answered so it leaves this list.</p>
+      <p class="adm-intro" id="eq-intro">Questions sent from the website’s contact form. Reply by email or WhatsApp, then mark the question answered so it leaves this list.</p>
       <div id="eq-list"></div>
       <div class="adm-pager" id="eq-pager"></div>
     </section>
@@ -192,6 +193,6 @@
 <script src="../assets/js/api/availability.js?v=23b2281d"></script>
 <script src="../assets/js/api/appointments.js?v=244b48c8"></script>
 <script src="../assets/js/api/payments.js?v=59623c97"></script>
-<script src="../assets/js/admin.js?v=72819c48"></script>
+<script src="../assets/js/admin.js?v=753b9d7c"></script>
 </body>
 </html>

@@ -320,3 +320,5 @@
 .adm-card.is-answered{background:var(--color-bone)}
 .adm-card.is-answered .adm-eq-msg{color:var(--color-fg-2)}
 @media (max-width:640px){ .adm-f-seg{flex-basis:100%} .adm-f-seg .segment{width:100%} }
+.eq-short{display:none}
+@media (max-width:640px){ .eq-long{display:none} .eq-short{display:inline} }

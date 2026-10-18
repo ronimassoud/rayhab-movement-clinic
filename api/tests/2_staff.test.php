@@ -144,6 +144,19 @@ test('enquiries: listed for staff, oldest open first, answered and reopened', fu
     eq(404, staffCall($app, $staff, 'POST', '/api/admin/enquiries/00000000-0000-4000-8000-000000000000/answered', ['answered' => true])->status);
 });
 
+test('booking notes: only requests with a note, newest first', function () use ($app, $staff) {
+    $day = fullDay(14);
+    book($app, ['date' => $day, 'time' => '09:00', 'phone' => '+96170007001', 'note' => 'Older note: lower back pain for a month.']);
+    $app->db->query("update rayhab.appointments set created_at = now() - interval '1 hour' where note like 'Older note%'");
+    book($app, ['date' => $day, 'time' => '10:00', 'phone' => '+96170007002', 'note' => 'Newer note: knee pain after running.']);
+    book($app, ['date' => $day, 'time' => '11:00', 'phone' => '+96170007003', 'note' => '']);
+    $r = staffCall($app, $staff, 'GET', '/api/admin/appointments?has_note=1&sort=created_desc')->data();
+    $notes = array_column($r['items'], 'note');
+    eq('Newer note: knee pain after running.', $notes[0]);
+    ok(in_array('Older note: lower back pain for a month.', $notes, true), 'the older note is listed');
+    ok(!in_array('', $notes, true), 'no empty notes');
+});
+
 test('signing out ends the session', function () use ($app) {
     $s2 = signIn($app);
     call($app, 'POST', '/api/admin/logout', [], [], $s2['cookies']);

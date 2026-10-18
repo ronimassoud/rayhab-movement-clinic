@@ -106,6 +106,8 @@ final class AdminRoutes
             elseif (!empty($q['payment_method'])) { $where[] = 'pi.method = ?'; $params[] = $q['payment_method']; }
             if (!empty($q['date_from'])) { $where[] = 'a.local_date >= ?'; $params[] = $q['date_from']; }
             if (!empty($q['date_to'])) { $where[] = 'a.local_date <= ?'; $params[] = $q['date_to']; }
+            // Only requests that came with a note (the admin's Enquiries > Booking notes).
+            if (!empty($q['has_note'])) $where[] = "a.note <> ''";
             if (!empty($q['q'])) {
                 $needle = '%' . str_replace(['%', '_'], '', mb_strtolower(trim($q['q']))) . '%';
                 $where[] = "(lower(pt.first_name || ' ' || pt.last_name) like ? or lower(a.reference) like ? or pt.phone_e164 like ? or lower(coalesce(pt.email, '')) like ?)";
@@ -114,7 +116,7 @@ final class AdminRoutes
             $w = $where ? ' where ' . implode(' and ', $where) : '';
             [$size, $page, $offset] = self::page($q);
             $total = (int) $app->db->one('select count(*)::int as n from (' . Records::SELECT . $w . ') x', $params)['n'];
-            $order = ($q['sort'] ?? '') === 'created' ? 'a.created_at' : 'a.starts_at';
+            $order = ['created' => 'a.created_at', 'created_desc' => 'a.created_at desc'][$q['sort'] ?? ''] ?? 'a.starts_at';
             $rows = $app->db->query(Records::SELECT . $w . " order by $order limit $size offset $offset", $params);
             return Response::json(['items' => $app->records->shape($rows, $s['role']), 'page' => $page, 'page_size' => $size, 'total' => $total]);
         });
