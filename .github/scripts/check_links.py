@@ -24,7 +24,7 @@ checked = 0
 # self-contained 404 need none; the payment page and the admin are working
 # tools, not editorial pages.
 NO_MOTION = {"book.html", "services/frc-joint-training.html", "404.html",
-             "payment/index.html", "admin/index.html"}
+             "payment/index.html", "admin/index.html", "admin/login.html"}
 missing_motion = []
 
 for base, _dirs, files in os.walk(ROOT):

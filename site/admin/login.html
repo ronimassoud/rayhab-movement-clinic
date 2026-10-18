@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="rayhab-api" content="/api">
+<title>Sign in, clinic admin, Rayhab Movement Clinic</title>
+<meta name="description" content="Staff sign-in for the Rayhab Movement Clinic admin. A password and an authenticator code are required.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="preload" href="../assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/public-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/rayhab.css?v=2fcceee8">
+<link rel="icon" href="../assets/img/favicon.png" sizes="32x32">
+</head>
+<body data-app="admin-login" class="adm-body">
+<a class="skip" href="#main">Skip to content</a>
+<main class="adm-gate" id="main">
+  <div class="adm-gate-card">
+    <a href="../" aria-label="Rayhab Movement Clinic, public site"><span class="wordmark adm-gate-mark"></span></a>
+    <p class="eyebrow text-forest-600 mt-8">Clinic admin</p>
+
+    <!-- Step 1: password -->
+    <form class="lg-step" id="lg-password" novalidate>
+      <h1 class="adm-gate-h" tabindex="-1">Sign in</h1>
+      <p class="adm-gate-p" id="lg-note">Appointments, payments and patient details are for clinic staff only.</p>
+      <div class="adm-form mt-6">
+        <p class="adm-field"><label class="field-label" for="lg-email">Email</label>
+          <input class="input" id="lg-email" type="email" autocomplete="username" required aria-describedby="err-lg-email">
+          <span class="field-err" id="err-lg-email" hidden></span></p>
+        <p class="adm-field"><label class="field-label" for="lg-pass">Password</label>
+          <input class="input" id="lg-pass" type="password" autocomplete="current-password" required aria-describedby="err-lg-pass">
+          <span class="field-err" id="err-lg-pass" hidden></span></p>
+      </div>
+      <div class="notice notice-error mt-4" id="lg-err1" role="alert" tabindex="-1" hidden></div>
+      <div class="adm-gate-acts"><button class="btn btn-brand btn-md" type="submit" id="lg-go1">Continue</button></div>
+    </form>
+
+    <!-- Step 2a: first sign-in, set up the authenticator -->
+    <form class="lg-step" id="lg-enroll" novalidate hidden>
+      <h1 class="adm-gate-h" tabindex="-1">Set up your authenticator</h1>
+      <p class="adm-gate-p">Signing in needs a code from an authenticator app as well as your password. Scan this with Google Authenticator, Microsoft Authenticator, 1Password or a similar app, then enter the 6-digit code it shows.</p>
+      <div class="lg-qr" id="lg-qrwrap"><span class="bk-skel" aria-hidden="true"></span></div>
+      <details class="adm-note"><summary>Can’t scan? Enter this key instead</summary><p class="lg-secret" id="lg-secret"></p></details>
+      <div class="adm-form mt-5">
+        <p class="adm-field"><label class="field-label" for="lg-code-e">6-digit code</label>
+          <input class="input lg-code" id="lg-code-e" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="\d{6}" aria-describedby="err-lg-code-e">
+          <span class="field-err" id="err-lg-code-e" hidden></span></p>
+      </div>
+      <div class="notice notice-error mt-4" id="lg-err2" role="alert" tabindex="-1" hidden></div>
+      <div class="adm-gate-acts"><button class="btn btn-brand btn-md" type="submit" id="lg-go2">Finish and sign in</button></div>
+    </form>
+
+    <!-- Step 2b: the authenticator code -->
+    <form class="lg-step" id="lg-verify" novalidate hidden>
+      <h1 class="adm-gate-h" tabindex="-1">Enter your code</h1>
+      <p class="adm-gate-p">Open your authenticator app and enter the 6-digit code for Rayhab admin.</p>
+      <div class="adm-form mt-6">
+        <p class="adm-field"><label class="field-label" for="lg-code-v">6-digit code</label>
+          <input class="input lg-code" id="lg-code-v" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="\d{6}" aria-describedby="err-lg-code-v">
+          <span class="field-err" id="err-lg-code-v" hidden></span></p>
+      </div>
+      <div class="notice notice-error mt-4" id="lg-err3" role="alert" tabindex="-1" hidden></div>
+      <div class="adm-gate-acts">
+        <button class="btn btn-brand btn-md" type="submit" id="lg-go3">Sign in</button>
+        <button class="bk-linkbtn" type="button" id="lg-restart">Start again</button>
+      </div>
+    </form>
+  </div>
+</main>
+<script src="../assets/js/api/time.js?v=549c5148"></script>
+<script src="../assets/js/api/client.js?v=e732d077"></script>
+<script src="../assets/js/admin-login.js?v=25124ac2"></script>
+</body>
+</html>

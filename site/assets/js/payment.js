@@ -36,6 +36,14 @@
     });
     return out;
   }
+  /* If the link arrived as ?t= (some messaging buttons cannot carry a #),
+     move it into the fragment at once, so it does not stay in the address
+     bar, the history or any Referer. Nginx keeps it out of its logs. */
+  var fromQuery = /[?&]t=([A-Za-z0-9_-]+)/.exec(location.search);
+  if (fromQuery && !/[#&]t=/.test(location.hash)) {
+    var rest = location.search.replace(/([?&])t=[^&]*(&|$)/, '$1').replace(/[?&]$/, '');
+    history.replaceState(null, '', location.pathname + rest + '#t=' + fromQuery[1]);
+  }
   var params = hashParams();
   var token = params.t || '';
   var returned = params.r === '1';
@@ -114,6 +122,20 @@
     var a = view.appointment, p = view.payment || {};
     var amount = L.money(p.amount, p.currency);
 
+    // The clinic proposed another time: the patient answers before anything else.
+    if (a.status === 'reschedule_requested') {
+      var hint = T.localHint(a.local_date, a.local_time);
+      return message({ tone: 'pending', eyebrow: 'New time proposed',
+        title: 'Does this new time work for you?',
+        text: 'The clinic could not keep the time you asked for and proposes ' + T.dayLabel(a.local_date, true) + ' at ' +
+              a.local_time + ' Beirut time' + (hint ? ' (' + hint + ' your time)' : '') + '.',
+        facts: ['If you accept, the time is held for you and you choose how to pay next.',
+                'If not, the clinic will look for another time and message you.'],
+        actions: [{ label: 'Accept this time', run: function () { answerNewTime(true); } },
+                  { label: 'Ask for another time', run: function () { answerNewTime(false); } }, WA],
+        focus: opts.focus });
+    }
+
     if (a.status === 'declined' || a.status === 'cancelled' || a.status === 'expired') {
       var closed = {
         declined: ['Request declined', 'The clinic could not take this request. If you have not heard why, or would like another time, message the clinic.'],
@@ -140,8 +162,17 @@
     var methods = view.allowed_methods || [];
     var attempt = p.last_attempt && p.last_attempt.status;
 
-    // Back from Whish, or a payment Whish has not settled yet.
-    if (p.method === 'whish' && (attempt === 'pending' || (returned && !attempt))) return verifying(opts);
+    // Back from Whish: wait for the server to hear from Whish.
+    if (p.method === 'whish' && returned && (attempt === 'pending' || !attempt)) return verifying(opts);
+    // A checkout was opened but the patient is not coming back from it: it
+    // may still be open at Whish. Continuing reuses it rather than starting
+    // a second payment.
+    if (p.method === 'whish' && attempt === 'pending') {
+      return message({ tone: 'pending', eyebrow: 'Whish · Payment in progress', title: 'Your Whish payment is not finished',
+        text: 'A Whish checkout was opened for this appointment. If you have not paid yet, continue it. If you already paid, check again in a moment; please do not pay twice.',
+        actions: [{ label: 'Continue to Whish', run: startWhish }, { label: 'Check again', run: function () { load(); } }, WA],
+        focus: opts.focus });
+    }
 
     if (changing || (!p.method || p.status === 'not_selected')) {
       if (!methods.length) {
@@ -280,6 +311,27 @@
     });
   });
 
+  function answerNewTime(accept) {
+    if (busy) return;
+    busy = true;
+    Array.prototype.forEach.call(document.querySelectorAll('#ps-msg-actions button'), function (b) { b.disabled = true; });
+    API.payments.answerNewTime(token, accept, keyFor('newtime-' + accept)).then(function (res) {
+      busy = false;
+      if (res.ok && res.body && res.body.appointment) {
+        doneWith('newtime-' + accept);
+        view = res.body;
+        if (accept) return renderView();
+        return message({ tone: 'info', eyebrow: 'Another time requested', title: 'The clinic will find another time',
+          text: 'Thank you. The clinic will message you on WhatsApp with another time.', actions: [WA] });
+      }
+      if (res.status === 409 || res.status === 410) return load();
+      problem('Your answer could not be saved. Try again in a moment.');
+    }, function () {
+      busy = false;
+      problem('Your answer could not be sent. Check your connection and try again; answering twice is safe.');
+    });
+  }
+
   /* ---------- Whish ---------- */
   function startWhish() {
     if (busy) return;
@@ -297,7 +349,8 @@
         });
         return;
       }
-      if (url && /^https:\/\//.test(url)) { doneWith('whish'); location.assign(url); return; }
+      // Only Whish over https, or this site itself (the sandbox checkout on a staging or local backend).
+      if (url && (/^https:\/\//.test(url) || url.indexOf(location.origin + '/') === 0)) { doneWith('whish'); location.assign(url); return; }
       if (res.status === 409 && res.code === 'already_paid') return load();
       if (res.status === 401 || res.status === 404 || res.status === 410) return linkProblem(res);
       whishUnavailable(res.status === 503 || res.code === 'whish_unavailable');

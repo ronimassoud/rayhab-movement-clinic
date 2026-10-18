@@ -57,6 +57,7 @@
       ['demo-onlycash', 'Cash only, method locked'],
       ['demo-declined', 'Request declined'],
       ['demo-cancelled', 'Appointment cancelled'],
+      ['demo-newtime', 'New time proposed'],
       ['demo-expired', 'Link expired'],
       ['demo-invalid', 'Link not recognized']
     ]
@@ -121,6 +122,10 @@
       if (fromUrl) return fromUrl[1];
       try { return store.getItem ? (store.getItem('rayhab-demo-scenario') || 'success') : 'success'; }
       catch (e) { return 'success'; }
+    }
+    function setScenario(v) {
+      if (opts.scenario) { opts.scenario = v; return; }
+      try { if (store.setItem) store.setItem('rayhab-demo-scenario', v); } catch (e) { /* private mode */ }
     }
     function iso(ms) { return new Date(ms).toISOString(); }
     var today = T.today(now());
@@ -294,7 +299,8 @@
         'demo-cash': { status: 'confirmed', method: 'cash', pay: 'awaiting_payment' },
         'demo-failed': { status: 'confirmed', method: 'whish', pay: 'awaiting_payment', attempt: 'failed' },
         'demo-declined': { status: 'declined' },
-        'demo-cancelled': { status: 'cancelled' }
+        'demo-cancelled': { status: 'cancelled' },
+        'demo-newtime': { status: 'reschedule_requested' }
       };
       var m = map[token];
       if (!m) return null;
@@ -412,7 +418,7 @@
     }
 
     function transition(a, action, body, sc) {
-      if (sc === 'session_expired') return err(401, 'session_expired', 'Your session has expired.', { login_url: '?demo=1&scenario=success' });
+      if (sc === 'session_expired') return err(401, 'session_expired', 'Your session has expired.', { login_url: 'login.html?demo=1' });
       if (sc === 'server_error') return err(500, 'internal', 'Something went wrong.');
       if (a.actions.indexOf(action) < 0) {
         return err(409, 'invalid_transition', 'This appointment can no longer be ' + action.replace('_', ' ') + 'd. It is now ' + a.status + '.');
@@ -491,6 +497,15 @@
         return ok({ status: 'requested', id: a.id, reference: a.reference, hold_expires_at: a.hold_expires_at }, 201);
       }
 
+      if ((m = /^\/payment-selection\/([^/]+)\/reschedule$/.exec(p)) && method === 'POST') {
+        var rt = tokenAppt(decodeURIComponent(m[1]));
+        if (!rt) return err(404, 'link_invalid', 'This link is not recognized.');
+        if (rt.status !== 'reschedule_requested') return err(409, 'appointment_closed', 'There is no new time waiting for an answer.');
+        rt.status = body.accept ? (rt.payment.method ? 'confirmed' : 'approved') : 'requested';
+        log(rt, body.accept ? 'reschedule_accepted' : 'reschedule_rejected', 'patient', body.accept ? 'Accepted the new time' : 'Asked for another time', 0);
+        refreshActions(rt);
+        return ok(selectionView(rt));
+      }
       if ((m = /^\/payment-selection\/([^/]+)$/.exec(p))) {
         var token = decodeURIComponent(m[1]);
         if (token === 'demo-expired') return err(410, 'link_expired', 'This link has expired.');
@@ -532,9 +547,22 @@
         return ok({ checkout_url: 'mock-checkout:' + body.token, expires_at: iso(now() + 15 * 60000) });
       }
 
+      /* ---- Staff sign-in (any password; any 6-digit code) ---- */
+      if (method === 'POST' && p === '/admin/login') {
+        if (!body.email || !body.password) return err(422, 'validation', 'Enter your email and password.', { errors: { email: body.email ? undefined : 'Enter your email.' } });
+        return ok({ mfa: 'verify' });
+      }
+      if (method === 'POST' && p === '/admin/mfa/enroll') return ok({ qr_code: '', secret: 'DEMO-KEY' });
+      if (method === 'POST' && p === '/admin/mfa/verify') {
+        if (!/^\d{6}$/.test(body.code || '')) return err(422, 'invalid_code', 'That code did not work.', { errors: { code: 'Enter the 6-digit code.' } });
+        setScenario('success');
+        return ok({ ok: true });
+      }
+      if (method === 'POST' && p === '/admin/logout') { setScenario('signed_out'); return ok({ ok: true }); }
+
       /* ---- Admin ---- */
       if (p.indexOf('/admin/') === 0) {
-        if (sc === 'signed_out') return err(401, 'unauthenticated', 'Sign in to continue.', { login_url: '?demo=1&scenario=success' });
+        if (sc === 'signed_out') return err(401, 'unauthenticated', 'Sign in to continue.', { login_url: 'login.html?demo=1' });
         var mutating = method !== 'GET';
         if (mutating && headers && !headers['X-CSRF-Token']) return err(403, 'csrf', 'Missing CSRF token.');
       }
@@ -542,7 +570,7 @@
         return ok({ user: { id: 'st_1', name: 'Dr. Rayan Halimeh', role: 'practitioner' },
                     practitioners: clone(PRACTITIONERS), services: SERVICES.map(function (s) { return { id: s.id, name: s.name }; }),
                     permissions: { confirm_cash: true, manage_schedule: true }, csrf_token: 'demo-csrf', timezone: T.TZ,
-                    logout_url: '?demo=1&scenario=signed_out' });
+                    logout_url: 'login.html?demo=1&signout=1', login_url: 'login.html?demo=1' });
       }
       if (method === 'GET' && p === '/admin/overview') return ok(overview());
       if (method === 'GET' && p === '/admin/appointments') return ok(listAppointments(q));
@@ -569,7 +597,7 @@
         });
       }
       if (method === 'PATCH' && p === '/admin/availability') {
-        if (sc === 'session_expired') return err(401, 'session_expired', 'Your session has expired.', { login_url: '?demo=1&scenario=success' });
+        if (sc === 'session_expired') return err(401, 'session_expired', 'Your session has expired.', { login_url: 'login.html?demo=1' });
         if (sc === 'server_error') return err(500, 'internal', 'Something went wrong.');
         (body.add || []).forEach(function (x) {
           if (!x.date || !x.start || !x.end || T.toMin(x.end) <= T.toMin(x.start)) return;
@@ -595,7 +623,7 @@
         return ok(pg);
       }
       if ((m = /^\/admin\/payments\/([^/]+)\/confirm-cash$/.exec(p)) && method === 'POST') {
-        if (sc === 'session_expired') return err(401, 'session_expired', 'Your session has expired.', { login_url: '?demo=1&scenario=success' });
+        if (sc === 'session_expired') return err(401, 'session_expired', 'Your session has expired.', { login_url: 'login.html?demo=1' });
         if (sc === 'server_error') return err(500, 'internal', 'Something went wrong.');
         var key = headers && headers['Idempotency-Key'];
         if (key && cashKeys[key]) return ok({ payment: paymentRow(byPay(cashKeys[key])) });
@@ -715,7 +743,8 @@
       bar.querySelector('select').addEventListener('change', function (e) {
         var v = e.target.value;
         if (!v) return;
-        if (app === 'payment') { location.hash = 't=' + v; location.reload(); return; }
+        // The verifying scenarios arrive as a return from Whish would: with &r=1.
+        if (app === 'payment') { location.hash = 't=' + v + (/verify/.test(v) ? '&r=1' : ''); location.reload(); return; }
         try { store.setItem('rayhab-demo-scenario', v); } catch (x) { /* private mode */ }
         location.href = location.pathname + location.search.replace(/[?&]scenario=[\w-]+/, '') + location.hash;
       });

@@ -1,0 +1,92 @@
+name: Deploy to the server
+
+# Releases the site and the booking API to the VPS (docs/production-runbook.md).
+# Run by hand from the Actions tab: choose staging or production. Each is a
+# GitHub environment; "production" should require an approval (runbook step 9),
+# so nothing reaches dr-rayhab.com without someone saying so.
+#
+# GitHub Pages (pages.yml) is separate and unchanged: it stays the demo preview.
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Where to deploy
+        type: choice
+        options: [staging, production]
+        default: staging
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ inputs.environment == 'production' && 'https://dr-rayhab.com' || 'https://staging.dr-rayhab.com' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+
+      # The same build and checks as the Pages workflow, without its staging
+      # step: production pages must carry no noindex and no demo flag.
+      - name: Build and check the site
+        run: |
+          npm ci && npm run build
+          npm test
+          python3 content/stamp.py
+          python3 content/sitemap.py
+          python3 .github/scripts/check_links.py site
+          if grep -rl 'name="rayhab-demo"' site --include=*.html; then echo "demo flag found in production pages" >&2; exit 1; fi
+
+      - name: Staging only - keep it out of search engines
+        if: inputs.environment == 'staging'
+        run: python3 content/staging_noindex.py site
+
+      - name: Test the server
+        working-directory: server
+        run: npm ci && npm run typecheck && npm test
+
+      - name: Build and push the image
+        id: image
+        run: |
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}-server:${GITHUB_SHA::12}"
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker build -t "$IMAGE" server
+          docker push "$IMAGE"
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+
+      - name: Package the site
+        run: tar -czf "site-${GITHUB_SHA::12}.tgz" -C site .
+
+      - name: Upload and release
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          SSH_HOST: ${{ secrets.DEPLOY_HOST }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          TGZ="site-${GITHUB_SHA::12}.tgz"
+          scp -i ~/.ssh/id_deploy "$TGZ" "deploy@$SSH_HOST:/tmp/$TGZ"
+          ssh -i ~/.ssh/id_deploy "deploy@$SSH_HOST" \
+            "/srv/rayhab/bin/deploy.sh '${{ inputs.environment }}' '${{ steps.image.outputs.image }}' '/tmp/$TGZ'"
+
+      - name: Smoke test
+        run: |
+          BASE="${{ inputs.environment == 'production' && 'https://dr-rayhab.com' || 'https://staging.dr-rayhab.com' }}"
+          AUTH=""
+          if [ "${{ inputs.environment }}" = staging ]; then AUTH="-u rayhab:${{ secrets.STAGING_BASIC_AUTH }}"; fi
+          curl -fsS $AUTH "$BASE/api/health"
+          curl -fsS $AUTH -o /dev/null "$BASE/"
+          test "$(curl -s $AUTH -o /dev/null -w '%{http_code}' "$BASE/no-such-page")" = 404
+          curl -fsS $AUTH "$BASE/api/services" | grep -q '"services"'

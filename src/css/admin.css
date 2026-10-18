@@ -303,3 +303,11 @@
   .adm-dialog-acts .btn{width:100%}
   .adm-gate-card{padding:30px 22px}
 }
+
+/* ---- Sign-in (admin/login.html) ---- */
+.lg-step[hidden]{display:none}
+.lg-qr{display:grid;place-items:center;width:224px;height:224px;margin:22px 0 14px;padding:12px;background:#fff;border:1px solid var(--color-line);border-radius:var(--radius-md)}
+.lg-qr img{width:200px;height:200px;image-rendering:pixelated}
+.lg-qr .bk-skel{width:180px;height:180px}
+.lg-secret{font:600 15px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em;color:var(--color-fg);word-break:break-all}
+.lg-code{max-width:200px;font-size:22px;letter-spacing:.3em;font-variant-numeric:tabular-nums}

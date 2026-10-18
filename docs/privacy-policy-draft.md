@@ -86,3 +86,29 @@ place.
 ## Changes
 
 State how the policy will be updated and dated. **[DECIDE]**
+
+## Once the booking backend is live (added 2026-10-18) **[LEGAL]**
+
+The production setup in `docs/production-runbook.md` adds outside processors.
+Each must be named in the policy, covered by a data processing agreement, and
+reviewed against Law 81/2018 before real patient data is stored:
+
+| Processor | What it holds or sees | Where |
+|---|---|---|
+| Supabase | The database (bookings, contact details, notes, payments) and staff sign-in | The region chosen for the project (recommended: Frankfurt, EU) |
+| The VPS provider | The server that runs the site and the API; no database | The server's region (recommended: Frankfurt, EU) |
+| Meta (WhatsApp Business Platform) | Patient phone numbers and the message text | Meta's infrastructure |
+| The email provider | Staff alerts (reference, service and time only) and website questions in full | The provider's region |
+| Whish Money (when online payment is on) | The payment, its amount and reference | Whish |
+
+The booking consent line "They are not shared with anyone outside the clinic"
+is not accurate once these are in use. A suggested replacement, for the
+clinic's legal adviser to approve:
+
+> I agree to Rayhab storing these details to arrange my appointment. They are
+> kept by the clinic and the services it uses to run bookings and send
+> messages, and are not sold or used for marketing.
+
+When the wording changes, change `CONSENT_VERSION` in
+`site/assets/js/booking.js` too, so each stored request records which
+wording the patient agreed to.

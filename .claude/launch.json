@@ -4,14 +4,37 @@
     {
       "name": "rayhab-site",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "4488", "--directory", "site"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4488",
+        "--directory",
+        "site"
+      ],
       "port": 4488
     },
     {
       "name": "rayhab-v2",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "4612", "--directory", "C:/Users/Roni Massoud/Desktop/Rayhab 2.0/site"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4612",
+        "--directory",
+        "C:/Users/Roni Massoud/Desktop/Rayhab 2.0/site"
+      ],
       "port": 4612
+    },
+    {
+      "name": "rayhab-full",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "server"
+      ],
+      "port": 4700
     }
   ]
 }
