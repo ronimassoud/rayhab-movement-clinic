@@ -14,12 +14,15 @@
 
 create extension if not exists btree_gist with schema extensions;
 
+-- Safe to run again: it then sets the password to the one below, which is
+-- also how you change it later.
 do $$
 begin
   if not exists (select 1 from pg_roles where rolname = 'rayhab_app') then
-    create role rayhab_app login password 'CHOOSE-A-LONG-RANDOM-PASSWORD';
+    create role rayhab_app login;
   end if;
 end $$;
+alter role rayhab_app with login password 'CHOOSE-A-LONG-RANDOM-PASSWORD';
 
 grant usage on schema extensions to rayhab_app;
 
