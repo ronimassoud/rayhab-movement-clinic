@@ -17,8 +17,15 @@ export interface Ctx { app: FastifyInstance; db: Db; deps: Awaited<ReturnType<ty
 export async function setup(extra: Record<string, string> = {}): Promise<Ctx> {
   let db: Db;
   if (process.env.TEST_DATABASE_URL) {
-    db = await connectPostgres(process.env.TEST_DATABASE_URL);
-    await db.exec('drop schema if exists rayhab cascade');
+    // A database of its own for every setup, as each PGlite one is, so one
+    // test's fresh start never wipes another's data mid-run.
+    const admin = await connectPostgres(process.env.TEST_DATABASE_URL);
+    const name = 'rayhab_t_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    await admin.exec('create database ' + name);
+    await admin.close();
+    const url = new URL(process.env.TEST_DATABASE_URL);
+    url.pathname = '/' + name;
+    db = await connectPostgres(url.toString());
   } else {
     db = await connectPglite();
   }

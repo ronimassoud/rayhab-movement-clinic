@@ -18,11 +18,12 @@ set -euo pipefail
 
 DOMAIN="${DOMAIN:-dr-rayhab.com}"
 STAGING="${STAGING:-staging.$DOMAIN}"
-ADMIN_EMAIL="${ADMIN_EMAIL:?set ADMIN_EMAIL for Let's Encrypt notices}"
+ADMIN_EMAIL="${ADMIN_EMAIL:?set ADMIN_EMAIL, for certificate expiry notices}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 WITH_STAGING="${WITH_STAGING:-1}"
 
 [ "$(id -u)" -eq 0 ] || { echo "Run as root (sudo)." >&2; exit 1; }
+# shellcheck source=/dev/null
 . /etc/os-release
 [ "${ID:-}" = "ubuntu" ] || echo "Warning: written for Ubuntu 24.04; this is ${PRETTY_NAME:-unknown}." >&2
 
