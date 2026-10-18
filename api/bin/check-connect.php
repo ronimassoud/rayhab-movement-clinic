@@ -92,6 +92,9 @@ foreach (['DATABASE_URL' => 'rayhab_app', 'DATABASE_MIGRATE_URL' => 'postgres'] 
     $u = parse_url($c[$key]) ?: [];
     $user = urldecode($u['user'] ?? '');
     $hosts[$key] = ($u['host'] ?? '') . ':' . ($u['port'] ?? 5432);
+    $pass = $u['pass'] ?? '';
+    if (str_contains($pass, 'YOUR-PASSWORD')) $bad("$key still has the [YOUR-PASSWORD] placeholder");
+    elseif (str_starts_with($pass, '[') && str_ends_with($pass, ']')) $warn("$key: the password is in [square brackets]; Supabase's template uses them as a placeholder, so they are usually not part of the password");
     if (str_starts_with($u['host'] ?? '', 'db.')) $warn("$key uses the direct host; use the Session pooler URL instead (the direct one needs IPv6)");
     if (($u['port'] ?? 5432) == 6543) $warn("$key uses port 6543 (transaction pooler); use the Session pooler, port 5432");
     if ($ref && str_contains($u['host'] ?? '', 'pooler.supabase.com') && $user !== "$role.$ref") {
