@@ -50,11 +50,17 @@ function fresh(array $extra = []): App
 /* The same database, other settings (for example Whish disabled). */
 function sibling(App $app, array $extra): App { return new App(config($extra), $app->db); }
 
-/* The next open day (closed Sunday and Wednesday) open mornings and afternoons (not Saturday). */
-function fullDay(int $from = 1): string
+/* The $n-th day from today that is open mornings and afternoons (closed
+   Sunday and Wednesday, mornings only Saturday). It counts open days, not
+   calendar days, so different $n are always different days, whatever
+   weekday the tests run on. */
+function fullDay(int $n = 1): string
 {
-    $d = Time::addDays(Time::today(), $from);
-    while (in_array(Time::dow($d), [0, 3, 6], true)) $d = Time::addDays($d, 1);
+    $d = Time::today();
+    while ($n > 0) {
+        $d = Time::addDays($d, 1);
+        if (!in_array(Time::dow($d), [0, 3, 6], true)) $n--;
+    }
     return $d;
 }
 
