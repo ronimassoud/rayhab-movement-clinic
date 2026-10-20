@@ -81,7 +81,8 @@ stated in the policy:
 - Requests that never became appointments (declined, expired, or cancelled
   before being confirmed or paid), with their messages: 6 months (183 days)
   after their last change. **[LEGAL]** to confirm.
-- Website questions: 12 months after being answered. **[LEGAL]** to confirm.
+- Website questions, and patients' replies to the clinic's WhatsApp messages (which the admin shows next to them): 12 months after being answered. **[LEGAL]** to confirm. Photos, voice notes and documents sent on WhatsApp are not downloaded or kept.
+- A patient who replies STOP gets no more WhatsApp messages from the booking system (2026-10-20).
 - Message history (who was sent which message, delivery status): 90 days.
 - Appointments that happened, and payments: kept for now; the legal minimum
   for clinical and financial records is **[LEGAL]**.

@@ -294,7 +294,7 @@
     var alerts = (o.alerts || []).slice();
     if (c.enquiries) {
       alerts.unshift({ level: 'info', href: '#/enquiries',
-        text: c.enquiries + (c.enquiries === 1 ? ' website question is' : ' website questions are') + ' waiting for a reply.' });
+        text: c.enquiries + (c.enquiries === 1 ? ' question or WhatsApp reply is' : ' questions and WhatsApp replies are') + ' waiting for an answer.' });
     }
     $('ov-alerts').innerHTML = alerts.length
       ? '<ul class="adm-alerts">' + alerts.map(function (a) {
@@ -302,7 +302,7 @@
             (a.appointment_id ? '<button type="button" class="adm-alert-b" data-open="' + esc(a.appointment_id) + '">' + esc(a.text) + '</button>'
               : a.href ? '<a class="adm-alert-b" href="' + esc(a.href) + '">' + esc(a.text) + '</a>' : esc(a.text)) + '</li>';
         }).join('') + '</ul>'
-      : empty('All clear', 'Late replies, website questions, failed payments and expiring holds appear here.');
+      : empty('All clear', 'Late replies, questions, WhatsApp replies, failed payments and expiring holds appear here.');
   }
   function stat(label, value, href, foot, cls) {
     return '<a class="adm-stat ' + (cls || '') + '" href="' + href + '"><span class="adm-stat-l">' + esc(label) + '</span>' +
@@ -651,7 +651,7 @@
   }
 
   /* ---------- Enquiries ----------
-     Website questions. The reply goes by email or WhatsApp from the
+     Website questions and patients' WhatsApp replies. The reply goes by email or WhatsApp from the
      clinic; marking a question answered only moves it off the waiting
      list, and can be undone. */
   var eq = { status: 'open', page: 1 };
@@ -666,7 +666,7 @@
     var notes = eq.status === 'notes';
     $('eq-intro').textContent = notes
       ? 'What patients wrote in “What brings you in?” when they requested an appointment, newest first. Open the appointment to reply or act on it.'
-      : 'Questions sent from the website’s contact form. Reply by email or WhatsApp, then mark the question answered so it leaves this list.';
+      : 'Questions from the website’s contact form, and patients’ replies to the clinic’s WhatsApp messages. Reply by email or from the clinic’s WhatsApp, then mark it answered so it leaves this list.';
     $('eq-q').placeholder = notes ? 'Name, phone, reference' : 'Name, email, phone or words in the question';
     if (notes) return loadNotes(box);
     var fresh = latest('enquiries');
@@ -682,20 +682,25 @@
     }, function () { if (fresh()) box.innerHTML = failed('Enquiries', 'enquiries'); });
   }
   function enquiryCard(e) {
-    var reply = 'mailto:' + encodeURIComponent(e.email) + '?subject=' + encodeURIComponent('Re: your question to Rayhab Movement Clinic');
+    // A WhatsApp reply has no email: it is answered from the clinic's main WhatsApp.
+    var wa = e.channel === 'whatsapp';
+    var reply = e.email ? 'mailto:' + encodeURIComponent(e.email) + '?subject=' + encodeURIComponent('Re: your question to Rayhab Movement Clinic') : '';
     var answered = e.status === 'answered';
+    var waBtn = e.phone ? '<a class="btn ' + (reply ? 'btn-ghost-light' : 'btn-brand') + ' btn-sm" href="' + waLink(e.phone) + '" target="_blank" rel="noopener">' +
+      (reply ? 'WhatsApp' : 'Reply on WhatsApp') + '</a>' : '';
     return '<li class="adm-card' + (answered ? ' is-answered' : '') + '">' +
-      '<div class="adm-card-top"><div><p class="adm-card-k">Received ' + esc(at(e.created_at)) + ' · ' + esc(ago(e.created_at)) + '</p>' +
+      '<div class="adm-card-top"><div><p class="adm-card-k">' + (wa ? 'WhatsApp reply · ' : 'Website question · ') + 'Received ' + esc(at(e.created_at)) + ' · ' + esc(ago(e.created_at)) + '</p>' +
       '<h3 class="adm-card-h">' + esc(e.name) + '</h3></div>' +
       badge(answered ? { label: 'Answered', tone: 'success' } : { label: 'Waiting', tone: 'pending' }) + '</div>' +
       '<p class="adm-eq-msg">' + esc(e.message) + '</p>' +
-      '<dl class="adm-dl"><div><dt>Email</dt><dd><a href="' + esc(reply) + '">' + esc(e.email) + '</a></dd></div>' +
+      '<dl class="adm-dl">' +
+      (e.email ? '<div><dt>Email</dt><dd><a href="' + esc(reply) + '">' + esc(e.email) + '</a></dd></div>' : '') +
       (e.phone ? '<div><dt>Phone</dt><dd><a href="' + waLink(e.phone) + '" target="_blank" rel="noopener">' + esc(e.phone) + '</a></dd></div>' : '') +
+      (e.appointment ? '<div><dt>About</dt><dd><button class="bk-linkbtn" type="button" data-open="' + esc(e.appointment.id) + '">' + esc(e.appointment.reference) + '</button></dd></div>' : '') +
       (answered && e.answered_at ? '<div><dt>Answered</dt><dd>' + esc(at(e.answered_at)) + (e.answered_by ? ' by ' + esc(e.answered_by.name) : '') + '</dd></div>' : '') +
       '</dl>' +
       '<div class="adm-card-acts">' +
-      (answered ? '' : '<a class="btn btn-brand btn-sm" href="' + esc(reply) + '">Reply by email</a>' +
-        (e.phone ? '<a class="btn btn-ghost-light btn-sm" href="' + waLink(e.phone) + '" target="_blank" rel="noopener">WhatsApp</a>' : '')) +
+      (answered ? '' : (reply ? '<a class="btn btn-brand btn-sm" href="' + esc(reply) + '">Reply by email</a>' : '') + waBtn) +
       '<button class="btn ' + (answered ? 'btn-ghost-light' : 'btn-spring') + ' btn-sm" type="button" data-answer="' + esc(e.id) + '" data-to="' + (answered ? '0' : '1') + '">' +
       (answered ? 'Reopen' : 'Mark answered') + '<span class="vh">, ' + esc(e.name) + '</span></button></div></li>';
   }

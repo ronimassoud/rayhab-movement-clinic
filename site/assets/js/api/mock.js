@@ -154,6 +154,9 @@
       { id: '7f1c2a90-0000-4000-8000-000000000002', name: 'Georges Abi Nader', email: 'georges@example.com', phone: null,
         message: 'Do you offer online follow-ups for patients in Dubai after a first visit in Beirut?',
         created_at: iso(now() - 4 * 3600000), status: 'open', answered_at: null, answered_by: null },
+      { id: '7f1c2a90-0000-4000-8000-000000000004', name: 'Karim Haddad', email: null, phone: '+96170000204', channel: 'whatsapp', appointment: null,
+        message: 'Thanks! Is it possible to come 30 minutes later on the day?',
+        created_at: iso(now() - 2 * 3600000), status: 'open', answered_at: null, answered_by: null },
       { id: '7f1c2a90-0000-4000-8000-000000000003', name: 'Hiba Saleh', email: 'hiba@example.com', phone: '+961 3 000 203',
         message: 'Is there parking near the clinic?',
         created_at: iso(now() - 80 * 3600000), status: 'answered', answered_at: iso(now() - 70 * 3600000), answered_by: { name: 'Dr. Rayan Halimeh' } }
@@ -592,7 +595,7 @@
         var eqs = enquiries.filter(function (e) { return st === 'all' || e.status === st; });
         if (q.q) {
           var needle = q.q.toLowerCase();
-          eqs = eqs.filter(function (e) { return (e.name + ' ' + e.email + ' ' + (e.phone || '') + ' ' + e.message).toLowerCase().indexOf(needle) >= 0; });
+          eqs = eqs.filter(function (e) { return (e.name + ' ' + (e.email || '') + ' ' + (e.phone || '') + ' ' + e.message).toLowerCase().indexOf(needle) >= 0; });
         }
         eqs.sort(function (x, y) { return (x.created_at < y.created_at ? -1 : 1) * (st === 'open' ? 1 : -1); });
         return ok(page(eqs, q));

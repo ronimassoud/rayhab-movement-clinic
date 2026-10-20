@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Rayhab\App;
 use Rayhab\Config;
+use Rayhab\Inbound;
 use Rayhab\Messaging;
 use Rayhab\Util;
 use Rayhab\Worker;
@@ -64,6 +65,50 @@ test('answers unknown routes and bad bodies in the error shape', function () use
 test('payment link tokens never reach a log line', function () {
     eq('/api/payment-selection/…/reschedule', App::maskUrl('/api/payment-selection/abcDEF123_-xyz/reschedule'));
     eq('/payment/?t=…&x=1', App::maskUrl('/payment/?t=secret&x=1'));
+});
+
+test('WhatsApp replies become enquiries; STOP turns WhatsApp off for that number', function () use ($app) {
+    $wa = function (array $messages, array $contacts = []) use ($app) {
+        $raw = (string) json_encode(['entry' => [['changes' => [['value' => ['messages' => $messages, 'contacts' => $contacts]]]]]]);
+        eq(200, call($app, 'POST', '/api/webhooks/whatsapp', $raw, ['x-hub-signature-256' => 'sha256=' . Util::hmac('wa-secret', $raw)])->status);
+    };
+    $enq = fn(string $msgId) => $app->db->one('select first_name, last_name, email, phone, message, channel, appointment_id from rayhab.enquiries where source_message_id = ?', [$msgId]);
+    $staffMail = fn(string $template) => $app->db->query('select payload from rayhab.notification_outbox where channel = ? and template = ? order by id', ['email', $template]);
+    $id = book($app, ['date' => fullDay(11), 'time' => '09:00', 'phone' => '+96170000555', 'first_name' => 'Nada', 'last_name' => 'Saab']);
+
+    // A reply: an enquiry under the booking's name, linked to it; the staff email doesn't carry the text.
+    $wa([['from' => '96170000555', 'id' => 'wamid.r1', 'type' => 'text', 'text' => ['body' => 'Can I come 30 minutes later? My back is worse today.']]],
+        [['wa_id' => '96170000555', 'profile' => ['name' => 'N S']]]);
+    eq(['first_name' => 'Nada', 'last_name' => 'Saab', 'email' => null, 'phone' => '+96170000555',
+        'message' => 'Can I come 30 minutes later? My back is worse today.', 'channel' => 'whatsapp', 'appointment_id' => $id], $enq('wamid.r1'));
+    $mails = $staffMail('whatsapp_reply');
+    ok(count($mails) >= 1 && !str_contains((string) end($mails)['payload'], 'back is worse'), 'the email says a reply arrived, not what it says');
+    $wa([['from' => '96170000555', 'id' => 'wamid.r1', 'type' => 'text', 'text' => ['body' => 'Can I come 30 minutes later? My back is worse today.']]]);
+    eq(1, (int) $app->db->one("select count(*)::int as n from rayhab.enquiries where source_message_id = 'wamid.r1'")['n'], 'a redelivered webhook counts once');
+
+    // A photo is not kept; the admin says one arrived.
+    $wa([['from' => '96170000555', 'id' => 'wamid.r2', 'type' => 'image', 'image' => ['id' => 'media.1']]]);
+    ok(str_contains($enq('wamid.r2')['message'], 'sent a photo'), 'a photo is shown as a note, not stored');
+
+    // Someone with no booking: the WhatsApp profile name, no appointment.
+    $wa([['from' => '96171999888', 'id' => 'wamid.r3', 'type' => 'text', 'text' => ['body' => 'Hello, do you treat knees?']]],
+        [['wa_id' => '96171999888', 'profile' => ['name' => 'Omar El Khoury']]]);
+    eq(['Omar', 'El Khoury', null], [$enq('wamid.r3')['first_name'], $enq('wamid.r3')['last_name'], $enq('wamid.r3')['appointment_id']]);
+
+    // STOP: consent off for that number, queued WhatsApp messages dropped, staff told, no enquiry.
+    $app->db->query("insert into rayhab.notification_outbox (channel, template, recipient, appointment_id, status) values ('whatsapp', 'reminder', '+96170000555', ?, 'pending')", [$id]);
+    $wa([['from' => '96170000555', 'id' => 'wamid.s1', 'type' => 'text', 'text' => ['body' => ' Stop! ']]]);
+    eq(null, $app->db->one('select consent_whatsapp_at from rayhab.appointments where id = ?', [$id])['consent_whatsapp_at']);
+    eq('skipped', $app->db->one("select status from rayhab.notification_outbox where template = 'reminder' and appointment_id = ?", [$id])['status']);
+    eq(null, $enq('wamid.s1'), 'STOP is not an enquiry');
+    ok(count($staffMail('whatsapp_opt_out')) >= 1, 'staff are told');
+    ok((bool) $app->db->one("select 1 as x from rayhab.events where type = 'whatsapp_opt_out' and appointment_id = ?", [$id]), 'recorded in the audit log');
+    $before = (int) $app->db->one("select count(*)::int as n from rayhab.notification_outbox where channel = 'whatsapp'")['n'];
+    $app->notify->whatsapp($app->notify->row($id), 'approved', ['Thursday', '09:00']);
+    eq($before, (int) $app->db->one("select count(*)::int as n from rayhab.notification_outbox where channel = 'whatsapp'")['n'], 'no further WhatsApp messages');
+
+    ok(Inbound::isStop('إيقاف') && Inbound::isStop('UNSUBSCRIBE') && Inbound::isStop('stop.'), 'STOP in Arabic, any case, with punctuation');
+    ok(!Inbound::isStop("please don't stop my reminders"), 'a sentence that mentions stop is a reply');
 });
 
 test('the worker health check fails once the worker stops', function () use ($app) {

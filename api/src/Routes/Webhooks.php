@@ -1,8 +1,9 @@
 <?php
-/* WhatsApp delivery receipts from Meta.
+/* WhatsApp webhooks from Meta.
 
      GET  /api/webhooks/whatsapp   Meta's subscription check (hub.verify_token)
-     POST /api/webhooks/whatsapp   statuses: sent, delivered, read, failed
+     POST /api/webhooks/whatsapp   statuses: sent, delivered, read, failed;
+                                   and messages patients send (Inbound.php)
 
    Every POST is authenticated with X-Hub-Signature-256, an HMAC of the raw
    body with the app secret; anything else is refused. */
@@ -11,6 +12,7 @@ declare(strict_types=1);
 namespace Rayhab\Routes;
 
 use Rayhab\App;
+use Rayhab\Inbound;
 use Rayhab\Request;
 use Rayhab\Response;
 use Rayhab\Util;
@@ -41,8 +43,15 @@ final class Webhooks
             }
             $body = json_decode($r->body, true);
             if (!is_array($body)) return Response::json(['error' => ['code' => 'bad_request', 'message' => 'Not JSON.']], 400);
+            $inbound = new Inbound($app->db, $app->notify);
             foreach ($body['entry'] ?? [] as $entry) {
                 foreach ($entry['changes'] ?? [] as $change) {
+                    // Patients writing to the sending number: STOP, or a reply for the admin (Inbound.php).
+                    $names = [];
+                    foreach ($change['value']['contacts'] ?? [] as $c) $names[(string) ($c['wa_id'] ?? '')] = $c['profile']['name'] ?? null;
+                    foreach ($change['value']['messages'] ?? [] as $m) {
+                        if (is_array($m)) $inbound->handle($m, $names[(string) ($m['from'] ?? '')] ?? null);
+                    }
                     foreach ($change['value']['statuses'] ?? [] as $s) {
                         $app->db->query("update rayhab.notification_outbox set delivery_status = ?,
                                            last_error = case when ? = 'failed' then ? else last_error end where provider_message_id = ?",

@@ -227,7 +227,11 @@ The API emails the clinic when a booking request or a website question arrives: 
 
 ### 6.1 Get a sender number
 
-In **Meta Business Suite**, create (or use) the clinic's business, then add **WhatsApp** in Meta for Developers (an app of type Business). Register the clinic's sending number. It cannot also stay on the WhatsApp phone app.
+In **Meta Business Suite**, create (or use) the clinic's business, then add **WhatsApp** in Meta for Developers (an app of type Business). Register a **separate number used only by the booking system** (decided 2026-10-20): not +961 71 383 315, which stays the clinic's own WhatsApp for talking to patients. The sending number must not already be on WhatsApp, and must receive an SMS or call for the code. Set its two-step PIN and keep it in the password manager.
+
+Patients may still reply to it. The booking system handles that (`api/src/Inbound.php`):
+- **STOP** (also UNSUBSCRIBE, `توقف`, `إيقاف`, arrêt) turns WhatsApp off for that number, drops messages still queued to it, and emails the staff a reference. A later booking asks for WhatsApp consent again.
+- **Any other reply** appears in the admin's **Enquiries**, marked "WhatsApp reply", with the patient's latest booking. Answer it from the clinic's own WhatsApp (the button opens the chat), then mark it answered. The staff email only says a reply arrived. Photos and voice notes are not kept: the admin shows that one arrived.
 
 ### 6.2 Create a permanent token
 
@@ -242,7 +246,7 @@ Create a **System User** with the WhatsApp permissions and generate a **permanen
 
 ### 6.3 Connect the webhook
 
-Webhook URL: `https://dr-rayhab.com/api/webhooks/whatsapp`, with the verify token you chose. Subscribe to **messages**. Delivery receipts then appear in the outbox.
+Webhook URL: `https://dr-rayhab.com/api/webhooks/whatsapp`, with the verify token you chose. Subscribe to **messages**. Delivery receipts then appear in the outbox, and patients' replies and STOP requests are handled as in 6.1.
 
 ### 6.4 Submit the templates
 
@@ -250,7 +254,7 @@ All are category **Utility**, language **English** (`en`). Each must keep **exac
 
 | Name | Body | Button |
 |---|---|---|
-| `rayhab_request_received` | Hello from Rayhab Movement Clinic. We have your appointment request for {{1}} at {{2}} (Beirut time). This is a request, not yet a confirmed appointment; we will reply within one working day. | none |
+| `rayhab_request_received` | Hello from Rayhab Movement Clinic. We have your appointment request for {{1}} at {{2}} (Beirut time). This is a request, not yet a confirmed appointment; we will reply within one working day. Reply STOP to stop these messages. | none |
 | `rayhab_approved_choose_payment` | Good news: your appointment on {{1}} at {{2}} (Beirut time) is approved. Please choose how you would like to pay with the button below. The link is private to you. | URL, dynamic: `https://dr-rayhab.com/payment/#t={{1}}`, text "Choose how to pay" |
 | `rayhab_request_declined` | Rayhab Movement Clinic: we are sorry, we cannot take your appointment request. {{1}} You are welcome to request another time on our website. | none |
 | `rayhab_new_time_proposed` | Rayhab Movement Clinic: the time you asked for is not available. We can offer {{1}} at {{2}} (Beirut time). Please accept it or ask for another time with the button below. | URL, dynamic: as above, text "Answer" |

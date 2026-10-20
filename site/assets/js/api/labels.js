@@ -83,6 +83,7 @@
     enquiry_reopened:   'Website question reopened',
     signed_in:          'Signed in',
     viewed:             'Record opened',
+    whatsapp_opt_out:   'Turned off WhatsApp messages',
     retention:          'Old data deleted (schedule)',
     subject_erased:     'Personal data erased (request)'
   };

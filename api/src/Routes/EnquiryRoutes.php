@@ -1,5 +1,5 @@
 <?php
-/* Website questions in the admin.
+/* Website questions, and patients' WhatsApp replies (Inbound.php), in the admin.
 
      GET  /api/admin/enquiries?status=open|answered|all&q=&page=&page_size=
      POST /api/admin/enquiries/{id}/answered   { answered: true | false }
@@ -19,16 +19,20 @@ use Rayhab\Util;
 
 final class EnquiryRoutes
 {
-    private const SELECT = 'select e.id, e.first_name, e.last_name, e.email, e.phone, e.message, e.created_at, e.handled_at, p.name as handled_by_name
-                              from rayhab.enquiries e left join rayhab.practitioners p on p.id = e.handled_by';
+    private const SELECT = 'select e.id, e.first_name, e.last_name, e.email, e.phone, e.message, e.created_at, e.handled_at, p.name as handled_by_name,
+                                   e.channel, e.appointment_id, a.reference
+                              from rayhab.enquiries e left join rayhab.practitioners p on p.id = e.handled_by
+                              left join rayhab.appointments a on a.id = e.appointment_id';
 
     public static function view(array $e): array
     {
         return [
             'id' => $e['id'],
             'name' => trim($e['first_name'] . ' ' . $e['last_name']),
-            'email' => $e['email'],
+            'email' => $e['email'] ?: null,
             'phone' => $e['phone'] ?: null,
+            'channel' => $e['channel'] ?? 'website',
+            'appointment' => $e['appointment_id'] ? ['id' => $e['appointment_id'], 'reference' => $e['reference']] : null,
             'message' => $e['message'],
             'created_at' => Util::iso($e['created_at']),
             'status' => $e['handled_at'] ? 'answered' : 'open',
@@ -49,7 +53,7 @@ final class EnquiryRoutes
             elseif ($status === 'answered') $where[] = 'e.handled_at is not null';
             if (!empty($q['q'])) {
                 $needle = '%' . str_replace(['%', '_'], '', mb_strtolower(trim($q['q']))) . '%';
-                $where[] = "(lower(e.first_name || ' ' || e.last_name) like ? or lower(e.email) like ? or coalesce(e.phone, '') like ? or lower(e.message) like ?)";
+                $where[] = "(lower(e.first_name || ' ' || e.last_name) like ? or lower(coalesce(e.email, '')) like ? or coalesce(e.phone, '') like ? or lower(e.message) like ?)";
                 array_push($params, $needle, $needle, $needle, $needle);
             }
             $w = $where ? ' where ' . implode(' and ', $where) : '';
