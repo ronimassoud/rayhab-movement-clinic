@@ -1004,6 +1004,7 @@ here so it can be checked on the live server.
 ### Legal
 
 Drafts, not for publication: [`docs/privacy-policy-draft.md`](docs/privacy-policy-draft.md)
+(and its page, `site/privacy.html`, unlinked and blocked from production until approved)
 and [`docs/terms-draft.md`](docs/terms-draft.md). They record what the site
 actually collects and promises, and list every decision and legal review still
 needed. The booking consent line now says details are kept "by the clinic and

@@ -53,6 +53,11 @@ jobs:
           python3 content/sitemap.py
           python3 .github/scripts/check_links.py site
           if grep -rl 'name="rayhab-demo"' site --include=*.html; then echo "demo flag found in production pages" >&2; exit 1; fi
+          # A page still awaiting legal review (privacy.html while it is a
+          # draft) may go to staging for review, never to production.
+          if [ "${{ inputs.environment }}" = production ] && grep -rl 'data-draft' site --include=*.html; then
+            echo "These pages are drafts awaiting legal review; remove data-draft once approved." >&2; exit 1
+          fi
 
       - name: Staging only - keep it out of search engines
         if: inputs.environment == 'staging'

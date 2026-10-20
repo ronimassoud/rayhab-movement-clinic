@@ -1,5 +1,7 @@
 # Privacy policy: working draft (not published)
 
+**The page itself:** `site/privacy.html` is the patient-facing draft, built from this file and the code as of 2026-10-20. Review it there (on staging: `/privacy.html`). It is hidden from search engines, linked from nowhere, and its `data-draft` attribute stops any deploy to production until it is removed. To publish once approved: resolve every highlighted placeholder, remove `data-draft` and the draft banner, drop the noindex tag, and link the page from both forms and the footer.
+
 **Status:** draft for the clinic and its legal adviser. It is not linked from
 the site and must not be published until every item marked **[DECIDE]** or
 **[LEGAL]** is resolved. It describes only what the website actually does
