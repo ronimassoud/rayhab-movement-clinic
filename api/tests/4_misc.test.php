@@ -66,6 +66,44 @@ test('payment link tokens never reach a log line', function () {
     eq('/payment/?t=…&x=1', App::maskUrl('/payment/?t=secret&x=1'));
 });
 
+test('the worker health check fails once the worker stops', function () use ($app) {
+    $app->db->query("delete from rayhab.heartbeats where name = 'worker'");
+    eq(503, call($app, 'GET', '/api/health/worker')->status);
+    (new Worker($app, new Messaging($app->cfg)))->tick();
+    $r = call($app, 'GET', '/api/health/worker');
+    eq(200, $r->status);
+    ok($r->data()['last_run'] !== null, 'reports the last run');
+    $app->db->query("update rayhab.heartbeats set at = now() - interval '6 minutes' where name = 'worker'");
+    eq(503, call($app, 'GET', '/api/health/worker')->status);
+});
+
+test('blocked sign-in attempts email the staff, once an hour', function () use ($app) {
+    $try = fn() => $app->handle(new \Rayhab\Request('POST', '/api/admin/login', [], ['origin' => ORIGIN, 'content-type' => 'application/json'], [],
+                                                    (string) json_encode(['email' => 'nobody@example.com', 'password' => 'x']), '10.250.0.1'));
+    $count = fn() => (int) $app->db->one("select count(*)::int as n from rayhab.notification_outbox where template = 'signin_alert'")['n'];
+    $before = $count();
+    for ($i = 0; $i < 10; $i++) ok($try()->status !== 429, 'under the limit');
+    eq($before, $count(), 'no alert while under the limit');
+    eq(429, $try()->status);
+    eq(429, $try()->status);
+    eq($before + 1, $count(), 'one alert per staff address, however often it trips');
+    $mail = $app->db->one("select payload from rayhab.notification_outbox where template = 'signin_alert' order by id desc limit 1");
+    ok(!str_contains((string) $mail['payload'], '10.250.0.1'), 'the address is not emailed');
+});
+
+test('error logs keep out the personal data a database error can quote', function () use ($app) {
+    $email = 'leak-' . bin2hex(random_bytes(3)) . '@example.com';
+    $app->db->query("create temporary table redact_probe (email text unique)");
+    $app->db->query('insert into redact_probe values (?)', [$email]);
+    try { $app->db->query('insert into redact_probe values (?)', [$email]); throw new LogicException('no duplicate error'); }
+    catch (PDOException $e) { $line = App::redact((string) $e); }
+    ok(!str_contains($line, $email), 'the duplicate value is withheld');
+    ok(str_contains($line, '23505'), 'the error code stays');
+    $line = App::redact('syntax error at or near "Maya Khoury" for +961 70 000 101 and 96170000101, on 2026-10-20 at App.php(61)');
+    ok(!str_contains($line, 'Maya') && !str_contains($line, '000 101') && !str_contains($line, '96170000101'), 'names near a syntax error and numbers are withheld');
+    ok(str_contains($line, '2026-10-20') && str_contains($line, 'App.php(61)'), 'dates and line numbers stay');
+});
+
 test('sealing round-trips and refuses tampering', function () {
     $s = Util::seal('k' . str_repeat('x', 40), 'hello');
     eq('hello', Util::unseal('k' . str_repeat('x', 40), $s));

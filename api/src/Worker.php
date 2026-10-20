@@ -43,8 +43,8 @@ final class Worker
                 $dead = !$retry || (int) $r['attempts'] >= self::MAX_ATTEMPTS;
                 $wait = min(60 * 2 ** ((int) $r['attempts'] - 1), 6 * 3600);   // 1 min, 2, 4 … capped at 6 h
                 $db->query('update rayhab.notification_outbox set status = ?, last_error = ?, next_attempt_at = now() + make_interval(secs => ?) where id = ?',
-                           [$dead ? 'dead' : 'failed', mb_substr($e->getMessage(), 0, 500), $wait, $r['id']]);
-                error_log('[rayhab] message ' . $r['id'] . ' (' . $r['template'] . ') ' . ($dead ? 'given up: ' : 'will be retried: ') . $e->getMessage());
+                           [$dead ? 'dead' : 'failed', mb_substr(App::redact($e->getMessage()), 0, 500), $wait, $r['id']]);
+                error_log('[rayhab] message ' . $r['id'] . ' (' . $r['template'] . ') ' . ($dead ? 'given up: ' : 'will be retried: ') . App::redact($e->getMessage()));
             }
         }
         return count($rows);
@@ -107,11 +107,14 @@ final class Worker
         $db->query("delete from rayhab.rate_limits where window_start < now() - interval '1 day'");
     }
 
-    /** The cron run: everything once. */
+    /** The cron run: everything once, then a heartbeat (only if all of it worked). */
     public function tick(): array
     {
-        return ['delivered' => $this->deliver(50), 'reconciled' => $this->reconcile(), 'expired' => $this->expireHolds(),
-                'reminded' => $this->remind(), 'swept' => (int) (gmdate('i') === '07' && $this->sweepOnce())];
+        $r = ['delivered' => $this->deliver(50), 'reconciled' => $this->reconcile(), 'expired' => $this->expireHolds(),
+              'reminded' => $this->remind(), 'swept' => (int) (gmdate('i') === '07' && $this->sweepOnce())];
+        $this->app->db->query("insert into rayhab.heartbeats (name, at) values ('worker', now())
+                               on conflict (name) do update set at = excluded.at");
+        return $r;
     }
 
     private function sweepOnce(): bool { $this->sweep(); return true; }

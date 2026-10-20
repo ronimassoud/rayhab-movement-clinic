@@ -37,7 +37,7 @@ apt-get upgrade -y
 apt-get install -y ca-certificates curl ufw fail2ban unattended-upgrades rsync \
   apache2 apache2-utils certbot \
   php-fpm php-cli php-pgsql php-curl php-mbstring \
-  msmtp msmtp-mta postgresql-client
+  msmtp msmtp-mta postgresql-client age
 dpkg-reconfigure -f noninteractive unattended-upgrades
 
 PHPV="$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')"
@@ -109,6 +109,25 @@ cat > /etc/logrotate.d/rayhab <<'EOF'
     missingok
     notifempty
     copytruncate
+}
+EOF
+# The site's own Apache logs (IP addresses, pages visited): a folder of their
+# own, so this rule, not Ubuntu's default, sets how long they are kept.
+install -d -m 750 -o root -g adm /var/log/apache2/rayhab
+cat > /etc/logrotate.d/rayhab-apache <<'EOF'
+/var/log/apache2/rayhab/*.log {
+    daily
+    rotate 14
+    maxage 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 640 root adm
+    sharedscripts
+    postrotate
+        systemctl reload apache2 > /dev/null 2>&1 || true
+    endscript
 }
 EOF
 

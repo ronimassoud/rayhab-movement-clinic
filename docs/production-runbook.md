@@ -164,11 +164,21 @@ The Free plan keeps **no backups**. Until you upgrade, the server makes its own:
 - It keeps the last 14 dumps.
 - Copy one off the server now and then (step 12).
 
-To restore a dump into a project, for example to try it on staging:
+**Encrypt them.** A dump holds every booking and note, so it should not sit readable on the same server as the API. On your own computer, install [age](https://github.com/FiloSottile/age) (`winget install FiloSottile.age` on Windows) and make a key once:
 
 ```bash
-gunzip -c /srv/rayhab/backups/production/<file>.sql.gz | psql "<the staging project's postgres connection URL>"
+age-keygen -o rayhab-backup-key.txt
 ```
+
+It prints `Public key: age1...`. Put that public key in `BACKUP_RECIPIENT` in both connect files and run `push-settings.sh` again (step 8). Keep `rayhab-backup-key.txt` in your password manager and nowhere else: the server never needs it, and without it no backup can be opened. From then on dumps end in `.sql.gz.age`, and the backup log says "encrypted" (or "NOT encrypted" while the key is missing).
+
+To restore a dump into a project, for example to try it on staging, copy it to your computer and:
+
+```bash
+age -d -i rayhab-backup-key.txt <file>.sql.gz.age | gunzip | psql "<the staging project's postgres connection URL>"
+```
+
+(For an older unencrypted `.sql.gz`, skip the `age` step.)
 
 Free projects are also **paused after a week without activity**. The cron worker queries the database every minute, which should keep it active. Still, check the project's status in the dashboard during the first weeks; a paused project is restored from the dashboard in a few minutes, and the site shows its "not available" messages meanwhile.
 
@@ -348,7 +358,7 @@ Then it sends one test email through Resend.
    - The pages have **no** `noindex` tag.
    - The page source has no `rayhab-demo`.
    - [securityheaders.com](https://securityheaders.com) shows the CSP, nosniff and referrer policy.
-6. **Turn on HSTS.** When all of that holds, uncomment the `Strict-Transport-Security` line in `/etc/apache2/conf-available/rayhab.conf` and run `sudo apache2ctl configtest && sudo systemctl reload apache2`.
+6. **Lengthen HSTS.** HTTPS-only is on from the start for one day (`max-age=86400`), so a certificate problem early on cannot lock visitors out for long. After a week with all of the above holding, raise it to a year: in `infra/apache/rayhab.conf`, change it to `max-age=31536000` (add `; includeSubDomains` only if every subdomain of `dr-rayhab.com` serves HTTPS), commit, and on the server copy it to `/etc/apache2/conf-available/rayhab.conf` and run `sudo apache2ctl configtest && sudo systemctl reload apache2`. **Check:** `curl -sI https://dr-rayhab.com | grep -i strict` shows the new value.
 
 ## 11. Prices and policy text
 
@@ -370,16 +380,21 @@ Opening hours live in `rayhab.working_hours` (weekday 0 is Sunday; times are Bei
 **Logs**
 
 ```bash
-sudo tail -f /var/log/apache2/rayhab-production-error.log      # API errors (masked: no tokens, no patient details)
+sudo tail -f /var/log/apache2/rayhab/production-error.log      # API errors (masked: no tokens, no patient details)
 sudo tail -f /var/log/rayhab/worker-production.log             # what the cron worker did
-sudo tail -f /var/log/apache2/rayhab-production-access.log     # requests (payment-link tokens are never logged)
+sudo tail -f /var/log/apache2/rayhab/production-access.log     # requests (payment-link tokens are never logged)
 ```
+
+Apache's logs for the site are kept 14 days, then deleted (`/etc/logrotate.d/rayhab-apache`); the worker, mail and backup logs 8 weeks. Error logs withhold the values a database error can quote, email addresses and phone numbers.
 
 **Settings** in `app.env` apply on the next request; there is nothing to restart. New code arrives only through a deploy.
 
 **Monitoring**
 
-- Add an uptime monitor (UptimeRobot or Better Stack, free) on `https://dr-rayhab.com/api/health`, alerting by email.
+- Add an uptime monitor (UptimeRobot or Better Stack, free), alerting by email, on two URLs:
+  - `https://dr-rayhab.com/api/health`: the site, the API and the database answer.
+  - `https://dr-rayhab.com/api/health/worker`: the cron worker finished a run in the last five minutes. It answers 503 when the worker has stopped, which means messages, reminders and expiring holds are all waiting.
+- When sign-in is blocked for an address after too many attempts, the staff addresses get one email ("sign-in attempts blocked") per hour. Once is usually someone mistyping; repeated emails mean someone is trying passwords, so check the access log and tell whoever runs the server.
 - Check messages that could not be delivered once a week:
 
   ```sql
@@ -409,7 +424,7 @@ sudo tail -f /var/log/apache2/rayhab-production-access.log     # requests (payme
 
 **Backups**
 
-- **On Free:** the nightly dumps in `/srv/rayhab/backups/` are the only backups, and they sit on the same server. Once a month, copy the newest one somewhere else (`scp deploy@dr-rayhab.com:/srv/rayhab/backups/production/<file> .`). The log is `/var/log/rayhab/backup.log`.
+- **On Free:** the nightly dumps in `/srv/rayhab/backups/` are the only backups, and they sit on the same server. Once a month, copy the newest one somewhere else (`scp deploy@dr-rayhab.com:/srv/rayhab/backups/production/<file> .`). Encrypted (step 5.8), a copy is safe in ordinary cloud storage. The log is `/var/log/rayhab/backup.log`; check it says "encrypted".
 - **On Pro:** Supabase keeps daily backups as well.
 - Either way, restore a copy into the staging project once a quarter (step 5.8), so you know a restore works.
 

@@ -71,6 +71,13 @@ backend described in `docs/backend-architecture.md` is built, list here:
 appointments, enquiries, appointment records, and any medical records (which
 fall under separate health-record rules).
 
+Already fixed in the system (verified in the code on 2026-10-20), and to be
+stated in the policy:
+- Server access logs (IP address, browser, pages visited): 14 days, then
+  deleted. Payment-link tokens are never written to them.
+- Database backups: the last 14 nightly copies, then deleted.
+- Staff sign-in sessions: deleted when they expire (12 hours).
+
 ## Your rights
 
 **[LEGAL]** List the rights that apply (access, correction, deletion,
@@ -79,9 +86,18 @@ basis and contact address are settled.
 
 ## Security
 
-**[PLANNED]** Describe the actual measures once the backend exists (HTTPS,
-access control, encrypted backups). Do not describe measures that are not in
-place.
+**[PLANNED]** Describe the actual measures once the backend exists. Do not
+describe measures that are not in place. In the code as of 2026-10-20, and
+true once the server runs as set up in `docs/production-runbook.md`:
+- HTTPS only, with HSTS; TLS 1.2 or newer.
+- Staff sign in with a password and an authenticator code; every change is
+  recorded in an audit log.
+- Nightly backups are encrypted with a key kept off the server, **once**
+  `BACKUP_RECIPIENT` is set (runbook step 5.8). Until then, do not claim it.
+- Error logs withhold email addresses, phone numbers and the values a
+  database error can quote.
+- No analytics, advertising or third-party scripts; the build fails if any
+  are added.
 
 ## Changes
 

@@ -1,0 +1,35 @@
+# Weekly update pull requests for the build tools, the local test database
+# and the GitHub Actions the workflows use. Each arrives as a pull request;
+# nothing merges or deploys by itself.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      build-tools:
+        patterns: ['*']
+    ignore:
+      # Pinned and vendored by hand (site/assets/js/vendor/README.md): a bump
+      # here alone would not change the files the site actually serves.
+      - dependency-name: gsap
+
+  - package-ecosystem: npm
+    directory: /api/dev
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    groups:
+      local-test-db:
+        patterns: ['*']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      actions:
+        patterns: ['*']

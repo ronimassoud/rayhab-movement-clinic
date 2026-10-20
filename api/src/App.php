@@ -32,6 +32,13 @@ final class App
         $this->whish = new Whish($cfg, $db);
 
         $this->get('/api/health', function () { $this->db->query('select 1'); return Response::json(['ok' => true]); });
+        // For an uptime monitor: 503 once the cron worker has not finished a run
+        // for five minutes (messages, reminders and expiring holds all wait on it).
+        $this->get('/api/health/worker', function () {
+            $hb = $this->db->one("select at, at > now() - interval '5 minutes' as fresh from rayhab.heartbeats where name = 'worker'");
+            $fresh = (bool) ($hb['fresh'] ?? false);
+            return Response::json(['ok' => $fresh, 'last_run' => $hb ? Util::iso($hb['at']) : null], $fresh ? 200 : 503);
+        });
         Routes\PublicRoutes::register($this);
         Routes\PatientRoutes::register($this);
         Routes\AuthRoutes::register($this);
@@ -58,9 +65,21 @@ final class App
         } catch (ApiError $e) {
             return Response::json($e->body(), $e->status);
         } catch (\Throwable $e) {
-            error_log('[rayhab] ' . $r->id . ' ' . $r->method . ' ' . self::maskUrl($r->path) . ': ' . $e);
+            error_log('[rayhab] ' . $r->id . ' ' . $r->method . ' ' . self::maskUrl($r->path) . ': ' . self::redact((string) $e));
             return Response::json(['error' => ['code' => 'internal', 'message' => 'Something went wrong on our side.']], 500);
         }
+    }
+
+    /* An error on its way to a log, without the personal data PostgreSQL and
+       PHP can quote in one: the values in a DETAIL line or "Key (email)=(…)",
+       the text near a syntax error, and any email address or phone number.
+       Stack traces carry no arguments (zend.exception_ignore_args). */
+    public static function redact(string $text): string
+    {
+        return (string) preg_replace(
+            ['/DETAIL:[^\n]*/', '/\(([^()]*)\)=\(([^()\n]*)\)/', '/(at or near )"[^"\n]*"/', '/[\w.+-]+@[\w-]+(\.[\w-]+)+/', '/\+\d[\d\s-]{6,}\d/', '/\b\d{8,}\b/'],
+            ['DETAIL: (withheld)', '($1)=(…)', '$1"…"', '…@…', '+…', '…'],
+            $text);
     }
 
     /* A payment link's token is in some paths; it never reaches a log. */

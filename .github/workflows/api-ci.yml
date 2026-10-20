@@ -55,6 +55,7 @@ jobs:
           sudo htpasswd -cb /etc/apache2/rayhab-staging.htpasswd rayhab ci
           sudo cp infra/apache/rayhab.conf /etc/apache2/conf-available/rayhab.conf
           sudo cp infra/apache/dr-rayhab.com.conf infra/apache/staging.dr-rayhab.com.conf /etc/apache2/sites-available/
+          sudo install -d /var/log/apache2/rayhab
           sudo a2enconf -q rayhab && sudo a2ensite -q dr-rayhab.com staging.dr-rayhab.com
           sudo apache2ctl -t
       - name: Cron file

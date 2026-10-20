@@ -32,6 +32,8 @@ for k in DATABASE_URL DATABASE_MIGRATE_URL; do
 done
 case "$(val DATABASE_URL)" in *rayhab_app*) ;; *) echo "DATABASE_URL should sign in as rayhab_app (infra/supabase/setup.sql), not postgres." >&2; exit 1 ;; esac
 case "$(val RESEND_API_KEY)" in re_*) ;; *) echo "RESEND_API_KEY should start with re_" >&2; exit 1 ;; esac
+case "$(val BACKUP_RECIPIENT)" in ''|age1*) ;; *) echo "BACKUP_RECIPIENT should be an age public key (age1...)" >&2; exit 1 ;; esac
+[ -n "$(val BACKUP_RECIPIENT)" ] || echo "Note: BACKUP_RECIPIENT is empty, so nightly backups stay unencrypted (runbook step 5.8)."
 
 # APP_SECRET: made once, then kept in your file so later runs reuse it.
 if [ -z "$(val APP_SECRET)" ]; then
@@ -63,7 +65,10 @@ whish=disabled
   echo "STAFF_EMAILS=$(val STAFF_EMAILS)"
   echo "WHISH_DRIVER=$whish"
 } > "$WORK/app.patch"
-echo "DATABASE_MIGRATE_URL=$(val DATABASE_MIGRATE_URL)" > "$WORK/migrate.env"
+{
+  echo "DATABASE_MIGRATE_URL=$(val DATABASE_MIGRATE_URL)"
+  [ -z "$(val BACKUP_RECIPIENT)" ] || echo "BACKUP_RECIPIENT=$(val BACKUP_RECIPIENT)"
+} > "$WORK/migrate.env"
 
 from_addr="$(val EMAIL_FROM | sed -n 's/.*<\(.*\)>.*/\1/p')"
 [ -n "$from_addr" ] || from_addr="$(val EMAIL_FROM)"

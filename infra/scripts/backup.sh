@@ -7,6 +7,11 @@
 # Dumps the rayhab schema with the schema owner's connection (migrate.env)
 # into /srv/rayhab/backups/<env>/, compressed, readable only by deploy, and
 # keeps the last 14. Copy them off the server now and then (runbook step 12).
+#
+# With BACKUP_RECIPIENT in migrate.env (an age public key, age1...), each dump
+# is encrypted to it: the server can write backups but not read them back,
+# and only the private key, kept off the server, opens them. Without it the
+# dump is written unencrypted and the log says so.
 # Once Supabase is on Pro, its daily backups take over and this can stay or go.
 set -euo pipefail
 
@@ -37,10 +42,21 @@ for k, v in (("PGHOST", u.hostname), ("PGPORT", str(u.port or 5432)), ("PGUSER",
 PY
 )"
 unset DATABASE_MIGRATE_URL
+RECIPIENT="${BACKUP_RECIPIENT:-}"
+unset BACKUP_RECIPIENT
 OUT="$DIR/rayhab-$ENV_NAME-$(date -u +%Y%m%dT%H%M%SZ).sql.gz"
-pg_dump --schema=rayhab --no-owner --no-privileges | gzip -9 > "$OUT.part"
+if [ -n "$RECIPIENT" ]; then
+  case "$RECIPIENT" in age1*) ;; *) echo "BACKUP_RECIPIENT should be an age public key (age1...)" >&2; exit 1 ;; esac
+  OUT="$OUT.age"
+  pg_dump --schema=rayhab --no-owner --no-privileges | gzip -9 | age -r "$RECIPIENT" > "$OUT.part"
+  note="encrypted"
+else
+  pg_dump --schema=rayhab --no-owner --no-privileges | gzip -9 > "$OUT.part"
+  note="NOT encrypted: set BACKUP_RECIPIENT (runbook step 5.8)"
+fi
 mv "$OUT.part" "$OUT"
 
-find "$DIR" -maxdepth 1 -name 'rayhab-*.sql.gz' -printf '%f\n' | sort -r | tail -n +"$((KEEP + 1))" |
+# Encrypted and plain dumps count together, newest first.
+find "$DIR" -maxdepth 1 -name 'rayhab-*.sql.gz*' ! -name '*.part' -printf '%f\n' | sort -r | tail -n +"$((KEEP + 1))" |
   while read -r old; do rm -f "${DIR:?}/$old"; done
-echo "$(date -u +%FT%TZ) backup $OUT ($(du -h "$OUT" | cut -f1))"
+echo "$(date -u +%FT%TZ) backup $OUT ($(du -h "$OUT" | cut -f1), $note)"

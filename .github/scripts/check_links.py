@@ -184,3 +184,40 @@ if leaks:
         print("  " + item)
     sys.exit(1)
 print("no secrets in browser scripts")
+
+# ---- Nothing loads from another site ----
+# No analytics, embeds, fonts or scripts from a third party: a visitor's IP
+# and the condition they are reading about stay with the clinic, and no
+# cookie banner is needed. Plain links (<a>) are fine, and so is the
+# canonical <link>, which names this site and loads nothing. Adding anything
+# that does load from elsewhere is a privacy decision (a consent banner and
+# the privacy notice change with it), so it fails the build until then.
+TAG = re.compile(r"<(?!a[\s>])([a-z][a-z0-9-]*)\b([^>]*)>", re.I | re.S)
+OUTSIDE_ATTR = re.compile(r'\b(src|href|srcset|action|data|poster|formaction|background)\s*=\s*["\']?\s*(?:https?:)?//', re.I)
+CANONICAL = re.compile(r'rel=["\']?(canonical|alternate)\b[^>]*href=["\']https://dr-rayhab\.com/|href=["\']https://dr-rayhab\.com/[^>]*rel=["\']?(canonical|alternate)\b', re.I)
+OUTSIDE_CODE = re.compile(r'''(@import\s+(url\()?\s*["']?\s*(https?:)?//|url\(\s*["']?\s*(https?:)?//|\bfetch\(\s*["'`](https?:)?//|\bimport\(\s*["'`](https?:)?//|\bsendBeacon\(\s*["'`](https?:)?//|\.src\s*=\s*["'`](https?:)?//)''', re.I)
+loads = []
+for base, _dirs, files in os.walk(ROOT):
+    for name in files:
+        path = os.path.join(base, name)
+        if name.endswith(".html"):
+            with open(path, encoding="utf-8") as fh:
+                html = fh.read()
+            for m in TAG.finditer(html):
+                tag = m.group(0)
+                if OUTSIDE_ATTR.search(tag) and not (m.group(1).lower() == "link" and CANONICAL.search(tag)):
+                    loads.append("%s:%d  %s" % (path, html.count("\n", 0, m.start()) + 1, tag[:120]))
+            for m in re.finditer(r"<(script|style)\b[^>]*>(.*?)</\1>", html, re.I | re.S):
+                if OUTSIDE_CODE.search(m.group(2)):
+                    loads.append("%s:%d  inline %s loads from another site" % (path, html.count("\n", 0, m.start()) + 1, m.group(1)))
+        elif name.endswith((".css", ".js")) and "vendor" not in base:
+            with open(path, encoding="utf-8") as fh:
+                for no, line in enumerate(fh, 1):
+                    if OUTSIDE_CODE.search(line):
+                        loads.append("%s:%d" % (path, no))
+if loads:
+    print("\n%d things load from another site:" % len(loads))
+    for item in loads:
+        print("  " + item)
+    sys.exit(1)
+print("nothing loads from another site")

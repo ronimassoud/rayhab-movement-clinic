@@ -1,0 +1,42 @@
+name: Dependencies
+
+# Licenses and known vulnerabilities in both npm lockfiles, and a software
+# bill of materials (CycloneDX) for each, kept as a build artifact. Runs on
+# every push that touches a lockfile, and weekly, since new advisories appear
+# without any change here.
+
+on:
+  push:
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'api/dev/package.json'
+      - 'api/dev/package-lock.json'
+      - '.github/scripts/check_deps.mjs'
+      - '.github/workflows/dependencies.yml'
+  schedule:
+    - cron: '0 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Also writes the bill of materials, so it is kept even when a check fails.
+      - name: Licenses, advisories and bill of materials
+        run: node .github/scripts/check_deps.mjs --sbom sbom
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sbom-${{ github.sha }}
+          path: sbom/
+          retention-days: 90

@@ -967,8 +967,8 @@ here so it can be checked on the live server.
     well.
   - Do not list either page in `robots.txt`; the noindex is enough, and a
     Disallow would advertise them.
-- **Security headers:** `Strict-Transport-Security` (after HTTPS is
-  confirmed working), `X-Content-Type-Options: nosniff`,
+- **Security headers:** `Strict-Transport-Security` (one day from the
+  start, a year once production checks out), `X-Content-Type-Options: nosniff`,
   `Referrer-Policy: strict-origin-when-cross-origin`,
   `Permissions-Policy: camera=(), microphone=(), geolocation=()`, and a
   Content-Security-Policy. The only inline scripts are the motion gate on

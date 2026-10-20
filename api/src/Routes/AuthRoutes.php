@@ -38,10 +38,29 @@ final class AuthRoutes
         $write = fn(string $hash, array $p) => $app->db->query('update rayhab.auth_pending set sealed = ? where id_hash = ?',
                                                               [Util::seal($secret, (string) json_encode($p)), $hash]);
         $clear = fn(Response $res) => $res->cookie(Guard::PENDING_COOKIE, '', $app->guard->cookieOpts(0));
+        // Sign-in steps share one limit per address. When it trips, staff hear
+        // about it by email, at most once an hour; the address stays in the logs.
+        $limit = function (Request $r, int $max) use ($app): void {
+            try {
+                $app->guard->limit('login-ip:' . $r->ip, $max, 900);
+            } catch (ApiError $e) {
+                if ($e->status === 429) {
+                    $app->notify->staff('signin_alert', 'Rayhab admin: sign-in attempts blocked',
+                        "Sign-in to the clinic admin was blocked for one address after too many attempts in 15 minutes.
 
-        $app->post('/api/admin/login', function (Request $r) use ($app, $secret) {
+"
+                        . "If this was you, wait 15 minutes and try again. If it was not, nothing is needed: the block lifts by itself, "
+                        . "and every account also needs its authenticator code. If it keeps happening, tell whoever runs the server.
+",
+                        null, 'signin-alert:' . gmdate('YmdH'));
+                }
+                throw $e;
+            }
+        };
+
+        $app->post('/api/admin/login', function (Request $r) use ($app, $secret, $limit) {
             $app->guard->origin($r);
-            $app->guard->limit('login-ip:' . $r->ip, 10, 900);
+            $limit($r, 10);
             $c = new Check($r->json());
             $email = $c->email('email', true);
             $password = (string) ($r->json()['password'] ?? '');
@@ -61,9 +80,9 @@ final class AuthRoutes
             return Response::json(['mfa' => $verified ? 'verify' : 'enroll'])->cookie(Guard::PENDING_COOKIE, $raw, $app->guard->cookieOpts(300));
         });
 
-        $app->post('/api/admin/mfa/enroll', function (Request $r) use ($app, $read, $write) {
+        $app->post('/api/admin/mfa/enroll', function (Request $r) use ($app, $read, $write, $limit) {
             $app->guard->origin($r);
-            $app->guard->limit('login-ip:' . $r->ip, 10, 900);
+            $limit($r, 10);
             [$hash, $p] = $read($r);
             if ($p['enrolled']) throw ApiError::conflict('already_enrolled', 'An authenticator is already set up. Enter its code.');
             $e = $app->auth->enroll($p['accessToken']);
@@ -72,9 +91,9 @@ final class AuthRoutes
             return Response::json(['qr_code' => $e['qrCode'], 'secret' => $e['secret']]);
         });
 
-        $app->post('/api/admin/mfa/verify', function (Request $r) use ($app, $read, $write, $clear, $expired) {
+        $app->post('/api/admin/mfa/verify', function (Request $r) use ($app, $read, $write, $clear, $expired, $limit) {
             $app->guard->origin($r);
-            $app->guard->limit('login-ip:' . $r->ip, 20, 900);
+            $limit($r, 20);
             $code = (string) ($r->json()['code'] ?? '');
             if (!preg_match('/^\d{6}$/', $code)) throw ApiError::validation(['code' => 'Enter the 6-digit code.']);
             [$hash, $p] = $read($r);

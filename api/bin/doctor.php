@@ -54,6 +54,10 @@ try {
     $noPrice ? $warn('no price yet for: ' . implode(', ', $noPrice) . ' (runbook step 11; requests for these cannot be approved)') : $ok('every service has a price');
     $staff = (int) $db->one('select count(*)::int as n from rayhab.practitioners where active and auth_user_id is not null')['n'];
     $staff ? $ok("$staff staff account(s) linked to Supabase Auth") : $bad('no staff account linked yet (runbook step 5.6, the SQL after the first deploy)');
+    $hb = $db->one("select extract(epoch from now() - at)::int as s from rayhab.heartbeats where name = 'worker'");
+    if (!$hb) $warn('the cron worker has not finished a run yet (/etc/cron.d/rayhab; it runs every minute)');
+    elseif ($hb['s'] <= 300) $ok('the cron worker last finished ' . $hb['s'] . 's ago');
+    else $bad('the cron worker last finished ' . round($hb['s'] / 60) . ' minutes ago: see /var/log/rayhab/worker-' . $cfg->env() . '.log');
 } catch (Throwable $e) {
     $bad('database: ' . preg_replace('/password=\S+/', 'password=…', $e->getMessage()));
 }
