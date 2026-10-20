@@ -391,7 +391,9 @@ The booking flow, the patient payment page and the clinic admin talk to the
 booking API in [`api/`](api/), which implements every contract below.
 Getting it running on `dr-rayhab.com` (VPS, DNS, Supabase, WhatsApp, Whish,
 GitHub secrets) is a step-by-step checklist in
-[`docs/production-runbook.md`](docs/production-runbook.md).
+[`docs/production-runbook.md`](docs/production-runbook.md). What to do when
+something goes wrong (a lost device, a leaked key, a possible breach) is in
+[`docs/incident-response.md`](docs/incident-response.md).
 
 Connecting Supabase and Resend takes one local file per environment,
 `infra/connect.production.env` (copied from `infra/connect.example.env`,

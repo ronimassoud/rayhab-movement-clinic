@@ -389,6 +389,8 @@ Apache's logs for the site are kept 14 days, then deleted (`/etc/logrotate.d/ray
 
 **Settings** in `app.env` apply on the next request; there is nothing to restart. New code arrives only through a deploy.
 
+**Incidents:** a lost device, a leaked key, a message to the wrong person, a possible breach: follow [`incident-response.md`](incident-response.md). Fill in its contacts (section 1) before launch.
+
 **Monitoring**
 
 - Add an uptime monitor (UptimeRobot or Better Stack, free), alerting by email, on two URLs:
