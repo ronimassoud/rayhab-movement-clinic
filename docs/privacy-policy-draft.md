@@ -76,6 +76,14 @@ stated in the policy:
 - Server access logs (IP address, browser, pages visited): 14 days, then
   deleted. Payment-link tokens are never written to them.
 - Database backups: the last 14 nightly copies, then deleted.
+- Requests that never became appointments (declined, expired, or cancelled
+  before being confirmed or paid), with their messages: 6 months (183 days)
+  after their last change. **[LEGAL]** to confirm.
+- Website questions: 12 months after being answered. **[LEGAL]** to confirm.
+- Message history (who was sent which message, delivery status): 90 days.
+- Appointments that happened, and payments: kept for now; the legal minimum
+  for clinical and financial records is **[LEGAL]**.
+- The periods are settings (`RETAIN_*` in `app.env`), changed without code.
 - Staff sign-in sessions: deleted when they expire (12 hours).
 
 ## Your rights
@@ -83,6 +91,12 @@ stated in the policy:
 **[LEGAL]** List the rights that apply (access, correction, deletion,
 objection, withdrawal of consent) and how to exercise them, once the legal
 basis and contact address are settled.
+
+What the system can do (2026-10-20): find everything held about a person by
+phone or email, give them a copy, and erase it. Requests that never became
+appointments are deleted completely; appointments that happened or were paid
+keep their date, service and payment but lose name, contact details and note.
+The clinic checks who is asking first (runbook, "Requests about personal data").
 
 ## Security
 
@@ -113,13 +127,13 @@ reviewed against Law 81/2018 before real patient data is stored:
 |---|---|---|
 | Supabase | The database (bookings, contact details, notes, payments, website questions) and staff sign-in | The region chosen for the project (recommended: Frankfurt, EU) |
 | The VPS provider | The server that runs the site and the PHP API (Apache); requests pass through it, but the database is at Supabase | The server's region (recommended: Frankfurt, EU) |
-| Meta (WhatsApp Business Platform) | Patient phone numbers and the message text | Meta's infrastructure |
-| Resend (email) | Staff notices only: a booking reference, the service and time, or that a website question arrived. Questions themselves stay in the database, behind the admin sign-in | The provider's region |
+| Meta (WhatsApp Business Platform) | Patient phone numbers and the message text: appointment day and time, payment links, decline reasons. Messages never name the service, so they don't reveal a condition | Meta's infrastructure |
+| Resend (email) | Staff notices only: a booking reference and its day and time, or that a website question arrived. Questions themselves stay in the database, behind the admin sign-in | The provider's region |
 | Whish Money (when online payment is on) | The payment, its amount and reference | Whish |
 
 The booking consent line "They are not shared with anyone outside the clinic"
-is not accurate once these are in use. A suggested replacement, for the
-clinic's legal adviser to approve:
+was not accurate once these are in use. **Applied on 2026-10-20** (consent
+version `2026-10-20`), still for the clinic's legal adviser to approve:
 
 > I agree to Rayhab storing these details to arrange my appointment. They are
 > kept by the clinic and the services it uses to run bookings and send

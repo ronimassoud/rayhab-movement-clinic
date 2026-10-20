@@ -37,10 +37,11 @@ test('stores a request and answers "requested" with a reference', function () us
     ok(preg_match('/^RQ-\d+$/', $r->data()['reference']), 'a reference');
     $row = $app->db->one('select status, consent_version, consent_whatsapp_at from rayhab.appointments where id = ?', [$r->data()['id']]);
     eq('requested', $row['status']);
-    eq('2026-10-15', $row['consent_version']);
+    eq('2026-10-20', $row['consent_version']);
     ok($row['consent_whatsapp_at'] !== null, 'WhatsApp consent stored');
-    $out = $app->db->query('select channel, template from rayhab.notification_outbox where appointment_id = ? order by id', [$r->data()['id']]);
+    $out = $app->db->query('select channel, template, payload from rayhab.notification_outbox where appointment_id = ? order by id', [$r->data()['id']]);
     eq(['whatsapp:request_received', 'email:new_request'], array_map(static fn($o) => $o['channel'] . ':' . $o['template'], $out));
+    foreach ($out as $o) ok(!str_contains((string) $o['payload'], 'Scoliosis'), $o['template'] . ' does not name the service (it would reveal a condition)');
     $slots = call($app, 'GET', '/api/availability?service_id=assessment&mode=clinic&date=' . fullDay())->data()['slots'];
     eq(false, array_values(array_filter($slots, static fn($s) => $s['time'] === '10:00'))[0]['available'], 'the time is now taken');
 });

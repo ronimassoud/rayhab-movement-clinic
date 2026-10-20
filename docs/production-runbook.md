@@ -232,17 +232,17 @@ Webhook URL: `https://dr-rayhab.com/api/webhooks/whatsapp`, with the verify toke
 
 ### 6.4 Submit the templates
 
-All are category **Utility**, language **English** (`en`). Each must keep **exactly** this name and these variables. The wording can be adjusted, but keep the variables in order.
+All are category **Utility**, language **English** (`en`). Each must keep **exactly** this name and these variables. The wording can be adjusted, but keep the variables in order, and don't name the service or the condition: next to a phone number, that would tell Meta about the patient's health. The patient sees the service on the payment page.
 
 | Name | Body | Button |
 |---|---|---|
-| `rayhab_request_received` | Hello from Rayhab Movement Clinic. We have your request for {{1}} on {{2}} at {{3}} (Beirut time). This is a request, not yet a confirmed appointment; we will reply within one working day. | none |
-| `rayhab_approved_choose_payment` | Good news: your {{1}} on {{2}} at {{3}} (Beirut time) is approved. Please choose how you would like to pay with the button below. The link is private to you. | URL, dynamic: `https://dr-rayhab.com/payment/#t={{1}}`, text "Choose how to pay" |
-| `rayhab_request_declined` | Rayhab Movement Clinic: we are sorry, we cannot take your request for {{1}}. {{2}} You are welcome to request another time on our website. | none |
-| `rayhab_new_time_proposed` | Rayhab Movement Clinic: the time you asked for {{1}} is not available. We can offer {{2}} at {{3}} (Beirut time). Please accept it or ask for another time with the button below. | URL, dynamic: as above, text "Answer" |
-| `rayhab_appointment_cancelled` | Rayhab Movement Clinic: your {{1}} on {{2}} at {{3}} has been cancelled. Reply here if you have any questions. | none |
-| `rayhab_payment_received` | Rayhab Movement Clinic: thank you, we have received your payment of {{1}} for {{2}} on {{3}}. See you soon. | none |
-| `rayhab_appointment_reminder` | Reminder from Rayhab Movement Clinic: your {{1}} is on {{2}} at {{3}} (Beirut time), {{4}}. Wear clothes you can move in and bring any X-ray or report you have. | none |
+| `rayhab_request_received` | Hello from Rayhab Movement Clinic. We have your appointment request for {{1}} at {{2}} (Beirut time). This is a request, not yet a confirmed appointment; we will reply within one working day. | none |
+| `rayhab_approved_choose_payment` | Good news: your appointment on {{1}} at {{2}} (Beirut time) is approved. Please choose how you would like to pay with the button below. The link is private to you. | URL, dynamic: `https://dr-rayhab.com/payment/#t={{1}}`, text "Choose how to pay" |
+| `rayhab_request_declined` | Rayhab Movement Clinic: we are sorry, we cannot take your appointment request. {{1}} You are welcome to request another time on our website. | none |
+| `rayhab_new_time_proposed` | Rayhab Movement Clinic: the time you asked for is not available. We can offer {{1}} at {{2}} (Beirut time). Please accept it or ask for another time with the button below. | URL, dynamic: as above, text "Answer" |
+| `rayhab_appointment_cancelled` | Rayhab Movement Clinic: your appointment on {{1}} at {{2}} has been cancelled. Reply here if you have any questions. | none |
+| `rayhab_payment_received` | Rayhab Movement Clinic: thank you, we have received your payment of {{1}} for your appointment on {{2}}. See you soon. | none |
+| `rayhab_appointment_reminder` | Reminder from Rayhab Movement Clinic: your appointment is on {{1}} at {{2}} (Beirut time), {{3}}. Wear clothes you can move in and bring any X-ray or report you have. | none |
 
 If Meta refuses a `#` in the button URL, use `https://dr-rayhab.com/payment/?t={{1}}`. The payment page moves the token out of the address bar, and Apache keeps it out of its logs.
 
@@ -418,6 +418,24 @@ Apache's logs for the site are kept 14 days, then deleted (`/etc/logrotate.d/ray
   The site works the same way (`/srv/rayhab/production/site/current`). Or re-run the workflow from an older tag.
 
 **Database changes** only ever add, never rename or drop, in the same release, so a rollback of the API keeps working on the newer schema.
+
+**How long data is kept.** The worker deletes old personal data each hour, on the schedule in `app.env`: requests that never became appointments after 183 days, answered website questions after 365, message history after 90 (`RETAIN_*`; 0 keeps that kind forever). Appointments that happened, and payments, are kept. Each deletion run leaves one "Old data deleted (schedule)" entry, with counts only, in the admin's **Activity**. Backups follow 14 days behind.
+
+**Requests about personal data**
+
+A patient may ask what the clinic holds about them, or for it to be erased.
+
+1. **Check it is them.** Reply on the WhatsApp number or email address the request is about, and ask them to confirm from it. Note the request and its date (the incident log template in `incident-response.md` works as a form).
+2. **See what is held:**
+
+   ```bash
+   sudo -u www-data RAYHAB_ENV_FILE=/srv/rayhab/production/app.env php /srv/rayhab/production/api/current/bin/subject.php find --phone "+961 70 000 000" --email them@example.com
+   ```
+
+   Give the phone number, the email address, or both; every booking made its own patient record, and this finds them all.
+3. **For a copy:** run the same with `export` instead of `find`, redirected to a file (`> /root/request.json`). Send it to them securely, then delete the file.
+4. **To erase:** run it with `erase`; it shows what would happen. Add `--yes` to do it. Requests that never became appointments, and their questions and message records, are deleted. Appointments that happened or were paid are kept, but without name, phone, email or note: how long those records must be kept is for the legal adviser. If they have an upcoming appointment, cancel it in the admin first.
+5. **Tell them it is done**, and note the date. Backups still hold the data for up to 14 days, after which it is gone everywhere.
 
 **Secrets**
 

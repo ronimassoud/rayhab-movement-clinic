@@ -583,7 +583,7 @@
       if (method === 'GET' && p === '/admin/session') {
         return ok({ user: { id: 'st_1', name: 'Dr. Rayan Halimeh', role: 'practitioner' },
                     practitioners: clone(PRACTITIONERS), services: SERVICES.map(function (s) { return { id: s.id, name: s.name }; }),
-                    permissions: { confirm_cash: true, manage_schedule: true }, csrf_token: 'demo-csrf', timezone: T.TZ,
+                    permissions: { confirm_cash: true, manage_schedule: true, read_notes: true }, csrf_token: 'demo-csrf', timezone: T.TZ,
                     logout_url: 'login.html?demo=1&signout=1', login_url: 'login.html?demo=1' });
       }
       if (method === 'GET' && p === '/admin/overview') return ok(overview());

@@ -70,7 +70,7 @@
   var CLINIC_WA = '96171383315';
   // Changes whenever the wording of either consent line changes, so the
   // server can store which wording each patient agreed to.
-  var CONSENT_VERSION = '2026-10-15';
+  var CONSENT_VERSION = '2026-10-20';
 
   var DOW = T.DOW, DOW_FULL = T.DOW_FULL, MON = T.MON, MON_FULL = T.MON_FULL;
 

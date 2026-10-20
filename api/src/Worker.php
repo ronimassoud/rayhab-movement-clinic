@@ -8,7 +8,8 @@
      expireHolds  requests nobody answered in time, and unanswered new times
      reconcile    ask Whish about payments still pending after a minute
      remind       WhatsApp reminder about 24 hours before a confirmed visit
-     sweep        remove expired sessions, sign-in steps, keys and counters */
+     sweep        remove expired sessions, sign-in steps, keys and counters,
+                  and personal data past its retention period (Retention) */
 declare(strict_types=1);
 
 namespace Rayhab;
@@ -90,7 +91,7 @@ final class Worker
                                          and a.starts_at between now() + interval '20 hours' and now() + interval '28 hours'");
         foreach ($due as $a) {
             $this->app->db->tx(function (Db $t) use ($a) {
-                $this->app->notify->whatsapp($a, 'reminder', [$a['service_name'], Time::dayLabel($a['local_date'], true), $a['local_time'],
+                $this->app->notify->whatsapp($a, 'reminder', [Time::dayLabel($a['local_date'], true), $a['local_time'],
                     $a['mode'] === 'online' ? 'Online, video call' : $this->app->cfg->get('CLINIC_LOCATION')], null, 'reminder:' . $a['id']);
                 $t->query('update rayhab.appointments set reminded_at = now() where id = ?', [$a['id']]);
             });
@@ -105,6 +106,7 @@ final class Worker
         $db->query('delete from rayhab.auth_pending where expires_at < now()');
         $db->query("delete from rayhab.idempotency_keys where created_at < now() - interval '2 days'");
         $db->query("delete from rayhab.rate_limits where window_start < now() - interval '1 day'");
+        (new Retention($db, $this->app->cfg))->run();
     }
 
     /** The cron run: everything once, then a heartbeat (only if all of it worked). */

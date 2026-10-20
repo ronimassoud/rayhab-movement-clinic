@@ -123,7 +123,9 @@ final class Guard
     /** @return array{confirm_cash:bool,manage_schedule:bool} */
     public static function permissions(string $role): array
     {
-        return ['confirm_cash' => true, 'manage_schedule' => $role !== 'reception'];
+        // Reception arranges times and takes cash; the patient's note (often
+        // health information) is for the practitioners only.
+        return ['confirm_cash' => true, 'manage_schedule' => $role !== 'reception', 'read_notes' => $role !== 'reception'];
     }
 
     public static function can(array $staff, string $what): void

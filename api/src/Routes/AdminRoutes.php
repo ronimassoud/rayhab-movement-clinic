@@ -106,8 +106,9 @@ final class AdminRoutes
             elseif (!empty($q['payment_method'])) { $where[] = 'pi.method = ?'; $params[] = $q['payment_method']; }
             if (!empty($q['date_from'])) { $where[] = 'a.local_date >= ?'; $params[] = $q['date_from']; }
             if (!empty($q['date_to'])) { $where[] = 'a.local_date <= ?'; $params[] = $q['date_to']; }
-            // Only requests that came with a note (the admin's Enquiries > Booking notes).
-            if (!empty($q['has_note'])) $where[] = "a.note <> ''";
+            // Only requests that came with a note (the admin's Enquiries > Booking notes);
+            // none for a role that may not read notes.
+            if (!empty($q['has_note'])) $where[] = Guard::permissions($s['role'])['read_notes'] ? "a.note <> ''" : 'false';
             if (!empty($q['q'])) {
                 $needle = '%' . str_replace(['%', '_'], '', mb_strtolower(trim($q['q']))) . '%';
                 $where[] = "(lower(pt.first_name || ' ' || pt.last_name) like ? or lower(a.reference) like ? or pt.phone_e164 like ? or lower(coalesce(pt.email, '')) like ?)";
@@ -125,8 +126,14 @@ final class AdminRoutes
             $s = $staff($r);
             $a = $app->records->load($p['id'], $s['role']);
             if (!$a) throw ApiError::notFound('No such appointment.');
-            $events = $app->db->query('select id, at, type, actor_kind, actor_name, appointment_id, summary from rayhab.events
-                                        where appointment_id = ? order by at desc, id desc', [$a['id']]);
+            // Who opened which record, at most once an hour per person and record,
+            // so an investigation can tell who saw a patient's details.
+            $app->db->query("insert into rayhab.events (type, appointment_id, actor_kind, actor_id, actor_name, summary, request_id)
+                             select 'viewed', ?, 'staff', ?, ?, 'Opened the record', ?
+                             where not exists (select 1 from rayhab.events where type = 'viewed' and appointment_id = ? and actor_id = ?
+                                               and at > now() - interval '1 hour')", [$a['id'], $s['id'], $s['name'], $r->id, $a['id'], $s['id']]);
+            $events = $app->db->query("select id, at, type, actor_kind, actor_name, appointment_id, summary from rayhab.events
+                                        where appointment_id = ? and type <> 'viewed' order by at desc, id desc", [$a['id']]);
             return Response::json(['appointment' => $a, 'events' => array_map(static fn($e) => Records::eventView($e + ['reference' => $a['reference']]), $events)]);
         });
 
@@ -249,7 +256,8 @@ final class AdminRoutes
             $q = $r->query;
             $where = [];
             $params = [];
-            if (!empty($q['type'])) { $where[] = 'e.type = ?'; $params[] = $q['type']; }
+            // Record views are listed only when asked for, so they don't bury the changes.
+            if (!empty($q['type'])) { $where[] = 'e.type = ?'; $params[] = $q['type']; } else $where[] = "e.type <> 'viewed'";
             if (!empty($q['appointment_id'])) { $where[] = 'e.appointment_id = ?'; $params[] = $q['appointment_id']; }
             $w = $where ? ' where ' . implode(' and ', $where) : '';
             [$size, $page, $offset] = self::page($q);
@@ -293,7 +301,7 @@ final class AdminRoutes
                     $set('approved', ', hold_expires_at = null');
                     $link = $app->links->issue($apptId, new \DateTimeImmutable((string) $a['starts_at']));
                     $log('approved', 'Approved. WhatsApp sent with the payment link', 'approved');
-                    $app->notify->whatsapp($m, 'approved', [$m['service_name'], Time::dayLabel($m['local_date'], true), $m['local_time']], $link, 'approved:' . $apptId . ':' . microtime(true));
+                    $app->notify->whatsapp($m, 'approved', [Time::dayLabel($m['local_date'], true), $m['local_time']], $link, 'approved:' . $apptId . ':' . microtime(true));
                 } elseif ($action === 'decline') {
                     $reason = trim((string) ($body['reason'] ?? ''));
                     if ($reason === '' || mb_strlen($reason) > 120) throw ApiError::validation(['reason' => 'Choose a reason.']);
@@ -301,7 +309,7 @@ final class AdminRoutes
                     $set('declined', ', hold_expires_at = null');
                     $app->links->revoke($apptId);
                     $log('declined', 'Declined: ' . $reason, 'declined');
-                    $app->notify->whatsapp($m, 'declined', [$m['service_name'], $message !== '' ? $message : $reason], null, 'declined:' . $apptId);
+                    $app->notify->whatsapp($m, 'declined', [$message !== '' ? $message : $reason], null, 'declined:' . $apptId);
                 } elseif ($action === 'reschedule') {
                     $c = new Check($body);
                     $date = $c->match('date', Check::DAY, 'Choose a day.');
@@ -319,13 +327,13 @@ final class AdminRoutes
                               [$start->format(DATE_ATOM), $end->format(DATE_ATOM), $date, $time, $app->cfg->int('HOLD_HOURS'), $apptId]);
                     $link = $app->links->issue($apptId, $start);
                     $log('reschedule_proposed', 'New time proposed: ' . Time::dayLabel($date) . ' ' . $time, 'reschedule_requested');
-                    $app->notify->whatsapp($m, 'new_time', [$m['service_name'], Time::dayLabel($date, true), $time], $link, 'newtime:' . $apptId . ':' . $date . $time);
+                    $app->notify->whatsapp($m, 'new_time', [Time::dayLabel($date, true), $time], $link, 'newtime:' . $apptId . ':' . $date . $time);
                 } elseif ($action === 'cancel') {
                     $reason = mb_substr(trim((string) ($body['reason'] ?? '')), 0, 500);
                     $set('cancelled', ', hold_expires_at = null');
                     $app->links->revoke($apptId);
                     $log('cancelled', 'Cancelled' . ($reason !== '' ? ': ' . $reason : ''), 'cancelled');
-                    $app->notify->whatsapp($m, 'cancelled', [$m['service_name'], Time::dayLabel($m['local_date'], true), $m['local_time']], null, 'cancelled:' . $apptId);
+                    $app->notify->whatsapp($m, 'cancelled', [Time::dayLabel($m['local_date'], true), $m['local_time']], null, 'cancelled:' . $apptId);
                 } elseif ($action === 'complete') {
                     $set('completed');
                     $log('completed', 'Marked completed', 'completed');

@@ -13,15 +13,18 @@ namespace Rayhab;
 final class Notify
 {
     /* The WhatsApp templates to submit to Meta (exact wording in the runbook).
-       Parameters are positional: {{1}}, {{2}}, … */
+       Parameters are positional: {{1}}, {{2}}, … No message names the
+       service: "Scoliosis assessment" next to a phone number would tell Meta
+       about the patient's health. The service shows on the private payment
+       page and in the admin only. */
     public const TEMPLATES = [
-        'request_received' => 'rayhab_request_received',      // service, day, time
-        'approved' => 'rayhab_approved_choose_payment',        // service, day, time; URL button: the link
-        'declined' => 'rayhab_request_declined',               // service, reason
-        'new_time' => 'rayhab_new_time_proposed',              // service, new day, new time; URL button
-        'cancelled' => 'rayhab_appointment_cancelled',         // service, day, time
-        'payment_received' => 'rayhab_payment_received',       // amount, service, day
-        'reminder' => 'rayhab_appointment_reminder',           // service, day, time, place
+        'request_received' => 'rayhab_request_received',      // day, time
+        'approved' => 'rayhab_approved_choose_payment',        // day, time; URL button: the link
+        'declined' => 'rayhab_request_declined',               // reason
+        'new_time' => 'rayhab_new_time_proposed',              // new day, new time; URL button
+        'cancelled' => 'rayhab_appointment_cancelled',         // day, time
+        'payment_received' => 'rayhab_payment_received',       // amount, day
+        'reminder' => 'rayhab_appointment_reminder',           // day, time, place
     ];
 
     public function __construct(private Db $db, private Config $cfg) {}

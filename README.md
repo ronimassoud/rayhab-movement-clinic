@@ -1006,8 +1006,16 @@ here so it can be checked on the live server.
 Drafts, not for publication: [`docs/privacy-policy-draft.md`](docs/privacy-policy-draft.md)
 and [`docs/terms-draft.md`](docs/terms-draft.md). They record what the site
 actually collects and promises, and list every decision and legal review still
-needed. The booking consent sentence "They are not shared with anyone outside
-the clinic" must be revised once the backend uses outside processors.
+needed. The booking consent line now says details are kept "by the clinic and
+the services it uses to run bookings and send messages" (consent version
+2026-10-20), pending the legal adviser's approval.
+
+Personal data on the server: old data is deleted on a schedule
+(`RETAIN_*` in `app.env`, `api/src/Retention.php`); a person's data is
+found, exported or erased with `api/bin/subject.php` (runbook, "Requests
+about personal data"); staff with the `reception` role do not see patients'
+notes, and opening a record is logged. Images and their sources:
+[`docs/asset-register.md`](docs/asset-register.md).
 
 ### Acceptance checks for the backend
 

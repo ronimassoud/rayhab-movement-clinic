@@ -40,6 +40,8 @@ final class Config
         'CLINIC_NAME' => 'Rayhab Movement Clinic',
         'CLINIC_PHONE' => '+961 71 383 315',
         'CLINIC_LOCATION' => 'Rayhab Movement Clinic, Beirut',
+        // How long personal data is kept, in days; 0 keeps it (Retention.php).
+        'RETAIN_UNCONFIRMED_DAYS' => '183', 'RETAIN_ANSWERED_QUESTION_DAYS' => '365', 'RETAIN_MESSAGE_DAYS' => '90',
     ];
 
     /** @var array<string,string> */

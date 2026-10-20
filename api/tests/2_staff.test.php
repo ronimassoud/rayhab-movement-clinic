@@ -32,7 +32,7 @@ test('the session gives permissions, a CSRF token and the sign-in links', functi
     $s = call($app, 'GET', '/api/admin/session', null, [], $staff['cookies'])->data();
     eq('Dr. Rayan Halimeh', $s['user']['name']);
     eq('admin', $s['user']['role']);
-    eq(['confirm_cash' => true, 'manage_schedule' => true], $s['permissions']);
+    eq(['confirm_cash' => true, 'manage_schedule' => true, 'read_notes' => true], $s['permissions']);
     eq('/admin/login.html?signout=1', $s['logout_url']);
 });
 

@@ -70,7 +70,7 @@ function booking(array $over = []): array
         'service_id' => 'assessment', 'practitioner_id' => null, 'for_whom' => 'me', 'mode' => 'clinic',
         'date' => fullDay(), 'time' => '09:00', 'timezone' => 'Asia/Beirut',
         'first_name' => 'Maya', 'last_name' => 'Khoury', 'phone' => '+96170000101', 'email' => 'maya@example.com', 'note' => '',
-        'consents' => ['storage' => true, 'whatsapp' => true, 'version' => '2026-10-15'], 'website' => '', 'elapsed_ms' => 40000,
+        'consents' => ['storage' => true, 'whatsapp' => true, 'version' => '2026-10-20'], 'website' => '', 'elapsed_ms' => 40000,
     ], $over);
 }
 

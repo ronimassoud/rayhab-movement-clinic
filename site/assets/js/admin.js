@@ -873,7 +873,7 @@
             ['No suitable time available', 'Not the right service for this concern', 'Outside what the clinic treats', 'Duplicate request', 'Other']
               .map(function (r) { return '<option>' + r + '</option>'; }).join('') + '</select>') +
           field('dc-msg', 'Message to the patient (optional)', '<textarea class="textarea" id="dc-msg" maxlength="500" placeholder="Sent with the WhatsApp message."></textarea>') +
-          '</div><p class="adm-dl-p">The time is released and the patient is told by WhatsApp.</p>',
+          '</div><p class="adm-dl-p">The time is released and the patient is told by WhatsApp. The message passes through Meta, so leave out medical details.</p>',
         check: function () { return $('dc-reason').value ? null : ['dc-reason', 'Choose a reason.']; },
         fieldFor: { reason: 'dc-reason', message: 'dc-msg' },
         send: function (key) { return A.decline(a.id, { reason: $('dc-reason').value, message: $('dc-msg').value.trim() || null }, key); },

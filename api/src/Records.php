@@ -90,7 +90,8 @@ final class Records
             'local_time' => $row['local_time'],
             'timezone' => Time::TZ,
             'patient' => ['name' => trim($row['first_name'] . ' ' . $row['last_name']), 'phone' => $row['phone_e164'], 'email' => $row['email'] ?: null],
-            'note' => (string) $row['note'],
+            // The patient's own view (no role) and practitioners see the note; reception does not.
+            'note' => $role === null || Guard::permissions($role)['read_notes'] ? (string) $row['note'] : null,
             'hold_expires_at' => Util::iso($row['hold_expires_at']),
             'payment' => $this->payment($row, $txs, $role),
             'financial_closed_at' => Util::iso($row['financial_closed_at']),

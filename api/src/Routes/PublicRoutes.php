@@ -134,9 +134,9 @@ final class PublicRoutes
                 Records::log($t, 'requested', $id, ['kind' => 'patient', 'name' => $first . ' ' . $last],
                              'Requested ' . $svc['name'] . ' for ' . Time::dayLabel($date) . ' ' . $time, null, 'requested', $r->id);
                 $msg = ['id' => $id, 'phone_e164' => $phone, 'consent_whatsapp_at' => $appt['consent_whatsapp_at']];
-                $app->notify->whatsapp($msg, 'request_received', [$svc['name'], Time::dayLabel($date, true), $time], null, 'received:' . $id);
+                $app->notify->whatsapp($msg, 'request_received', [Time::dayLabel($date, true), $time], null, 'received:' . $id);
                 $app->notify->staff('new_request', 'New booking request ' . $ref,
-                    "A new booking request is waiting for your reply.\n\n" . $ref . ': ' . $svc['name'] . ', ' . Time::dayLabel($date, true) . ' at ' . $time
+                    "A new booking request is waiting for your reply.\n\n" . $ref . ': ' . Time::dayLabel($date, true) . ' at ' . $time
                     . ' (Beirut time), ' . ($mode === 'online' ? 'online' : 'at the clinic') . ".\n\nReview it: " . $app->notify->adminUrl('#/requests') . "\n",
                     $id, 'new_request:' . $id);
                 return Response::json(['status' => 'requested', 'id' => $id, 'reference' => $ref, 'hold_expires_at' => Util::iso($appt['hold_expires_at'])], 201);

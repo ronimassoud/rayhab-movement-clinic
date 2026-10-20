@@ -81,7 +81,10 @@
     expired:            'Expired',
     enquiry_answered:   'Website question answered',
     enquiry_reopened:   'Website question reopened',
-    signed_in:          'Signed in'
+    signed_in:          'Signed in',
+    viewed:             'Record opened',
+    retention:          'Old data deleted (schedule)',
+    subject_erased:     'Personal data erased (request)'
   };
 
   var STRINGS = {

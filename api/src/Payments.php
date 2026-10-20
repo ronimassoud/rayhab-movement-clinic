@@ -25,7 +25,7 @@ final class Payments
                                          where id = ? and financial_closed_at is null returning id', [$pi['appointment_id']]);
             if ($closed) Records::log($this->db, 'financial_closed', $pi['appointment_id'], ['kind' => 'system', 'name' => 'System'], 'Financial case closed');
             $m = $this->notify->row($pi['appointment_id']);
-            if ($m) $this->notify->whatsapp($m, 'payment_received', [Util::money((int) $pi['amount'], $pi['currency']), $m['service_name'],
+            if ($m) $this->notify->whatsapp($m, 'payment_received', [Util::money((int) $pi['amount'], $pi['currency']),
                                                                      Time::dayLabel($m['local_date'], true)], null, 'paid:' . $pi['appointment_id']);
         }
         return $pi;
