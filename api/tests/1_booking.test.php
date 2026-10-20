@@ -31,7 +31,7 @@ test('offers the clinic grid on an open day, nothing when closed or out of range
 });
 
 test('stores a request and answers "requested" with a reference', function () use ($app) {
-    $r = call($app, 'POST', '/api/appointments', booking(['time' => '10:00']));
+    $r = call($app, 'POST', '/api/appointments', booking(['time' => '10:00', 'note' => 'Thoracic curve, 24 degrees']));
     eq(201, $r->status, $r->body);
     eq('requested', $r->data()['status']);
     ok(preg_match('/^RQ-\d+$/', $r->data()['reference']), 'a reference');
@@ -42,6 +42,10 @@ test('stores a request and answers "requested" with a reference', function () us
     $out = $app->db->query('select channel, template, payload from rayhab.notification_outbox where appointment_id = ? order by id', [$r->data()['id']]);
     eq(['whatsapp:request_received', 'email:new_request'], array_map(static fn($o) => $o['channel'] . ':' . $o['template'], $out));
     foreach ($out as $o) ok(!str_contains((string) $o['payload'], 'Scoliosis'), $o['template'] . ' does not name the service (it would reveal a condition)');
+    // The staff email goes through Resend: a reference, a day and a time, and nothing about the patient.
+    $mail = (string) array_values(array_filter($out, static fn($o) => $o['channel'] === 'email'))[0]['payload'];
+    foreach (['Maya', 'Khoury', '70000101', 'maya@example.com', 'Thoracic'] as $p) ok(!str_contains($mail, $p), "the staff email leaves out \"$p\"");
+    ok(str_contains($mail, $r->data()['reference']), 'the staff email carries the reference');
     $slots = call($app, 'GET', '/api/availability?service_id=assessment&mode=clinic&date=' . fullDay())->data()['slots'];
     eq(false, array_values(array_filter($slots, static fn($s) => $s['time'] === '10:00'))[0]['available'], 'the time is now taken');
 });

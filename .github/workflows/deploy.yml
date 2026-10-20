@@ -99,3 +99,30 @@ jobs:
           test "$(curl -s $AUTH -o /dev/null -w '%{http_code}' "$BASE/no-such-page")" = 404
           curl -fsS $AUTH "$BASE/api/services" | grep -q '"services"'
           test "$(curl -s -o /dev/null -w '%{http_code}' "http://${BASE#https://}/")" = 301
+
+      # The security headers, checked on what the server actually sends
+      # (the audit's verification plan), and old TLS refused.
+      - name: Security headers and TLS
+        run: |
+          BASE="${{ inputs.environment == 'production' && 'https://dr-rayhab.com' || 'https://staging.dr-rayhab.com' }}"
+          AUTH=""
+          if [ "${{ inputs.environment }}" = staging ]; then AUTH="-u rayhab:${{ secrets.STAGING_BASIC_AUTH }}"; fi
+          has() {   # has <path> <header line, start, case-insensitive>
+            curl -sS $AUTH -o /dev/null -D - "$BASE$1" | tr -d '\r' | grep -qi "^$2" || { echo "$1 is missing: $2" >&2; exit 1; }
+          }
+          has / 'strict-transport-security: max-age='
+          has / 'content-security-policy: default-src '"'"'self'"'"
+          has / 'x-content-type-options: nosniff'
+          has / 'x-frame-options: deny'
+          has / 'referrer-policy: strict-origin-when-cross-origin'
+          has / 'permissions-policy: camera=()'
+          has /admin/ 'cache-control: no-store'
+          has /admin/ 'x-robots-tag: noindex'
+          has /payment/ 'cache-control: no-store'
+          has /payment/ 'referrer-policy: no-referrer'
+          has /payment/ 'x-robots-tag: noindex'
+          # Staff data needs a session, whatever the page does.
+          test "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/admin/appointments")" = 401
+          # TLS 1.0 and 1.1 must be refused.
+          if curl -s -o /dev/null --tlsv1.0 --tls-max 1.1 "$BASE/" 2>/dev/null; then echo "the server accepts TLS older than 1.2" >&2; exit 1; fi
+          echo "security headers and TLS ok"

@@ -6,7 +6,9 @@
 #
 # Dumps the rayhab schema with the schema owner's connection (migrate.env)
 # into /srv/rayhab/backups/<env>/, compressed, readable only by deploy, and
-# keeps the last 14. Copy them off the server now and then (runbook step 12).
+# keeps the last 14. With BACKUP_COPY_TO set (below) it also mirrors the
+# encrypted ones to another machine; otherwise copy one off by hand now and
+# then (runbook step 12).
 #
 # With BACKUP_RECIPIENT in migrate.env (an age public key, age1...), each dump
 # is encrypted to it: the server can write backups but not read them back,
@@ -60,3 +62,16 @@ mv "$OUT.part" "$OUT"
 find "$DIR" -maxdepth 1 -name 'rayhab-*.sql.gz*' ! -name '*.part' -printf '%f\n' | sort -r | tail -n +"$((KEEP + 1))" |
   while read -r old; do rm -f "${DIR:?}/$old"; done
 echo "$(date -u +%FT%TZ) backup $OUT ($(du -h "$OUT" | cut -f1), $note)"
+
+# Off the server, with BACKUP_COPY_TO in migrate.env (user@host:/path, reached
+# with deploy's SSH key). The encrypted dumps only, mirrored: the copy holds
+# the same last 14 as here, so the 14-day backup period holds everywhere. An
+# unencrypted dump never leaves the server.
+if [ -n "${BACKUP_COPY_TO:-}" ]; then
+  if [ -z "$RECIPIENT" ]; then
+    echo "$(date -u +%FT%TZ) not copied off the server: only encrypted backups leave it (set BACKUP_RECIPIENT)" >&2
+    exit 1
+  fi
+  rsync -a --delete -e "ssh -o BatchMode=yes" --include="rayhab-$ENV_NAME-*.sql.gz.age" --exclude='*' "$DIR/" "$BACKUP_COPY_TO/"
+  echo "$(date -u +%FT%TZ) copied the encrypted backups to $BACKUP_COPY_TO"
+fi

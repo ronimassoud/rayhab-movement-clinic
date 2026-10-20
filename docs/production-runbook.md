@@ -180,6 +180,20 @@ age -d -i rayhab-backup-key.txt <file>.sql.gz.age | gunzip | psql "<the staging 
 
 (For an older unencrypted `.sql.gz`, skip the `age` step.)
 
+**Keep a copy off the server.** If the server is lost, so are the backups on it. Any machine that accepts SSH and has `rsync` can hold a copy: a storage box from the server's host, or a small second server in another region. It is another service holding (encrypted) patient data, so add it to the processor register.
+
+1. On the server, give the `deploy` user a key, and allow it on the target:
+
+   ```bash
+   sudo -u deploy ssh-keygen -t ed25519 -N "" -f /home/deploy/.ssh/id_ed25519
+   sudo cat /home/deploy/.ssh/id_ed25519.pub
+   ```
+
+   Add the printed line to the target's `authorized_keys`, then connect once so the server learns the target's host key: `sudo -u deploy ssh backup@your-backup-host`.
+2. Set `BACKUP_COPY_TO=backup@your-backup-host:/backups/rayhab/production` (and `.../staging` in the staging file), and run `push-settings.sh` again. It refuses without `BACKUP_RECIPIENT`: an unencrypted dump never leaves the server.
+
+Each night's backup log then ends "copied the encrypted backups to ...". The copy is mirrored, so it holds the same last 14 as the server.
+
 Free projects are also **paused after a week without activity**. The cron worker queries the database every minute, which should keep it active. Still, check the project's status in the dashboard during the first weeks; a paused project is restored from the dashboard in a few minutes, and the site shows its "not available" messages meanwhile.
 
 **When you upgrade production to Pro:** Supabase's daily backups start (keep the nightly dump too if you like a copy on your own server). Pausing no longer applies. Point-in-Time Recovery is an optional add-on. Nothing in the code or settings changes.
@@ -444,7 +458,7 @@ A patient may ask what the clinic holds about them, or for it to be erased.
 
 **Backups**
 
-- **On Free:** the nightly dumps in `/srv/rayhab/backups/` are the only backups, and they sit on the same server. Once a month, copy the newest one somewhere else (`scp deploy@dr-rayhab.com:/srv/rayhab/backups/production/<file> .`). Encrypted (step 5.8), a copy is safe in ordinary cloud storage. The log is `/var/log/rayhab/backup.log`; check it says "encrypted".
+- **On Free:** the nightly dumps in `/srv/rayhab/backups/` are the only backups, and they sit on the same server. With `BACKUP_COPY_TO` set (step 5.8) they are copied off the server every night; otherwise, once a month, copy the newest one somewhere else (`scp deploy@dr-rayhab.com:/srv/rayhab/backups/production/<file> .`). Encrypted (step 5.8), a copy is safe in ordinary cloud storage. The log is `/var/log/rayhab/backup.log`; check it says "encrypted".
 - **On Pro:** Supabase keeps daily backups as well.
 - Either way, restore a copy into the staging project once a quarter (step 5.8), so you know a restore works.
 

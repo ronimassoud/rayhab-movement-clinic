@@ -34,6 +34,10 @@ case "$(val DATABASE_URL)" in *rayhab_app*) ;; *) echo "DATABASE_URL should sign
 case "$(val RESEND_API_KEY)" in re_*) ;; *) echo "RESEND_API_KEY should start with re_" >&2; exit 1 ;; esac
 case "$(val BACKUP_RECIPIENT)" in ''|age1*) ;; *) echo "BACKUP_RECIPIENT should be an age public key (age1...)" >&2; exit 1 ;; esac
 [ -n "$(val BACKUP_RECIPIENT)" ] || echo "Note: BACKUP_RECIPIENT is empty, so nightly backups stay unencrypted (runbook step 5.8)."
+case "$(val BACKUP_COPY_TO)" in ''|*@*:/*) ;; *) echo "BACKUP_COPY_TO should look like user@host:/path" >&2; exit 1 ;; esac
+if [ -n "$(val BACKUP_COPY_TO)" ] && [ -z "$(val BACKUP_RECIPIENT)" ]; then
+  echo "BACKUP_COPY_TO needs BACKUP_RECIPIENT: only encrypted backups leave the server." >&2; exit 1
+fi
 
 # APP_SECRET: made once, then kept in your file so later runs reuse it.
 if [ -z "$(val APP_SECRET)" ]; then
@@ -68,6 +72,7 @@ whish=disabled
 {
   echo "DATABASE_MIGRATE_URL=$(val DATABASE_MIGRATE_URL)"
   [ -z "$(val BACKUP_RECIPIENT)" ] || echo "BACKUP_RECIPIENT=$(val BACKUP_RECIPIENT)"
+  [ -z "$(val BACKUP_COPY_TO)" ] || echo "BACKUP_COPY_TO=$(val BACKUP_COPY_TO)"
 } > "$WORK/migrate.env"
 
 from_addr="$(val EMAIL_FROM | sed -n 's/.*<\(.*\)>.*/\1/p')"
