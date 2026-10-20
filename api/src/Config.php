@@ -33,7 +33,7 @@ final class Config
         'STAFF_EMAILS' => '',
         'WHISH_DRIVER' => 'disabled',
         'WHISH_BASE_URL' => '', 'WHISH_MERCHANT_ID' => '', 'WHISH_SECRET' => '',
-        'LEAD_DAYS' => '1', 'HORIZON_DAYS' => '90', 'HOLD_HOURS' => '24', 'LINK_TTL_DAYS' => '14',
+        'LEAD_DAYS' => '1', 'HORIZON_DAYS' => '90', 'HOLD_HOURS' => '72', 'LINK_TTL_DAYS' => '14',
         'PAYMENT_DEADLINE_HOURS' => '24',
         'POLICY_CASH_TEXT' => 'Pay at reception when you come in.',
         'POLICY_WHISH_TEXT' => 'You pay now through Whish. Your booking is secured once Whish confirms the payment.',

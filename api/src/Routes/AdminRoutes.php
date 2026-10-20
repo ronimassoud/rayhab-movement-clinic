@@ -72,13 +72,17 @@ final class AdminRoutes
             $received = $app->db->query("select currency, sum(amount)::int as amount from rayhab.payment_transactions
                                           where status = 'verified' and updated_at > now() - interval '7 days' group by currency");
             $alerts = [];
-            foreach ($app->db->query("select a.id, a.reference, p.first_name, p.last_name from rayhab.appointments a join rayhab.patients p on p.id = a.patient_id
-                                       where a.status = 'requested' and a.created_at < now() - interval '1 day' order by a.created_at") as $x) {
-                $alerts[] = ['level' => 'warn', 'text' => $x['reference'] . ' (' . $x['first_name'] . ' ' . $x['last_name'] . ') has waited more than a day for a reply.', 'appointment_id' => $x['id']];
-            }
-            foreach ($app->db->query("select id, reference from rayhab.appointments where status = 'requested'
-                                       and hold_expires_at < now() + interval '3 hours' and created_at >= now() - interval '1 day'") as $x) {
+            // A hold about to lapse is the more urgent warning, so a request gets that one
+            // instead of "waited more than a day", whatever HOLD_HOURS is.
+            $ending = $app->db->query("select id, reference from rayhab.appointments where status = 'requested'
+                                        and hold_expires_at < now() + interval '3 hours' order by hold_expires_at");
+            foreach ($ending as $x) {
                 $alerts[] = ['level' => 'warn', 'text' => $x['reference'] . ': the hold on this time ends within 3 hours. Reply before it lapses.', 'appointment_id' => $x['id']];
+            }
+            foreach ($app->db->query("select a.id, a.reference, p.first_name, p.last_name from rayhab.appointments a join rayhab.patients p on p.id = a.patient_id
+                                       where a.status = 'requested' and a.created_at < now() - interval '1 day'
+                                         and not (a.id = any(?::text[])) order by a.created_at", [array_column($ending, 'id')]) as $x) {
+                $alerts[] = ['level' => 'warn', 'text' => $x['reference'] . ' (' . $x['first_name'] . ' ' . $x['last_name'] . ') has waited more than a day for a reply.', 'appointment_id' => $x['id']];
             }
             foreach ($app->db->query("select distinct a.id, a.reference from rayhab.payment_transactions t
                                         join rayhab.payment_intents pi on pi.id = t.intent_id join rayhab.appointments a on a.id = pi.appointment_id

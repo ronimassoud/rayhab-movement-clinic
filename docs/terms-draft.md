@@ -2,7 +2,7 @@
 
 **The page itself:** `site/terms.html` is the patient-facing draft, "Booking, payment and cancellation", written from this file and the booking system as built on 2026-10-20; the decisions below are its highlighted placeholders. Review it on staging at `/terms.html`. Like the privacy page, it is hidden from search engines, linked from nowhere, and its `data-draft` attribute stops any deploy to production until removed. Once approved: resolve the placeholders, remove `data-draft`, the banner and the noindex tag, and link it from the booking review step, the payment page and the footer.
 
-**Found while drafting it:** the site promises a reply within one working day, but a requested time is held for only 24 hours (`HOLD_HOURS`). A request made on a Saturday afternoon lapses on Sunday, before a Monday reply. Either raise `HOLD_HOURS` (for example to 72) or reply within 24 hours every day. **[DECIDE]**
+**Found while drafting it, and decided:** the site promises a reply within one working day, but a requested time was held for only 24 hours, so a request made on a Saturday afternoon lapsed before a Monday reply. The hold is now 72 hours (`HOLD_HOURS`, 2026-10-20), which covers a weekend; a proposed new time is held as long.
 
 **Status:** not a terms-and-conditions document. The site sells nothing
 online, has no accounts and takes no payment today, so full website terms are

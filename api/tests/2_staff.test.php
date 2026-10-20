@@ -157,6 +157,22 @@ test('booking notes: only requests with a note, newest first', function () use (
     ok(!in_array('', $notes, true), 'no empty notes');
 });
 
+test('a request holds its time for 72 hours, and the overview warns before the hold lapses', function () use ($app, $staff, $req) {
+    $ending = $req('09:00', fullDay(9));
+    $waiting = $req('10:00', fullDay(9));
+    $hours = (float) $app->db->one("select extract(epoch from hold_expires_at - created_at) / 3600 as h from rayhab.appointments where id = ?", [$ending])['h'];
+    ok(abs($hours - 72) < 0.1, "held for 72 hours (got $hours)");
+    // Two days in, with two hours left; and one day in, with plenty left.
+    $app->db->query("update rayhab.appointments set created_at = now() - interval '70 hours', hold_expires_at = now() + interval '2 hours' where id = ?", [$ending]);
+    $app->db->query("update rayhab.appointments set created_at = now() - interval '30 hours', hold_expires_at = now() + interval '42 hours' where id = ?", [$waiting]);
+    $ref = fn(string $id) => staffCall($app, $staff, 'GET', "/api/admin/appointments/$id")->data()['appointment']['reference'];
+    $alerts = array_column(staffCall($app, $staff, 'GET', '/api/admin/overview')->data()['alerts'], 'text');
+    $about = fn(string $r) => array_values(array_filter($alerts, static fn($t) => str_starts_with($t, $r)));
+    eq([$ref($ending) . ': the hold on this time ends within 3 hours. Reply before it lapses.'], $about($ref($ending)), 'one warning, the urgent one');
+    eq(1, count($about($ref($waiting))));
+    ok(str_contains($about($ref($waiting))[0], 'waited more than a day'), 'the other has waited more than a day');
+});
+
 test('signing out ends the session', function () use ($app) {
     $s2 = signIn($app);
     call($app, 'POST', '/api/admin/logout', [], [], $s2['cookies']);
