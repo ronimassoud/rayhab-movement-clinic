@@ -31,7 +31,10 @@ final class PublicRoutes
                 'modes' => $s['modes'], 'practitioner_ids' => $s['practitioner_ids'],
             ], $app->sched->services());
             $practitioners = $app->db->query('select id, name, title from rayhab.practitioners where active and bookable order by name');
-            return Response::json(['services' => $services, 'practitioners' => $practitioners, 'timezone' => Time::TZ]);
+            // How the clinic contacts patients about a request (PATIENT_CHANNEL): the form asks for that consent.
+            // And whether online payment is offered yet (phase 2), so the form promises only what exists.
+            return Response::json(['services' => $services, 'practitioners' => $practitioners, 'timezone' => Time::TZ,
+                                   'contact' => $app->cfg->get('PATIENT_CHANNEL'), 'online_payment' => $app->whish->name !== 'disabled']);
         });
 
         $app->get('/api/availability', function (Request $r) use ($app) {
@@ -92,10 +95,12 @@ final class PublicRoutes
         $first = $c->name('first_name', 'first name');
         $last = $c->name('last_name', 'last name');
         $phone = $c->match('phone', '/^\+[1-9]\d{7,14}$/', 'Enter a WhatsApp number with its country code.');
-        $email = $c->email('email', false);
+        // The clinic writes to the patient on one channel (PATIENT_CHANNEL); by email, the address is needed.
+        $channel = $app->cfg->get('PATIENT_CHANNEL') === 'whatsapp' ? 'whatsapp' : 'email';
+        $email = $c->email('email', $channel === 'email');
         $note = $c->maxText('note', 2000, 'Keep it under 2000 characters.');
         $consents = $c->raw('consents');
-        if (!is_array($consents) || ($consents['storage'] ?? null) !== true || ($consents['whatsapp'] ?? null) !== true
+        if (!is_array($consents) || ($consents['storage'] ?? null) !== true || ($consents[$channel] ?? null) !== true
             || !is_string($consents['version'] ?? null) || $consents['version'] === '' || strlen($consents['version']) > 40) {
             $c->add('consents', 'Consent is required.');
         }
@@ -117,24 +122,27 @@ final class PublicRoutes
         $end = $start->modify('+' . $svc['duration_min'] . ' minutes');
 
         try {
-            return $app->db->tx(function (Db $t) use ($app, $r, $svc, $pid, $mode, $forWhom, $date, $time, $first, $last, $phone, $email, $note, $consents, $start, $end) {
+            return $app->db->tx(function (Db $t) use ($app, $r, $svc, $pid, $mode, $forWhom, $date, $time, $first, $last, $phone, $email, $note, $consents, $channel, $start, $end) {
                 $patient = $t->one('insert into rayhab.patients (first_name, last_name, phone_e164, email) values (?, ?, ?, ?) returning id',
                                    [$first, $last, $phone, $email]);
                 $ref = $t->one("select 'RQ-' || nextval('rayhab.reference_seq') as r")['r'];
                 $id = Util::id('apt');
                 $appt = $t->one("insert into rayhab.appointments (id, reference, patient_id, practitioner_id, service_id, mode, for_whom,
                                    starts_at, ends_at, local_date, local_time, status, note, hold_expires_at,
-                                   consent_storage_at, consent_whatsapp_at, consent_version)
-                                 values (?, ?, ?, ?, ?, ?, ?, ?::timestamptz, ?::timestamptz, ?, ?, 'requested', ?, now() + make_interval(hours => ?), now(), now(), ?)
-                                 returning hold_expires_at, consent_whatsapp_at",
+                                   consent_storage_at, consent_whatsapp_at, consent_email_at, consent_version)
+                                 values (?, ?, ?, ?, ?, ?, ?, ?::timestamptz, ?::timestamptz, ?, ?, 'requested', ?, now() + make_interval(hours => ?), now(),
+                                         case when ?::boolean then now() end, case when ?::boolean then now() end, ?)
+                                 returning hold_expires_at, consent_whatsapp_at, consent_email_at",
                                 [$id, $ref, $patient['id'], $pid, $svc['id'], $mode, $forWhom, $start->format(DATE_ATOM), $end->format(DATE_ATOM),
-                                 $date, $time, $note, $app->cfg->int('HOLD_HOURS'), $consents['version']]);
+                                 $date, $time, $note, $app->cfg->int('HOLD_HOURS'),
+                                 ($consents['whatsapp'] ?? null) === true, ($consents['email'] ?? null) === true, $consents['version']]);
                 $t->query('insert into rayhab.payment_intents (id, appointment_id, amount, currency, outstanding) values (?, ?, ?, ?, ?)',
                           [Util::id('pay'), $id, $svc['price_amount'] ?? 0, $svc['currency'], $svc['price_amount'] ?? 0]);
                 Records::log($t, 'requested', $id, ['kind' => 'patient', 'name' => $first . ' ' . $last],
                              'Requested ' . $svc['name'] . ' for ' . Time::dayLabel($date) . ' ' . $time, null, 'requested', $r->id);
-                $msg = ['id' => $id, 'phone_e164' => $phone, 'consent_whatsapp_at' => $appt['consent_whatsapp_at']];
-                $app->notify->whatsapp($msg, 'request_received', [Time::dayLabel($date, true), $time], null, 'received:' . $id);
+                $msg = ['id' => $id, 'phone_e164' => $phone, 'email' => $email, 'consent_whatsapp_at' => $appt['consent_whatsapp_at'],
+                        'consent_email_at' => $appt['consent_email_at']];
+                $app->notify->patient($msg, 'request_received', [Time::dayLabel($date, true), $time], null, 'received:' . $id);
                 $app->notify->staff('new_request', 'New booking request ' . $ref,
                     "A new booking request is waiting for your reply.\n\n" . $ref . ': ' . Time::dayLabel($date, true) . ' at ' . $time
                     . ' (Beirut time), ' . ($mode === 'online' ? 'online' : 'at the clinic') . ".\n\nReview it: " . $app->notify->adminUrl('#/requests') . "\n",

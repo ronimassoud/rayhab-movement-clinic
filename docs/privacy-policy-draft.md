@@ -131,7 +131,7 @@ reviewed against Law 81/2018 before real patient data is stored:
 | Supabase | The database (bookings, contact details, notes, payments, website questions) and staff sign-in | The region chosen for the project (recommended: Frankfurt, EU) |
 | The VPS provider | The server that runs the site and the PHP API (Apache); requests pass through it, but the database is at Supabase | The server's region (recommended: Frankfurt, EU) |
 | Meta (WhatsApp Business Platform) | Patient phone numbers and the message text: appointment day and time, payment links, decline reasons. Messages never name the service, so they don't reveal a condition | Meta's infrastructure |
-| Resend (email) | Staff notices only: a booking reference and its day and time, or that a website question arrived. Questions themselves stay in the database, behind the admin sign-in | The provider's region |
+| Resend (email) | **Phase 1 (2026-11-05): every message to patients**, by email: their address, the appointment's day and time, and the private link (sealed in the database, put in only at sending). Plus the staff notices: a booking reference and its day and time, or that a website question arrived. Questions and notes stay in the database, behind the admin sign-in | The provider's region |
 | Whish Money (when online payment is on) | The payment, its amount and reference | Whish |
 
 The booking consent line "They are not shared with anyone outside the clinic"

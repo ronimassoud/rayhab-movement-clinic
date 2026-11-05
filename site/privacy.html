@@ -111,17 +111,17 @@
       <ul>
         <li>The service you choose, whether at the clinic or online, and the day and time you ask for.</li>
         <li>Whether the appointment is for you or your child.</li>
-        <li>Your first and last name, your WhatsApp number, and your email address if you give one.</li>
+        <li>Your first and last name, your phone number, and your email address.</li>
         <li>Anything you write under "What brings you in?". This is optional and may include health information, such as a diagnosis or how you feel. Please write only what helps us prepare.</li>
         <li>That you agreed to the statements on the form, when, and which version of their wording you saw.</li>
       </ul>
       <h3>When you send a question</h3>
       <p>Your name, your email address, your phone number if you give one, and your question.</p>
       <h3>When you choose how to pay</h3>
-      <p>The payment method, the amount and a payment reference. If you pay online with Whish, you do it on Whish's own page: your card or wallet details go to Whish, never to us.</p>
+      <p>The payment method, the amount and a payment reference. For now, payment is in cash at the clinic. <mark class="todo">[PHASE 2] When online payment with Whish starts: you pay on Whish's own page, and your card or wallet details go to Whish, never to us.</mark></p>
       <h3>Messages we send you</h3>
-      <p>WhatsApp messages about your request: that we received it, that it is approved (with a private link to choose how to pay), a new time if we need to propose one, a reminder the day before, a cancellation, or a payment receipt. We keep a record of each message and whether it was delivered. Our messages never name the service you booked, so they say nothing about your health.</p>
-      <p>If you reply, your message is kept with your booking and handled like a question sent through this site. Photos, voice notes and documents you send there are not kept. Reply <strong>STOP</strong> at any time and we won't message you on WhatsApp again; we will call you instead if we need to reach you.</p>
+      <p>Emails about your request: that we received it, that it is approved (with a private link to confirm it), a new time if we need to propose one, a reminder the day before, a cancellation, or a payment receipt. We keep a record of each one and whether it was sent. Our emails never name the service you booked, so they say nothing about your health. If you reply, your reply reaches the clinic's own email.</p>
+      <p><mark class="todo">[PHASE 2] When these messages move to WhatsApp, say so here: replies to them are kept with the booking like a question sent through this site; photos, voice notes and documents are not kept; and replying STOP stops them, after which the clinic calls instead.</mark></p>
       <h3>When you visit this site</h3>
       <p>Like any website, our server records the address your device connects from (IP address), your browser type, the page requested and the time. We use these records only to keep the site secure and to fix problems. Private payment links are never written to them.</p>
       <h3>What we don't do</h3>
@@ -141,7 +141,7 @@
         <tbody>
           <tr><td>Arranging and confirming your appointment</td><td>Contact details, the time you chose</td><td>Taking the steps you ask for before treatment</td></tr>
           <tr><td>Understanding why you are coming</td><td>What you write under "What brings you in?"</td><td>Your explicit agreement</td></tr>
-          <tr><td>Messages about your booking</td><td>WhatsApp number, day and time</td><td>Providing the service you asked for</td></tr>
+          <tr><td>Messages about your booking</td><td>Email address, day and time</td><td>Providing the service you asked for</td></tr>
           <tr><td>Answering your question</td><td>Contact details, your question</td><td>Replying at your request</td></tr>
           <tr><td>Taking payment and keeping accounts</td><td>Amount, method, reference</td><td>Legal duties for financial records</td></tr>
           <tr><td>Keeping the site and our records secure</td><td>Server records, a log of staff actions</td><td>Our legitimate interest in security</td></tr>
@@ -160,8 +160,8 @@
         <tbody>
           <tr><td>Supabase</td><td>Our database, and staff sign-in</td><td>The booking, question and payment information above</td><td>European Union (Ireland)</td></tr>
           <tr><td><mark class="todo">[DECIDE] Server host</mark></td><td>Runs this website and the booking system</td><td>Information passing through, server records, nightly backups</td><td><mark class="todo">[DECIDE]</mark></td></tr>
-          <tr><td>Meta (WhatsApp Business)</td><td>Delivers our WhatsApp messages</td><td>Your number, the day and time, payment links</td><td>Meta's servers, including outside Lebanon</td></tr>
-          <tr><td>Resend</td><td>Emails the clinic when a request or question arrives</td><td>A booking reference with its day and time; never your name, contact details or note</td><td><mark class="todo">[DECIDE] The region shown in Resend</mark></td></tr>
+          <tr><td>Meta (WhatsApp Business) <mark class="todo">[PHASE 2] from when messages move to WhatsApp</mark></td><td>Would deliver our WhatsApp messages</td><td>Your number, the day and time, private links</td><td>Meta's servers, including outside Lebanon</td></tr>
+          <tr><td>Resend</td><td>Sends our emails: to you about your booking, and to the clinic when a request or question arrives</td><td>Your email address, the day and time of your appointment and its private link; for the clinic's emails, a booking reference only. Never your note</td><td><mark class="todo">[DECIDE] The region shown in Resend</mark></td></tr>
           <tr><td>Whish Money, when online payment is offered</td><td>Online payment</td><td>The amount and reference, and what you give Whish on its own page</td><td><mark class="todo">[DECIDE]</mark></td></tr>
         </tbody>
       </table>
@@ -169,7 +169,7 @@
       <p>Inside the clinic, the practitioners see your full request, including your note. Reception staff, if any, see your contact and booking details but not your note.</p>
 
       <h2 id="outside-lebanon">Information stored outside Lebanon</h2>
-      <p>Some of these services keep information outside Lebanon: our database is in Ireland, and WhatsApp messages pass through Meta's servers. <mark class="todo">[LEGAL] The basis for these transfers under Law No. 81 of 2018, and any safeguards to name.</mark></p>
+      <p>Some of these services keep information outside Lebanon: our database is in Ireland, and our emails pass through Resend's servers. <mark class="todo">[LEGAL] The basis for these transfers under Law No. 81 of 2018, and any safeguards to name.</mark></p>
 
       <h2 id="how-long">How long we keep it</h2>
       <p>Information is deleted automatically when its period ends.</p>
@@ -205,7 +205,7 @@
         <li><strong>Give you a copy</strong> of the information we hold about you.</li>
         <li><strong>Correct</strong> anything that is wrong.</li>
         <li><strong>Delete it.</strong> Requests that never became appointments, questions and message records are deleted completely. For appointments that took place or were paid, we keep the date, service and payment for our records, but remove your name, contact details and note. <mark class="todo">[LEGAL] Subject to any legal duty to keep clinical or financial records.</mark></li>
-        <li><strong>Withdraw an agreement</strong> you gave, for example to a case study, or stop WhatsApp messages by replying STOP (we will then arrange things by phone).</li>
+        <li><strong>Withdraw an agreement</strong> you gave, for example to a case study, or stop our emails about your booking (we will then arrange things by phone).</li>
         <li><mark class="todo">[LEGAL] Any other rights under Lebanese law, and under the GDPR if it applies, such as objecting to a use of your information.</mark></li>
       </ul>
       <p><strong>How to ask:</strong> email rayan.halimeh@gmail.com or message +961 71 383 315 on WhatsApp. To protect you, we confirm every request from the phone number or email address the information is held under. There is no charge, and we aim to reply within <mark class="todo">[LEGAL] 30 days</mark>.</p>
@@ -283,7 +283,7 @@
 <script src="assets/js/api/client.js?v=e732d077"></script>
 <script src="assets/js/api/availability.js?v=23b2281d"></script>
 <script src="assets/js/api/appointments.js?v=244b48c8"></script>
-<script src="assets/js/booking.js?v=74389488"></script>
+<script src="assets/js/booking.js?v=e767d8ed"></script>
 <script src="assets/js/modal.js?v=2db7fb17"></script>
 <script src="assets/js/vendor/gsap.min.js?v=5e6e6cba" defer></script>
 <script src="assets/js/vendor/ScrollTrigger.min.js?v=00a3e5c7" defer></script>

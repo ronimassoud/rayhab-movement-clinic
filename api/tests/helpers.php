@@ -30,6 +30,8 @@ function config(array $extra = []): Config
         'DEPLOY_ENV' => 'test', 'PUBLIC_ORIGIN' => ORIGIN, 'APP_SECRET' => 'test-secret-test-secret-test-secret-0000',
         'COOKIE_SECURE' => 'false', 'AUTH_DRIVER' => 'dev', 'DEV_STAFF' => STAFF_EMAIL . ':' . STAFF_PASSWORD . ':pr-rayan',
         'WHATSAPP_DRIVER' => 'log', 'EMAIL_DRIVER' => 'log', 'STAFF_EMAILS' => 'clinic@rayhab.test', 'WHISH_DRIVER' => 'sandbox',
+        // These suites test the WhatsApp channel (phase 2); 6_email.test.php tests phase 1's email.
+        'PATIENT_CHANNEL' => 'whatsapp',
         'HORIZON_DAYS' => '200', 'DATABASE_URL' => $GLOBALS['TEST_DB_URL'],
     ], $extra));
 }

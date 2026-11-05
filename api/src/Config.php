@@ -40,6 +40,10 @@ final class Config
         'CLINIC_NAME' => 'Rayhab Movement Clinic',
         'CLINIC_PHONE' => '+961 71 383 315',
         'CLINIC_LOCATION' => 'Rayhab Movement Clinic, Beirut',
+        // How the clinic writes to patients: email (phase 1) or whatsapp (phase 2, once Meta has
+        // approved the templates); and where patients' email replies go (the sender only sends).
+        'PATIENT_CHANNEL' => 'email',
+        'CLINIC_EMAIL' => 'rayan.halimeh@gmail.com',
         // How long personal data is kept, in days; 0 keeps it (Retention.php).
         'RETAIN_UNCONFIRMED_DAYS' => '183', 'RETAIN_ANSWERED_QUESTION_DAYS' => '365', 'RETAIN_MESSAGE_DAYS' => '90',
     ];
@@ -108,9 +112,11 @@ final class Config
         if (strlen($this->get('APP_SECRET')) < 32) $p[] = 'APP_SECRET must be at least 32 characters';
         if (!filter_var($this->get('PUBLIC_ORIGIN'), FILTER_VALIDATE_URL)) $p[] = 'PUBLIC_ORIGIN must be a URL';
         foreach (['AUTH_DRIVER' => ['supabase', 'dev'], 'WHATSAPP_DRIVER' => ['cloud', 'log', 'off'],
-                  'EMAIL_DRIVER' => ['mail', 'log', 'off'], 'WHISH_DRIVER' => ['disabled', 'sandbox', 'whish']] as $k => $ok) {
+                  'EMAIL_DRIVER' => ['mail', 'log', 'off'], 'WHISH_DRIVER' => ['disabled', 'sandbox', 'whish'],
+                  'PATIENT_CHANNEL' => ['email', 'whatsapp']] as $k => $ok) {
             if (!in_array($this->get($k), $ok, true)) $p[] = "$k must be one of " . implode(', ', $ok);
         }
+        if (!filter_var($this->get('CLINIC_EMAIL'), FILTER_VALIDATE_EMAIL)) $p[] = 'CLINIC_EMAIL must be an email address (patients reply to it)';
         $live = $env === 'production' || $env === 'staging';
         if ($live) {
             if ($this->get('DATABASE_URL') === '') $p[] = 'DATABASE_URL is required';
@@ -123,6 +129,9 @@ final class Config
             if ($this->get('WHISH_DRIVER') === 'sandbox') $p[] = 'WHISH_DRIVER=sandbox is not allowed in production';
             if ($this->get('WHATSAPP_DRIVER') === 'log') $p[] = 'WHATSAPP_DRIVER=log is not allowed in production (use cloud, or off)';
             if ($this->get('EMAIL_DRIVER') === 'log') $p[] = 'EMAIL_DRIVER=log is not allowed in production (use mail, or off)';
+            // Patients must actually hear from the clinic on the channel the booking form promises.
+            if ($this->get('PATIENT_CHANNEL') === 'email' && $this->get('EMAIL_DRIVER') !== 'mail') $p[] = 'PATIENT_CHANNEL=email needs EMAIL_DRIVER=mail';
+            if ($this->get('PATIENT_CHANNEL') === 'whatsapp' && $this->get('WHATSAPP_DRIVER') !== 'cloud') $p[] = 'PATIENT_CHANNEL=whatsapp needs WHATSAPP_DRIVER=cloud';
         }
         if ($this->get('WHATSAPP_DRIVER') === 'cloud') {
             foreach (['WA_TOKEN', 'WA_PHONE_NUMBER_ID', 'WA_APP_SECRET', 'WA_VERIFY_TOKEN'] as $k) {

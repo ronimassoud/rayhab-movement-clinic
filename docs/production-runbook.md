@@ -27,6 +27,22 @@ Patients / staff ──HTTP 80──> Apache: 301 to HTTPS
                                                     cron, every minute: bin/worker.php ──> WhatsApp, email (msmtp), Whish
 ```
 
+## Launch phases (decided 2026-11-05)
+
+**Phase 1, now: cash only, patients emailed.** Whish depends on a third party and is not ready, so:
+
+- the payment page offers only "Pay at the clinic" (`WHISH_DRIVER=disabled`);
+- every message to patients goes by email through Resend (`PATIENT_CHANNEL=email`); replies go to `CLINIC_EMAIL`;
+- the flow: the patient requests, Rayan approves in the admin, the patient gets an email with a private link and confirms "I'll pay at the clinic" (Rayan gets an email), and at the visit Rayan presses **Confirm cash received** in the admin (Payments, or the appointment), which records the receipt and emails the patient.
+
+Both are settings in the connect files (step 8); phase 1 is the default.
+
+**Phase 2, later:** WhatsApp (step 6, then `PATIENT_CHANNEL=whatsapp`) and Whish (step 7, then `WHISH_DRIVER=whish`). No code changes for the switch beyond the Whish driver itself; update the privacy and terms pages' **[PHASE 2]** passages at the same time.
+
+**What phase 1 needs, in order:** the server and DNS (steps 2 to 4), the backup key (5.8), `push-settings.sh` (8), GitHub (9), staging deploy, Rayan's staff account and the doctor (10, 8.4), prices (11), an end-to-end test on staging, then the legal sign-off (13: the privacy and terms pages approved and published, case-study consents, processor agreements with Supabase, Resend and the server host), and the production deploy. Steps 6 (WhatsApp) and 7 (Whish) wait for phase 2.
+
+**Resend Free:** 100 emails a day. A booking sends about six (to the patient and to Rayan), so roughly 15 bookings a day; upgrade the Resend plan before that becomes tight.
+
 **Connecting Supabase and Resend, in short.** Everything secret goes into one file on your computer per environment, `infra/connect.production.env` (and `.staging.env`). Git never commits it; never paste these values into chat or email.
 
 1. Copy the template: `cp infra/connect.example.env infra/connect.production.env`.

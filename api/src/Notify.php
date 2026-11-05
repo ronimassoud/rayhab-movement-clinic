@@ -3,9 +3,10 @@
    that causes them; delivered right after the response, and by the cron
    worker as a backstop (Worker.php).
 
-   WhatsApp goes only to patients who ticked the WhatsApp consent. A link
-   token in a message is stored sealed and removed once sent, so the outbox
-   never holds a working link in the clear. */
+   Patients hear from the clinic on one channel, PATIENT_CHANNEL: email in
+   phase 1 (PatientMail), WhatsApp in phase 2; only with that channel's
+   consent. A link token in a message is stored sealed and removed once
+   sent, so the outbox never holds a working link in the clear. */
 declare(strict_types=1);
 
 namespace Rayhab;
@@ -28,6 +29,25 @@ final class Notify
     ];
 
     public function __construct(private Db $db, private Config $cfg) {}
+
+    /* A message to the patient, on the channel PATIENT_CHANNEL names: email
+       in phase 1, WhatsApp once Meta has approved the templates. Either way
+       only with that channel's consent from the booking.
+       @param array{id:string,phone_e164:string,email?:?string,consent_whatsapp_at:mixed,consent_email_at?:mixed} $a */
+    public function patient(array $a, string $template, array $params, ?string $linkToken = null, ?string $dedupe = null): void
+    {
+        if ($this->cfg->get('PATIENT_CHANNEL') === 'whatsapp') {
+            $this->whatsapp($a, $template, $params, $linkToken, $dedupe);
+            return;
+        }
+        if (empty($a['consent_email_at']) || empty($a['email'])) return;
+        $mail = PatientMail::compose($this->cfg, $template, $params);
+        $payload = $mail + ['reply_to' => $this->cfg->get('CLINIC_EMAIL')];
+        if ($linkToken !== null) $payload['link_sealed'] = Util::seal($this->cfg->get('APP_SECRET'), $linkToken);
+        $this->db->query("insert into rayhab.notification_outbox (channel, template, recipient, payload, appointment_id, dedupe_key)
+                          values ('email', ?, ?, ?::jsonb, ?, ?) on conflict (dedupe_key) do nothing",
+                         [$template, $a['email'], json_encode($payload, JSON_UNESCAPED_UNICODE), $a['id'], $dedupe]);
+    }
 
     /** @param array{id:string,phone_e164:string,consent_whatsapp_at:mixed} $a */
     public function whatsapp(array $a, string $template, array $params, ?string $linkToken = null, ?string $dedupe = null): void
@@ -56,8 +76,8 @@ final class Notify
     /* The row a message needs, for one appointment. */
     public function row(string $appointmentId): ?array
     {
-        return $this->db->one('select a.id, a.reference, a.local_date, a.local_time, a.mode, a.consent_whatsapp_at, a.starts_at,
-                                      s.name as service_name, p.phone_e164
+        return $this->db->one('select a.id, a.reference, a.local_date, a.local_time, a.mode, a.consent_whatsapp_at, a.consent_email_at, a.starts_at,
+                                      s.name as service_name, p.phone_e164, p.email
                                  from rayhab.appointments a join rayhab.services s on s.id = a.service_id
                                  join rayhab.patients p on p.id = a.patient_id where a.id = ?', [$appointmentId]);
     }

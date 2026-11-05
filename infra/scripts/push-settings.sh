@@ -54,8 +54,14 @@ umask 077
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
-whish=disabled
-[ "$ENV_NAME" = staging ] && whish=sandbox
+# The launch phase: phase 1 is cash only, patients emailed; phase 2 turns on
+# Whish and WhatsApp. Read from the connect file, with phase 1 as the default.
+whish="$(val WHISH_DRIVER)"; whish="${whish:-disabled}"
+channel="$(val PATIENT_CHANNEL)"; channel="${channel:-email}"
+case "$whish" in disabled|whish) ;; sandbox) [ "$ENV_NAME" = staging ] || { echo "WHISH_DRIVER=sandbox is for staging only" >&2; exit 1; } ;;
+  *) echo "WHISH_DRIVER should be disabled, sandbox (staging) or whish" >&2; exit 1 ;; esac
+case "$channel" in email|whatsapp) ;; *) echo "PATIENT_CHANNEL should be email or whatsapp" >&2; exit 1 ;; esac
+case "$(val CLINIC_EMAIL)" in ''|*@*.*) ;; *) echo "CLINIC_EMAIL should be an email address" >&2; exit 1 ;; esac
 {
   echo "DEPLOY_ENV=$ENV_NAME"
   echo "PUBLIC_ORIGIN=$(val PUBLIC_ORIGIN)"
@@ -68,6 +74,8 @@ whish=disabled
   echo "EMAIL_FROM=$(val EMAIL_FROM)"
   echo "STAFF_EMAILS=$(val STAFF_EMAILS)"
   echo "WHISH_DRIVER=$whish"
+  echo "PATIENT_CHANNEL=$channel"
+  [ -z "$(val CLINIC_EMAIL)" ] || echo "CLINIC_EMAIL=$(val CLINIC_EMAIL)"
 } > "$WORK/app.patch"
 {
   echo "DATABASE_MIGRATE_URL=$(val DATABASE_MIGRATE_URL)"

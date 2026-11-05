@@ -29,6 +29,8 @@ try {
     $cfg = Config::fromEnvironment();
     $ok('app.env is complete for ' . $cfg->env() . ' (' . $cfg->get('PUBLIC_ORIGIN') . ')');
     $ok('drivers: auth ' . $cfg->get('AUTH_DRIVER') . ', email ' . $cfg->get('EMAIL_DRIVER') . ', WhatsApp ' . $cfg->get('WHATSAPP_DRIVER') . ', Whish ' . $cfg->get('WHISH_DRIVER'));
+    $ok('patients hear from the clinic by ' . $cfg->get('PATIENT_CHANNEL') . ($cfg->get('PATIENT_CHANNEL') === 'email' ? ', replies to ' . $cfg->get('CLINIC_EMAIL') : '')
+        . '; payment: ' . ($cfg->get('WHISH_DRIVER') === 'disabled' ? 'cash at the clinic only (phase 1)' : 'cash or Whish'));
 } catch (Throwable $e) {
     $bad($e->getMessage());
     exit(1);

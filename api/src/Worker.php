@@ -34,7 +34,14 @@ final class Worker
                     $link = isset($payload['link_sealed']) ? Util::unseal($this->app->cfg->get('APP_SECRET'), $payload['link_sealed']) : null;
                     $res = $this->send->whatsapp($r['recipient'], $r['template'], $payload['params'] ?? [], $link);
                 } else {
-                    $res = $this->send->email($r['recipient'], (string) ($payload['subject'] ?? ''), (string) ($payload['text'] ?? ''), $payload['reply_to'] ?? null);
+                    // A patient email with the private link (PatientMail): the link goes into the
+                    // text only now; the stored text keeps the {link} placeholder.
+                    $text = (string) ($payload['text'] ?? '');
+                    if (isset($payload['link_sealed'])) {
+                        $token = Util::unseal($this->app->cfg->get('APP_SECRET'), $payload['link_sealed']);
+                        $text = str_replace(PatientMail::LINK, rtrim($this->app->cfg->get('PUBLIC_ORIGIN'), '/') . '/payment/#t=' . $token, $text);
+                    }
+                    $res = $this->send->email($r['recipient'], (string) ($payload['subject'] ?? ''), $text, $payload['reply_to'] ?? null);
                 }
                 unset($payload['link_sealed']);          // sent: the sealed link is no longer needed
                 $db->query("update rayhab.notification_outbox set status = ?, sent_at = now(), provider_message_id = ?, payload = ?::jsonb, last_error = null where id = ?",
@@ -85,13 +92,13 @@ final class Worker
 
     public function remind(): int
     {
-        $due = $this->app->db->query("select a.id, a.local_date, a.local_time, a.mode, a.consent_whatsapp_at, s.name as service_name, p.phone_e164
+        $due = $this->app->db->query("select a.id, a.local_date, a.local_time, a.mode, a.consent_whatsapp_at, a.consent_email_at, s.name as service_name, p.phone_e164, p.email
                                         from rayhab.appointments a join rayhab.services s on s.id = a.service_id join rayhab.patients p on p.id = a.patient_id
                                        where a.status = 'confirmed' and a.reminded_at is null
                                          and a.starts_at between now() + interval '20 hours' and now() + interval '28 hours'");
         foreach ($due as $a) {
             $this->app->db->tx(function (Db $t) use ($a) {
-                $this->app->notify->whatsapp($a, 'reminder', [Time::dayLabel($a['local_date'], true), $a['local_time'],
+                $this->app->notify->patient($a, 'reminder', [Time::dayLabel($a['local_date'], true), $a['local_time'],
                     $a['mode'] === 'online' ? 'Online, video call' : $this->app->cfg->get('CLINIC_LOCATION')], null, 'reminder:' . $a['id']);
                 $t->query('update rayhab.appointments set reminded_at = now() where id = ?', [$a['id']]);
             });

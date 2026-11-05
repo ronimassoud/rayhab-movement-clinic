@@ -229,10 +229,16 @@
     }
     ['whish', 'cash'].forEach(function (m) { $('pm-' + m).hidden = methods.indexOf(m) < 0; });
     if (methods.length === 1) chosen = methods[0];
+    // Cash only (no online payment yet): the patient confirms; there is nothing to choose.
+    var cashOnly = methods.length === 1 && methods[0] === 'cash';
+    $('pay-h1').textContent = cashOnly ? 'Confirm your appointment' : 'Choose how to pay';
+    $('ps-choose-h').textContent = cashOnly ? 'Pay at the clinic' : 'How would you like to pay?';
+    $('ps-choose-sub').textContent = cashOnly ? 'Nothing is paid now. Confirm below, and pay in cash when you come in.'
+                                              : 'Choose one. You can pay online now, or pay in cash when you come in.';
     if (methods.indexOf(chosen) < 0) chosen = '';
     var dl = $('ps-deadline');
     dl.hidden = !(view.policy && view.policy.deadline);
-    if (!dl.hidden) dl.textContent = 'Please choose before ' + deadlineLabel(view.policy.deadline) + ', or the clinic may offer the time to someone else.';
+    if (!dl.hidden) dl.textContent = 'Please ' + (cashOnly ? 'confirm' : 'choose') + ' before ' + deadlineLabel(view.policy.deadline) + ', or the clinic may offer the time to someone else.';
     $('ps-cancelchange').hidden = !changing;
     $('ps-choose-err').hidden = true;
     paintChoice();
@@ -250,7 +256,7 @@
     btn.disabled = !chosen || busy;
     btn.setAttribute('aria-busy', String(busy));
     btn.textContent = busy ? (chosen === 'whish' ? 'Opening Whish…' : 'Saving…')
-      : chosen === 'whish' ? 'Continue to Whish' : chosen === 'cash' ? 'Confirm cash at the clinic' : 'Choose a payment method';
+      : chosen === 'whish' ? 'Continue to Whish' : chosen === 'cash' ? (visibleMethods().length === 1 ? 'Confirm, I’ll pay at the clinic' : 'Confirm cash at the clinic') : 'Choose a payment method';
   }
   function visibleMethods() {
     return ['whish', 'cash'].filter(function (m) { return !$('pm-' + m).hidden; });

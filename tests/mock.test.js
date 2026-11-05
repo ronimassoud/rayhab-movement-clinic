@@ -9,6 +9,12 @@ const M = require('../site/assets/js/api/mock.js');
 const staff = { 'X-CSRF-Token': 'demo-csrf' };
 const mock = (scenario) => M.create({ instant: true, scenario: scenario || 'success' });
 
+test('the booking form is told phase 1: patients are emailed, payment is at the clinic', async () => {
+  const r = await mock().handle('GET', '/services');
+  assert.equal(r.body.contact, 'email');
+  assert.equal(r.body.online_payment, false);
+});
+
 test('choosing cash never marks the payment paid', async () => {
   const m = mock();
   const r = await m.handle('POST', '/payment-selection/demo-approved', { method: 'cash' });
@@ -60,7 +66,7 @@ test('a request is only ever "requested", and a slot is taken once', async () =>
   let slots = (await m.handle('GET', '/availability?service_id=assessment&date=' + day)).body.slots;
   const free = slots.find(s => s.available);
   const body = { service_id: 'assessment', mode: 'clinic', date: day, time: free.time, first_name: 'A', last_name: 'B',
-                 phone: '+9613123456', consents: { storage: true, whatsapp: true, version: 'x' } };
+                 phone: '+9613123456', email: 'a@example.com', consents: { storage: true, email: true, version: 'x' } };
   const r = await m.handle('POST', '/appointments', body);
   assert.equal(r.status, 201);
   assert.equal(r.body.status, 'requested');

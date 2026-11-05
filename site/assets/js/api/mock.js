@@ -485,7 +485,8 @@
       var m;
 
       if (method === 'GET' && p === '/services') {
-        return ok({ services: clone(SERVICES), practitioners: clone(PRACTITIONERS), timezone: T.TZ });
+        // Phase 1, as production: patients are emailed, and payment is at the clinic.
+        return ok({ services: clone(SERVICES), practitioners: clone(PRACTITIONERS), timezone: T.TZ, contact: 'email', online_payment: false });
       }
       if (method === 'GET' && p === '/availability') {
         if (sc === 'availability_down') return err(503, 'unavailable', 'Availability is unavailable.');
@@ -502,9 +503,11 @@
         if (sc === 'rate_limited') return err(429, 'rate_limited', 'Too many requests.');
         if (sc === 'server_error') return err(500, 'internal', 'Something went wrong.');
         if (body.website) return err(400, 'rejected', 'Request rejected.');
-        if (!body.consents || !body.consents.storage || !body.consents.whatsapp) {
+        // Phase 1, as the real API with PATIENT_CHANNEL=email: the email consent, and an address.
+        if (!body.consents || !body.consents.storage || !body.consents.email) {
           return err(422, 'validation', 'Consent is required.', { errors: { consents: 'Consent is required.' } });
         }
+        if (!body.email) return err(422, 'validation', 'Some details need fixing.', { errors: { email: 'Enter your email.' } });
         var free = slotsFor(body.service_id, body.practitioner_id, body.date, body.mode)
           .some(function (s) { return s.time === body.time && s.available; });
         if (!free) return err(409, 'slot_taken', 'That time is no longer available.');

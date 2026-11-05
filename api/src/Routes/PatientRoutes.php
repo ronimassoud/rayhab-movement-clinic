@@ -96,6 +96,12 @@ final class PatientRoutes
                     if ($row['status'] === 'approved') {
                         $t->query("update rayhab.appointments set status = 'confirmed', updated_at = now() where id = ?", [$apptId]);
                         Records::log($t, 'confirmed', $apptId, ['kind' => 'patient', 'name' => 'Patient'], 'Confirmed by choosing a payment method', 'approved', 'confirmed');
+                        // The clinic hears that the patient confirmed: a reference, a day and a time, nothing else.
+                        $m = $app->notify->row($apptId);
+                        $app->notify->staff('patient_confirmed', $m['reference'] . ' confirmed' . ($method === 'cash' ? ': the patient will pay at the clinic' : ''),
+                            'The patient confirmed ' . $m['reference'] . ' for ' . Time::dayLabel($m['local_date'], true) . ' at ' . $m['local_time'] . ' (Beirut time)'
+                            . ($method === 'cash' ? ", and will pay at the clinic. Record the cash in the admin when it is paid.\n\n" : ".\n\n")
+                            . $app->notify->adminUrl('#/payments') . "\n", $apptId, 'confirmed:' . $apptId);
                     }
                 });
                 return Response::json(self::current($app, $apptId));

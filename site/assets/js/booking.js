@@ -3,8 +3,10 @@
    then connected to the booking API.
 
    No account, no payment. The form produces a *request*; the clinic
-   reviews it, and once it is approved the patient gets a WhatsApp message
-   with a secure link to choose how to pay (payment/index.html).
+   reviews it, and once it is approved the patient gets a message with a
+   private link to confirm it (payment/index.html): by email in phase 1, by
+   WhatsApp once Meta has approved the templates. The server says which
+   (GET /services: contact), and whether online payment exists yet.
 
    It talks to the booking API through api/client.js (contracts in
    README.md, "Launch and backend handoff"):
@@ -50,7 +52,27 @@
     { id: 'pain-follow', name: 'Pain management follow-up', duration_min: 45, tag: '',
       description: 'Coached graded activity, progression and updates to your home program. For existing patients.' }
   ];
-  var catalog = { services: TYPES, practitioners: [], live: false };
+  // contact: how the clinic writes to the patient; onlinePay: whether Whish is offered yet.
+  var catalog = { services: TYPES, practitioners: [], live: false, contact: 'email', onlinePay: false };
+
+  /* The parts of the form that depend on the channel and on online payment. */
+  var CONTACT_COPY = {
+    email: { phone: 'Phone number', consent: 'The clinic may email me about this request, including a private link to confirm it once it is approved.',
+             msg: '<strong>You get an email</strong> confirming the time, or proposing another one if it no longer works.' },
+    whatsapp: { phone: 'WhatsApp number', consent: 'The clinic may message me on WhatsApp about this request, including a secure link to choose how to pay once it is approved.',
+                msg: '<strong>You get a WhatsApp message</strong> confirming the time, or proposing another one if it no longer works.' }
+  };
+  function applyContact() {
+    var c = CONTACT_COPY[catalog.contact] || CONTACT_COPY.email;
+    var set = function (sel, prop, v) { var el = $(sel); if (el) el[prop] = v; };
+    set('#f-phone-label', 'textContent', c.phone);
+    set('#bk-consent-wa-text', 'textContent', c.consent);
+    set('#f-email-opt', 'hidden', catalog.contact === 'email');
+    set('#next-msg', 'innerHTML', c.msg);
+    set('#next-pay', 'innerHTML', catalog.onlinePay
+      ? '<strong>Once it is confirmed, you choose how to pay:</strong> at the clinic, or online, through a secure link.'
+      : '<strong>Once it is approved, you confirm it</strong> with a private link, and pay at the clinic when you come in.');
+  }
 
   /* ---------- Clinic calendar ----------
      The clinic's usual opening pattern, used when live availability cannot
@@ -70,7 +92,7 @@
   var CLINIC_WA = '96171383315';
   // Changes whenever the wording of either consent line changes, so the
   // server can store which wording each patient agreed to.
-  var CONSENT_VERSION = '2026-10-20';
+  var CONSENT_VERSION = '2026-11-05';
 
   var DOW = T.DOW, DOW_FULL = T.DOW_FULL, MON = T.MON, MON_FULL = T.MON_FULL;
 
@@ -124,7 +146,7 @@
   }
   function emailErr() {
     var v = st.email.trim();
-    if (!v) return '';   // optional: the clinic answers on WhatsApp
+    if (!v) return catalog.contact === 'email' ? 'Enter your email, so the clinic can confirm your appointment.' : '';   // optional on WhatsApp
     // One @, something either side, a dot in the domain, no spaces.
     if (!/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(v)) return 'Check the email address.';
     return '';
@@ -146,7 +168,7 @@
   }
   function phoneErr() {
     var v = st.phone.trim();
-    if (!v) return 'Enter a WhatsApp number the clinic can reach you on.';
+    if (!v) return 'Enter a phone number the clinic can reach you on.';
     if (/[^0-9+()\-\s.]/.test(v)) return 'Use digits, spaces, + or ( ) only.';
     if (st.cc === 'other' && !/^(\+|00)/.test(v)) return 'Start with + and the country code.';
     var digits = v.replace(/\D/g, '');
@@ -203,6 +225,9 @@
       catalog.services = b.services;
       catalog.practitioners = Array.isArray(b.practitioners) ? b.practitioners : [];
       catalog.live = true;
+      if (b.contact === 'email' || b.contact === 'whatsapp') catalog.contact = b.contact;
+      catalog.onlinePay = b.online_payment === true;
+      applyContact();
       if (!catalog.services.some(function (t) { return t.id === st.type; })) st.type = catalog.services[0].id;
       fitMode();
       renderTypes();
@@ -290,7 +315,7 @@
     if (bk) bk.hidden = st.step === 1 || st.done;
     var dw = $('#m-doneWhen');
     if (dw) dw.textContent = whenLabel() + (isOnline() ? ', online.' : ' at the Beirut clinic.') +
-      ' The clinic replies by WhatsApp within one working day.';
+      ' The clinic replies within one working day.';
   }
 
   /* ---- Stepper ----
@@ -590,7 +615,7 @@
     var phone = e164();
     var shown = phone && st.cc !== 'other' && phone.indexOf(st.cc) === 0 ? st.cc + ' ' + phone.slice(st.cc.length) : phone;
     $('#rvContact').textContent = phone
-      ? 'WhatsApp ' + shown + (st.email.trim() ? ' · ' + st.email.trim() : '')
+      ? (catalog.contact === 'whatsapp' ? 'WhatsApp ' : 'Phone ') + shown + (st.email.trim() ? ' · ' + st.email.trim() : '')
       : 'Not entered yet';
     $('#doneWhen').textContent = whenLabel();
     var dt = $('#doneType'), dwh = $('#doneWhere'), dr = $('#doneRef');
@@ -864,7 +889,7 @@
       'LOCATION:' + whereLabel(),
       'STATUS:TENTATIVE',
       'DESCRIPTION:Requested appointment' + (st.reference ? ' ' + st.reference : '') +
-        '. The clinic confirms by WhatsApp within one working day.',
+        '. The clinic confirms within one working day.',
       'END:VEVENT', 'END:VCALENDAR'
     ];
     var blob = new Blob([lines.join('\r\n')], { type: 'text/calendar' });
@@ -895,6 +920,11 @@
   // The fields a 422 can name, mapped to the inputs they belong to.
   var FIELD_FOR = { first_name: '#f-first', last_name: '#f-last', email: '#f-email', phone: '#f-phone' };
 
+  function consentsFor() {
+    var c = { storage: !!st.consent, version: CONSENT_VERSION };
+    c[catalog.contact === 'whatsapp' ? 'whatsapp' : 'email'] = !!st.consentWa;
+    return c;
+  }
   function payload() {
     var hp = $('#f-website');
     return {
@@ -910,7 +940,8 @@
       phone: e164(),
       email: st.email.trim() || null,
       note: st.note.trim(),
-      consents: { storage: !!st.consent, whatsapp: !!st.consentWa, version: CONSENT_VERSION },
+      // The second tick agrees to hear from the clinic on its channel (email or WhatsApp).
+      consents: consentsFor(),
       // Abuse signals, checked by the server: a field people never see,
       // and how long the form was open.
       website: hp ? hp.value : '',
@@ -1009,6 +1040,7 @@
     fitMode();
     st.date = nextFreeFrom(firstBookable());
 
+    applyContact();
     renderTypes();
     render();
     loadCatalog();

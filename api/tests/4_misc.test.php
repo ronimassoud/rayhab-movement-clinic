@@ -16,7 +16,7 @@ $throws = function (array $values, string $needle): void {
     throw new RuntimeException("accepted a configuration that should mention $needle");
 };
 $prod = ['APP_SECRET' => str_repeat('x', 40), 'DEPLOY_ENV' => 'production', 'DATABASE_URL' => 'postgres://u:p@h/db', 'PUBLIC_ORIGIN' => 'https://dr-rayhab.com',
-         'SUPABASE_URL' => 'https://p.supabase.co', 'SUPABASE_ANON_KEY' => 'k', 'WHATSAPP_DRIVER' => 'off', 'EMAIL_DRIVER' => 'off'];
+         'SUPABASE_URL' => 'https://p.supabase.co', 'SUPABASE_ANON_KEY' => 'k', 'WHATSAPP_DRIVER' => 'off', 'EMAIL_DRIVER' => 'mail', 'STAFF_EMAILS' => 'clinic@dr-rayhab.com'];
 
 test('refuses unsafe production settings', function () use ($throws, $prod) {
     $throws(['WHISH_DRIVER' => 'sandbox'] + $prod, 'sandbox');
@@ -24,6 +24,11 @@ test('refuses unsafe production settings', function () use ($throws, $prod) {
     $throws(['PUBLIC_ORIGIN' => 'http://dr-rayhab.com'] + $prod, 'https');
     $throws(['WHATSAPP_DRIVER' => 'log'] + $prod, 'WHATSAPP_DRIVER');
     $throws(['APP_SECRET' => 'short'], 'APP_SECRET');
+    // Patients must hear from the clinic on the channel the booking form promises.
+    $throws(['EMAIL_DRIVER' => 'off'] + $prod, 'PATIENT_CHANNEL=email needs EMAIL_DRIVER=mail');
+    $throws(['PATIENT_CHANNEL' => 'whatsapp'] + $prod, 'PATIENT_CHANNEL=whatsapp needs WHATSAPP_DRIVER=cloud');
+    $throws(['PATIENT_CHANNEL' => 'sms'] + $prod, 'PATIENT_CHANNEL');
+    $throws(['CLINIC_EMAIL' => 'not-an-email'] + $prod, 'CLINIC_EMAIL');
 });
 
 test('accepts a complete production setup', function () use ($prod) {

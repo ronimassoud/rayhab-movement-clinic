@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="rayhab-api" content="/api">
 <title>Book with Rayhab, Rayhab Movement Clinic</title>
-<meta name="description" content="Request a scoliosis assessment, rehabilitation session, online consultation or physiotherapy appointment. No account needed; the clinic confirms by WhatsApp.">
+<meta name="description" content="Request a scoliosis assessment, rehabilitation session, online consultation or physiotherapy appointment. No account needed; the clinic confirms within one working day.">
 <meta name="robots" content="noindex">
 <link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/public-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -37,12 +37,12 @@
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#08190E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
         </div>
         <h2>Booking request successfully sent</h2>
-        <p id="m-doneWhen">The clinic replies by WhatsApp within one working day.</p>
+        <p id="m-doneWhen">The clinic replies within one working day.</p>
       </div>
     </div>
     <a href="./" aria-label="Rayhab Movement Clinic, home"><span class="wordmark"></span></a>
     <h1>Book with Rayhab</h1>
-    <p class="bk-lede">No account needed. You'll get a confirmation by WhatsApp within one working day.</p>
+    <p class="bk-lede">No account needed. The clinic confirms within one working day.</p>
 
     <div class="bk-summary" id="bk-aside">
       <p class="eyebrow text-spring-500 mb-4">Your request</p>
@@ -185,7 +185,7 @@
           </div>
         </div>
       </div>
-      <p class="bk-hold">Choosing a time sends a request. Nothing is reserved until the clinic confirms, by WhatsApp within one working day, and nothing is charged at this stage.</p>
+      <p class="bk-hold">Choosing a time sends a request. Nothing is reserved until the clinic confirms, within one working day, and nothing is charged at this stage.</p>
     </section>
 
     <!-- Step 3 -->
@@ -200,7 +200,7 @@
         <p><label class="field-label" for="f-first">First name</label><input class="input" id="f-first" type="text" autocomplete="given-name" required aria-describedby="err-f-first"><span class="field-err" id="err-f-first" hidden></span></p>
         <p><label class="field-label" for="f-last">Last name</label><input class="input" id="f-last" type="text" autocomplete="family-name" required aria-describedby="err-f-last"><span class="field-err" id="err-f-last" hidden></span></p>
         <p>
-          <label class="field-label" for="f-phone">WhatsApp number</label>
+          <label class="field-label" for="f-phone" id="f-phone-label">Phone number</label>
           <span class="bk-phone">
             <select class="input bk-cc" id="f-cc" aria-label="Country code" autocomplete="tel-country-code">
               <option value="+961" selected>LB +961</option>
@@ -223,7 +223,7 @@
             </select>
             <input class="input" id="f-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="3 123 456" required aria-describedby="err-f-phone"></span><span class="field-err" id="err-f-phone" hidden></span>
         </p>
-        <p><label class="field-label" for="f-email">Email <span class="field-opt">(optional)</span></label><input class="input" id="f-email" type="email" autocomplete="email" aria-describedby="err-f-email"><span class="field-err" id="err-f-email" hidden></span></p>
+        <p><label class="field-label" for="f-email">Email <span class="field-opt" id="f-email-opt" hidden>(optional)</span></label><input class="input" id="f-email" type="email" autocomplete="email" aria-describedby="err-f-email"><span class="field-err" id="err-f-email" hidden></span></p>
         <p class="span2">
           <label class="field-label" for="f-note">What brings you in?</label>
           <textarea class="textarea" id="f-note"></textarea>
@@ -240,7 +240,7 @@
         </button>
         <button class="bk-consent" type="button" id="bk-consent-wa" role="checkbox" aria-checked="false">
           <span class="bk-checkbox" aria-hidden="true"></span>
-          <span class="body-s">The clinic may message me on WhatsApp about this request, including a secure link to choose how to pay once it is approved.</span>
+          <span class="body-s" id="bk-consent-wa-text">The clinic may email me about this request, including a private link to confirm it once it is approved.</span>
         </button>
       </div>
       <p class="notice notice-error mt-5" id="bk-detailerr" hidden role="alert" aria-live="assertive">Fill in the highlighted fields and tick both boxes so the clinic can reach you to confirm.</p>
@@ -272,7 +272,7 @@
           <button class="bk-edit" type="button" data-step="3">Change</button>
         </div>
       </dl>
-      <p class="notice notice-info mt-6">This is a request, not a confirmed booking. The clinic reviews it and replies by WhatsApp within one working day. Nothing is charged now.</p>
+      <p class="notice notice-info mt-6">This is a request, not a confirmed booking. The clinic reviews it and replies within one working day. Nothing is charged now.</p>
       <div class="notice notice-error bk-senderr mt-5" id="bk-senderr" role="alert" tabindex="-1" hidden>
         <p class="bk-senderr-t" id="bk-senderr-t">Your request didn't reach the clinic, so nothing has been booked yet.</p>
         <p class="bk-senderr-d" id="bk-senderr-d">Your details are still here. Try again, or send the request on WhatsApp instead.</p>
@@ -303,8 +303,8 @@
       <h3 class="h6 mt-8 text-forest-900">What happens next</h3>
       <ol class="bk-nextsteps">
         <li><strong>The clinic reviews your request</strong> within one working day.</li>
-        <li><strong>You get a WhatsApp message</strong> confirming the time, or proposing another one if it no longer works.</li>
-        <li><strong>Once it is confirmed, you choose how to pay:</strong> at the clinic, or online where offered, through a secure link.</li>
+        <li id="next-msg"><strong>You get an email</strong> confirming the time, or proposing another one if it no longer works.</li>
+        <li id="next-pay"><strong>Once it is approved, you confirm it</strong> with a private link, and pay at the clinic when you come in.</li>
         <li><strong>Before your visit:</strong> bring any X-ray or report you already have, wear clothing you can move in, and allow the full time.</li>
       </ol>
       <div class="bk-doneactions">
@@ -331,6 +331,6 @@
 <script src="assets/js/api/client.js?v=e732d077"></script>
 <script src="assets/js/api/availability.js?v=23b2281d"></script>
 <script src="assets/js/api/appointments.js?v=244b48c8"></script>
-<script src="assets/js/booking.js?v=74389488"></script>
+<script src="assets/js/booking.js?v=e767d8ed"></script>
 </body>
 </html>

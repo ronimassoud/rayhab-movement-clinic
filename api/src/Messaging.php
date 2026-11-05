@@ -47,7 +47,9 @@ class Messaging
         $driver = $this->cfg->get('EMAIL_DRIVER');
         if ($driver === 'off') return ['id' => null, 'skipped' => true];
         if ($driver === 'log') {
-            error_log('[email] to ' . $to . ': ' . $subject);
+            // In development a private link is printed too, so the payment page can be opened from the log.
+            $link = $this->cfg->env() === 'development' && preg_match('#https?://\S+/payment/\#t=\S+#', $text, $m) ? ' link: ' . $m[0] : '';
+            error_log('[email] to ' . $to . ': ' . $subject . $link);
             return ['id' => 'log-' . time(), 'skipped' => false];
         }
         $headers = ['From' => $this->cfg->get('EMAIL_FROM'), 'Content-Type' => 'text/plain; charset=UTF-8', 'MIME-Version' => '1.0'];

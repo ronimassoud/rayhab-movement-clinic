@@ -305,7 +305,7 @@ final class AdminRoutes
                     $set('approved', ', hold_expires_at = null');
                     $link = $app->links->issue($apptId, new \DateTimeImmutable((string) $a['starts_at']));
                     $log('approved', 'Approved. WhatsApp sent with the payment link', 'approved');
-                    $app->notify->whatsapp($m, 'approved', [Time::dayLabel($m['local_date'], true), $m['local_time']], $link, 'approved:' . $apptId . ':' . microtime(true));
+                    $app->notify->patient($m, 'approved', [Time::dayLabel($m['local_date'], true), $m['local_time']], $link, 'approved:' . $apptId . ':' . microtime(true));
                 } elseif ($action === 'decline') {
                     $reason = trim((string) ($body['reason'] ?? ''));
                     if ($reason === '' || mb_strlen($reason) > 120) throw ApiError::validation(['reason' => 'Choose a reason.']);
@@ -313,7 +313,7 @@ final class AdminRoutes
                     $set('declined', ', hold_expires_at = null');
                     $app->links->revoke($apptId);
                     $log('declined', 'Declined: ' . $reason, 'declined');
-                    $app->notify->whatsapp($m, 'declined', [$message !== '' ? $message : $reason], null, 'declined:' . $apptId);
+                    $app->notify->patient($m, 'declined', [$message !== '' ? $message : $reason], null, 'declined:' . $apptId);
                 } elseif ($action === 'reschedule') {
                     $c = new Check($body);
                     $date = $c->match('date', Check::DAY, 'Choose a day.');
@@ -331,13 +331,13 @@ final class AdminRoutes
                               [$start->format(DATE_ATOM), $end->format(DATE_ATOM), $date, $time, $app->cfg->int('HOLD_HOURS'), $apptId]);
                     $link = $app->links->issue($apptId, $start);
                     $log('reschedule_proposed', 'New time proposed: ' . Time::dayLabel($date) . ' ' . $time, 'reschedule_requested');
-                    $app->notify->whatsapp($m, 'new_time', [Time::dayLabel($date, true), $time], $link, 'newtime:' . $apptId . ':' . $date . $time);
+                    $app->notify->patient($m, 'new_time', [Time::dayLabel($date, true), $time], $link, 'newtime:' . $apptId . ':' . $date . $time);
                 } elseif ($action === 'cancel') {
                     $reason = mb_substr(trim((string) ($body['reason'] ?? '')), 0, 500);
                     $set('cancelled', ', hold_expires_at = null');
                     $app->links->revoke($apptId);
                     $log('cancelled', 'Cancelled' . ($reason !== '' ? ': ' . $reason : ''), 'cancelled');
-                    $app->notify->whatsapp($m, 'cancelled', [Time::dayLabel($m['local_date'], true), $m['local_time']], null, 'cancelled:' . $apptId);
+                    $app->notify->patient($m, 'cancelled', [Time::dayLabel($m['local_date'], true), $m['local_time']], null, 'cancelled:' . $apptId);
                 } elseif ($action === 'complete') {
                     $set('completed');
                     $log('completed', 'Marked completed', 'completed');
