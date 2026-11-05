@@ -1,7 +1,7 @@
 /* Rayhab, payment choice (payment/index.html).
 
-   Opened from the WhatsApp message the patient receives once the clinic
-   approves a request:
+   Opened from the message the patient receives once the clinic approves
+   a request (by email in phase 1, by WhatsApp in phase 2):
 
      https://dr-rayhab.com/payment/#t={token}
 
@@ -152,7 +152,7 @@
         title: 'Payment received',
         text: (p.method === 'whish' ? 'Whish has confirmed your payment of ' : 'The clinic has recorded your payment of ') + amount +
               '. ' + (a.status === 'confirmed' ? 'Your appointment is confirmed.' : 'The clinic will confirm the appointment.'),
-        facts: [p.receipt_reference ? 'Receipt reference: ' + p.receipt_reference : '', 'Keep this page or the WhatsApp message for your records.'].filter(Boolean),
+        facts: [p.receipt_reference ? 'Receipt reference: ' + p.receipt_reference : '', 'Keep this page or the clinic’s message for your records.'].filter(Boolean),
         actions: [{ label: 'Read: what to expect', href: '../scoliosis/' }] });
     }
     if (p.status === 'refunded') {
@@ -329,7 +329,7 @@
         view = res.body;
         if (accept) return renderView();
         return message({ tone: 'info', eyebrow: 'Another time requested', title: 'The clinic will find another time',
-          text: 'Thank you. The clinic will message you on WhatsApp with another time.', actions: [WA] });
+          text: 'Thank you. The clinic will be in touch with another time.', actions: [WA] });
       }
       if (res.status === 409 || res.status === 410) return load();
       problem('Your answer could not be saved. Try again in a moment.');
@@ -415,7 +415,7 @@
       title: expired ? 'This payment link has expired' : 'This payment link does not work',
       text: expired
         ? 'For your security, payment links only work for a limited time. Message the clinic and they will send you a new one.'
-        : 'The link may be incomplete. Open it again from the clinic’s WhatsApp message, or ask the clinic for a new one.',
+        : 'The link may be incomplete. Open it again from the clinic’s message, or ask the clinic for a new one.',
       actions: [{ label: 'WhatsApp the clinic', href: CLINIC_WA }] });
   }
 

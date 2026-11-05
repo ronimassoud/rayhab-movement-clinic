@@ -304,7 +304,7 @@ final class AdminRoutes
                     }
                     $set('approved', ', hold_expires_at = null');
                     $link = $app->links->issue($apptId, new \DateTimeImmutable((string) $a['starts_at']));
-                    $log('approved', 'Approved. WhatsApp sent with the payment link', 'approved');
+                    $log('approved', 'Approved. The payment link was sent to the patient', 'approved');
                     $app->notify->patient($m, 'approved', [Time::dayLabel($m['local_date'], true), $m['local_time']], $link, 'approved:' . $apptId . ':' . microtime(true));
                 } elseif ($action === 'decline') {
                     $reason = trim((string) ($body['reason'] ?? ''));

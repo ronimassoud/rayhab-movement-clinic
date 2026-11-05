@@ -867,7 +867,7 @@
     };
     if (kind === 'approve') {
       return dialog({ title: 'Approve this request?', ok: 'Approve and notify', tone: 'spring',
-        body: summaryLine(a) + '<p class="adm-dl-p">The patient gets a WhatsApp message with a secure link to choose how to pay.</p>',
+        body: summaryLine(a) + '<p class="adm-dl-p">The patient is sent a secure link to confirm the appointment.</p>',
         send: function (key) { return A.approve(a.id, {}, key); },
         done: function (res) { after(res, a.reference + ' approved. The patient is being notified.'); } });
     }
@@ -877,8 +877,8 @@
           field('dc-reason', 'Reason', '<select class="input" id="dc-reason"><option value="">Choose a reason</option>' +
             ['No suitable time available', 'Not the right service for this concern', 'Outside what the clinic treats', 'Duplicate request', 'Other']
               .map(function (r) { return '<option>' + r + '</option>'; }).join('') + '</select>') +
-          field('dc-msg', 'Message to the patient (optional)', '<textarea class="textarea" id="dc-msg" maxlength="500" placeholder="Sent with the WhatsApp message."></textarea>') +
-          '</div><p class="adm-dl-p">The time is released and the patient is told by WhatsApp. The message passes through Meta, so leave out medical details.</p>',
+          field('dc-msg', 'Message to the patient (optional)', '<textarea class="textarea" id="dc-msg" maxlength="500" placeholder="Included in the message to the patient."></textarea>') +
+          '</div><p class="adm-dl-p">The time is released and the patient is told. The message passes through the clinic’s email or messaging provider, so leave out medical details.</p>',
         check: function () { return $('dc-reason').value ? null : ['dc-reason', 'Choose a reason.']; },
         fieldFor: { reason: 'dc-reason', message: 'dc-msg' },
         send: function (key) { return A.decline(a.id, { reason: $('dc-reason').value, message: $('dc-msg').value.trim() || null }, key); },
@@ -917,7 +917,7 @@
         field('pr-time', 'Time', '<select class="input" id="pr-time" disabled><option>Loading…</option></select>') +
         '</div>' +
         field('pr-msg', 'Message to the patient (optional)', '<textarea class="textarea" id="pr-msg" maxlength="500"></textarea>') +
-        '</div><p class="adm-dl-p">The patient is asked by WhatsApp to accept the new time.</p>',
+        '</div><p class="adm-dl-p">The patient is asked to accept the new time.</p>',
       open: function () {
         var load = function () {
           var sel = $('pr-time'), d = $('pr-date').value;

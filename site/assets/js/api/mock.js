@@ -443,7 +443,7 @@
       if (action === 'approve') {
         if (sc === 'conflict') return err(409, 'slot_taken', 'That time is no longer free. Propose another time instead.');
         a.status = 'approved'; a.hold_expires_at = null;
-        log(a, 'approved', 'staff', 'Approved. WhatsApp sent with the payment link', 0);
+        log(a, 'approved', 'staff', 'Approved. The payment link was sent to the patient', 0);
       } else if (action === 'decline') {
         if (!body.reason) return err(422, 'validation', 'Choose a reason.', { errors: { reason: 'Choose a reason.' } });
         a.status = 'declined'; a.hold_expires_at = null;
