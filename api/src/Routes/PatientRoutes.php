@@ -1,9 +1,11 @@
 <?php
 /* The patient's secure link (README.md, "API contracts: payment choice").
 
-     GET  /api/payment-selection/{token}              what the page shows
-     POST /api/payment-selection/{token}              { method: "whish" | "cash" }
-     POST /api/payment-selection/{token}/reschedule   { accept: true | false }
+     GET  /api/payment-selection                      what the page shows
+     POST /api/payment-selection                      { method: "whish" | "cash" }
+     POST /api/payment-selection/reschedule           { accept: true | false }
+       (the link's token in the X-Payment-Token header, never in the path,
+       so it stays out of the hosting's request logs)
      POST /api/payments/whish/create                  { token } -> { checkout_url }
      POST /api/webhooks/whish                         Whish's authenticated callback
      GET|POST /api/payments/whish/sandbox/{ref}       the stand-in checkout (sandbox only) */
@@ -52,6 +54,12 @@ final class PatientRoutes
         ];
     }
 
+    /* The link's token comes in a header, so no URL (and no request log) holds it. */
+    private static function token(Request $r): string
+    {
+        return trim($r->header('x-payment-token'));
+    }
+
     private static function current(App $app, string $apptId): array
     {
         $a = $app->records->load($apptId, null);
@@ -61,9 +69,9 @@ final class PatientRoutes
 
     public static function register(App $app): void
     {
-        $app->get('/api/payment-selection/{token}', function (Request $r, array $p) use ($app) {
+        $app->get('/api/payment-selection', function (Request $r) use ($app) {
             $app->guard->limit('link-ip:' . $r->ip, 60, 60);
-            $apptId = $app->links->resolve($p['token']);
+            $apptId = $app->links->resolve(self::token($r));
             // While the page waits on Whish, ask Whish about this one payment
             // rather than waiting for the minute-by-minute worker.
             $pending = $app->db->one("select t.external_ref from rayhab.payment_transactions t join rayhab.payment_intents pi on pi.id = t.intent_id
@@ -73,13 +81,14 @@ final class PatientRoutes
             return Response::json(self::current($app, $apptId));
         });
 
-        $app->post('/api/payment-selection/{token}', function (Request $r, array $p) use ($app) {
+        $app->post('/api/payment-selection', function (Request $r) use ($app) {
             $app->guard->origin($r);
             $app->guard->limit('link-ip:' . $r->ip, 60, 60);
-            $apptId = $app->links->resolve($p['token']);
+            $token = self::token($r);
+            $apptId = $app->links->resolve($token);
             $method = (string) ($r->json()['method'] ?? '');
             if (!in_array($method, ['whish', 'cash'], true)) throw ApiError::validation(['method' => 'Choose Whish or cash.']);
-            return $app->guard->idempotent($r, 'select:' . Util::sha256($p['token']), function () use ($app, $apptId, $method) {
+            return $app->guard->idempotent($r, 'select:' . Util::sha256($token), function () use ($app, $apptId, $method) {
                 $app->db->tx(function (Db $t) use ($app, $apptId, $method) {
                     $row = $t->one('select a.status, pi.id, pi.method, pi.status as pay_status from rayhab.appointments a
                                       join rayhab.payment_intents pi on pi.appointment_id = a.id where a.id = ? for update', [$apptId]);
@@ -108,12 +117,13 @@ final class PatientRoutes
             });
         });
 
-        $app->post('/api/payment-selection/{token}/reschedule', function (Request $r, array $p) use ($app) {
+        $app->post('/api/payment-selection/reschedule', function (Request $r) use ($app) {
             $app->guard->origin($r);
-            $apptId = $app->links->resolve($p['token']);
+            $token = self::token($r);
+            $apptId = $app->links->resolve($token);
             $accept = $r->json()['accept'] ?? null;
             if (!is_bool($accept)) throw ApiError::validation(['accept' => 'Answer yes or no.']);
-            return $app->guard->idempotent($r, 'reschedule:' . Util::sha256($p['token']), function () use ($app, $apptId, $accept) {
+            return $app->guard->idempotent($r, 'reschedule:' . Util::sha256($token), function () use ($app, $apptId, $accept) {
                 $app->db->tx(function (Db $t) use ($app, $apptId, $accept) {
                     $row = $t->one('select a.status, a.local_date, a.local_time, a.reference, pi.method from rayhab.appointments a
                                       join rayhab.payment_intents pi on pi.appointment_id = a.id where a.id = ? for update', [$apptId]);

@@ -129,7 +129,7 @@ reviewed against Law 81/2018 before real patient data is stored:
 | Processor | What it holds or sees | Where |
 |---|---|---|
 | Supabase | The database (bookings, contact details, notes, payments, website questions) and staff sign-in | The region chosen for the project (recommended: Frankfurt, EU) |
-| Vercel (hosting, decided 2026-11-05) | The site and the PHP API; requests pass through it and its request logs (IP address, path, time; kept briefly) hold the payment-selection path with a link's token. The database is at Supabase | The API in Dublin (EU); pages from its global network |
+| Vercel (hosting, decided 2026-11-05) | The site and the PHP API; requests pass through it and its request logs (IP address, path, time; kept briefly). Payment links' tokens are never in a path, so the logs never hold them. The database is at Supabase | The API in Dublin (EU); pages from its global network |
 | GitHub | The nightly backups, encrypted to the clinic's key, so GitHub cannot read them; kept 14 days | United States |
 | Meta (WhatsApp Business Platform) | Patient phone numbers and the message text: appointment day and time, payment links, decline reasons. Messages never name the service, so they don't reveal a condition | Meta's infrastructure |
 | Resend (email) | **Phase 1 (2026-11-05): every message to patients**, by email: their address, the appointment's day and time, and the private link (sealed in the database, put in only at sending). Plus the staff notices: a booking reference and its day and time, or that a website question arrived. Questions and notes stay in the database, behind the admin sign-in | The provider's region |

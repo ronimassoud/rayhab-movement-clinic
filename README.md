@@ -720,7 +720,11 @@ to it, so health details in a question stay behind the staff sign-in.
 **Whish return.** Whish's return URL is
 `https://dr-rayhab.com/payment/#t={token}&r=1`.
 
-#### `GET /api/payment-selection/{token}`
+#### `GET /api/payment-selection`
+
+The link's token goes in the `X-Payment-Token` request header on this
+endpoint and the two below, never in the path or the query, so no request
+log holds it.
 
 What the page shows. It is read-only and is also what the page polls while
 verifying.
@@ -775,7 +779,7 @@ the clinic has not set.
 | `paid` | "Payment received", with the receipt reference. |
 | `refunded` | "Payment refunded". |
 
-#### `POST /api/payment-selection/{token}`
+#### `POST /api/payment-selection`
 
 The body is `{ "method": "whish" | "cash" }`. The response has the same shape
 as the GET, updated.
@@ -788,7 +792,7 @@ as the GET, updated.
 
 On any `409` the page reloads and shows what is true now.
 
-#### `POST /api/payment-selection/{token}/reschedule`
+#### `POST /api/payment-selection/reschedule`
 
 The patient's answer to a new time the clinic proposed: `{ "accept": true | false }`.
 The response has the same shape as the GET.
@@ -941,7 +945,7 @@ The browser checks are for convenience only; the server must enforce:
     from checkout, and never because the patient chose cash.
 - **Idempotency.** Store `Idempotency-Key` per endpoint and actor for at
   least 24 hours. A repeat returns the first response. This matters most for
-  `POST /api/appointments`, `POST /api/payment-selection/{token}`,
+  `POST /api/appointments`, `POST /api/payment-selection`,
   `POST /api/payments/whish/create` and `confirm-cash`.
 - **Tokens.** Payment-link tokens:
   - at least 128 bits of randomness;

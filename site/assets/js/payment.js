@@ -9,8 +9,9 @@
    It travels in the #fragment, which browsers never send to a server, so
    it does not end up in access logs, in a Referer, or in analytics.
 
-     GET  /api/payment-selection/{token}   what to show (read-only, polled)
-     POST /api/payment-selection/{token}   { method: "whish" | "cash" }
+     GET  /api/payment-selection           what to show (read-only, polled)
+     POST /api/payment-selection           { method: "whish" | "cash" }
+     (the token in the X-Payment-Token header)
      POST /api/payments/whish/create       { token } -> { checkout_url }
 
    Whish sends the patient back to #t={token}&r=1. Coming back proves

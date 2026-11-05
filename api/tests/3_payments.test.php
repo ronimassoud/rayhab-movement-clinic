@@ -24,7 +24,7 @@ $quiet = new class(config()) extends Messaging {
 
 test('the payment page shows the approved appointment and both methods', function () use ($app, $approved) {
     [, $link] = $approved();
-    $v = call($app, 'GET', "/api/payment-selection/$link")->data();
+    $v = call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->data();
     eq('approved', $v['appointment']['status']);
     eq('Scoliosis assessment', $v['appointment']['service']['name']);
     eq(['method' => null, 'status' => 'not_selected', 'amount' => 8000, 'currency' => 'USD', 'outstanding' => 8000],
@@ -32,18 +32,26 @@ test('the payment page shows the approved appointment and both methods', functio
     eq(['whish', 'cash'], $v['allowed_methods']);
 });
 
+test('the link token travels only in a header, never in the path', function () use ($app, $approved) {
+    [, $link] = $approved();
+    eq('link_invalid', call($app, 'GET', '/api/payment-selection')->data()['error']['code'], 'no header');
+    eq(404, call($app, 'GET', "/api/payment-selection/$link")->status, 'the old path form is not a route');
+    eq(404, call($app, 'POST', "/api/payment-selection/$link", ['method' => 'cash'])->status);
+    eq('approved', call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => " $link "])->data()['appointment']['status'], 'trimmed');
+});
+
 test('unknown and expired links', function () use ($app, $approved) {
-    eq('link_invalid', call($app, 'GET', '/api/payment-selection/' . str_repeat('x', 43))->data()['error']['code']);
+    eq('link_invalid', call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => str_repeat('x', 43)])->data()['error']['code']);
     [$id, $link] = $approved();
     $app->db->query("update rayhab.payment_links set expires_at = now() - interval '1 minute' where appointment_id = ?", [$id]);
-    $r = call($app, 'GET', "/api/payment-selection/$link");
+    $r = call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link]);
     eq(410, $r->status);
     eq('link_expired', $r->data()['error']['code']);
 });
 
 test('choosing cash confirms the appointment but leaves it unpaid', function () use ($app, $approved) {
     [, $link] = $approved();
-    $v = call($app, 'POST', "/api/payment-selection/$link", ['method' => 'cash'])->data();
+    $v = call($app, 'POST', '/api/payment-selection', ['method' => 'cash'], ['x-payment-token' => $link])->data();
     eq('confirmed', $v['appointment']['status']);
     eq('cash', $v['payment']['method']);
     eq('awaiting_payment', $v['payment']['status']);
@@ -52,7 +60,7 @@ test('choosing cash confirms the appointment but leaves it unpaid', function () 
 
 test('confirm cash received: once, however often it is pressed', function () use ($app, $staff, $approved) {
     [$id, $link] = $approved();
-    call($app, 'POST', "/api/payment-selection/$link", ['method' => 'cash']);
+    call($app, 'POST', '/api/payment-selection', ['method' => 'cash'], ['x-payment-token' => $link]);
     $a = staffCall($app, $staff, 'GET', "/api/admin/appointments/$id")->data()['appointment'];
     eq(['confirm_cash'], $a['payment']['actions']);
     $url = '/api/admin/payments/' . $a['payment']['id'] . '/confirm-cash';
@@ -73,14 +81,14 @@ test('confirm cash received: once, however often it is pressed', function () use
     $after = staffCall($app, $staff, 'GET', "/api/admin/appointments/$id")->data()['appointment'];
     ok($after['financial_closed_at'] !== null, 'financial case closed');
     eq('confirmed', $after['status'], 'paid is not completed');
-    $v = call($app, 'GET', "/api/payment-selection/$link")->data();
+    $v = call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->data();
     eq('paid', $v['payment']['status']);
     eq([], $v['allowed_methods']);
 });
 
 $startWhish = function () use ($app, $approved): array {
     [$id, $link] = $approved();
-    call($app, 'POST', "/api/payment-selection/$link", ['method' => 'whish']);
+    call($app, 'POST', '/api/payment-selection', ['method' => 'whish'], ['x-payment-token' => $link]);
     $co = call($app, 'POST', '/api/payments/whish/create', ['token' => $link]);
     eq(200, $co->status, $co->body);
     $ref = basename(parse_url($co->data()['checkout_url'], PHP_URL_PATH));
@@ -89,14 +97,14 @@ $startWhish = function () use ($app, $approved): array {
 
 test('coming back from Whish is not proof: unpaid until verified', function () use ($app, $startWhish) {
     [, $link, $ref, $url] = $startWhish();
-    $back = call($app, 'GET', "/api/payment-selection/$link")->data();
+    $back = call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->data();
     eq('awaiting_payment', $back['payment']['status']);
     eq('pending', $back['payment']['last_attempt']['status']);
     eq(false, $back['can_change_method']);
     eq($url, call($app, 'POST', '/api/payments/whish/create', ['token' => $link])->data()['checkout_url'], 'the open checkout is reused');
     call($app, 'POST', "/api/payments/whish/sandbox/$ref", 'outcome=verified', ['content-type' => 'application/x-www-form-urlencoded']);
     $app->db->query("update rayhab.payment_transactions set updated_at = now() - interval '1 minute' where external_ref = ?", [$ref]);
-    $paid = call($app, 'GET', "/api/payment-selection/$link")->data();
+    $paid = call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->data();
     eq('paid', $paid['payment']['status'], 'verified when the page asks again');
     eq($ref, $paid['payment']['receipt_reference']);
 });
@@ -108,14 +116,14 @@ test('the worker settles a Whish payment once', function () use ($app, $startWhi
     $w = new Worker($app, $quiet);
     eq(1, $w->reconcile());
     eq(0, $w->reconcile());
-    eq('paid', call($app, 'GET', "/api/payment-selection/$link")->data()['payment']['status']);
+    eq('paid', call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->data()['payment']['status']);
 });
 
 test('a failed payment stays unpaid and may be retried', function () use ($app, $startWhish) {
     [, $link, $ref] = $startWhish();
     call($app, 'POST', "/api/payments/whish/sandbox/$ref", 'outcome=failed', ['content-type' => 'application/x-www-form-urlencoded']);
     $app->db->query("update rayhab.payment_transactions set updated_at = now() - interval '1 minute' where external_ref = ?", [$ref]);
-    $v = call($app, 'GET', "/api/payment-selection/$link")->data();
+    $v = call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->data();
     eq('awaiting_payment', $v['payment']['status']);
     eq('failed', $v['payment']['last_attempt']['status']);
     eq(true, $v['can_retry']);
@@ -128,13 +136,13 @@ test('a callback must be authentic, and counts once', function () use ($app, $st
     eq(401, call($app, 'POST', '/api/webhooks/whish', $raw, ['x-sandbox-signature' => 'nope'])->status);
     $sig = Util::hmac($app->cfg->get('APP_SECRET'), $raw);
     for ($i = 0; $i < 2; $i++) eq(200, call($app, 'POST', '/api/webhooks/whish', $raw, ['x-sandbox-signature' => $sig])->status);
-    eq('paid', call($app, 'GET', "/api/payment-selection/$link")->data()['payment']['status']);
+    eq('paid', call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->data()['payment']['status']);
     eq(1, $app->db->one("select count(*)::int as n from rayhab.events where appointment_id = ? and type = 'payment_verified'", [$id])['n']);
 });
 
 test('with Whish disabled, only cash is offered', function () use ($app, $approved) {
     [, $link] = $approved();
-    eq(['cash'], call(sibling($app, ['WHISH_DRIVER' => 'disabled']), 'GET', "/api/payment-selection/$link")->data()['allowed_methods']);
+    eq(['cash'], call(sibling($app, ['WHISH_DRIVER' => 'disabled']), 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->data()['allowed_methods']);
 });
 
 test('the worker delivers the outbox and removes the sealed link once sent', function () use ($app, $approved, $quiet) {

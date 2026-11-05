@@ -83,6 +83,7 @@
     if (body != null) headers['Content-Type'] = 'application/json';
     if (mutating) headers['Idempotency-Key'] = opts.key || newKey();
     if (mutating && csrf) headers['X-CSRF-Token'] = csrf;
+    Object.keys(opts.headers || {}).forEach(function (k) { headers[k] = opts.headers[k]; });
 
     if (DEMO) {
       return loadMock().then(function (mock) {

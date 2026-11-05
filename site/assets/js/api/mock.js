@@ -517,8 +517,9 @@
         return ok({ status: 'requested', id: a.id, reference: a.reference, hold_expires_at: a.hold_expires_at }, 201);
       }
 
-      if ((m = /^\/payment-selection\/([^/]+)\/reschedule$/.exec(p)) && method === 'POST') {
-        var rt = tokenAppt(decodeURIComponent(m[1]));
+      var linkToken = String(headers['X-Payment-Token'] || headers['x-payment-token'] || '');
+      if (p === '/payment-selection/reschedule' && method === 'POST') {
+        var rt = tokenAppt(linkToken);
         if (!rt) return err(404, 'link_invalid', 'This link is not recognized.');
         if (rt.status !== 'reschedule_requested') return err(409, 'appointment_closed', 'There is no new time waiting for an answer.');
         rt.status = body.accept ? (rt.payment.method ? 'confirmed' : 'approved') : 'requested';
@@ -526,8 +527,8 @@
         refreshActions(rt);
         return ok(selectionView(rt));
       }
-      if ((m = /^\/payment-selection\/([^/]+)$/.exec(p))) {
-        var token = decodeURIComponent(m[1]);
+      if (p === '/payment-selection') {
+        var token = linkToken;
         if (token === 'demo-expired') return err(410, 'link_expired', 'This link has expired.');
         var ta = tokenAppt(token);
         if (!ta) return err(404, 'link_invalid', 'This link is not recognized.');

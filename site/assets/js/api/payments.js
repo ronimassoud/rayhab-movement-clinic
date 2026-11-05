@@ -1,9 +1,11 @@
 /* Rayhab, payments API (contracts in README.md).
 
    Patient, through the secure link's opaque token:
-     selection(token)                 GET  /api/payment-selection/:token
-     choose(token, method, key)       POST /api/payment-selection/:token
-     answerNewTime(token, accept, key) POST /api/payment-selection/:token/reschedule
+     selection(token)                 GET  /api/payment-selection
+     choose(token, method, key)       POST /api/payment-selection
+     answerNewTime(token, accept, key) POST /api/payment-selection/reschedule
+     The token goes in the X-Payment-Token header, never in the URL, so
+     it stays out of request logs.
      whishCheckout(token, key)        POST /api/payments/whish/create
 
    Staff:
@@ -17,12 +19,12 @@
   'use strict';
   var api = window.RayhabAPI;
   if (!api) return;
-  function tok(t) { return '/payment-selection/' + encodeURIComponent(t); }
+  function tok(t) { return { 'X-Payment-Token': String(t || '') }; }
   api.payments = {
-    selection: function (token) { return api.get(tok(token), { timeout: 10000 }); },
-    choose: function (token, method, key) { return api.post(tok(token), { method: method }, { key: key }); },
+    selection: function (token) { return api.get('/payment-selection', { timeout: 10000, headers: tok(token) }); },
+    choose: function (token, method, key) { return api.post('/payment-selection', { method: method }, { key: key, headers: tok(token) }); },
     // A new time the clinic proposed: accept it, or ask for another.
-    answerNewTime: function (token, accept, key) { return api.post(tok(token) + '/reschedule', { accept: !!accept }, { key: key }); },
+    answerNewTime: function (token, accept, key) { return api.post('/payment-selection/reschedule', { accept: !!accept }, { key: key, headers: tok(token) }); },
     whishCheckout: function (token, key) { return api.post('/payments/whish/create', { token: token }, { key: key, timeout: 20000 }); },
     list: function (f) { return api.get('/admin/payments' + api.qs(f), { timeout: 10000 }); },
     confirmCash: function (id, body, key) {

@@ -17,7 +17,7 @@ test('the booking form is told phase 1: patients are emailed, payment is at the 
 
 test('choosing cash never marks the payment paid', async () => {
   const m = mock();
-  const r = await m.handle('POST', '/payment-selection/demo-approved', { method: 'cash' });
+  const r = await m.handle('POST', '/payment-selection', { method: 'cash' }, { 'X-Payment-Token': 'demo-approved' });
   assert.equal(r.status, 200);
   assert.equal(r.body.payment.method, 'cash');
   assert.equal(r.body.payment.status, 'awaiting_payment');
@@ -40,20 +40,20 @@ test('cash is recorded once, however often it is sent', async () => {
 
 test('coming back from Whish is not proof of payment', async () => {
   const m = mock();
-  await m.handle('POST', '/payment-selection/demo-approved', { method: 'whish' });
+  await m.handle('POST', '/payment-selection', { method: 'whish' }, { 'X-Payment-Token': 'demo-approved' });
   const co = await m.handle('POST', '/payments/whish/create', { token: 'demo-approved' });
   assert.ok(co.body.checkout_url);
-  const back = await m.handle('GET', '/payment-selection/demo-approved');
+  const back = await m.handle('GET', '/payment-selection', null, { 'X-Payment-Token': 'demo-approved' });
   assert.equal(back.body.payment.status, 'awaiting_payment');
   m.settleWhish(m.tokenAppt('demo-approved'), 'failed');
-  const failed = await m.handle('GET', '/payment-selection/demo-approved');
+  const failed = await m.handle('GET', '/payment-selection', null, { 'X-Payment-Token': 'demo-approved' });
   assert.equal(failed.body.payment.status, 'awaiting_payment');
   assert.equal(failed.body.can_retry, true);
 });
 
 test('a verified Whish payment closes the financial case, not the appointment', async () => {
   const m = mock();
-  for (let i = 0; i < 3; i++) await m.handle('GET', '/payment-selection/demo-verifying');
+  for (let i = 0; i < 3; i++) await m.handle('GET', '/payment-selection', null, { 'X-Payment-Token': 'demo-verifying' });
   const a = m.tokenAppt('demo-verifying');
   assert.equal(a.payment.status, 'paid');
   assert.ok(a.financial_closed_at);
@@ -102,6 +102,6 @@ test('staff changes need the CSRF token, and an ended session says so', async ()
 
 test('expired and unknown payment links', async () => {
   const m = mock();
-  assert.equal((await m.handle('GET', '/payment-selection/demo-expired')).status, 410);
-  assert.equal((await m.handle('GET', '/payment-selection/nope-nope')).status, 404);
+  assert.equal((await m.handle('GET', '/payment-selection', null, { 'X-Payment-Token': 'demo-expired' })).status, 410);
+  assert.equal((await m.handle('GET', '/payment-selection', null, { 'X-Payment-Token': 'nope-nope' })).status, 404);
 });

@@ -66,9 +66,9 @@ test('phase 1 end to end: request, approve, confirm by email link, record cash, 
     ok(!str_contains($after['payload'], $link) && !str_contains($after['payload'], 'link_sealed'), 'the outbox keeps no link once sent');
 
     // The patient confirms with "pay at the clinic"; Rayan is told.
-    $v = call($app, 'GET', "/api/payment-selection/$link")->data();
+    $v = call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->data();
     eq(['cash'], $v['allowed_methods'], 'cash is the only method');
-    eq('confirmed', call($app, 'POST', "/api/payment-selection/$link", ['method' => 'cash'])->data()['appointment']['status']);
+    eq('confirmed', call($app, 'POST', '/api/payment-selection', ['method' => 'cash'], ['x-payment-token' => $link])->data()['appointment']['status']);
     $told = $app->db->one("select recipient, payload from rayhab.notification_outbox where template = 'patient_confirmed' and appointment_id = ?", [$id]);
     eq('clinic@rayhab.test', $told['recipient']);
     ok(str_contains($told['payload'], 'pay at the clinic') && !str_contains($told['payload'], 'Maya'), 'Rayan hears it, without patient details');

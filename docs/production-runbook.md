@@ -292,6 +292,7 @@ Once all templates are approved, set `WHATSAPP_DRIVER=cloud` and `PATIENT_CHANNE
 Nothing to set up for deploys: Vercel deploys from Git. The workflows:
 
 - **Site CI** and **API CI**, on every push: the browser-script and API tests, the built files current, every link resolving, nothing loading from another site, and `vercel.json` (function, route, cron, headers, script hashes).
+- **Live check**, after every successful Vercel deployment (`infra/vercel/check-live.mjs`): production always; staging once the repository secret `VERCEL_BYPASS` holds the value from Vercel **Settings > Deployment Protection > Protection Bypass for Automation**. A red run means the live site is missing a header or a protection: fix it, or roll back (step 10).
 - **Nightly database backup** (5.8).
 
 The old GitHub Pages copy (`ronimassoud.github.io/rayhab-movement-clinic`) no longer updates. Turn it off: **Settings > Pages > Unpublish** (or set the source to None).
@@ -311,7 +312,7 @@ The old GitHub Pages copy (`ronimassoud.github.io/rayhab-movement-clinic`) no lo
    - `https://www.dr-rayhab.com` redirects to `https://dr-rayhab.com/`.
    - A missing page answers 404 with the branded page.
    - The pages have **no** `noindex` tag and no `rayhab-demo`.
-   - `curl -sI https://dr-rayhab.com` shows the CSP, `strict-transport-security`, nosniff and the referrer policy; `curl -sI https://dr-rayhab.com/admin/` shows `no-store` and `noindex`.
+   - **Actions > Live check** passed for this deploy. It runs by itself after every production deploy and checks what the site really sends: the security headers, `no-store` and `noindex` on the admin and payment pages, the redirects, the 404 page, the API (staff data and the cron route refused without credentials) and TLS 1.2 or newer only. By hand: `node infra/vercel/check-live.mjs https://dr-rayhab.com --production`.
    - A real booking from your own email address, end to end, as in step 8.
 8. **Lengthen HSTS** after a week with all of this holding: in `vercel.json`, change `max-age=86400` to `max-age=31536000`, then merge and deploy.
 
@@ -334,7 +335,7 @@ Opening hours live in `rayhab.working_hours` (weekday 0 is Sunday; times are Bei
 
 ## 12. Running it
 
-**Logs:** Vercel > the project > **Logs**: the API's requests and errors, and the cron runs (**Settings > Cron Jobs** shows each one). Error lines withhold email addresses, phone numbers and the values a database error can quote. Vercel keeps runtime logs only a short time; for an incident, export what matters at once (`incident-response.md`). Unlike the payment page itself, the API's request log shows the `/api/payment-selection/...` path with the private link's token; links expire, and the logs are visible only to the Vercel team.
+**Logs:** Vercel > the project > **Logs**: the API's requests and errors, and the cron runs (**Settings > Cron Jobs** shows each one). Error lines withhold email addresses, phone numbers and the values a database error can quote. Vercel keeps runtime logs only a short time; for an incident, export what matters at once (`incident-response.md`). The private link's token never reaches these logs: the payment page keeps it in the `#` part of its address, which browsers never send, and the API receives it in the `X-Payment-Token` request header, not the path.
 
 **Settings** change in the connect file, then `push-env.mjs` and a redeploy. New code arrives only through Git.
 

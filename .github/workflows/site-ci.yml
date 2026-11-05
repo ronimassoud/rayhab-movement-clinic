@@ -43,4 +43,4 @@ jobs:
         run: python3 .github/scripts/check_links.py site
 
       - name: vercel.json (function, route, cron, headers, script hashes)
-        run: node infra/vercel/check-config.mjs
+        run: node infra/vercel/check-config.mjs && node --check infra/vercel/check-live.mjs

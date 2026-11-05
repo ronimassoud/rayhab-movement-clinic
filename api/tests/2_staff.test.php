@@ -81,12 +81,12 @@ test('reschedule: only to a free time; the patient accepts or asks again', funct
     eq('reschedule_requested', $moved['status']);
     eq('15:00', $moved['local_time']);
     $link = linkFromOutbox($app, $id, 'new_time');
-    eq('reschedule_requested', call($app, 'GET', "/api/payment-selection/$link")->data()['appointment']['status']);
-    eq('requested', call($app, 'POST', "/api/payment-selection/$link/reschedule", ['accept' => false])->data()['appointment']['status']);
+    eq('reschedule_requested', call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->data()['appointment']['status']);
+    eq('requested', call($app, 'POST', '/api/payment-selection/reschedule', ['accept' => false], ['x-payment-token' => $link])->data()['appointment']['status']);
     staffCall($app, $staff, 'POST', "/api/admin/appointments/$id/reschedule", ['date' => $day, 'time' => '16:00']);
     $link2 = linkFromOutbox($app, $id, 'new_time');
-    eq(410, call($app, 'GET', "/api/payment-selection/$link")->status, 'the old link is revoked');
-    $yes = call($app, 'POST', "/api/payment-selection/$link2/reschedule", ['accept' => true])->data()['appointment'];
+    eq(410, call($app, 'GET', '/api/payment-selection', null, ['x-payment-token' => $link])->status, 'the old link is revoked');
+    $yes = call($app, 'POST', '/api/payment-selection/reschedule', ['accept' => true], ['x-payment-token' => $link2])->data()['appointment'];
     eq('approved', $yes['status']);
     eq('16:00', $yes['local_time']);
 });

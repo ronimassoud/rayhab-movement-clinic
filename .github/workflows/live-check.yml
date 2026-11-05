@@ -1,0 +1,51 @@
+# What a live deployment actually sends (infra/vercel/check-live.mjs), each
+# time Vercel finishes deploying: production at dr-rayhab.com, and staging at
+# staging.dr-rayhab.com once the VERCEL_BYPASS secret holds the project's
+# "Protection Bypass for Automation" value. Also runnable by hand.
+name: Live check
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Which site to check
+        type: choice
+        options: [production, staging]
+        default: production
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       (startsWith(github.event.deployment.environment, 'Production') ||
+        github.event.deployment.ref == 'redesign-2.0'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with: { persist-credentials: false }
+      - uses: actions/setup-node@v7
+        with: { node-version: 22 }
+      - name: Check the live site
+        env:
+          VERCEL_BYPASS: ${{ secrets.VERCEL_BYPASS }}
+          EVENT: ${{ github.event_name }}
+          TARGET: ${{ inputs.target }}
+          ENVIRONMENT: ${{ github.event.deployment.environment }}
+        run: |
+          if [ "$EVENT" = workflow_dispatch ]; then which="$TARGET"
+          elif [ "${ENVIRONMENT#Production}" != "$ENVIRONMENT" ]; then which=production
+          else which=staging; fi
+          if [ "$which" = production ]; then
+            sleep 20   # let the domain move to the new deployment
+            node infra/vercel/check-live.mjs https://dr-rayhab.com --production
+          elif [ -n "$VERCEL_BYPASS" ]; then
+            node infra/vercel/check-live.mjs https://staging.dr-rayhab.com
+          else
+            echo "::notice::Staging not checked: add the VERCEL_BYPASS secret (Vercel > Settings > Deployment Protection > Protection Bypass for Automation)."
+          fi
