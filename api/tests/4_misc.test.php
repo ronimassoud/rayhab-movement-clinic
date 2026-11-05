@@ -25,14 +25,57 @@ test('refuses unsafe production settings', function () use ($throws, $prod) {
     $throws(['WHATSAPP_DRIVER' => 'log'] + $prod, 'WHATSAPP_DRIVER');
     $throws(['APP_SECRET' => 'short'], 'APP_SECRET');
     // Patients must hear from the clinic on the channel the booking form promises.
-    $throws(['EMAIL_DRIVER' => 'off'] + $prod, 'PATIENT_CHANNEL=email needs EMAIL_DRIVER=mail');
+    $throws(['EMAIL_DRIVER' => 'off'] + $prod, 'PATIENT_CHANNEL=email needs EMAIL_DRIVER=resend');
     $throws(['PATIENT_CHANNEL' => 'whatsapp'] + $prod, 'PATIENT_CHANNEL=whatsapp needs WHATSAPP_DRIVER=cloud');
     $throws(['PATIENT_CHANNEL' => 'sms'] + $prod, 'PATIENT_CHANNEL');
     $throws(['CLINIC_EMAIL' => 'not-an-email'] + $prod, 'CLINIC_EMAIL');
 });
 
-test('accepts a complete production setup', function () use ($prod) {
+test('accepts a complete production setup', function () use ($prod, $throws) {
     eq(['https://dr-rayhab.com'], (new Config($prod))->origins);
+    // On Vercel: email through Resend's API.
+    $vercel = ['EMAIL_DRIVER' => 'resend', 'RESEND_API_KEY' => 're_test_key'] + $prod;
+    eq('resend', (new Config($vercel))->get('EMAIL_DRIVER'));
+    $throws(['EMAIL_DRIVER' => 'resend'] + $prod, 'RESEND_API_KEY');
+    $throws(['CRON_SECRET' => 'short'] + $vercel, 'CRON_SECRET');
+});
+
+test('on Vercel: settings from the environment, the rewritten route, the visitor address', function () {
+    $keys = ['DEPLOY_ENV' => 'test', 'APP_SECRET' => str_repeat('e', 40), 'PUBLIC_ORIGIN' => 'https://example.test', 'EMAIL_DRIVER' => 'log'];
+    $had = getenv('RAYHAB_ENV_FILE');
+    putenv('RAYHAB_ENV_FILE');
+    foreach ($keys as $k => $v) putenv("$k=$v");
+    try {
+        $c = Config::fromEnvironment();
+        eq(['https://example.test', 'log'], [$c->get('PUBLIC_ORIGIN'), $c->get('EMAIL_DRIVER')]);
+    } finally {
+        foreach (array_keys($keys) as $k) putenv($k);
+        if ($had !== false) putenv("RAYHAB_ENV_FILE=$had");
+    }
+
+    $saved = [$_SERVER, $_GET];
+    try {
+        $_SERVER = ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/api/public/index.php?__route=availability&date=2026-11-06',
+                    'REMOTE_ADDR' => '127.0.0.1', 'HTTP_X_REAL_IP' => '203.0.113.7'];
+        $_GET = ['__route' => 'availability', 'date' => '2026-11-06'];
+        putenv('VERCEL=1');
+        $r = \Rayhab\Request::fromGlobals();
+        eq(['/api/availability', ['date' => '2026-11-06'], '203.0.113.7'], [$r->path, $r->query, $r->ip]);
+        putenv('VERCEL');
+        eq('127.0.0.1', \Rayhab\Request::fromGlobals()->ip, 'x-real-ip is trusted only on Vercel');
+    } finally {
+        putenv('VERCEL');
+        [$_SERVER, $_GET] = $saved;
+    }
+});
+
+test('the cron route runs the worker only with CRON_SECRET', function () use ($app) {
+    eq(401, call($app, 'GET', '/api/cron/worker')->status, 'refused while no secret is set');
+    $cron = sibling($app, ['CRON_SECRET' => str_repeat('c', 32)]);
+    eq(401, call($cron, 'GET', '/api/cron/worker', null, ['authorization' => 'Bearer wrong'])->status);
+    $ok = call($cron, 'GET', '/api/cron/worker', null, ['authorization' => 'Bearer ' . str_repeat('c', 32)]);
+    eq(200, $ok->status);
+    ok(isset($ok->data()['ran']['delivered']), 'the worker ran');
 });
 
 test('reads a settings file, ignoring comments', function () {

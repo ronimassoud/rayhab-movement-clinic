@@ -1,10 +1,9 @@
 <?php
 /* Requests about one person's data: show, export or erase it (Subject.php).
-   Run on the server, after the clinic has checked who is asking (runbook,
-   "Requests about personal data"):
+   Run from your computer, after the clinic has checked who is asking
+   (runbook, "Requests about personal data"):
 
-     sudo -u www-data RAYHAB_ENV_FILE=/srv/rayhab/production/app.env \
-       php /srv/rayhab/production/api/current/bin/subject.php <find|export|erase> --phone +961... [--email a@b.c] [--yes]
+     node api/dev/subject.mjs production <find|export|erase> --phone "+961 ..." [--email a@b.c] [--yes]
 
      find    what is held, as counts, and what erasing would do
      export  everything held, as JSON on standard output (redirect it to a

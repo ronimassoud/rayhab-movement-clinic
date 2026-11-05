@@ -34,9 +34,19 @@ final class Request
         }
         if (isset($_SERVER['CONTENT_TYPE'])) $headers['content-type'] = (string) $_SERVER['CONTENT_TYPE'];
         $path = parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH) ?: '/';
-        return new self(strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')), $path, array_map('strval', $_GET),
-                        $headers, array_map('strval', $_COOKIE), (string) file_get_contents('php://input'),
-                        (string) ($_SERVER['REMOTE_ADDR'] ?? ''));
+        $query = array_map('strval', $_GET);
+        // On Vercel, vercel.json rewrites /api/<route> to this script as ?__route=<route>.
+        if (isset($query['__route'])) {
+            $path = '/api/' . ltrim($query['__route'], '/');
+            unset($query['__route']);
+        }
+        // Behind Vercel's edge every request comes from the proxy; Vercel sets
+        // x-real-ip to the visitor's address (and overwrites what a client sends),
+        // so the per-address rate limits stay per visitor.
+        $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+        if (getenv('VERCEL') && ($headers['x-real-ip'] ?? '') !== '') $ip = $headers['x-real-ip'];
+        return new self(strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')), $path, $query,
+                        $headers, array_map('strval', $_COOKIE), (string) file_get_contents('php://input'), $ip);
     }
 
     public function header(string $name): string { return $this->headers[strtolower($name)] ?? ''; }

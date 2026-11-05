@@ -32,6 +32,14 @@ final class App
         $this->whish = new Whish($cfg, $db);
 
         $this->get('/api/health', function () { $this->db->query('select 1'); return Response::json(['ok' => true]); });
+        // Vercel Cron, every minute (vercel.json): the worker, behind CRON_SECRET.
+        $this->get('/api/cron/worker', function (Request $r) {
+            $secret = $this->cfg->get('CRON_SECRET');
+            if ($secret === '' || !hash_equals('Bearer ' . $secret, $r->header('authorization'))) {
+                return Response::json(['error' => ['code' => 'unauthenticated', 'message' => 'Not allowed.']], 401);
+            }
+            return Response::json(['ok' => true, 'ran' => (new Worker($this, new Messaging($this->cfg)))->tick()]);
+        });
         // For an uptime monitor: 503 once the cron worker has not finished a run
         // for five minutes (messages, reminders and expiring holds all wait on it).
         $this->get('/api/health/worker', function () {

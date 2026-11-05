@@ -22,6 +22,9 @@ final class HttpClient
             $h[] = 'Content-Type: application/json';
         }
         $opts[CURLOPT_HTTPHEADER] = $h;
+        // On Windows (the CLI tools run from a developer's computer) PHP's curl has no
+        // certificate list of its own: use the system's.
+        if (PHP_OS_FAMILY === 'Windows' && !ini_get('curl.cainfo') && defined('CURLSSLOPT_NATIVE_CA')) $opts[CURLOPT_SSL_OPTIONS] = CURLSSLOPT_NATIVE_CA;
         curl_setopt_array($ch, $opts);
         $raw = curl_exec($ch);
         $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);

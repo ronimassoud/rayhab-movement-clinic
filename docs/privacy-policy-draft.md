@@ -86,7 +86,7 @@ stated in the policy:
 - Message history (who was sent which message, delivery status): 90 days.
 - Appointments that happened, and payments: kept for now; the legal minimum
   for clinical and financial records is **[LEGAL]**.
-- The periods are settings (`RETAIN_*` in `app.env`), changed without code.
+- The periods are settings (`RETAIN_*` settings), changed without code.
 - Staff sign-in sessions: deleted when they expire (12 hours).
 
 ## Your rights
@@ -105,12 +105,12 @@ The clinic checks who is asking first (runbook, "Requests about personal data").
 
 **[PLANNED]** Describe the actual measures once the backend exists. Do not
 describe measures that are not in place. In the code as of 2026-10-20, and
-true once the server runs as set up in `docs/production-runbook.md`:
+true once the site runs as set up in `docs/production-runbook.md`:
 - HTTPS only, with HSTS; TLS 1.2 or newer.
 - Staff sign in with a password and an authenticator code; every change is
   recorded in an audit log.
-- Nightly backups are encrypted with a key kept off the server, **once**
-  `BACKUP_RECIPIENT` is set (runbook step 5.8). Until then, do not claim it.
+- Nightly backups are encrypted with a key kept off Vercel and GitHub: the
+  backup job refuses to run without `BACKUP_RECIPIENT` (runbook step 5.8).
 - Error logs withhold email addresses, phone numbers and the values a
   database error can quote.
 - No analytics, advertising or third-party scripts; the build fails if any
@@ -129,7 +129,8 @@ reviewed against Law 81/2018 before real patient data is stored:
 | Processor | What it holds or sees | Where |
 |---|---|---|
 | Supabase | The database (bookings, contact details, notes, payments, website questions) and staff sign-in | The region chosen for the project (recommended: Frankfurt, EU) |
-| The VPS provider | The server that runs the site and the PHP API (Apache); requests pass through it, but the database is at Supabase | The server's region (recommended: Frankfurt, EU) |
+| Vercel (hosting, decided 2026-11-05) | The site and the PHP API; requests pass through it and its request logs (IP address, path, time; kept briefly) hold the payment-selection path with a link's token. The database is at Supabase | The API in Dublin (EU); pages from its global network |
+| GitHub | The nightly backups, encrypted to the clinic's key, so GitHub cannot read them; kept 14 days | United States |
 | Meta (WhatsApp Business Platform) | Patient phone numbers and the message text: appointment day and time, payment links, decline reasons. Messages never name the service, so they don't reveal a condition | Meta's infrastructure |
 | Resend (email) | **Phase 1 (2026-11-05): every message to patients**, by email: their address, the appointment's day and time, and the private link (sealed in the database, put in only at sending). Plus the staff notices: a booking reference and its day and time, or that a website question arrived. Questions and notes stay in the database, behind the admin sign-in | The provider's region |
 | Whish Money (when online payment is on) | The payment, its amount and reference | Whish |

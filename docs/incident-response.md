@@ -3,7 +3,7 @@
 **What this is for:** anything that may have exposed, changed or lost
 patient data, or that stops the clinic taking bookings: a lost phone with
 the admin open, a leaked password or key, a message sent to the wrong
-person, a published photo whose consent was withdrawn, a server break-in,
+person, a published photo whose consent was withdrawn, a hosting account break-in,
 or a provider telling us *they* were breached.
 
 **How to use it:** follow the first-hour steps in order, then the playbook
@@ -22,29 +22,29 @@ before launch. Nothing here is legal advice.
 | Role | Who | Reach them by |
 |---|---|---|
 | **Incident lead:** decides, keeps the log, speaks for the clinic | **[DECIDE]** (normally Dr. Rayan Halimeh) | **[DECIDE]** |
-| **Technical lead:** contains and investigates; has server and Supabase access | **[DECIDE]** (whoever runs the server) | **[DECIDE]** |
+| **Technical lead:** contains and investigates; has Vercel and Supabase access | **[DECIDE]** (whoever runs the hosting) | **[DECIDE]** |
 | **Backup technical contact** | **[DECIDE]** | **[DECIDE]** |
 | **Legal adviser:** decides who must be told, and when | **[DECIDE]** | **[DECIDE]** |
 
 Keep this table, with phone numbers, somewhere you can reach without the
-admin or the server, such as a printed page or a shared note.
+admin or the site, such as a printed page or a shared note.
 
 **Providers**, through their own dashboards (you need to be signed in):
 
 | Provider | Holds | Where to report or get help |
 |---|---|---|
 | Supabase | The database and staff sign-in | Dashboard, **Support** |
-| VPS host **[DECIDE]** | The server, logs, backups | Its control panel's support |
-| Resend | Staff notice emails | Dashboard, **Help** |
+| Vercel | The site, the API, its logs, the settings (environment variables) | Dashboard, **Help** |
+| Resend | Emails to patients and staff | Dashboard, **Help** |
 | Meta (WhatsApp Business) | Patient numbers and messages | Meta Business Suite, **Help** |
-| GitHub | The code, the deploy workflow and its secrets | github.com/support |
+| GitHub | The code, CI, the nightly encrypted backups and their secrets | github.com/support |
 | Whish (once online payment is on) | Payments | Its merchant contact **[DECIDE]** |
 
 ## 2. How serious is it?
 
 | Level | Examples | Act |
 |---|---|---|
-| **1: Breach likely** | Someone outside the clinic saw or downloaded patient data; a database password or the server is compromised; backups were exposed | Now, whatever the hour |
+| **1: Breach likely** | Someone outside the clinic saw or downloaded patient data; a database password, the Vercel account or the GitHub account is compromised; backups were exposed | Now, whatever the hour |
 | **2: Breach possible** | A lost phone or laptop that was signed in to the admin; a leaked key that may not have been used; repeated "sign-in attempts blocked" emails; a message to the wrong number | Within a few hours |
 | **3: No data exposed** | The site or the worker is down (`/api/health/worker` answers 503); a failed backup; a provider outage | The same working day |
 
@@ -55,24 +55,22 @@ Start at the higher level if unsure; move down once the facts allow.
 1. **Open the incident log** (section 7). Write the time, who noticed, and
    what they saw.
 2. **Tell the incident lead and the technical lead.**
-3. **Preserve evidence before changing anything.** Logs on the server are
-   deleted after 14 days, so copy them now:
-
-   ```bash
-   sudo tar czf /root/incident-$(date -u +%Y%m%dT%H%MZ).tgz /var/log/apache2/rayhab /var/log/rayhab
-   ```
-
-   Copy the file off the server (`scp`), then delete it from the server.
-   It contains IP addresses and request details, so keep it in encrypted
-   storage, share it only with the people investigating, and delete it
-   when the incident is closed.
+3. **Preserve evidence before changing anything.** Vercel keeps the API's
+   request and error logs only a short time (about a day on Pro), so look now:
+   Vercel > the project > **Logs**, filtered to production and the time of the
+   incident. Copy or screenshot what matters; for a longer stretch, ask the
+   technical lead to stream it with `npx vercel logs`. Also note **Team
+   Settings > Activity** (who changed settings or deployed). Keep what you save
+   in encrypted storage: it contains IP addresses and request details. Share it
+   only with the people investigating, and delete it when the incident is
+   closed.
 
    In Supabase, look at the **Logs** (Auth and Postgres) while they are still
    there: the Free plan keeps them only a short time. Export or screenshot
    what matters.
 4. **Contain** with the matching playbook (section 4). Prefer steps that can
    be undone: signing everyone out, or taking the API offline, loses nothing.
-5. **Do not** delete records, wipe the server or contact anyone outside the
+5. **Do not** delete records, redeploy over the evidence or contact anyone outside the
    clinic yet, except a provider whose help you need to contain it. Who to
    tell is decided in section 5.
 
@@ -82,9 +80,10 @@ Start at the higher level if unsure; move down once the facts allow.
 |---|---|---|
 | Sign every staff member out | SQL Editor: `delete from rayhab.staff_sessions; delete from rayhab.auth_pending;` | They sign in again |
 | Lock one staff account | SQL Editor: `update rayhab.practitioners set active = false where id = '<id>';` (it also ends their sessions). Then in Supabase **Authentication > Users**, reset their password, or delete the user | `active = true`; for a deleted user, create them again and link them (runbook step 5) |
-| Take the API offline (the pages stay up; the forms say something went wrong and point people to WhatsApp, and the admin can't sign in) | `sudo systemctl stop "$(cat /srv/rayhab/bin/fpm-service)"` and `sudo mv /etc/cron.d/rayhab /root/rayhab.cron` | `sudo mv /root/rayhab.cron /etc/cron.d/rayhab` and `sudo systemctl start "$(cat /srv/rayhab/bin/fpm-service)"` |
-| Take the whole site offline | `sudo a2dissite dr-rayhab.com && sudo systemctl reload apache2` | `sudo a2ensite dr-rayhab.com && sudo systemctl reload apache2` |
-| Stop all patient messages | In `app.env`, `WHATSAPP_DRIVER=off`; `EMAIL_DRIVER=off` for staff email | Set them back |
+| Take the API offline (the pages stay up; the forms say something went wrong and point people to WhatsApp, the admin can't sign in, and the worker stops) | SQL Editor: `alter role rayhab_app nologin; select pg_terminate_backend(pid) from pg_stat_activity where usename = 'rayhab_app';` | `alter role rayhab_app login;` |
+| Take the whole site offline | Vercel > the project > **Settings > Domains**: remove `dr-rayhab.com` and `www.dr-rayhab.com` | Add them back as in runbook step 3 (the DNS records stay, so it works within minutes) |
+| Stop all emails | Resend > **API Keys**: delete the key. Emails then fail and stay in the outbox as undelivered | A new key in the connect file, `node infra/vercel/push-env.mjs production`, redeploy |
+| Stop WhatsApp messages (phase 2) | Vercel **Settings > Environment Variables**: `WHATSAPP_DRIVER` to `off`, then **Redeploy** | Set it back and redeploy |
 | Cancel all payment links | SQL Editor: `update rayhab.payment_links set revoked_at = now() where revoked_at is null;` | Not undoable; patients need new links from the clinic |
 
 ## 4. Playbooks
@@ -108,9 +107,10 @@ Start at the higher level if unsure; move down once the facts allow.
 
 1. One email is usually someone mistyping. Several within a day means someone
    is trying passwords.
-2. Find the address in the access log:
-   `sudo grep '/api/admin/login' /var/log/apache2/rayhab/production-access.log | awk '{print $1}' | sort | uniq -c | sort -rn | head`
-3. Block it on the server: `sudo ufw deny from <address>`.
+2. Find the address: Vercel **Logs**, production, filtered to the path
+   `/api/admin/login`; note the IP addresses that repeat.
+3. Block it: Vercel > the project > **Firewall**, add an IP blocking rule for
+   that address.
 4. Ask every staff member to confirm they still have their own authenticator,
    and to change their password if it is used anywhere else.
 
@@ -123,32 +123,35 @@ public.
 
 | Secret | Change it | Then check |
 |---|---|---|
-| Database password, `rayhab_app` (`DATABASE_URL`) | Run `infra/supabase/setup.sql` with a new password (edit the copy you paste, not the repo file); update `DATABASE_URL` in the connect file; `push-settings.sh` | Supabase Postgres logs for connections not from the server |
-| Database password, `postgres` (`DATABASE_MIGRATE_URL`) | Supabase **Database > Settings > Reset database password**; update the connect file; `push-settings.sh` | As above. This login can read and change everything: level 1 |
-| `APP_SECRET` | Empty it in the connect file; `push-settings.sh` makes a new one | It signs everyone out, and payment links in messages not yet delivered stop working |
-| Resend API key | Resend **API Keys**: create a new one, delete the old; update the connect file; `push-settings.sh` | Resend's sending log for emails the clinic did not send |
-| WhatsApp token (`WA_TOKEN`) | Meta Business **System users**: generate a new token; edit `app.env` by hand | WhatsApp Manager for messages the clinic did not send |
-| Whish keys | Whish merchant settings **[DECIDE]**; edit `app.env` | Whish transactions |
-| Deploy key (GitHub `DEPLOY_SSH_KEY`) | Remove its line from `/home/deploy/.ssh/authorized_keys`; make a new key pair (runbook step 9) | `sudo last`, `/var/log/auth.log`, and GitHub Actions runs nobody started |
-| Backup private key (`rayhab-backup-key.txt`) | Make a new key; put the public half in `BACKUP_RECIPIENT`; `push-settings.sh` | Where existing backup copies are stored: anyone with them and the old key can read them, so delete the old copies |
+| Database password, `rayhab_app` (`DATABASE_URL`) | Run `infra/supabase/setup.sql` with a new password (edit the copy you paste, not the repo file); update `DATABASE_URL` in the connect file; `push-env.mjs`, redeploy | Supabase Postgres logs for connections that are not the API's |
+| Database password, `postgres` (`DATABASE_MIGRATE_URL`) | Supabase **Database > Settings > Reset database password**; update the connect file; `push-env.mjs`, redeploy | As above. This login can read and change everything: level 1 |
+| `APP_SECRET` | Empty it in the connect file; `push-env.mjs` makes a new one; redeploy | It signs everyone out, and payment links in messages not yet delivered stop working |
+| Resend API key | Resend **API Keys**: create a new one, delete the old; update the connect file; `push-env.mjs`, redeploy | Resend's sending log for emails the clinic did not send |
+| WhatsApp token (`WA_TOKEN`) | Meta Business **System users**: generate a new token; update the connect file; `push-env.mjs`, redeploy | WhatsApp Manager for messages the clinic did not send |
+| Whish keys | Whish merchant settings **[DECIDE]**; update the connect file; `push-env.mjs`, redeploy | Whish transactions |
+| A Vercel or GitHub sign-in, or a Vercel token (`npx vercel login` keeps one on the computer that ran it) | Change the password and check two-factor sign-in; Vercel **Account Settings > Tokens** and GitHub **Settings > Sessions**: revoke what you don't recognize | Vercel **Team Settings > Activity** and **Deployments** nobody started; changed environment variables; GitHub Actions runs and secrets |
+| Backup private key (`rayhab-backup-key.txt`) | Make a new key; put the public half in the GitHub secret `BACKUP_RECIPIENT` | The backup artifacts in GitHub Actions: anyone with them and the old key can read them, so delete the old runs' artifacts |
 | The Supabase anon key | Public by design: no action needed unless it was the **service_role** key, which the clinic never uses. If that leaked, rotate the project's API keys in Supabase | |
 
-### 4.4 The server may be broken into
+### 4.4 A hosting account may be compromised
 
-Level 1. Signs include unknown logins in `sudo last`, files changed outside a
-deploy, unknown processes, or the host reporting abuse from the server.
+Level 1. Signs include deployments or setting changes nobody made (Vercel
+**Team Settings > Activity**), unknown members or tokens, a changed
+`vercel.json` or code on `main` nobody wrote, or a provider's security alert.
 
-1. Take the site offline (containment switches), but do not delete anything.
-2. Ask the VPS host for a **snapshot** of the server as it is: that is the
-   evidence.
-3. Change **every** secret in 4.3: the server could read them all.
-4. Build a **new** server from `infra/scripts/provision.sh` (runbook step 4)
-   and deploy to it. Never clean up and reuse a compromised server.
-5. The database lives at Supabase, not on the server, but the server held
-   its password: check Supabase's logs for what that login did.
-6. The 14 nightly backups on the server: if they were encrypted
-   (`BACKUP_RECIPIENT` set), the attacker could not read them; if not, treat
-   them as exposed.
+1. Take the site offline (containment switches), but do not delete anything:
+   the deployments and the activity log are the evidence.
+2. Secure the accounts: new passwords, two-factor sign-in, revoke unknown
+   tokens, sessions and members (4.3).
+3. Change **every** secret in 4.3: anyone in the project can read its
+   environment variables.
+4. Check `main` against the last commit you trust; redeploy that commit
+   (**Deployments > Instant Rollback**, or a new deploy from the cleaned
+   branch).
+5. The database lives at Supabase, but Vercel held its password: check
+   Supabase's logs for what that login did.
+6. The backups are encrypted to your key, which is not on Vercel or GitHub:
+   the attacker could not read them unless the key also leaked.
 
 ### 4.5 A message or email went to the wrong person, or said too much
 
@@ -188,7 +191,7 @@ Consent withdrawn, the wrong photo, or a name that should not be there.
 ### 4.8 Data lost or damaged
 
 1. Take the API offline, so nothing more changes.
-2. On the Free plan the server's nightly backups are the only copies: restore
+2. On the Free plan the nightly GitHub Actions backups are the only copies: restore
    the latest good one into the **staging** project first, check it, then
    into production (runbook step 5.8). On Pro, Supabase's backups also work.
 3. Bookings made since that backup are missing: list them from the staff
@@ -197,14 +200,14 @@ Consent withdrawn, the wrong photo, or a name that should not be there.
 ### 4.9 The site or worker is down (level 3)
 
 1. `https://dr-rayhab.com/api/health` failing: the API or the database.
-   Check `sudo tail -50 /var/log/apache2/rayhab/production-error.log` and the
+   Check Vercel **Logs** (errors, production) and the
    Supabase status page; a paused Free project is restored from the
    dashboard.
 2. `/api/health/worker` answering 503: the cron worker has stopped, so
    messages, reminders and expiring holds are all waiting. Check
-   `/var/log/rayhab/worker-production.log`, and that `/etc/cron.d/rayhab`
-   exists.
-3. Run the doctor (runbook step 8.4).
+   Vercel **Settings > Cron Jobs** (is it listed and enabled?) and **Logs** for
+   `/api/cron/worker`.
+3. Run the doctor: `node api/dev/doctor.mjs production` (runbook step 10).
 
 ## 5. Who must be told **[LEGAL]**
 

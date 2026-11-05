@@ -1,0 +1,19 @@
+# Not part of the Vercel deployment. The PHP function bundles every file
+# that is left (vercel-php), so this keeps it to the site and the API.
+# api/dev holds .mjs files Vercel would otherwise build as Node functions.
+api/dev/
+api/tests/
+tests/
+docs/
+content/
+uploads/
+assets/
+.github/
+infra/supabase/
+infra/connect.*.env
+brief.txt
+Rayhab UI.dc.html
+support.js
+doc-page.js
+image-slot.js
+README.md

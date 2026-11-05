@@ -1,10 +1,10 @@
 <?php
 /* Checks that the API is connected: settings, Supabase (database and
-   sign-in), the clinic's data, and email through Resend. Run on the server
-   after push-settings.sh and the first deploy:
+   sign-in), the clinic's data, and email through Resend. From your computer,
+   with the settings Vercel has (infra/vercel/settings.mjs), after the first
+   deploy:
 
-     sudo -u www-data RAYHAB_ENV_FILE=/srv/rayhab/production/app.env \
-       php /srv/rayhab/production/api/current/bin/doctor.php [--email you@example.com]
+     node api/dev/doctor.mjs production [--email you@example.com]
 
    With --email it sends one test email to that address. It changes nothing
    else. Exit code 0 when everything needed is in place. */
@@ -27,7 +27,7 @@ $opts = getopt('', ['email:']);
 fwrite(STDOUT, "Settings\n");
 try {
     $cfg = Config::fromEnvironment();
-    $ok('app.env is complete for ' . $cfg->env() . ' (' . $cfg->get('PUBLIC_ORIGIN') . ')');
+    $ok('settings are complete for ' . $cfg->env() . ' (' . $cfg->get('PUBLIC_ORIGIN') . ')');
     $ok('drivers: auth ' . $cfg->get('AUTH_DRIVER') . ', email ' . $cfg->get('EMAIL_DRIVER') . ', WhatsApp ' . $cfg->get('WHATSAPP_DRIVER') . ', Whish ' . $cfg->get('WHISH_DRIVER'));
     $ok('patients hear from the clinic by ' . $cfg->get('PATIENT_CHANNEL') . ($cfg->get('PATIENT_CHANNEL') === 'email' ? ', replies to ' . $cfg->get('CLINIC_EMAIL') : '')
         . '; payment: ' . ($cfg->get('WHISH_DRIVER') === 'disabled' ? 'cash at the clinic only (phase 1)' : 'cash or Whish'));
@@ -57,9 +57,9 @@ try {
     $staff = (int) $db->one('select count(*)::int as n from rayhab.practitioners where active and auth_user_id is not null')['n'];
     $staff ? $ok("$staff staff account(s) linked to Supabase Auth") : $bad('no staff account linked yet (runbook step 5.6, the SQL after the first deploy)');
     $hb = $db->one("select extract(epoch from now() - at)::int as s from rayhab.heartbeats where name = 'worker'");
-    if (!$hb) $warn('the cron worker has not finished a run yet (/etc/cron.d/rayhab; it runs every minute)');
+    if (!$hb) $warn('the cron worker has not finished a run yet (Vercel Cron runs it every minute, in production only)');
     elseif ($hb['s'] <= 300) $ok('the cron worker last finished ' . $hb['s'] . 's ago');
-    else $bad('the cron worker last finished ' . round($hb['s'] / 60) . ' minutes ago: see /var/log/rayhab/worker-' . $cfg->env() . '.log');
+    else $bad('the cron worker last finished ' . round($hb['s'] / 60) . ' minutes ago: see Vercel > Logs and Settings > Cron Jobs');
 } catch (Throwable $e) {
     $bad('database: ' . preg_replace('/password=\S+/', 'password=…', $e->getMessage()));
 }
@@ -79,16 +79,16 @@ if ($r === null) {
 }
 
 fwrite(STDOUT, "Email\n");
-if ($cfg->get('EMAIL_DRIVER') !== 'mail') {
+if (!in_array($cfg->get('EMAIL_DRIVER'), ['mail', 'resend'], true)) {
     $warn('EMAIL_DRIVER is ' . $cfg->get('EMAIL_DRIVER') . ': no email is sent');
 } else {
     $ok('notices go to ' . implode(', ', $cfg->staffEmails) . ' from ' . $cfg->get('EMAIL_FROM'));
     if (isset($opts['email'])) {
         try {
             (new Messaging($cfg))->email((string) $opts['email'], 'Rayhab: test email', "This is a test from the Rayhab booking API on " . gethostname() . ".\nIf it arrived, email is working.\n");
-            $ok('test email handed to msmtp for ' . $opts['email'] . ' (check the inbox, and /var/log/rayhab/msmtp.log)');
+            $ok('test email ' . ($cfg->get('EMAIL_DRIVER') === 'resend' ? 'accepted by Resend' : 'handed to mail()') . ' for ' . $opts['email'] . ' (check the inbox, and Resend > Emails)');
         } catch (Throwable $e) {
-            $bad('test email: ' . $e->getMessage() . ' (see /var/log/rayhab/msmtp.log)');
+            $bad('test email: ' . $e->getMessage() . ' (see Resend > Emails)');
         }
     } else {
         $warn('add --email you@example.com to send a test');

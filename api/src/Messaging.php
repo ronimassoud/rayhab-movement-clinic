@@ -1,8 +1,8 @@
 <?php
 /* WhatsApp (Meta WhatsApp Business Cloud API) and email.
 
-   Email goes through PHP's mail(), which on the server hands it to msmtp,
-   configured with the clinic's SMTP provider (runbook, "Email"). Each has a
+   Email goes through Resend's HTTP API (EMAIL_DRIVER=resend, on Vercel), or
+   through PHP's mail(), which on a server of our own hands it to msmtp. Each has a
    "log" driver for development, which writes what would have been sent to
    the PHP error log, and "off", which records the message as skipped.
    Production requires the real drivers or "off" (Config). */
@@ -51,6 +51,16 @@ class Messaging
             $link = $this->cfg->env() === 'development' && preg_match('#https?://\S+/payment/\#t=\S+#', $text, $m) ? ' link: ' . $m[0] : '';
             error_log('[email] to ' . $to . ': ' . $subject . $link);
             return ['id' => 'log-' . time(), 'skipped' => false];
+        }
+        if ($driver === 'resend') {
+            $body = ['from' => $this->cfg->get('EMAIL_FROM'), 'to' => [$to], 'subject' => $subject, 'text' => $text];
+            if ($replyTo && filter_var($replyTo, FILTER_VALIDATE_EMAIL)) $body['reply_to'] = $replyTo;
+            $r = HttpClient::json('POST', 'https://api.resend.com/emails', ['Authorization' => 'Bearer ' . $this->cfg->get('RESEND_API_KEY')], $body, 10);
+            if ($r['status'] === 0) throw new SendError('Resend unreachable: ' . $r['error'], true);
+            if ($r['status'] < 200 || $r['status'] >= 300) {
+                throw new SendError('Resend ' . $r['status'] . ': ' . ($r['json']['message'] ?? $r['json']['name'] ?? 'error'), $r['status'] === 429 || $r['status'] >= 500);
+            }
+            return ['id' => (string) ($r['json']['id'] ?? ''), 'skipped' => false];
         }
         $headers = ['From' => $this->cfg->get('EMAIL_FROM'), 'Content-Type' => 'text/plain; charset=UTF-8', 'MIME-Version' => '1.0'];
         if ($replyTo && filter_var($replyTo, FILTER_VALIDATE_EMAIL)) $headers['Reply-To'] = $replyTo;

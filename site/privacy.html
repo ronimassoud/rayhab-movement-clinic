@@ -123,12 +123,12 @@
       <p>Emails about your request: that we received it, that it is approved (with a private link to confirm it), a new time if we need to propose one, a reminder the day before, a cancellation, or a payment receipt. We keep a record of each one and whether it was sent. Our emails never name the service you booked, so they say nothing about your health. If you reply, your reply reaches the clinic's own email.</p>
       <p><mark class="todo">[PHASE 2] When these messages move to WhatsApp, say so here: replies to them are kept with the booking like a question sent through this site; photos, voice notes and documents are not kept; and replying STOP stops them, after which the clinic calls instead.</mark></p>
       <h3>When you visit this site</h3>
-      <p>Like any website, our server records the address your device connects from (IP address), your browser type, the page requested and the time. We use these records only to keep the site secure and to fix problems. Private payment links are never written to them.</p>
+      <p>Like any website, our server records the address your device connects from (IP address), your browser type, the page requested and the time. We use these records only to keep the site secure and to fix problems, and they are kept only briefly.</p>
       <h3>What we don't do</h3>
       <ul>
         <li>No cookies for visitors, and nothing stored in your browser.</li>
         <li>No analytics, advertising or social media tracking.</li>
-        <li>Fonts and scripts come from our own server, so no other company learns which pages you read.</li>
+        <li>Fonts and scripts come from this website itself, so no other company learns which pages you read.</li>
         <li>The WhatsApp, Instagram and TikTok links are plain links: nothing from those services loads until you click.</li>
       </ul>
       <h3>Case studies</h3>
@@ -159,7 +159,8 @@
         <thead><tr><th>Service</th><th>What it does</th><th>What it holds or sees</th><th>Where</th></tr></thead>
         <tbody>
           <tr><td>Supabase</td><td>Our database, and staff sign-in</td><td>The booking, question and payment information above</td><td>European Union (Ireland)</td></tr>
-          <tr><td><mark class="todo">[DECIDE] Server host</mark></td><td>Runs this website and the booking system</td><td>Information passing through, server records, nightly backups</td><td><mark class="todo">[DECIDE]</mark></td></tr>
+          <tr><td>Vercel</td><td>Hosts this website and runs the booking system</td><td>Information passing through, server records</td><td>The booking system runs in the European Union (Ireland); the pages are delivered from Vercel's servers around the world</td></tr>
+          <tr><td>GitHub</td><td>Keeps our nightly backups</td><td>Encrypted copies of our database, which GitHub cannot read</td><td>United States</td></tr>
           <tr><td>Meta (WhatsApp Business) <mark class="todo">[PHASE 2] from when messages move to WhatsApp</mark></td><td>Would deliver our WhatsApp messages</td><td>Your number, the day and time, private links</td><td>Meta's servers, including outside Lebanon</td></tr>
           <tr><td>Resend</td><td>Sends our emails: to you about your booking, and to the clinic when a request or question arrives</td><td>Your email address, the day and time of your appointment and its private link; for the clinic's emails, a booking reference only. Never your note</td><td><mark class="todo">[DECIDE] The region shown in Resend</mark></td></tr>
           <tr><td>Whish Money, when online payment is offered</td><td>Online payment</td><td>The amount and reference, and what you give Whish on its own page</td><td><mark class="todo">[DECIDE]</mark></td></tr>
@@ -169,7 +170,7 @@
       <p>Inside the clinic, the practitioners see your full request, including your note. Reception staff, if any, see your contact and booking details but not your note.</p>
 
       <h2 id="outside-lebanon">Information stored outside Lebanon</h2>
-      <p>Some of these services keep information outside Lebanon: our database is in Ireland, and our emails pass through Resend's servers. <mark class="todo">[LEGAL] The basis for these transfers under Law No. 81 of 2018, and any safeguards to name.</mark></p>
+      <p>Some of these services keep information outside Lebanon: our database and booking system are in Ireland, our encrypted backups are kept by GitHub in the United States, and our emails pass through Resend's servers. <mark class="todo">[LEGAL] The basis for these transfers under Law No. 81 of 2018, and any safeguards to name.</mark></p>
 
       <h2 id="how-long">How long we keep it</h2>
       <p>Information is deleted automatically when its period ends.</p>
@@ -181,7 +182,7 @@
           <tr><td>Questions sent through this site, and replies to our WhatsApp messages</td><td>12 months after we answer them</td></tr>
           <tr><td>The record of messages sent to you</td><td>90 days</td></tr>
           <tr><td>Appointments that took place, and payments</td><td><mark class="todo">[LEGAL] The period required for clinical and financial records</mark></td></tr>
-          <tr><td>Server records (IP address, pages visited)</td><td>14 days</td></tr>
+          <tr><td>Server records (IP address, pages visited)</td><td>A few days at most <mark class="todo">[DECIDE] Confirm the period on our Vercel plan</mark></td></tr>
           <tr><td>Backups</td><td>14 days, so deleted information leaves the backups within 14 days</td></tr>
         </tbody>
       </table>
@@ -195,7 +196,7 @@
         <li>Every change to a booking is recorded, and so is who opened which record.</li>
         <li>Each person at the clinic sees only what their role needs.</li>
         <li>Our error records leave out email addresses and phone numbers.</li>
-        <li><mark class="todo">[DECIDE] Backups are encrypted. State this only once backup encryption is switched on.</mark></li>
+        <li>Our nightly backups are encrypted, with a key kept away from the services that store them.</li>
       </ul>
       <p>No system is perfectly secure. If something goes wrong that affects your information, we will tell you <mark class="todo">[LEGAL] when and how the law requires</mark>.</p>
 

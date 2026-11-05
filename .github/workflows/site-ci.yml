@@ -1,0 +1,46 @@
+name: Site CI
+
+# The site as Vercel serves it. Vercel publishes the committed site/ as it is
+# (vercel.json, infra/vercel/build.mjs), so this checks that what is
+# committed is complete and current: the stylesheet built, asset URLs
+# stamped, the sitemap written, every link resolving, nothing loading from
+# another site, and vercel.json's headers and script hashes. Nothing here
+# deploys; Vercel deploys from Git (main to production, redesign-2.0 to
+# staging).
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Browser-script tests
+        run: npm ci && npm test
+
+      # Rebuilt here and compared: a stale committed stylesheet, a missing
+      # ?v= stamp or an out-of-date sitemap would otherwise reach Vercel.
+      - name: Built files are current
+        run: |
+          npm run build
+          python3 content/stamp.py
+          python3 content/sitemap.py
+          git diff --stat --exit-code -- site || { echo "::error::Run npm run build, python content/stamp.py and python content/sitemap.py, then commit site/."; exit 1; }
+
+      - name: Every internal link resolves; no secrets; nothing from another site
+        run: python3 .github/scripts/check_links.py site
+
+      - name: vercel.json (function, route, cron, headers, script hashes)
+        run: node infra/vercel/check-config.mjs

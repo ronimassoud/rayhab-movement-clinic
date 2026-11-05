@@ -1,8 +1,10 @@
 <?php
-/* The cron worker: messages, holds, payment reconciliation, reminders.
-   /etc/cron.d/rayhab runs it every minute (infra/cron/rayhab):
+/* The worker from the command line: messages, holds, payment
+   reconciliation, reminders. On Vercel the same work runs every minute
+   through GET /api/cron/worker (vercel.json); this is for a server of our own
+   or a manual run, with RAYHAB_ENV_FILE naming the settings:
 
-     RAYHAB_ENV_FILE=/srv/rayhab/production/app.env php /srv/rayhab/production/api/current/bin/worker.php
+     RAYHAB_ENV_FILE=app.env php api/bin/worker.php
 
    A lock file keeps two runs from overlapping. */
 declare(strict_types=1);

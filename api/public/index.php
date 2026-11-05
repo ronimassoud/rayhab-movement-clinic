@@ -1,10 +1,12 @@
 <?php
-/* Every /api/* request. Apache sends them here (infra/apache), with the
-   settings file's path in RAYHAB_ENV_FILE.
+/* Every /api/* request. On Vercel, vercel.json routes them here and the
+   settings come from the project's environment variables; locally, the dev
+   router does, with RAYHAB_ENV_FILE.
 
-   After the response has gone to the browser, any message the request
-   queued (a WhatsApp confirmation, a staff email) is sent at once; the
-   minute-by-minute cron worker is the backstop. */
+   Any message the request queued (the patient's email, a staff notice) is
+   then sent at once: after the response where the server allows it
+   (fastcgi_finish_request), otherwise just before the function ends. The
+   minute-by-minute cron worker (GET /api/cron/worker) is the backstop. */
 declare(strict_types=1);
 
 require dirname(__DIR__) . '/src/bootstrap.php';

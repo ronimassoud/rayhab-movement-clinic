@@ -1,10 +1,10 @@
 <?php
-/* Configuration, read once from the settings file and checked.
+/* Configuration, read once and checked.
 
-   On the server the file is /srv/rayhab/<env>/app.env (KEY=value lines,
-   mode 640, see infra/env.example). Apache passes its path to PHP as
-   RAYHAB_ENV_FILE; the cron worker gets it the same way. The API refuses to
-   run with an incomplete or unsafe setup rather than fail on a patient. */
+   On Vercel the settings are the project's environment variables (set by
+   infra/vercel/push-env.mjs; every key and default is in infra/env.example).
+   Locally, a KEY=value file named by RAYHAB_ENV_FILE. The API refuses to run
+   with an incomplete or unsafe setup rather than fail on a patient. */
 declare(strict_types=1);
 
 namespace Rayhab;
@@ -29,6 +29,9 @@ final class Config
         'WA_TOKEN' => '', 'WA_PHONE_NUMBER_ID' => '', 'WA_APP_SECRET' => '', 'WA_VERIFY_TOKEN' => '',
         'WA_GRAPH_VERSION' => 'v21.0', 'WA_LANG' => 'en',
         'EMAIL_DRIVER' => 'log',
+        // EMAIL_DRIVER=resend sends through Resend's HTTP API with this key (on Vercel, where
+        // there is no mail relay); mail hands messages to the server's msmtp.
+        'RESEND_API_KEY' => '',
         'EMAIL_FROM' => 'Rayhab bookings <bookings@dr-rayhab.com>',
         'STAFF_EMAILS' => '',
         'WHISH_DRIVER' => 'disabled',
@@ -43,6 +46,8 @@ final class Config
         // How the clinic writes to patients: email (phase 1) or whatsapp (phase 2, once Meta has
         // approved the templates); and where patients' email replies go (the sender only sends).
         'PATIENT_CHANNEL' => 'email',
+        // Vercel Cron calls GET /api/cron/worker with "Authorization: Bearer <CRON_SECRET>".
+        'CRON_SECRET' => '',
         'CLINIC_EMAIL' => 'rayan.halimeh@gmail.com',
         // How long personal data is kept, in days; 0 keeps it (Retention.php).
         'RETAIN_UNCONFIRMED_DAYS' => '183', 'RETAIN_ANSWERED_QUESTION_DAYS' => '365', 'RETAIN_MESSAGE_DAYS' => '90',
@@ -85,11 +90,20 @@ final class Config
         return new self($values);
     }
 
+    /* A settings file when RAYHAB_ENV_FILE names one (local development, the
+       CLI tools); otherwise the process environment, which is how Vercel
+       passes the project's environment variables. */
     public static function fromEnvironment(): self
     {
         $file = getenv('RAYHAB_ENV_FILE') ?: ($_SERVER['RAYHAB_ENV_FILE'] ?? '');
-        if (!$file) throw new \RuntimeException('RAYHAB_ENV_FILE is not set.');
-        return self::fromFile($file);
+        if ($file) return self::fromFile($file);
+        $v = [];
+        foreach (array_keys(self::DEFAULTS) as $k) {
+            $x = getenv($k);
+            if ($x !== false && $x !== '') $v[$k] = (string) $x;
+        }
+        if (!isset($v['DEPLOY_ENV'])) throw new \RuntimeException('No settings: set RAYHAB_ENV_FILE, or the environment variables (DEPLOY_ENV first).');
+        return new self($v);
     }
 
     public function get(string $k): string { return $this->v[$k] ?? ''; }
@@ -112,7 +126,7 @@ final class Config
         if (strlen($this->get('APP_SECRET')) < 32) $p[] = 'APP_SECRET must be at least 32 characters';
         if (!filter_var($this->get('PUBLIC_ORIGIN'), FILTER_VALIDATE_URL)) $p[] = 'PUBLIC_ORIGIN must be a URL';
         foreach (['AUTH_DRIVER' => ['supabase', 'dev'], 'WHATSAPP_DRIVER' => ['cloud', 'log', 'off'],
-                  'EMAIL_DRIVER' => ['mail', 'log', 'off'], 'WHISH_DRIVER' => ['disabled', 'sandbox', 'whish'],
+                  'EMAIL_DRIVER' => ['mail', 'resend', 'log', 'off'], 'WHISH_DRIVER' => ['disabled', 'sandbox', 'whish'],
                   'PATIENT_CHANNEL' => ['email', 'whatsapp']] as $k => $ok) {
             if (!in_array($this->get($k), $ok, true)) $p[] = "$k must be one of " . implode(', ', $ok);
         }
@@ -130,7 +144,7 @@ final class Config
             if ($this->get('WHATSAPP_DRIVER') === 'log') $p[] = 'WHATSAPP_DRIVER=log is not allowed in production (use cloud, or off)';
             if ($this->get('EMAIL_DRIVER') === 'log') $p[] = 'EMAIL_DRIVER=log is not allowed in production (use mail, or off)';
             // Patients must actually hear from the clinic on the channel the booking form promises.
-            if ($this->get('PATIENT_CHANNEL') === 'email' && $this->get('EMAIL_DRIVER') !== 'mail') $p[] = 'PATIENT_CHANNEL=email needs EMAIL_DRIVER=mail';
+            if ($this->get('PATIENT_CHANNEL') === 'email' && !in_array($this->get('EMAIL_DRIVER'), ['mail', 'resend'], true)) $p[] = 'PATIENT_CHANNEL=email needs EMAIL_DRIVER=resend (or mail)';
             if ($this->get('PATIENT_CHANNEL') === 'whatsapp' && $this->get('WHATSAPP_DRIVER') !== 'cloud') $p[] = 'PATIENT_CHANNEL=whatsapp needs WHATSAPP_DRIVER=cloud';
         }
         if ($this->get('WHATSAPP_DRIVER') === 'cloud') {
@@ -138,7 +152,9 @@ final class Config
                 if ($this->get($k) === '') $p[] = "WHATSAPP_DRIVER=cloud needs $k";
             }
         }
-        if ($this->get('EMAIL_DRIVER') === 'mail' && self::list($this->get('STAFF_EMAILS')) === []) $p[] = 'EMAIL_DRIVER=mail needs STAFF_EMAILS';
+        if (in_array($this->get('EMAIL_DRIVER'), ['mail', 'resend'], true) && self::list($this->get('STAFF_EMAILS')) === []) $p[] = 'EMAIL_DRIVER=' . $this->get('EMAIL_DRIVER') . ' needs STAFF_EMAILS';
+        if ($this->get('EMAIL_DRIVER') === 'resend' && !str_starts_with($this->get('RESEND_API_KEY'), 're_')) $p[] = 'EMAIL_DRIVER=resend needs RESEND_API_KEY (re_...)';
+        if ($this->get('CRON_SECRET') !== '' && strlen($this->get('CRON_SECRET')) < 24) $p[] = 'CRON_SECRET must be at least 24 characters';
         if ($this->get('WHISH_DRIVER') === 'whish') {
             foreach (['WHISH_BASE_URL', 'WHISH_MERCHANT_ID', 'WHISH_SECRET'] as $k) {
                 if ($this->get($k) === '') $p[] = "WHISH_DRIVER=whish needs $k";

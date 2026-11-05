@@ -7,33 +7,46 @@ physiotherapy.
 Static site: plain HTML, CSS custom properties and vanilla JavaScript. No build
 step and no framework. Open `site/index.html` or serve the `site/` directory.
 
-- **Production (planned):** <https://dr-rayhab.com>, on an Ubuntu VPS with
-  Apache, PHP and certbot, and the booking API in `api/`. See
-  [Launch and backend handoff](#launch-and-backend-handoff).
-- **Staging:** <https://ronimassoud.github.io/rayhab-movement-clinic/>
+- **Production (planned):** <https://dr-rayhab.com>, on Vercel (Pro): the
+  site from Vercel's network and the booking API in `api/` as a PHP function
+  in Dublin. See [Launch and backend handoff](#launch-and-backend-handoff).
+- **Staging:** <https://staging.dr-rayhab.com>, Vercel's deployment of the
+  `redesign-2.0` branch (behind Vercel's sign-in or a shareable link)
 - **Repository:** <https://github.com/ronimassoud/rayhab-movement-clinic>
 - **Design canvas:** [Rayhab UI on Claude Design](https://claude.ai/design/p/c0ba2874-187e-4463-b422-73d41cc99cb9?file=Rayhab+UI.dc.html)
   (the source the site was built from, kept byte-exact at `Rayhab UI.dc.html`)
 
 > **Not ready for launch.** The booking and contact forms need the backend
 > described below, and the items under [Before launch](#before-launch) and the
-> [launch blockers](#launch-blockers) are open. The GitHub Pages staging copy is
-> public but marked noindex on every page, so search engines do not index it;
-> it still exposes clinical photographs and articles awaiting clinical review
-> to anyone with the link.
+> [launch blockers](#launch-blockers) are open. The staging copy is marked noindex
+> on every page and sits behind Vercel's deployment protection.
 
 ## Deployment
 
-Pushing to `main` publishes the **staging** copy of `site/` to GitHub Pages via
-`.github/workflows/pages.yml`. In order, it rebuilds the stylesheet, runs the
-browser-script tests (`npm test`), versions
-asset URLs (`content/stamp.py`), writes `sitemap.xml` from the indexable pages
-(`content/sitemap.py`), runs `.github/scripts/check_links.py`, and finally marks
-every page noindex (`content/staging_noindex.py`) so the mirror never competes
-with production in search. The same step allows demo mode on the staging copy
-(see [Demo mode](#demo-mode)).
+Vercel deploys from Git (`vercel.json`): a push to `main` builds
+**production** (`dr-rayhab.com`), and a push to `redesign-2.0` builds
+**staging** (`staging.dr-rayhab.com`). The site is served as committed;
+Vercel's build step only runs `infra/vercel/build.mjs`, which:
 
-`check_links.py` fails the deploy on a broken internal link or `#anchor`, a page
+- in **production**, refuses to publish while any page is marked
+  `data-draft` (the privacy and terms pages until legal sign-off) or allows
+  demo mode;
+- everywhere else, marks every page noindex and allows demo mode (see
+  [Demo mode](#demo-mode)), so staging never competes with production in
+  search.
+
+`vercel.json` also holds the `/api` route to the PHP function, the
+every-minute cron worker, the redirects and the security headers.
+
+**Site CI** (`.github/workflows/site-ci.yml`) runs on every push: it rebuilds
+the stylesheet, runs the browser-script tests (`npm test`), versions asset
+URLs (`content/stamp.py`), writes `sitemap.xml` (`content/sitemap.py`) and
+fails if any of that changes a committed file, then runs
+`.github/scripts/check_links.py` and `infra/vercel/check-config.mjs` (the
+CSP script hashes against the inline scripts). So run those three steps and
+commit their output before pushing.
+
+`check_links.py` fails on a broken internal link or `#anchor`, a page
 missing the motion or menu markup, an indexable page without its title,
 description, production canonical or share image, or a sitemap that differs
 from the indexable pages, or anything shaped like a secret key in a browser
@@ -41,8 +54,7 @@ script.
 
 Canonical URLs, the sitemap, `robots.txt` and social share links all use the
 production origin in `content/site_config.py` (`SITE_URL`). Production hosting
-is described in [Launch and backend handoff](#launch-and-backend-handoff); it
-must not run the staging noindex step.
+is described in [Launch and backend handoff](#launch-and-backend-handoff).
 
 ## Running it
 
@@ -117,16 +129,17 @@ docs/                        production runbook, backend architecture, frontend 
                              privacy and terms drafts
 tests/                       node --test: Beirut time, status words, demo rules
 api/                         the booking API (plain PHP 8.3+, no Composer packages)
-  public/index.php           every /api/* request; Apache sends them here
+  public/index.php           every /api/* request; vercel.json routes them here
   src/Routes/                the HTTP routes, one file per audience
   src/                       scheduling, records, links, payments, the outbox,
-                             Supabase Auth, WhatsApp, email (mail via msmtp), Whish
+                             Supabase Auth, WhatsApp, email (Resend API), Whish
   src/Worker.php             message delivery, holds, reconciliation, reminders
-  bin/worker.php             the cron worker; bin/migrate.php the migrations
-  migrations/                SQL, applied in order on every deploy
+  bin/                       migrate.php, doctor.php, subject.php (run through dev/*.mjs)
+  migrations/                SQL, applied in order by node api/dev/migrate.mjs
   tests/                     plain PHP tests, on PostgreSQL (TEST_DATABASE_URL)
-  dev/                       local only: PGlite database, PHP dev server, test runner
-infra/                       Apache sites, PHP settings, cron, provision.sh, deploy.sh, env.example
+  dev/                       local only: PGlite database, PHP dev server, tests, migrate/check/doctor/subject
+infra/                       vercel/ (build guard, push-env, config check), supabase/, env.example
+vercel.json                  Vercel: build, the PHP function, /api route, cron, headers, redirects
 package.json                 Tailwind, the pinned GSAP version, npm test
 Rayhab UI.dc.html            the original Claude Design canvas, byte-exact
 brief.txt                    the original written brief
@@ -154,7 +167,7 @@ run `seo_tags.inject_seo()` over it, or rebuild and let CI catch omissions.
 | Script | What it does | When |
 |---|---|---|
 | `content/sitemap.py` | Writes `site/sitemap.xml` from the indexable pages | CI, or by hand |
-| `content/staging_noindex.py` | Adds noindex to every page | Staging CI only |
+| `content/staging_noindex.py` | Adds noindex to every page | Unused since Vercel; `infra/vercel/build.mjs` does it for previews |
 | `content/og_image.py` | Draws the 1200x630 share image from the brand assets | By hand, when they change |
 | `content/site_config.py` | Production origin, API base, share image | Edit, then rebuild |
 
@@ -389,8 +402,8 @@ Known gaps, all deliberate rather than overlooked:
 
 The booking flow, the patient payment page and the clinic admin talk to the
 booking API in [`api/`](api/), which implements every contract below.
-Getting it running on `dr-rayhab.com` (VPS, DNS, Supabase, WhatsApp, Whish,
-GitHub secrets) is a step-by-step checklist in
+Getting it running on `dr-rayhab.com` (Vercel, DNS, Supabase, Resend,
+backups; later WhatsApp and Whish) is a step-by-step checklist in
 [`docs/production-runbook.md`](docs/production-runbook.md). What to do when
 something goes wrong (a lost device, a leaked key, a possible breach) is in
 [`docs/incident-response.md`](docs/incident-response.md).
@@ -398,17 +411,19 @@ something goes wrong (a lost device, a leaked key, a possible breach) is in
 Connecting Supabase and Resend takes one local file per environment,
 `infra/connect.production.env` (copied from `infra/connect.example.env`,
 never committed), `infra/supabase/setup.sql` in the Supabase SQL Editor,
-`infra/scripts/push-settings.sh` to put the settings on the server, and
-`api/bin/doctor.php` on the server to check it all, including a test email.
-Before any server exists, `node api/dev/check.mjs production [--email you@x]`
-checks the same file against Supabase and Resend from your own computer.
+`node infra/vercel/push-env.mjs production` to put the settings into Vercel,
+`node api/dev/migrate.mjs production` for the tables, and
+`node api/dev/doctor.mjs production [--email you@x]` to check it all,
+including a test email. `node api/dev/check.mjs production [--email you@x]`
+checks the same file against Supabase and Resend before anything is deployed.
 
-- **Server side:** an Ubuntu Server 26.04 VPS with Apache 2 and certbot.
-  Port 80 redirects to HTTPS on 443. Apache serves the static site and sends
-  `/api/*` to the API, plain PHP run by PHP-FPM.
+- **Server side:** Vercel (Pro). Vercel serves the static site and sends
+  `/api/*` to the API, plain PHP 8.4 in one serverless function
+  (`vercel-php` runtime, Dublin region).
   - **Database:** plain SQL on PostgreSQL (Supabase).
-  - **Background work:** a cron job every minute handles messages, holds and
-    payment reconciliation.
+  - **Background work:** Vercel Cron calls `/api/cron/worker` every minute
+    (production only), for messages, holds, reminders and payment
+    reconciliation. Each request also delivers its own messages straight away.
   - **Tests:** they cover the contract tables and the acceptance checks
     below.
 
@@ -427,8 +442,8 @@ not built yet.
 
 | Area | State |
 |---|---|
-| Static site, generators, CI | Existing. GitHub Pages serves the staging copy. |
-| Production hosting at `https://dr-rayhab.com` | Prepared: `infra/` (Apache sites, PHP settings, cron, provisioning and deploy scripts) and `.github/workflows/deploy.yml`. Not yet set up: needs the steps in the runbook. |
+| Static site, generators, CI | Existing. Vercel serves staging from `redesign-2.0`. |
+| Production hosting at `https://dr-rayhab.com` | Prepared for Vercel: `vercel.json`, `infra/vercel/`, `api/php.ini`. Not yet set up: needs the steps in the runbook; production is blocked until the legal pages are approved. |
 | Booking flow (`book.html` and the booking dialog on every page) | Existing (frontend). Catalog, live availability with Beirut DST, international WhatsApp numbers, both consents, every request state. |
 | Payment choice (`payment/`) | Existing (frontend). Whish or cash, verifying, paid, failed, expired and closed states. |
 | Clinic admin (`admin/`) | Existing (frontend). Overview, requests, appointments, calendar, payments with cash confirmation, activity. |
@@ -436,8 +451,8 @@ not built yet.
 | Every `/api/*` endpoint below | Existing (`api/`, PHP), tested on PostgreSQL 16 in CI and locally on PGlite. |
 | Website questions in the admin (`#/enquiries`) | Existing: listed for staff, marked answered or reopened. |
 | Staff sign-in (`admin/login.html`) | Existing: Supabase Auth with a required authenticator code, handled server-side. |
-| WhatsApp, email | Existing drivers. Email goes through Resend (Free plan) by SMTP, via msmtp; sending starts once the domain is verified in Resend and the Meta templates are approved (runbook step 6). |
-| Database plan | Supabase Free to start, upgraded to Pro later. Until then the server takes a nightly database dump (`infra/scripts/backup.sh`, runbook step 5.8). |
+| WhatsApp, email | Existing drivers. Email goes through Resend (Free plan) by its API; in phase 1 every patient message is an email. WhatsApp waits for the Meta templates (runbook step 6). |
+| Database plan | Supabase Free to start, upgraded to Pro later. Until then a GitHub Actions job takes a nightly, encrypted database dump (`.github/workflows/backup.yml`, runbook step 5.8). |
 | Whish | The flow is built and tested against a sandbox stand-in. The real driver waits for Whish's merchant documentation (runbook step 7); until then production offers cash only. |
 | Demo backend for review (`?demo=1`) | Existing, staging and localhost only. |
 
@@ -498,7 +513,7 @@ Nothing is sent or stored. The only thing kept is the chosen scenario, in
 | API base | `content/site_config.py` `API_BASE`, written into every page as `<meta name="rayhab-api" content="/api">` | `/api` |
 | Share image | `content/site_config.py` `SHARE_IMAGE` | `/assets/img/og/rayhab-share.jpg` (1200x630) |
 
-**Same origin.** The API base is a same-origin path on purpose: Apache sends
+**Same origin.** The API base is a same-origin path on purpose: Vercel sends
 `/api/` to the PHP API on the same site, so no CORS is needed and no keys
 exist in the browser.
 
@@ -941,41 +956,40 @@ The browser checks are for convenience only; the server must enforce:
   - Keep personal data out of URLs, logs and analytics.
   - Admin and payment-selection responses carry `Cache-Control: no-store`.
 
-### Production hosting (Apache, as configured in `infra/apache/`)
+### Production hosting (Vercel, as configured in `vercel.json`)
 
-The site is static: Apache serves `site/` as built by CI, minus the staging
-step. Everything below is already in `infra/apache/rayhab.conf`; it is listed
-here so it can be checked on the live server.
+The site is static: Vercel serves `site/` as committed. Everything below is
+already in `vercel.json` (checked by `infra/vercel/check-config.mjs` in CI);
+it is listed here so it can be checked on the live site.
 
-- **Do not run `content/staging_noindex.py` for production.** It exists only
-  for the GitHub Pages mirror and would remove the site from search.
-- **404:** `ErrorDocument 404 /404.html`, and make sure missing URLs return the
-  404 status, not 200. `404.html` works at any depth because it sets its own
-  `<base>`. (Verified on GitHub Pages: a missing URL returns 404 with this page.)
-- **Redirects:** HTTP to HTTPS and `www` to the apex with a single 301 each.
-  Also `301 /services/frc-joint-training.html` to
-  `/services/joint-training-mobility.html` (the old URL is a noindex
-  meta-refresh stub today).
+- **Noindex and demo mode only on previews:** `infra/vercel/build.mjs` adds
+  them to every page except in production, and refuses a production build
+  that has them.
+- **404:** Vercel serves `site/404.html` with the 404 status for missing
+  URLs. `404.html` works at any depth because it sets its own `<base>`.
+- **Redirects:** Vercel redirects HTTP to HTTPS, and `www` to the apex (set
+  in the project's domains). Also a permanent redirect from
+  `/services/frc-joint-training.html` to
+  `/services/joint-training-mobility.html`.
 - **Caching:** CSS and JS URLs carry a content hash (`?v=`), so
-  `/assets/css/` and `/assets/js/` can be `Cache-Control: public,
-  max-age=31536000, immutable`. Fonts likewise (they change only with a new
-  file name). Images are not versioned: give them a week. HTML:
-  `Cache-Control: no-cache`.
-- **Compression:** gzip or brotli for HTML, CSS, JS, SVG, XML and JSON.
+  `/assets/css/` and `/assets/js/` are `Cache-Control: public,
+  max-age=31536000, immutable`. Fonts likewise. Images get a week. HTML uses
+  Vercel's default (revalidated on each deploy).
+- **Compression:** Vercel compresses text responses itself.
 - **Private pages:**
   - `/admin/` and `/payment/` also get `X-Robots-Tag: noindex, nofollow`
     and `Cache-Control: no-store`.
   - `/payment/` gets `Referrer-Policy: no-referrer`; the page sets it as
     well.
-  - Do not list either page in `robots.txt`; the noindex is enough, and a
+  - Neither is listed in `robots.txt`; the noindex is enough, and a
     Disallow would advertise them.
 - **Security headers:** `Strict-Transport-Security` (one day from the
   start, a year once production checks out), `X-Content-Type-Options: nosniff`,
   `Referrer-Policy: strict-origin-when-cross-origin`,
-  `Permissions-Policy: camera=(), microphone=(), geolocation=()`, and a
-  Content-Security-Policy. The only inline scripts are the motion gate on
-  every page and the base-path script on the 404 page, so scripts can be
-  locked to hashes:
+  `Permissions-Policy: camera=(), microphone=(), geolocation=()`,
+  `X-Frame-Options: DENY` and a Content-Security-Policy. The only inline
+  scripts are the motion gate on every page and the base-path script on the
+  404 page, so scripts are locked to hashes:
 
   ```text
   default-src 'self'; img-src 'self' data:; font-src 'self';
@@ -985,8 +999,7 @@ here so it can be checked on the live server.
   ```
 
   `style-src` needs `'unsafe-inline'` for a few `style` attributes. If either
-  inline script changes, its hash must be recomputed. Test the policy in
-  report-only mode first.
+  inline script changes, CI fails until the hash in `vercel.json` is updated.
 
 ### Analytics and consent
 
@@ -1012,9 +1025,9 @@ needed. The booking consent line now says details are kept "by the clinic and
 the services it uses to run bookings and send messages" (consent version
 2026-10-20), pending the legal adviser's approval.
 
-Personal data on the server: old data is deleted on a schedule
-(`RETAIN_*` in `app.env`, `api/src/Retention.php`); a person's data is
-found, exported or erased with `api/bin/subject.php` (runbook, "Requests
+Personal data in the database: old data is deleted on a schedule
+(`RETAIN_*` settings, `api/src/Retention.php`); a person's data is
+found, exported or erased with `node api/dev/subject.mjs` (runbook, "Requests
 about personal data"); staff with the `reception` role do not see patients'
 notes, and opening a record is logged. Images and their sources:
 [`docs/asset-register.md`](docs/asset-register.md).
@@ -1057,10 +1070,10 @@ notes, and opening a record is logged. Images and their sources:
 
 | Blocker | Owner |
 |---|---|
-| Server, Supabase and secrets set up, following docs/production-runbook.md (steps 1 to 10) | Clinic / whoever runs the server |
+| Vercel, Supabase and secrets set up, following docs/production-runbook.md (steps 1 to 10) | Clinic / whoever runs the hosting |
 | Whish merchant contract and documentation; then the real driver in api/src/Whish.php (runbook step 7) | Clinic + a developer |
 | WhatsApp Business sender and the seven approved templates (runbook step 6) | Clinic |
-| DNS for dr-rayhab.com pointed at the server (runbook step 3); the rest is in infra/ | Clinic |
+| DNS for dr-rayhab.com pointed at Vercel (runbook step 3) | Clinic |
 | Privacy policy and booking terms approved and published | Clinic + legal adviser |
 | Booking consent wording updated to match real processors | Clinic + legal adviser |
 | Clinic email replacing the temporary Gmail | Clinic |
@@ -1068,7 +1081,7 @@ notes, and opening a record is logged. Images and their sources:
 | Payment policy confirmed: cash timing, Whish deadline, currency, prices (feeds `policy` and `price` in the API, and the success screen's step 3) | Clinic |
 | Clinical review of the 49 articles marked "Awaiting clinical review" | Dr. Rayan Halimeh |
 | Written consent confirmed for every case study and photograph | Clinic |
-| Remove nothing for production: `?demo=1` is inert there because the staging step is skipped. Confirm no page has `rayhab-demo` | Frontend + backend |
+| Nothing to remove for production: the Vercel build refuses a production deploy with `rayhab-demo` or `data-draft` on any page | Frontend + backend |
 | Re-verify everything above on the production domain | Frontend + backend |
 
 ## Editorial conventions

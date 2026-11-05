@@ -1,0 +1,54 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "node infra/vercel/build.mjs",
+  "outputDirectory": "site",
+  "regions": ["dub1"],
+  "functions": {
+    "api/public/index.php": {
+      "runtime": "vercel-php@0.8.0",
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    { "source": "/api/:route*", "destination": "/api/public/index.php?__route=:route*" }
+  ],
+  "redirects": [
+    { "source": "/services/frc-joint-training.html", "destination": "/services/joint-training-mobility.html", "permanent": true }
+  ],
+  "crons": [
+    { "path": "/api/cron/worker", "schedule": "* * * * *" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=()" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; script-src 'self' 'sha256-yb+kXgh5zw4DMCqxJK0NpZLXmcTGnfjGoW1XuTC6uLo=' 'sha256-48v3BVFceGGoCmEY8yhA3vVDPhB5xCDfXJYamli5VYQ='; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'" },
+        { "key": "Strict-Transport-Security", "value": "max-age=86400" }
+      ]
+    },
+    {
+      "source": "/assets/(css|js|fonts)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/assets/img/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+    },
+    {
+      "source": "/(admin|payment)/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    },
+    {
+      "source": "/payment/(.*)",
+      "headers": [{ "key": "Referrer-Policy", "value": "no-referrer" }]
+    }
+  ]
+}

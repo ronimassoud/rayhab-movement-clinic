@@ -1,6 +1,6 @@
 <?php
 /* Apply migrations, then make sure the starting data is there.
-   Run by deploy.sh with the schema owner's connection:
+   Run from your computer with the schema owner's login (node api/dev/migrate.mjs <env>):
 
      DATABASE_MIGRATE_URL=postgres://… php bin/migrate.php */
 declare(strict_types=1);
